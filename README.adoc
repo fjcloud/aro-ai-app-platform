@@ -19,7 +19,7 @@ The cluster steps follow link:https://github.com/fjcloud/aro-hcp-quickstart[`fjc
 
 GPU quota on a new subscription is 0. Request it before the workshop day. Approval is not instant.
 
-The same flow is in the browser at `docs/index.html`. Run `python3 docs/terminal_server.py` and open the URL it prints. *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Paste the deploy command into that terminal.
+The same flow is in the browser at https://aro-terminal-fja.azurewebsites.net/. *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Paste the deploy command into that terminal.
 
 == Use
 

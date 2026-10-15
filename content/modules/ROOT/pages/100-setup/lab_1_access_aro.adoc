@@ -11,7 +11,7 @@ The subscription is empty. This lab creates the ARO HCP cluster, writes an admin
 
 == From the browser
 
-The link:../../../docs/index.html[browser launcher] takes the lab export (`GUID`, `CLIENT_ID`, `PASSWORD`, `TENANT`, `SUBSCRIPTION`, `RESOURCEGROUP`). From the workshop directory, run `python3 docs/terminal_server.py` and open the URL it prints. *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, then paste the deploy command. The cluster is created in the lab resource group.
+The link:https://aro-terminal-fja.azurewebsites.net/[browser launcher] takes the lab export (`GUID`, `CLIENT_ID`, `PASSWORD`, `TENANT`, `SUBSCRIPTION`, `RESOURCEGROUP`). *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, then paste the deploy command. The cluster is created in the lab resource group.
 
 Stay in that shell for later `oc` commands, or download `~/aro-ai-app-platform/state/kubeconfig` and continue at <<_log_in>> on your laptop.
 

@@ -114,7 +114,7 @@ After completing this workshop, you will understand:
 You will need:
 
 * A web browser
-* An empty Azure subscription. Act 0 can run in a local terminal, or from the link:../../docs/index.html[browser launcher], which starts an Azure CLI terminal in the lab resource group
+* An empty Azure subscription. Act 0 can run in a local terminal, or from the link:https://aro-terminal-fja.azurewebsites.net/[browser launcher], which starts an Azure CLI terminal in the lab resource group
 * This workshop repository (cloned in Act 0) — not the Go app template
 
 Let's get started.
