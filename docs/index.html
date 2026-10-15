@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARO workshop — Azure CLI terminal</title>
+  <link rel="stylesheet" href="vendor/xterm.css">
+  <style>
+    :root {
+      --red: #ee0000;
+      --ink: #151515;
+      --muted: #4d4d4d;
+      --line: #d2d2d2;
+      --band: #f5f5f5;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--white);
+      font: 16px/1.5 "Red Hat Text", "Segoe UI", sans-serif;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      padding: 20px 28px;
+      border-bottom: 4px solid var(--red);
+    }
+    header a { color: var(--ink); }
+    h1 { font-size: 1.35rem; line-height: 1.3; margin: 0; }
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      min-height: calc(100vh - 78px);
+    }
+    section { padding: 28px; }
+    .steps { background: var(--band); }
+    .panel { border-left: 1px solid var(--line); }
+    h2 { font-size: 1.05rem; margin: 0 0 12px; }
+    ol { margin: 0; padding-left: 1.2rem; }
+    li + li { margin-top: 10px; }
+    p { margin: 0 0 12px; }
+    .note { color: var(--muted); font-size: 0.95rem; }
+    label { display: block; font-weight: 600; margin: 14px 0 4px; }
+    input {
+      width: 100%;
+      font: inherit;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+    input:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+    .hint { color: var(--muted); font-size: 0.85rem; font-weight: 400; }
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      margin-top: 8px;
+      font: 13px/1.45 ui-monospace, "SFMono-Regular", Consolas, monospace;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--band);
+      resize: vertical;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    button, .link-button {
+      font: inherit;
+      border-radius: 4px;
+      padding: 10px 16px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    button[type="submit"] {
+      background: var(--red);
+      color: var(--white);
+      border: 1px solid var(--red);
+    }
+    button.secondary, .link-button {
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+    }
+    #status { min-height: 1.5em; margin: 12px 0 0; font-weight: 600; }
+    #terminal {
+      height: 460px;
+      margin-top: 16px;
+      padding: 8px;
+      background: #1b1b1b;
+      border-radius: 4px;
+    }
+    #terminal .xterm { height: 100%; }
+    code { font-family: ui-monospace, Consolas, monospace; font-size: 0.92em; }
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; }
+      .panel { border-left: 0; border-top: 1px solid var(--line); }
+      header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI-Powered Developer Platform on ARO</h1>
+    <a href="../modules/master/index.html">Workshop instructions</a>
+  </header>
+  <main>
+    <section class="steps">
+      <h2>Instructions</h2>
+      <p>Terminal address: <a id="here" href=""></a></p>
+      <p>Paste the lab export, then <strong>Create</strong>. The page starts an Azure CLI container in the lab resource group and attaches the terminal on the right. It signs in as the service principal. Paste the deploy command into that terminal.</p>
+      <ol>
+        <li>The export looks like <code>GUID</code>, <code>CLIENT_ID</code>, <code>PASSWORD</code>, <code>TENANT</code>, <code>SUBSCRIPTION</code>, and <code>RESOURCEGROUP</code>. Paste the whole block. The secret is used only to sign in, then it is dropped. It is not in the command preview.</li>
+        <li>Quota on that subscription, in the resource group's region: at least 24 vCPUs of <em>Standard DSv3 Family</em> and 24 vCPUs of <em>Standard NCADS_A100_v4 Family</em>. The terminal itself uses 1 vCPU and 2 GB.</li>
+        <li>Choose <strong>Create</strong>. The first start pulls the Azure CLI image, which can take a few minutes. Later starts attach to the same container.</li>
+        <li>Put your pull secret at <code>~/pull_secret.json</code> in that terminal. It must include <code>registry.redhat.io</code>, <code>registry.connect.redhat.com</code>, and <code>cloud.openshift.com</code>.</li>
+        <li>Paste with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> (<kbd>Ctrl</kbd>+<kbd>V</kbd> in some browsers, <kbd>⌘</kbd>+<kbd>V</kbd> on a Mac). The command runs <code>make deploy</code> in <code>RESOURCEGROUP</code>. The cluster name is <code>aro-</code> plus the GUID.</li>
+        <li>Stay in that shell for the later <code>oc</code> labs. To continue on your laptop, download <code>~/aro-ai-app-platform/state/kubeconfig</code>. The API is public. <code>make delete</code> removes the cluster and keeps the lab resource group. <strong>Remove terminal</strong> deletes only the CLI container.</li>
+      </ol>
+      <p class="note">Cluster create takes about 40 minutes. Pasting the command again finishes whatever step stopped. Lab 1.1, <code>make gpu</code>, comes after the workers are up. The service principal needs permission to create Entra app registrations; that is how the console login is created. The container keeps running, and billing, until you remove it.</p>
+    </section>
+    <section class="panel">
+      <h2>Create the cluster</h2>
+      <form id="launcher">
+        <label for="creds">Lab export</label>
+        <textarea id="creds" spellcheck="false" autocomplete="off" placeholder="export GUID=&#10;export CLIENT_ID=&#10;export PASSWORD=&#10;export TENANT=&#10;export SUBSCRIPTION=&#10;export RESOURCEGROUP="></textarea>
+        <p id="parsed" class="note"></p>
+
+        <label for="repo">Workshop repository</label>
+        <input id="repo" name="repo" required type="url" value="https://github.com/fjcloud/aro-ai-app-platform.git" spellcheck="false">
+
+        <label for="command">Command preview <span class="hint">secret not included</span></label>
+        <textarea id="command" readonly aria-label="Deploy command preview"></textarea>
+
+        <div class="actions">
+          <button type="submit" id="create">Create</button>
+          <button type="button" class="secondary" id="copy">Copy command</button>
+          <button type="button" class="secondary" id="remove">Remove terminal</button>
+        </div>
+        <p id="status" role="status"></p>
+        <div id="terminal" aria-label="Azure CLI terminal"></div>
+      </form>
+    </section>
+  </main>
+  <script>
+    const form = document.querySelector("#launcher");
+    const command = document.querySelector("#command");
+    const status = document.querySelector("#status");
+    const here = document.querySelector("#here");
+    here.href = location.href.split("#")[0];
+    here.textContent = here.href;
+
+    function sh(value) {
+      return `'${String(value).replace(/'/g, `'\\''`)}'`;
+    }
+
+    function parseExports(text) {
+      const out = {};
+      for (const line of text.split(/\r?\n/)) {
+        const match = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
+        if (!match) continue;
+        let value = match[2];
+        if ((value.startsWith("'") && value.endsWith("'")) || (value.startsWith('"') && value.endsWith('"'))) {
+          value = value.slice(1, -1);
+        }
+        out[match[1]] = value;
+      }
+      return out;
+    }
+
+    function clusterName(guid, resourceGroup) {
+      const raw = (guid || String(resourceGroup || "").replace(/^openenv-/i, "")).toLowerCase();
+      const slug = raw.replace(/[^a-z0-9]/g, "").slice(0, 10);
+      return slug ? `aro-${slug}` : "";
+    }
+
+    function fields() {
+      const env = parseExports(document.querySelector("#creds").value);
+      const guid = (env.GUID || "").trim();
+      const resourceGroup = (env.RESOURCEGROUP || "").trim();
+      return {
+        guid,
+        clientId: (env.CLIENT_ID || "").trim(),
+        password: env.PASSWORD || "",
+        tenant: (env.TENANT || "").trim(),
+        subscription: (env.SUBSCRIPTION || "").trim(),
+        resourceGroup,
+        cluster: clusterName(guid, resourceGroup),
+        repo: document.querySelector("#repo").value.trim(),
+      };
+    }
+
+    function fieldError(data) {
+      if (!data.clientId || !data.password || !data.tenant || !data.subscription || !data.resourceGroup) {
+        return "Paste GUID, CLIENT_ID, PASSWORD, TENANT, SUBSCRIPTION, and RESOURCEGROUP.";
+      }
+      if (!/^[0-9a-fA-F-]{36}$/.test(data.clientId) || !/^[0-9a-fA-F-]{36}$/.test(data.subscription)) {
+        return "CLIENT_ID and SUBSCRIPTION must be ids.";
+      }
+      if (!/^[A-Za-z0-9][A-Za-z0-9.-]{0,127}$/.test(data.tenant)) {
+        return "TENANT must be a domain or tenant id.";
+      }
+      if (!/^[A-Za-z0-9][A-Za-z0-9._()-]{0,89}$/.test(data.resourceGroup)) {
+        return "RESOURCEGROUP is not a resource group name.";
+      }
+      if (!/^[a-z][a-z0-9-]{1,13}$/.test(data.cluster)) {
+        return "GUID must produce a cluster name of 2–14 lowercase letters, numbers, or hyphens.";
+      }
+      if (/[\r\n]/.test(data.password)) {
+        return "PASSWORD cannot contain a line break.";
+      }
+      if (!/^https:\/\/\S+$/.test(data.repo)) {
+        return "Repository must be an https URL.";
+      }
+      return "";
+    }
+
+    function build() {
+      const data = fields();
+      return `set -euo pipefail
+export CLIENT_ID=${sh(data.clientId)}
+export TENANT=${sh(data.tenant)}
+export SUBSCRIPTION=${sh(data.subscription)}
+export RESOURCEGROUP=${sh(data.resourceGroup)}
+export CLUSTER_NAME=${sh(data.cluster)}
+export CUSTOMER_RG_NAME="$RESOURCEGROUP"
+az account set --subscription "$SUBSCRIPTION"
+export LOCATION="$(az group show --name "$CUSTOMER_RG_NAME" --query location --output tsv)"
+if [[ -z "$LOCATION" ]]; then
+  echo "Resource group $CUSTOMER_RG_NAME was not found in subscription $SUBSCRIPTION."
+  exit 1
+fi
+if ! az aro hcp cluster --help >/dev/null 2>&1; then
+  az extension add --name aro
+fi
+if ! command -v oc >/dev/null 2>&1; then
+  mkdir -p "$HOME/bin"
+  curl -fsSL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.22/openshift-client-linux.tar.gz | tar -C "$HOME/bin" -xz oc
+fi
+export PATH="$HOME/bin:$PATH"
+if [[ ! -f "$HOME/pull_secret.json" ]]; then
+  echo "Put pull_secret.json in the home directory, then paste this command again."
+  exit 1
+fi
+export PULL_SECRET_FILE="$HOME/pull_secret.json"
+repo="$HOME/aro-ai-app-platform"
+if [[ ! -d "$repo/.git" ]]; then
+  git clone --depth 1 ${sh(data.repo)} "$repo"
+fi
+cd "$repo"
+if command -v make >/dev/null 2>&1; then
+  make deploy
+else
+  bash scripts/deploy.sh
+fi
+`;
+    }
+
+    function refresh() {
+      const data = fields();
+      const parsed = document.querySelector("#parsed");
+      if (!data.clientId && !data.password && !data.tenant && !data.subscription && !data.resourceGroup) {
+        command.value = "";
+        parsed.textContent = "Paste the export block from the lab.";
+        return;
+      }
+      const problem = fieldError(data);
+      command.value = problem ? "" : build();
+      parsed.textContent = problem
+        ? problem
+        : `Cluster ${data.cluster} in ${data.resourceGroup}. Secret captured. Region comes from the resource group.`;
+    }
+
+    function copyCommand() {
+      const text = build();
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.top = "0";
+      area.style.left = "0";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      area.setSelectionRange(0, text.length);
+      let ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch {
+        ok = false;
+      }
+      document.body.removeChild(area);
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+      return ok;
+    }
+
+    let sessionId = "";
+    let socket = null;
+    let term = null;
+
+    function terminal() {
+      if (term) return term;
+      term = new Terminal({
+        cursorBlink: true,
+        fontFamily: "ui-monospace, Consolas, monospace",
+        fontSize: 14,
+        theme: { background: "#1b1b1b", foreground: "#f0f0f0", cursor: "#f0f0f0" },
+      });
+      term.open(document.querySelector("#terminal"));
+      if (window.FitAddon) {
+        const fit = new FitAddon.FitAddon();
+        term.loadAddon(fit);
+        term.fitAddon = fit;
+        fit.fit();
+        window.addEventListener("resize", () => fit.fit());
+      }
+      term.onData((data) => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(new TextEncoder().encode(data));
+        }
+      });
+      return term;
+    }
+
+    function attach(id) {
+      const view = terminal();
+      if (socket) socket.close();
+      const proto = location.protocol === "https:" ? "wss" : "ws";
+      socket = new WebSocket(`${proto}://${location.host}/ws/${id}`);
+      socket.binaryType = "arraybuffer";
+      socket.onopen = () => {
+        status.textContent = "Terminal attached. Azure CLI signs in, then paste the deploy command.";
+        view.focus();
+      };
+      socket.onmessage = (event) => {
+        const bytes = event.data instanceof ArrayBuffer ? new Uint8Array(event.data) : event.data;
+        view.write(bytes);
+      };
+      socket.onclose = () => {
+        view.write("\r\n[disconnected]\r\n");
+      };
+    }
+
+    async function createTerminal() {
+      const data = fields();
+      const problem = fieldError(data);
+      if (problem) {
+        status.textContent = problem;
+        refresh();
+        return;
+      }
+      if (!form.reportValidity()) return;
+      refresh();
+      copyCommand();
+      const button = document.querySelector("#create");
+      button.disabled = true;
+      status.textContent = "Starting the Azure CLI container…";
+      const view = terminal();
+      if (view.fitAddon) view.fitAddon.fit();
+      view.write("\r\nStarting the Azure CLI container…\r\n");
+      try {
+        const response = await fetch("/api/terminal", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            guid: data.guid,
+            clientId: data.clientId,
+            password: data.password,
+            tenant: data.tenant,
+            subscription: data.subscription,
+            resourceGroup: data.resourceGroup,
+            cols: view.cols || 80,
+            rows: view.rows || 24,
+          }),
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.message || "The terminal service rejected the request.");
+        sessionId = payload.id;
+        for (;;) {
+          const poll = await fetch(`/api/terminal/${sessionId}`, { credentials: "same-origin" });
+          const state = await poll.json();
+          if (!poll.ok) throw new Error(state.message || "The terminal session ended.");
+          status.textContent = state.message || state.status;
+          if (state.status === "ready") {
+            attach(sessionId);
+            return;
+          }
+          if (state.status === "error") throw new Error(state.message || "The container failed.");
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      } catch (error) {
+        status.textContent = error.message === "Failed to fetch"
+          ? "Terminal service is not running on this host. Start it with python3 docs/terminal_server.py."
+          : error.message;
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    form.addEventListener("input", refresh);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      createTerminal();
+    });
+    document.querySelector("#copy").addEventListener("click", () => {
+      refresh();
+      const copied = copyCommand();
+      status.textContent = copied
+        ? "Command copied. Paste it in the terminal after Azure CLI is signed in."
+        : "Press Copy command again, then paste it in the terminal.";
+    });
+    document.querySelector("#remove").addEventListener("click", async () => {
+      if (!sessionId) {
+        status.textContent = "There is no terminal to remove.";
+        return;
+      }
+      const response = await fetch(`/api/terminal/${sessionId}`, { method: "DELETE", credentials: "same-origin" });
+      const payload = await response.json().catch(() => ({}));
+      status.textContent = payload.message || (response.ok ? "Terminal container removed." : "Could not remove the container.");
+      if (socket) socket.close();
+      sessionId = "";
+    });
+    fetch("/api/health").catch(() => {
+      status.textContent = "Terminal service is not running on this host. Start it with python3 docs/terminal_server.py.";
+    });
+    refresh();
+  </script>
+  <script src="vendor/xterm.js"></script>
+  <script src="vendor/xterm-addon-fit.js"></script>
+</body>
+</html>

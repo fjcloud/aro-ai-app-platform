@@ -5,3 +5,14 @@
 www/
 icons
 tools/.fonts/
+state/cluster.env
+state/kubeconfig
+state/letsencrypt/
+*.kubeconfig
+docs/worker/.venv/
+docs/worker/.venv-workers/
+docs/worker/python_modules/
+docs/worker/pylock.toml
+docs/worker/public/
+docs/worker/.dev.vars
+docs/worker/.wrangler/
