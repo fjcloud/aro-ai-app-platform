@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # LeaderWorkerSet defaults to 2 manager replicas at 1000m CPU each. On a
-# 3-worker ROSA cluster that packs the nodes so Dev Spaces (500m) cannot
+# 3-worker ARO HCP cluster that packs the nodes so Dev Spaces (500m) cannot
 # schedule. Qwen3.8 is an LLMInferenceService Deployment — keep the LWS CRD,
 # keep one manager, stop the operator from restoring replicas=2.
 set -euo pipefail

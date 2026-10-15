@@ -129,13 +129,24 @@ def group_name(session):
     return f"azsh-{digest}"
 
 
-def group_url(session):
-    name = group_name(session)
+def group_url(session, name=None):
+    name = name or group_name(session)
     return (
         "https://management.azure.com/subscriptions/"
         f"{session['subscription']}/resourceGroups/{session['resourceGroup']}"
         f"/providers/Microsoft.ContainerInstance/containerGroups/{name}?api-version={API}"
     )
+
+
+def container_names(session):
+    names = [group_name(session)]
+    guid = str(session.get("guid") or "")
+    slug = re.sub(r"[^a-z0-9]", "", guid.lower())[:10]
+    if slug:
+        legacy = f"azsh-{slug}"
+        if legacy not in names:
+            names.append(legacy)
+    return names
 
 
 def set_status(session, status, message):
@@ -176,19 +187,18 @@ def ensure_container(session):
         if state == "Running":
             set_status(session, "ready", f"Container {name} is already running in {location}.")
             return
-        if state not in ("Failed", "Stopped", "Terminated"):
-            set_status(session, "starting", detail or f"Container {name} is {state}.")
-            wait_until_running(session, url)
-            return
-        set_status(session, "starting", f"Replacing the previous {state.lower()} container.")
-        reset_shell(session)
-        http_json("DELETE", url, token)
-        deadline = time.time() + 120
-        while time.time() < deadline:
-            status, _ = http_json("GET", url, access_token(session))
-            if status == 404:
-                break
-            time.sleep(2)
+        if state.lower() == "deleting":
+            set_status(session, "starting", "Waiting for the previous container to finish removing.")
+            wait_until_gone(session, url)
+        else:
+            if state not in ("Failed", "Stopped", "Terminated"):
+                set_status(session, "starting", detail or f"Container {name} is {state}.")
+                wait_until_running(session, url)
+                return
+            set_status(session, "starting", f"Replacing the previous {state.lower()} container.")
+            reset_shell(session)
+            http_json("DELETE", url, token)
+            wait_until_gone(session, url)
     set_status(session, "starting", f"Creating container {name} in {location}. The Azure CLI image can take a few minutes.")
     body = {
         "location": location,
@@ -233,10 +243,27 @@ def wait_until_running(session, url):
     raise RuntimeError("The container did not start within 8 minutes.")
 
 
+def wait_until_gone(session, url):
+    deadline = time.time() + 180
+    while time.time() < deadline:
+        status, payload = http_json("GET", url, access_token(session))
+        if status == 404:
+            return
+        if status not in (200, 202, 204, 409):
+            raise RuntimeError(azure_error(payload))
+        time.sleep(2)
+    raise RuntimeError("The container is still being removed. Wait a moment and choose Remove again.")
+
+
 def delete_container(session):
-    status, payload = http_json("DELETE", group_url(session), access_token(session))
-    if status not in (200, 202, 204, 404):
-        raise RuntimeError(azure_error(payload))
+    for name in container_names(session):
+        url = group_url(session, name)
+        status, payload = http_json("DELETE", url, access_token(session))
+        if status == 404:
+            continue
+        if status not in (200, 202, 204):
+            raise RuntimeError(azure_error(payload))
+        wait_until_gone(session, url)
 
 
 def provision(session):

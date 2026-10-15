@@ -1,4 +1,4 @@
-# ROSA wildcard cert from the default IngressController.
+# Wildcard cert from the default IngressController.
 # hostname and certificateRefs.name are placeholders — configure-maas-gateway.sh
 # replaces them from this cluster's Ingress domain and infrastructureName.
 apiVersion: gateway.networking.k8s.io/v1

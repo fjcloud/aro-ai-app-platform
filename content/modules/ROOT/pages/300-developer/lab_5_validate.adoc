@@ -164,7 +164,7 @@ edge
 | Who | What They Did
 
 | Platform Engineer
-| Wrote `AGENTS.md` — a machine-readable rulebook for how apps must run on ROSA
+| Wrote `AGENTS.md` — a machine-readable rulebook for how apps must run on ARO
 
 | OpenCode (generating)
 | Read `AGENTS.md` before writing any code. Applied rules proactively.

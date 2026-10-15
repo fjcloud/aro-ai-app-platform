@@ -267,13 +267,13 @@ class Board:
 def architecture() -> None:
     b = Board(1280, 960)
     b.frame()
-    b.title("In-cluster coding agent on ROSA")
+    b.title("In-cluster coding agent on ARO")
 
     b.band((36, 100, 1244, 310))
     b.text((56, 114), "Act 1 — platform", b.display(SECTION), fill=RED)
     a1 = b.columns(3, 160, 288, left=56, right=1224, gap=36)
     labels1 = [
-        ("ROSA HCP", "workers + 1× L40S GPU"),
+        ("ARO HCP", "workers + 1× A100 GPU"),
         ("OpenShift AI MaaS", "Qwen3.8-27B INT4"),
         ("Gateway", "maas.apps… · one sk-oai- key"),
     ]
@@ -323,7 +323,7 @@ def model_serving() -> None:
 
     b.card(client, "OpenCode / curl", "Authorization: Bearer sk-oai-…")
     b.card(gw, "Gateway", "maas.<apps-domain> · Authorino + Limitador")
-    b.card(llm, "LLMInferenceService", "qwen3 · Red Hat vLLM on L40S", pad=16)
+    b.card(llm, "LLMInferenceService", "qwen3 · Red Hat vLLM on A100", pad=16)
     b.card(dash, "Dashboard", "rh-ai.apps… · catalog, extra keys")
 
     b.arrow((380, 305), (500, 245), head=12)
@@ -406,8 +406,8 @@ def the_bill() -> None:
     b.text((740, 140), "What you measure", b.display(SECTION), fill=BLACK)
 
     left_items = [
-        ("g6e.xlarge L40S", "one NVIDIA GPU node"),
-        ("Qwen3.8 INT4 in VRAM", "fits a single L40S"),
+        ("NC24ads A100", "one NVIDIA A100 80GB"),
+        ("Qwen3.8 INT4 in VRAM", "fits a single A100"),
         ("MaaS subscription", "5M tokens / 24h"),
     ]
     right_items = [

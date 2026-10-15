@@ -114,8 +114,8 @@ When a developer opens that URL, Dev Spaces clones the template (including `open
 |===
 | Component | Status
 
-| GPU machine pool (1× L40S)
-| ✅ Provisioned in ROSA
+| GPU node pool (1× A100 80 GB)
+| ✅ Provisioned on ARO HCP
 
 | Operators + dashboard
 | ✅ `https://rh-ai.apps.<apps-domain>/`

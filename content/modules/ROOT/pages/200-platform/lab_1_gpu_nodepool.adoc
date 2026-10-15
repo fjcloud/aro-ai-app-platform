@@ -1,0 +1,102 @@
+= Lab 1.1 — Deploy a GPU Node Pool
+
+Act 1 starts here. Add a GPU node pool to the ARO HCP cluster. This is the NVIDIA A100 80 GB that will run Qwen3.8 — the in-cluster model OpenCode will call this afternoon.
+
+[NOTE]
+====
+*Estimated time:* 15 minutes (5 min active + ~10 min wait) +
+*Persona:* Platform Engineer +
+*Fire and forget:* Trigger this lab first, then move on. The GPU node will be ready by the time you need it.
+====
+
+[IMPORTANT]
+====
+GPU nodes are expensive. One `Standard_NC24ads_A100_v4` (NVIDIA A100 80 GB) is about $4.78/hr in West Europe on Linux pay-as-you-go. The pool is fixed at one node for this workshop. Delete it with the cluster when you are done (`make delete CONFIRM=yes`).
+====
+
+== Understanding ARO HCP node pools
+
+A *node pool* is a group of worker nodes with a shared VM size. ARO HCP manages the VMs in your subscription — provisioning and replacing them — so the platform engineer does not build virtual machines by hand.
+
+The CPU pool `workers` (three `Standard_D8s_v3`) already exists from Act 0. This lab adds a second pool.
+
+[cols="1,2", options="header"]
+|===
+| Parameter | Value & Rationale
+
+| `--vm-size Standard_NC24ads_A100_v4`
+| 1× NVIDIA A100 80 GB. Qwen3.8-27B INT4 is ~19.5 GB and this workshop serves it at a 256K context, which does not fit a 16 GB T4.
+
+| `--replicas 1`
+| One GPU node. Enough for the workshop, and the hourly price stays predictable.
+
+| `--taints nvidia.com/gpu=present:NoSchedule`
+| Dev Spaces and build pods stay on the CPU workers.
+|===
+
+`make gpu` reads `state/cluster.env` and runs `az aro hcp cluster nodepool create` with those values. Run it again and it leaves an existing `gpu` pool in place.
+
+== Create the GPU node pool
+
+Quota for *Standard NCADS_A100_v4 Family vCPUs* in West Europe must be at least 24. If it is still 0, this command fails until the request is approved.
+
+[source,sh,role=execute]
+----
+make gpu
+----
+
+.Sample Output
+[source,text,options=nowrap]
+----
+Creating node pool gpu (1 x Standard_NC24ads_A100_v4)
+{
+  "name": "gpu",
+  "replicas": 1,
+  "state": "Succeeded",
+  "vmSize": "Standard_NC24ads_A100_v4"
+}
+----
+
+[WARNING]
+====
+If Azure returns a capacity error, delete the pool and try again later, or pick another region and recreate the cluster. GPU sizes are not available in every region at all times.
+
+[source,sh]
+----
+set -a
+source state/cluster.env
+set +a
+az aro hcp cluster nodepool delete \
+  --resource-group "${CUSTOMER_RG_NAME}" \
+  --cluster-name "${CLUSTER_NAME}" \
+  --name gpu \
+  --subscription "${SUBSCRIPTION_ID}" \
+  --yes
+----
+====
+
+Start a background wait for the GPU node to become Ready. `oc wait` only works after the node *exists* — poll until the label appears, then wait for Ready. Continue to the next lab while it completes:
+
+[source,sh,role=execute]
+----
+(
+  until oc get node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4 \
+      --no-headers 2>/dev/null | grep -q .; do
+    sleep 10
+  done
+  oc wait node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4 \
+    --for=condition=Ready --timeout=900s
+) &
+echo "GPU node wait started in background (PID $!)"
+----
+
+== ✅ Checkpoint
+
+[source,sh,role=execute]
+----
+make status
+----
+
+The `gpu` node pool shows one `Standard_NC24ads_A100_v4` replica. ✓
+
+➡️ Move immediately to the next lab. *Do not wait for the node* — it will be ready by the time you need it.

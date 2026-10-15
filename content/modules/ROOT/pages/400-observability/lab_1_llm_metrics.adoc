@@ -39,8 +39,8 @@ These series are already on the cluster (DCGM from the GPU Operator, `vllm:…` 
 . Left nav: *Observe → Dashboards*.
 . *Dashboard* dropdown: *NVIDIA DCGM Exporter Dashboard* (ConfigMap `nvidia-dcgm-exporter-dashboard` in `openshift-config-managed`).
 . At the top of the dashboard, set:
-** *Instance* — the GPU worker (the series labelled `NVIDIA L40S` / `exported_namespace=llm-serving`). There is no “instance type” filter; pick that instance, not a CPU worker.
-** *GPU* — `0` (this workshop has one L40S).
+** *Instance* — the GPU worker (the series labelled `NVIDIA A100` / `exported_namespace=llm-serving`). There is no “instance type” filter; pick that instance, not a CPU worker.
+** *GPU* — `0` (this workshop has one A100).
 . Time range: last few hours so you see model load *and* the OpenCode afternoon.
 
 Read these four panels (those names are on the dashboard):
@@ -54,11 +54,11 @@ Read these four panels (those names are on the dashboard):
 | Idle ≈ 0%. During OpenCode bursts, 30–95%.
 
 | *GPU Framebuffer Mem Used*
-| VRAM: Qwen3.8 weights + KV cache on the 48 GiB L40S.
+| VRAM: Qwen3.8 weights + KV cache on the 80 GiB A100.
 | Once the model is Ready, typically ~35–42 GiB (not the 19.5 GiB checkpoint alone).
 
 | *GPU Temperature*
-| L40S throttles above 87°C.
+| A100 80 GB PCIe slows as it approaches ~85°C.
 | Idle ~45–55°C; keep it under 80°C.
 
 | *GPU Power Usage*
@@ -74,7 +74,7 @@ On *GPU Utilization* over the last few hours you should see:
 
 [TIP]
 ====
-If 50 developers used OpenCode all day, what would this graph look like? When would you add a second GPU node? That is how the platform team justifies expanding the machine pool.
+If 50 developers used OpenCode all day, what would this graph look like? When would you add a second GPU node? That is how the platform team justifies a second replica on the `gpu` node pool.
 ====
 
 == Part 2: vLLM tokens (Web Console metrics)
@@ -96,7 +96,7 @@ Names use a *colon* (`vllm:generation_tokens_total`), not an underscore. Namespa
 | Successful completions. `finished_reason="stop"` is the normal path.
 
 | `rate(vllm:generation_tokens_total{namespace="llm-serving"}[5m])`
-| Decode throughput. On this L40S, typically 20–60 tokens/sec while OpenCode is answering.
+| Decode throughput while OpenCode is answering. Read the number on this graph. An A100 80 GB is the card; the rate depends on the prompt.
 
 | `histogram_quantile(0.95, rate(vllm:time_to_first_token_seconds_bucket{namespace="llm-serving"}[5m]))`
 | p95 time-to-first-token. Interactive use should stay under 2–3 seconds.
@@ -140,13 +140,20 @@ sum by (namespace) (increase(vllm:prompt_tokens_total{namespace="llm-serving"}[1
 
 Prompt tokens are usually much larger than generation tokens (OpenCode sends `AGENTS.md` and the conversation). That is expected.
 
-Rough cost model for this L40S (~$1.65/hr on-demand, ~43 tok/s decode):
+Rough cost model for this A100 in West Europe (~$4.78/hr Linux pay-as-you-go). Divide the hourly price by the decode rate on the graph:
 
 [source]
 ----
-Cost/token           ≈ $0.000011
-OpenCode session     ≈ 50 000 tokens → ~$0.55
-10 concurrent devs   ≈ 500 000 tokens → ~$5.50 / hour of chatting
+Cost/token = 4.78 / (tokens_per_sec × 3600)
+----
+
+Example if the graph shows about 80 tokens/sec:
+
+[source]
+----
+Cost/token           ≈ $0.000017
+OpenCode session     ≈ 50 000 tokens → ~$0.83
+10 concurrent devs   ≈ 500 000 tokens → ~$8.30 / hour of chatting
 ----
 
 The Fortune Cookie route is not on this invoice. Token quota on the MaaS gateway is how you stop an afternoon of OpenCode from becoming an unbounded GPU bill.
@@ -172,7 +179,7 @@ The Fortune Cookie route is not on this invoice. Token quota on the MaaS gateway
 
 [source,sh,role=execute]
 ----
-oc get node -l node.kubernetes.io/instance-type=g6e.xlarge
+oc get node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4
 
 oc get llminferenceservice,maasmodelref -n llm-serving
 

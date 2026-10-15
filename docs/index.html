@@ -103,7 +103,7 @@
 <body>
   <header>
     <h1>AI-Powered Developer Platform on ARO</h1>
-    <a href="../modules/master/index.html">Workshop instructions</a>
+    <a href="https://fjcloud.github.io/aro-ai-app-platform/">Workshop instructions</a>
   </header>
   <main>
     <section class="steps">
@@ -345,7 +345,10 @@ fi
       };
     }
 
+    let createToken = 0;
+
     async function createTerminal() {
+      const token = ++createToken;
       const data = fields();
       const problem = fieldError(data);
       if (problem) {
@@ -382,14 +385,17 @@ fi
         if (!response.ok) throw new Error(payload.message || "The terminal service rejected the request.");
         sessionId = payload.id;
         for (;;) {
+          if (token !== createToken) return;
           const poll = await fetch(`/api/terminal/${sessionId}`, { credentials: "same-origin" });
           const state = await poll.json();
+          if (token !== createToken) return;
           if (!poll.ok) throw new Error(state.message || "The terminal session ended.");
           status.textContent = state.message || state.status;
           if (state.status === "ready") {
             attach(sessionId);
             return;
           }
+          if (state.status === "deleted") return;
           if (state.status === "error") throw new Error(state.message || "The container failed.");
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
@@ -419,11 +425,20 @@ fi
         status.textContent = "There is no terminal to remove.";
         return;
       }
-      const response = await fetch(`/api/terminal/${sessionId}`, { method: "DELETE", credentials: "same-origin" });
-      const payload = await response.json().catch(() => ({}));
-      status.textContent = payload.message || (response.ok ? "Terminal container removed." : "Could not remove the container.");
+      const button = document.querySelector("#remove");
+      createToken += 1;
+      button.disabled = true;
+      status.textContent = "Removing the container…";
       if (socket) socket.close();
+      const removing = sessionId;
       sessionId = "";
+      try {
+        const response = await fetch(`/api/terminal/${removing}`, { method: "DELETE", credentials: "same-origin" });
+        const payload = await response.json().catch(() => ({}));
+        status.textContent = payload.message || (response.ok ? "Terminal container removed." : "Could not remove the container.");
+      } finally {
+        button.disabled = false;
+      }
     });
     fetch("/api/health").catch(() => {
       status.textContent = "Terminal service is not running on this host. Start it with python3 docs/terminal_server.py.";

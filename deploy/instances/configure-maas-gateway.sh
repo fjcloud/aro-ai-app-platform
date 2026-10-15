@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Bind the MaaS Gateway to this cluster's apps domain and ROSA wildcard cert.
-# Cluster id and DNS change on every ROSA cluster — do not hardcode them.
+# Bind the MaaS Gateway to this cluster's apps domain and wildcard cert.
+# Cluster id and DNS change on every cluster — do not hardcode them.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # shellcheck source=../cluster-env.sh

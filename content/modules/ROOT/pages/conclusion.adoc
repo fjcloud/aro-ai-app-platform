@@ -2,7 +2,7 @@
 
 *Congratulations!* 🥠
 
-You finished the Monday story: an in-cluster coding agent on ROSA, no public LLM. In a half day you published Qwen3.8 as a service, shipped Fortune Cookie from a prompt, and looked at the GPU and token bill.
+You finished the Monday story: an in-cluster coding agent on ARO, no public LLM. In a half day you published Qwen3.8 as a service, shipped Fortune Cookie from a prompt, and looked at the GPU and token bill.
 
 == What You Built
 
@@ -13,7 +13,7 @@ You finished the Monday story: an in-cluster coding agent on ROSA, no public LLM
 | Component | Technology
 
 | GPU infrastructure
-| ROSA managed machine pool (fixed 1 node), NVIDIA L40S
+| ARO HCP node pool (fixed 1 node), NVIDIA A100 80 GB
 
 | LLM as a Service
 | OpenShift AI 3.5 dashboard + Models-as-a-Service + `LLMInferenceService` + Red Hat vLLM + Qwen3.8-27B-INT4
@@ -58,8 +58,8 @@ You finished the Monday story: an in-cluster coding agent on ROSA, no public LLM
 
 == The Key Insights
 
-*1. ROSA makes GPU infrastructure a Platform Engineer concern, not a developer concern.*
-A single `rosa create machine-pool` command provisions NVIDIA hardware on AWS. Developers never interact with EC2 or node selectors.
+*1. ARO HCP makes GPU infrastructure a Platform Engineer concern, not a developer concern.*
+`make gpu` adds one A100 node pool in the subscription. Developers never pick a VM size or a taint.
 
 *2. OpenShift AI makes LLM serving a catalog item, not a project.*
 `oc apply -k` deploying an `LLMInferenceService` plus MaaS CRs gives every team a governed OpenAI-compatible API — keys, quotas, and the same interface they already know.
@@ -80,23 +80,23 @@ GPU utilization, token throughput, and TTFT are visible in the same console as a
 * *Webhook-triggered pipelines:* Add an `EventListener` + `TriggerBinding` to Tekton so `git push` triggers builds automatically
 * *Application autoscaling:* Add an HPA to the Fortune Cookie `Deployment` to scale based on HTTP requests
 * *Model fine-tuning:* OpenShift AI Data Science Projects support fine-tuning workflows on proprietary data using distributed training
-* *ROSA HCP (Hosted Control Planes):* This workshop already runs on ROSA HCP. The pattern isolates the control plane from worker nodes for stronger multi-tenancy and faster cluster provisioning.
+* *ARO hosted control planes:* This workshop already runs on ARO HCP. Microsoft hosts the control plane. Worker nodes are node pools in your subscription.
 * *OpenShift Service Mesh:* Do not install OSSM 3 by hand on OpenShift 4.22 — this cluster uses the Gateway API (`openshift-default`). Istio remains optional for app-to-app mTLS later.
 
-== Get Started with ROSA
+== Get Started with ARO
 
-* https://console.redhat.com/openshift/create/rosa/getstarted[Start a ROSA cluster in your AWS account, window=_blank]
-* https://www.redhat.com/en/technologies/cloud-computing/openshift/aws/learn[ROSA Learning Hub, window=_blank]
+* https://learn.microsoft.com/en-us/azure/openshift/quickstart-create-default-hosted-cluster[Create an ARO HCP cluster, window=_blank]
+* https://www.redhat.com/en/technologies/cloud-computing/openshift/azure[OpenShift on Azure, window=_blank]
 * https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed[OpenShift AI Documentation, window=_blank]
 * https://github.com/fjcloud/opencode-devspace[opencode-devspace reference architecture (GitHub), window=_blank]
 * https://opencode.ai[OpenCode CLI, window=_blank]
 
 == Talk to Us
 
-If you have questions or want to explore ROSA for your organization, our team is here to help. Use the blue hat icon in the https://console.redhat.com[Red Hat Hybrid Cloud Console, window=_blank] to start a conversation.
+If you have questions or want to explore ARO for your organization, our team is here to help. Use the blue hat icon in the https://console.redhat.com[Red Hat Hybrid Cloud Console, window=_blank] to start a conversation.
 
 ---
 
-*Thank you for attending the AI-Powered Developer Platform on ROSA workshop!*
+*Thank you for attending the AI-Powered Developer Platform on ARO workshop!*
 
 _May your deployments be swift, your models be accurate, and your fortunes be wise._ 🥠

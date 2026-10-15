@@ -1,11 +1,11 @@
 name: modules
-title: ROSA Workshop
+title: ARO Workshop
 version: master
 nav:
 - modules/ROOT/nav.adoc
 asciidoc:
   attributes:
-    lab_name: ROSA Workshop
+    lab_name: ARO Workshop
     release_version: master
     page-pagination: true  
     experimental: true

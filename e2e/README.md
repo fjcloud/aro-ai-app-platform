@@ -4,7 +4,7 @@ Maps to workshop Act 1 (labs 1.1–1.4) and Act 2 (labs 2.1–2.3). Neither need
 
 | Script | Persona | What it checks |
 |--------|---------|----------------|
-| `e2e/platform-run.sh` | Platform Engineer | GPU pool, operators, DSC (KServe + MaaS + dashboard + OGX), Dev Spaces, `LLMInferenceService/qwen3`, MaaS CRs, minted `sk-oai-` key, smoke `POST /chat/completions` |
+| `e2e/platform-run.sh` | Platform Engineer | GPU node pool, operators, DSC (KServe + MaaS + dashboard + OGX), Dev Spaces, `LLMInferenceService/qwen3`, MaaS CRs, minted `sk-oai-` key, smoke `POST /chat/completions` |
 | `e2e/dev-run.sh` | Developer | Template repo, OpenCode-generated Fortune Cookie, Tekton image, Argo CD sync, live route |
 
 Cleanup: `e2e/platform-cleanup.sh` and `e2e/dev-cleanup.sh`.

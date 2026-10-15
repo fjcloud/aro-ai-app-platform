@@ -1,6 +1,6 @@
 ---
 site:
-  title: AI-Powered Developer Platform on ROSA
+  title: AI-Powered Developer Platform on ARO
   start_page: modules::index.adoc
 
 content:

@@ -38,7 +38,7 @@ Anything that already speaks OpenAI works. One key, not an access/secret pair. D
 | Property | Value
 
 | Checkpoint
-| `RedHatAI/Qwen3.8-27B-INT4` (~19.5 GB, fits one L40S)
+| `RedHatAI/Qwen3.8-27B-INT4` (~19.5 GB, fits one A100 80 GB)
 
 | Engine
 | Red Hat vLLM CUDA 3.5.0 — `registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5.0`
@@ -207,12 +207,12 @@ Wait until the GPU node is Ready, then apply:
 
 [source,sh,role=execute]
 ----
-until oc get node -l node.kubernetes.io/instance-type=g6e.xlarge \
+until oc get node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4 \
     --no-headers 2>/dev/null | grep -q .; do
   sleep 10
 done
-oc wait node -l node.kubernetes.io/instance-type=g6e.xlarge \
-  --for=condition=Ready --timeout=600s
+oc wait node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4 \
+  --for=condition=Ready --timeout=900s
 
 oc apply -k deploy/inference
 ----

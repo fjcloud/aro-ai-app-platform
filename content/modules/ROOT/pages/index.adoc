@@ -1,6 +1,6 @@
-= AI-Powered Developer Platform on ROSA
+= AI-Powered Developer Platform on ARO
 
-Welcome to the *AI-Powered Developer Platform on ROSA* workshop.
+Welcome to the *AI-Powered Developer Platform on ARO* workshop.
 
 The story for today is a Monday at a company that will not send source code to a public LLM. This morning the platform team publishes Qwen3.8. This afternoon a developer ships an app with it. You wear both hats, then you look at the GPU and token bill.
 
@@ -20,12 +20,12 @@ The story for today is a Monday at a company that will not send source code to a
 
 == What You Will Build
 
-image::architecture-overview.png[In-cluster coding agent on ROSA, align="center"]
+image::architecture-overview.png[In-cluster coding agent on ARO, align="center"]
 
 The LLM writes the app. Qwen3.8 is a *platform* capability.
 
 === Act 1 — Platform
-* A fixed-size *GPU machine pool* on ROSA — one NVIDIA L40S, no manual EC2
+* A fixed-size *GPU node pool* on ARO HCP — one NVIDIA A100 80 GB, no virtual machines built by hand
 * *OpenShift AI* Models-as-a-Service serving *Qwen3.8-27B* (Red Hat AI INT4) behind one HTTPS front door and one `sk-oai-` key
 * *OpenShift Dev Spaces* pointed at that gateway
 * *AGENTS.md* — the only runbook OpenCode reads
@@ -45,7 +45,7 @@ The LLM writes the app. Qwen3.8 is a *platform* capability.
 
 After completing this workshop, you will understand:
 
-* How ROSA managed machine pools give you GPU capacity without EC2 complexity
+* How an ARO HCP node pool gives you GPU capacity without building Azure VMs by hand
 * How OpenShift AI (`LLMInferenceService` + Models-as-a-Service) is a governed OpenAI-compatible API on your cluster
 * How `AGENTS.md` shifts platform governance from documentation to something the model enforces
 * How Dev Spaces + OpenCode is an AI-augmented inner loop with no laptop install
@@ -60,12 +60,12 @@ After completing this workshop, you will understand:
 
 | *0 — Get in*
 | —
-| Clone this repo, confirm `oc` and `rosa`
-| 5 min
+| Deploy the ARO HCP cluster and log in with `oc`
+| 45 min
 
 .4+| *1 — Stand up the agent*
 | 1.1
-| Deploy a GPU Machine Pool
+| Deploy a GPU Node Pool
 | 15 min (5 active)
 
 | 1.2
@@ -114,7 +114,7 @@ After completing this workshop, you will understand:
 You will need:
 
 * A web browser
-* A terminal with `oc` logged into the ROSA cluster and a working `rosa` CLI
+* An empty Azure subscription. Act 0 can run in a local terminal, or from the link:../../docs/index.html[browser launcher], which starts an Azure CLI terminal in the lab resource group
 * This workshop repository (cloned in Act 0) — not the Go app template
 
 Let's get started.

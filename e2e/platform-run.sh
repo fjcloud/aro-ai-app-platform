@@ -3,7 +3,7 @@
 # Platform Engineer E2E Validation Script
 # =============================================================================
 # Validates the full Platform Engineer workshop flow:
-#   Phase 1 — GPU Machine Pool       (lab_1_gpu_machinepool)
+#   Phase 1 — GPU Node Pool          (lab_1_gpu_nodepool)
 #   Phase 2 — Cluster Operators      (lab_2_operators)
 #   Phase 3 — Platform Instances     (lab 1.3 Step 1)
 #   Phase 4 — LLMInferenceService + MaaS (lab 1.3 Steps 2–3)
@@ -17,7 +17,7 @@ set -euo pipefail
 # ── Configuration ─────────────────────────────────────────────────────────────
 GIT_SERVER="${GIT_SERVER:-https://gitpop.apps.sno.msl.cloud}"
 TEMPLATE_URL="${TEMPLATE_URL:-https://github.com/fjcloud/go-app-template}"
-GPU_INSTANCE_TYPE="${GPU_INSTANCE_TYPE:-g6e.xlarge}"
+GPU_INSTANCE_TYPE="${GPU_INSTANCE_TYPE:-Standard_NC24ads_A100_v4}"
 LLM_NS="${LLM_NS:-llm-serving}"
 LLM_IS="${LLM_IS:-qwen3}"
 MAAS_HOST="${MAAS_HOST:-}"
@@ -45,7 +45,7 @@ check() {
 }
 
 csv_succeeded() {
-  # Check specific namespaces — avoids permission issues on ROSA HCP with -A
+  # Check specific namespaces — avoids permission issues on ARO HCP with -A
   local pattern=$1
   for ns in redhat-ods-operator nvidia-gpu-operator openshift-nfd \
              openshift-operators openshift-gitops-operator openshift-pipelines \
@@ -79,9 +79,9 @@ MAAS_HOST="${MAAS_HOST:-$(workshop_maas_host)}"
 LLM_URL_MAAS="https://${MAAS_HOST}/llm-serving/${LLM_IS}/v1"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# PHASE 1 — GPU Machine Pool (lab_1_gpu_machinepool)
+# PHASE 1 — GPU Node Pool (lab_1_gpu_nodepool)
 # ─────────────────────────────────────────────────────────────────────────────
-step "Phase 1: GPU Machine Pool"
+step "Phase 1: GPU Node Pool"
 
 GPU_NODES=$(oc get nodes \
   -l "node.kubernetes.io/instance-type=${GPU_INSTANCE_TYPE}" \

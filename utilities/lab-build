@@ -45,6 +45,10 @@ ${CONTAINER_RUNTIME} \
   -v "./:/antora${volume_mount_flag}" \
   docker.io/antora/antora default-site.yml
 
+mkdir -p ./www/docs
+cp ./docs/index.html ./www/docs/index.html
+cp -a ./docs/vendor ./www/docs/vendor
+
 echo "Build process complete. Check the ./www folder for the generated site."
 echo "To view the site locally, run the following command: utilities/lab-serve"
 echo "If already running then browse to http://localhost:8443/index.html"

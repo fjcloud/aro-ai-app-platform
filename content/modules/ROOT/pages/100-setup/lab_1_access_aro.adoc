@@ -1,0 +1,92 @@
+= Act 0 — Get in
+
+The subscription is empty. This lab creates the ARO HCP cluster, writes an admin kubeconfig, and leaves you in this repository for every later `oc apply -k deploy/...` command.
+
+[NOTE]
+====
+*Estimated time:* 45 minutes (about 15 active, the rest is Azure provisioning) +
+*Persona:* Platform Engineer +
+*Blocking:* Act 1 starts after `oc get nodes` shows the CPU workers. The GPU node is Lab 1.1.
+====
+
+== From the browser
+
+The link:../../../docs/index.html[browser launcher] takes the lab export (`GUID`, `CLIENT_ID`, `PASSWORD`, `TENANT`, `SUBSCRIPTION`, `RESOURCEGROUP`). From the workshop directory, run `python3 docs/terminal_server.py` and open the URL it prints. *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, then paste the deploy command. The cluster is created in the lab resource group.
+
+Stay in that shell for later `oc` commands, or download `~/aro-ai-app-platform/state/kubeconfig` and continue at <<_log_in>> on your laptop.
+
+== Prerequisites
+
+On the machine you will use for the labs:
+
+* `az login` against the subscription that should own the cluster
+* `az extension add --name aro`, then `az aro hcp cluster --help` succeeds
+* `oc` on `PATH`
+* Permission to create Entra app registrations in that tenant
+* `~/pull_secret.json` with `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com` (Insights). Override the path with `PULL_SECRET_FILE`. Do not commit it.
+* Quota in West Europe:
+** *Standard DSv3 Family vCPUs* ≥ 24
+** *Standard NCADS_A100_v4 Family vCPUs* ≥ 24
+
+The A100 quota is 0 on a new subscription. Request it before you start. Lab 1.1 cannot create the GPU node without it.
+
+== Clone the workshop
+
+This is https://github.com/fjcloud/aro-ai-app-platform[`fjcloud/aro-ai-app-platform`] — cluster scripts, operators, instances, inference, and lab assets. Stay in this directory for the rest of the day.
+
+[source,sh,role=execute]
+----
+git clone https://github.com/fjcloud/aro-ai-app-platform.git
+cd aro-ai-app-platform
+----
+
+== Create the cluster
+
+`make deploy` is safe to run again. It keeps what already exists and finishes the step that stopped.
+
+It creates `aro-ai-weu` in `westeurope`: a hosted control plane, three `Standard_D8s_v3` workers, a customer-managed key for etcd, Entra ID for the console, and the Red Hat pull secret. The API and the ingress are public, so the later labs reach `oc`, Dev Spaces, and routes from this machine.
+
+[source,sh,role=execute]
+----
+make deploy
+----
+
+When it finishes, the last lines include `CONFIGURE_DONE` and a `KUBECONFIG=` path.
+
+== Log in
+
+The admin kubeconfig is `state/kubeconfig`. It is gitignored. There is no kubeadmin password. The console uses the Microsoft account that ran `make deploy`, and that account is `cluster-admin`.
+
+[source,sh,role=execute]
+----
+export KUBECONFIG="$PWD/state/kubeconfig"
+oc whoami && oc get nodes
+----
+
+You should see a cluster-admin identity and three Ready workers. *No GPU node yet* — that is Lab 1.1.
+
+Console URL:
+
+[source,sh,role=execute]
+----
+make status
+----
+
+Open the `console` URL from that output and sign in with the same Microsoft account.
+
+If `oc` later says the credential expired, refresh it:
+
+[source,sh,role=execute]
+----
+make kubeconfig
+export KUBECONFIG="$PWD/state/kubeconfig"
+----
+
+== Summary
+
+* [x] Workshop repo on disk (`aro-ai-app-platform`)
+* [x] ARO HCP cluster `aro-ai-weu` in the subscription
+* [x] `oc` connected with `state/kubeconfig`
+* [x] Three CPU workers, no GPU node
+
+➡️ Move on to *Act 1 — Stand up the agent* (Lab 1.1).

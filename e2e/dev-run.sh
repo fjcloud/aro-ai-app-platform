@@ -20,7 +20,7 @@ GIT_SERVER="${GIT_SERVER:-https://gitpop.apps.sno.msl.cloud}"
 APP_NAME="${APP_NAME:-fortune-cookie}"
 E2E_NS="${E2E_NS:-workshop-e2e}"
 TEMPLATE_URL="${TEMPLATE_URL:-https://github.com/fjcloud/go-app-template}"
-# LLM_HOST / LLM_URL resolved after oc is confirmed (cluster id changes per ROSA cluster)
+# LLM_HOST / LLM_URL resolved after oc is confirmed (cluster id changes per cluster)
 LLM_HOST="${LLM_HOST:-}"
 LLM_URL="${LLM_URL:-}"
 LLM_MODEL="qwen3"

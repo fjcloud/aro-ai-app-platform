@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Live ROSA values — never commit a cluster id or apps domain.
+# Live cluster values — never commit a cluster id or apps domain.
 # shellcheck disable=SC2034
 workshop_apps_domain() {
   oc get ingresses.config.openshift.io cluster -o jsonpath='{.spec.domain}'
