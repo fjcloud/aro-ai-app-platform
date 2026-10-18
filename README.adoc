@@ -9,12 +9,12 @@ The cluster steps follow link:https://github.com/fjcloud/aro-hcp-quickstart[`fjc
 == Prerequisites
 
 * `az login` against the subscription that should own the cluster
-* The ARO CLI extension: `az extension add --name aro`
+* The `aro-hcp` CLI extension. The browser terminal already has it. `az aro hcp cluster create -h` shows `--operators-authentication`. Do not install the published `aro` extension; that build hides those flags.
 * `oc` on `PATH`
 * Permission to create Entra app registrations in that tenant
 * A Red Hat pull secret at `~/pull_secret.json` (override with `PULL_SECRET_FILE`). It must contain `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com`. It is not written into this repository.
 * Quota in `westeurope` before Lab 1.1:
-** *Standard DSv3 Family vCPUs* — at least 24 (three `Standard_D8s_v3` workers)
+** *Standard DSv3 Family vCPUs* — at least 8 (two `Standard_D4s_v3` workers)
 ** *Standard NCADS_A100_v4 Family vCPUs* — at least 24 (one `Standard_NC24ads_A100_v4`)
 
 GPU quota on a new subscription is 0. Request it before the workshop day. Approval is not instant.
@@ -47,7 +47,7 @@ make delete CONFIRM=yes
 | `aro-ai-weu`, OpenShift 4.22
 
 | Workers
-| `workers`, 3 × `Standard_D8s_v3`
+| `workers`, 2 × `Standard_D4s_v3` (4 vCPUs each)
 
 | API / ingress
 | Public / Public

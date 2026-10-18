@@ -11,145 +11,195 @@
       --ink: #151515;
       --muted: #4d4d4d;
       --line: #d2d2d2;
-      --band: #f5f5f5;
+      --band: #f0f0f0;
       --white: #fff;
+      --term: #1b1b1b;
+      --header: 40px;
     }
     * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
       margin: 0;
       color: var(--ink);
       background: var(--white);
-      font: 16px/1.5 "Red Hat Text", "Segoe UI", sans-serif;
+      font: 16px/1.45 "Red Hat Text", "Segoe UI", sans-serif;
     }
     header {
       display: flex;
-      justify-content: space-between;
+      align-items: center;
       gap: 16px;
-      align-items: baseline;
-      padding: 20px 28px;
-      border-bottom: 4px solid var(--red);
+      height: var(--header);
+      padding: 0 12px;
+      border-bottom: 2px solid var(--red);
+      background: var(--white);
     }
-    header a { color: var(--ink); }
-    h1 { font-size: 1.35rem; line-height: 1.3; margin: 0; }
-    main {
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-      min-height: calc(100vh - 78px);
+    .brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .mark {
+      width: 12px;
+      height: 12px;
+      background: var(--red);
+      flex: none;
     }
-    section { padding: 28px; }
-    .steps { background: var(--band); }
-    .panel { border-left: 1px solid var(--line); }
-    h2 { font-size: 1.05rem; margin: 0 0 12px; }
-    ol { margin: 0; padding-left: 1.2rem; }
-    li + li { margin-top: 10px; }
-    p { margin: 0 0 12px; }
-    .note { color: var(--muted); font-size: 0.95rem; }
-    label { display: block; font-weight: 600; margin: 14px 0 4px; }
-    input {
-      width: 100%;
+    h1 { font-size: 0.92rem; line-height: 1.2; margin: 0; font-weight: 600; white-space: nowrap; }
+    #status {
+      flex: 1;
+      margin: 0;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .actions { display: flex; gap: 8px; }
+    button {
       font: inherit;
-      padding: 8px 10px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-    }
-    input:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
-    .hint { color: var(--muted); font-size: 0.85rem; font-weight: 400; }
-    textarea {
-      width: 100%;
-      min-height: 160px;
-      margin-top: 8px;
-      font: 13px/1.45 ui-monospace, "SFMono-Regular", Consolas, monospace;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      background: var(--band);
-      resize: vertical;
-    }
-    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-    button, .link-button {
-      font: inherit;
-      border-radius: 4px;
-      padding: 10px 16px;
+      border-radius: 3px;
+      padding: 4px 10px;
+      font-size: 0.85rem;
       cursor: pointer;
-      text-decoration: none;
     }
-    button[type="submit"] {
+    button[type="submit"], #create {
       background: var(--red);
       color: var(--white);
       border: 1px solid var(--red);
     }
-    button.secondary, .link-button {
+    button.secondary {
       background: var(--white);
       color: var(--ink);
       border: 1px solid var(--ink);
     }
-    #status { min-height: 1.5em; margin: 12px 0 0; font-weight: 600; }
-    #terminal {
-      height: 460px;
-      margin-top: 16px;
-      padding: 8px;
-      background: #1b1b1b;
-      border-radius: 4px;
+    button:disabled { opacity: 0.55; cursor: default; }
+    #gate {
+      display: grid;
+      place-items: center;
+      min-height: calc(100vh - var(--header));
+      padding: 32px 16px;
+      background:
+        linear-gradient(90deg, var(--band) 0 50%, var(--term) 50% 100%);
     }
+    .card {
+      width: min(640px, 100%);
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 40px rgba(21, 21, 21, 0.12);
+      padding: 28px;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 1.35rem; }
+    .card p { margin: 0 0 16px; color: var(--muted); }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    textarea, input {
+      width: 100%;
+      font: 13px/1.45 ui-monospace, "Red Hat Mono", "DejaVu Sans Mono", Consolas, monospace;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fafafa;
+    }
+    #creds { min-height: 168px; resize: vertical; }
+    #creds:focus, input:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+    .card .actions { margin-top: 16px; }
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+    #workspace {
+      display: none;
+      height: calc(100vh - var(--header));
+      grid-template-columns: minmax(0, 1.15fr) 8px minmax(380px, 0.85fr);
+    }
+    body.live #gate { display: none; }
+    body.live #workspace { display: grid; }
+    .docs, .terminal-pane { min-width: 0; min-height: 0; }
+    .docs { background: var(--band); }
+    #workshop { width: 100%; height: 100%; border: 0; background: var(--white); }
+    .splitter {
+      background: #2b2b2b;
+      cursor: col-resize;
+      border-left: 1px solid #3c3c3c;
+      border-right: 1px solid #3c3c3c;
+    }
+    .terminal-pane {
+      display: flex;
+      flex-direction: column;
+      background: var(--term);
+    }
+    #terminal { flex: 1; min-height: 0; padding: 2px 6px 6px; }
     #terminal .xterm { height: 100%; }
-    code { font-family: ui-monospace, Consolas, monospace; font-size: 0.92em; }
-    @media (max-width: 860px) {
-      main { grid-template-columns: 1fr; }
-      .panel { border-left: 0; border-top: 1px solid var(--line); }
-      header { flex-direction: column; }
+    .xterm-viewport { overflow-y: auto !important; }
+    @media (max-width: 640px) {
+      #gate { background: var(--band); }
+      header { height: auto; min-height: var(--header); flex-wrap: wrap; padding: 10px 16px; }
+      #status { white-space: normal; flex-basis: 100%; order: 3; }
+      #workspace { grid-template-columns: 1fr; grid-template-rows: minmax(240px, 42vh) minmax(280px, 1fr); }
+      .splitter { display: none; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>AI-Powered Developer Platform on ARO</h1>
-    <a href="https://fjcloud.github.io/aro-ai-app-platform/">Workshop instructions</a>
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <div>
+        <h1>ARO workshop</h1>
+      </div>
+    </div>
+    <p id="status" role="status">Paste the lab export to open the workshop.</p>
+    <div class="actions">
+      <button type="button" class="secondary" id="copy">Copy command</button>
+      <button type="button" class="secondary" id="remove">Remove terminal</button>
+    </div>
   </header>
-  <main>
-    <section class="steps">
-      <h2>Instructions</h2>
-      <p>Terminal address: <a id="here" href=""></a></p>
-      <p>Paste the lab export, then <strong>Create</strong>. The page starts an Azure CLI container in the lab resource group and attaches the terminal on the right. It signs in as the service principal. Paste the deploy command into that terminal.</p>
-      <ol>
-        <li>The export looks like <code>GUID</code>, <code>CLIENT_ID</code>, <code>PASSWORD</code>, <code>TENANT</code>, <code>SUBSCRIPTION</code>, and <code>RESOURCEGROUP</code>. Paste the whole block. The secret is used only to sign in, then it is dropped. It is not in the command preview.</li>
-        <li>Quota on that subscription, in the resource group's region: at least 24 vCPUs of <em>Standard DSv3 Family</em> and 24 vCPUs of <em>Standard NCADS_A100_v4 Family</em>. The terminal itself uses 1 vCPU and 2 GB.</li>
-        <li>Choose <strong>Create</strong>. The first start pulls the Azure CLI image, which can take a few minutes. Later starts attach to the same container.</li>
-        <li>Put your pull secret at <code>~/pull_secret.json</code> in that terminal. It must include <code>registry.redhat.io</code>, <code>registry.connect.redhat.com</code>, and <code>cloud.openshift.com</code>.</li>
-        <li>Paste with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> (<kbd>Ctrl</kbd>+<kbd>V</kbd> in some browsers, <kbd>⌘</kbd>+<kbd>V</kbd> on a Mac). The command runs <code>make deploy</code> in <code>RESOURCEGROUP</code>. The cluster name is <code>aro-</code> plus the GUID.</li>
-        <li>Stay in that shell for the later <code>oc</code> labs. To continue on your laptop, download <code>~/aro-ai-app-platform/state/kubeconfig</code>. The API is public. <code>make delete</code> removes the cluster and keeps the lab resource group. <strong>Remove terminal</strong> deletes only the CLI container.</li>
-      </ol>
-      <p class="note">Cluster create takes about 40 minutes. Pasting the command again finishes whatever step stopped. Lab 1.1, <code>make gpu</code>, comes after the workers are up. The service principal needs permission to create Entra app registrations; that is how the console login is created. The container keeps running, and billing, until you remove it.</p>
-    </section>
-    <section class="panel">
-      <h2>Create the cluster</h2>
-      <form id="launcher">
+  <form id="launcher">
+    <section id="gate">
+      <div class="card">
+        <h2>Start the workshop</h2>
+        <p>Paste the lab export. The workshop opens on the left. An Azure CLI terminal, already signed in, opens on the right.</p>
         <label for="creds">Lab export</label>
         <textarea id="creds" spellcheck="false" autocomplete="off" placeholder="export GUID=&#10;export CLIENT_ID=&#10;export PASSWORD=&#10;export TENANT=&#10;export SUBSCRIPTION=&#10;export RESOURCEGROUP="></textarea>
-        <p id="parsed" class="note"></p>
-
-        <label for="repo">Workshop repository</label>
-        <input id="repo" name="repo" required type="url" value="https://github.com/fjcloud/aro-ai-app-platform.git" spellcheck="false">
-
-        <label for="command">Command preview <span class="hint">secret not included</span></label>
-        <textarea id="command" readonly aria-label="Deploy command preview"></textarea>
-
+        <p id="parsed" class="sr"></p>
+        <input id="repo" class="sr" name="repo" required type="url" value="https://github.com/fjcloud/aro-ai-app-platform.git" tabindex="-1">
+        <textarea id="command" class="sr" readonly aria-label="Deploy command preview" tabindex="-1"></textarea>
         <div class="actions">
-          <button type="submit" id="create">Create</button>
-          <button type="button" class="secondary" id="copy">Copy command</button>
-          <button type="button" class="secondary" id="remove">Remove terminal</button>
+          <button type="submit" id="create">Start</button>
         </div>
-        <p id="status" role="status"></p>
-        <div id="terminal" aria-label="Azure CLI terminal"></div>
-      </form>
+      </div>
     </section>
-  </main>
+    <section id="workspace">
+      <div class="docs">
+        <iframe id="workshop" title="ARO workshop instructions" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox"></iframe>
+      </div>
+      <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" aria-label="Resize workshop and terminal" tabindex="0"></div>
+      <div class="terminal-pane">
+        <div id="terminal" aria-label="Azure CLI terminal"></div>
+      </div>
+    </section>
+  </form>
   <script>
     const form = document.querySelector("#launcher");
     const command = document.querySelector("#command");
     const status = document.querySelector("#status");
-    const here = document.querySelector("#here");
-    here.href = location.href.split("#")[0];
-    here.textContent = here.href;
+    const workshopUrl = "https://fjcloud.github.io/aro-ai-app-platform/modules/index.html";
+
+    function showWorkshop() {
+      document.body.classList.add("live");
+      const frame = document.querySelector("#workshop");
+      if (!frame.getAttribute("src")) frame.src = workshopUrl;
+      requestAnimationFrame(() => {
+        if (term && term.fitAddon) term.fitAddon.fit();
+      });
+    }
+
+    function showGate() {
+      document.body.classList.remove("live");
+    }
 
     function sh(value) {
       return `'${String(value).replace(/'/g, `'\\''`)}'`;
@@ -231,8 +281,9 @@ if [[ -z "$LOCATION" ]]; then
   echo "Resource group $CUSTOMER_RG_NAME was not found in subscription $SUBSCRIPTION."
   exit 1
 fi
-if ! az aro hcp cluster --help >/dev/null 2>&1; then
-  az extension add --name aro
+if ! az aro hcp cluster create -h 2>&1 | grep -q -- '--operators-authentication'; then
+  echo "This shell still has the published aro extension. Refresh the page and press Start."
+  exit 1
 fi
 if ! command -v oc >/dev/null 2>&1; then
   mkdir -p "$HOME/bin"
@@ -298,17 +349,26 @@ fi
       return ok;
     }
 
+    const sessionKey = "terminal-session";
     let sessionId = "";
     let socket = null;
     let term = null;
+    let reconnects = 0;
+    let reconnectTimer = 0;
 
     function terminal() {
       if (term) return term;
       term = new Terminal({
         cursorBlink: true,
-        fontFamily: "ui-monospace, Consolas, monospace",
+        fontFamily: '"Red Hat Mono", "DejaVu Sans Mono", ui-monospace, Consolas, monospace',
         fontSize: 14,
-        theme: { background: "#1b1b1b", foreground: "#f0f0f0", cursor: "#f0f0f0" },
+        theme: {
+          background: "#1b1b1b",
+          foreground: "#f0f0f0",
+          cursor: "#ee0000",
+          cursorAccent: "#1b1b1b",
+          selectionBackground: "#3c3c3c",
+        },
       });
       term.open(document.querySelector("#terminal"));
       if (window.FitAddon) {
@@ -316,7 +376,8 @@ fi
         term.loadAddon(fit);
         term.fitAddon = fit;
         fit.fit();
-        window.addEventListener("resize", () => fit.fit());
+        const pane = document.querySelector("#terminal");
+        new ResizeObserver(() => fit.fit()).observe(pane);
       }
       term.onData((data) => {
         if (socket && socket.readyState === WebSocket.OPEN) {
@@ -326,22 +387,73 @@ fi
       return term;
     }
 
+    function remember(id) {
+      sessionId = id || "";
+      if (sessionId) sessionStorage.setItem(sessionKey, sessionId);
+      else sessionStorage.removeItem(sessionKey);
+    }
+
+    async function watch(token) {
+      for (;;) {
+        if (token !== createToken) return;
+        const poll = await fetch(`/api/terminal/${sessionId}`, { credentials: "same-origin" });
+        const state = await poll.json();
+        if (token !== createToken) return;
+        if (!poll.ok) throw new Error(state.message || "The terminal session ended.");
+        status.textContent = state.message || state.status;
+        if (state.status === "ready") {
+          attach(sessionId);
+          return;
+        }
+        if (state.status === "deleted") {
+          remember("");
+          showGate();
+          return;
+        }
+        if (state.status === "error") throw new Error(state.message || "The container failed.");
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+    }
+
     function attach(id) {
       const view = terminal();
-      if (socket) socket.close();
+      if (socket) {
+        socket.onclose = null;
+        socket.close();
+      }
       const proto = location.protocol === "https:" ? "wss" : "ws";
-      socket = new WebSocket(`${proto}://${location.host}/ws/${id}`);
-      socket.binaryType = "arraybuffer";
-      socket.onopen = () => {
-        status.textContent = "Terminal attached. Azure CLI signs in, then paste the deploy command.";
+      const current = new WebSocket(`${proto}://${location.host}/ws/${id}`);
+      socket = current;
+      current.binaryType = "arraybuffer";
+      current.onopen = () => {
+        status.textContent = "Terminal attached.";
+        current.openedAt = Date.now();
         view.focus();
       };
-      socket.onmessage = (event) => {
+      current.onmessage = (event) => {
+        reconnects = 0;
         const bytes = event.data instanceof ArrayBuffer ? new Uint8Array(event.data) : event.data;
         view.write(bytes);
       };
-      socket.onclose = () => {
-        view.write("\r\n[disconnected]\r\n");
+      current.onclose = () => {
+        if (socket !== current || !sessionId) return;
+        if (current.openedAt && Date.now() - current.openedAt > 20000) reconnects = 0;
+        reconnects += 1;
+        if (reconnects > 8) {
+          view.write("\r\nThe terminal disconnected. Press Start to open it again.\r\n");
+          status.textContent = "The terminal disconnected. Press Start to open it again.";
+          return;
+        }
+        view.write("\r\n[disconnected, reattaching]\r\n");
+        status.textContent = "Reattaching to the existing terminal…";
+        clearTimeout(reconnectTimer);
+        reconnectTimer = setTimeout(() => {
+          const token = ++createToken;
+          watch(token).catch((error) => {
+            view.write(`\r\n${error.message}\r\n`);
+            status.textContent = error.message;
+          });
+        }, Math.min(1000 * reconnects, 3000));
       };
     }
 
@@ -359,6 +471,7 @@ fi
       if (!form.reportValidity()) return;
       refresh();
       copyCommand();
+      showWorkshop();
       const button = document.querySelector("#create");
       button.disabled = true;
       status.textContent = "Starting the Azure CLI container…";
@@ -383,22 +496,8 @@ fi
         });
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.message || "The terminal service rejected the request.");
-        sessionId = payload.id;
-        for (;;) {
-          if (token !== createToken) return;
-          const poll = await fetch(`/api/terminal/${sessionId}`, { credentials: "same-origin" });
-          const state = await poll.json();
-          if (token !== createToken) return;
-          if (!poll.ok) throw new Error(state.message || "The terminal session ended.");
-          status.textContent = state.message || state.status;
-          if (state.status === "ready") {
-            attach(sessionId);
-            return;
-          }
-          if (state.status === "deleted") return;
-          if (state.status === "error") throw new Error(state.message || "The container failed.");
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-        }
+        remember(payload.id);
+        await watch(token);
       } catch (error) {
         status.textContent = error.message === "Failed to fetch"
           ? "Terminal service is not running on this host. Start it with python3 docs/terminal_server.py."
@@ -429,13 +528,17 @@ fi
       createToken += 1;
       button.disabled = true;
       status.textContent = "Removing the container…";
-      if (socket) socket.close();
+      if (socket) {
+        socket.onclose = null;
+        socket.close();
+      }
       const removing = sessionId;
-      sessionId = "";
+      remember("");
       try {
         const response = await fetch(`/api/terminal/${removing}`, { method: "DELETE", credentials: "same-origin" });
         const payload = await response.json().catch(() => ({}));
-        status.textContent = payload.message || (response.ok ? "Terminal container removed." : "Could not remove the container.");
+        status.textContent = payload.message || (response.ok ? "Terminal container removed. The home directory was kept." : "Could not remove the container.");
+        if (response.ok) showGate();
       } finally {
         button.disabled = false;
       }
@@ -443,7 +546,43 @@ fi
     fetch("/api/health").catch(() => {
       status.textContent = "Terminal service is not running on this host. Start it with python3 docs/terminal_server.py.";
     });
+    const splitter = document.querySelector("#splitter");
+    const workspace = document.querySelector("#workspace");
+    let dragging = false;
+    splitter.addEventListener("pointerdown", (event) => {
+      dragging = true;
+      splitter.setPointerCapture(event.pointerId);
+    });
+    splitter.addEventListener("pointermove", (event) => {
+      if (!dragging) return;
+      const bounds = workspace.getBoundingClientRect();
+      const left = Math.min(Math.max(event.clientX - bounds.left, 280), bounds.width - 360);
+      workspace.style.gridTemplateColumns = `${left}px 8px minmax(0, 1fr)`;
+    });
+    splitter.addEventListener("pointerup", () => { dragging = false; });
     refresh();
+    resume().catch(() => {});
+
+    async function resume() {
+      let response = await fetch("/api/terminal", { credentials: "same-origin" });
+      if (!response.ok) {
+        const saved = sessionStorage.getItem(sessionKey);
+        if (!saved) return;
+        response = await fetch(`/api/terminal/${saved}`, { credentials: "same-origin" });
+      }
+      if (!response.ok) {
+        sessionStorage.removeItem(sessionKey);
+        return;
+      }
+      const state = await response.json();
+      if (!state.id || state.status === "deleted") return;
+      remember(state.id);
+      showWorkshop();
+      status.textContent = state.message || "Reattaching to the existing terminal…";
+      const token = ++createToken;
+      if (state.status === "ready") attach(state.id);
+      else await watch(token);
+    }
   </script>
   <script src="vendor/xterm.js"></script>
   <script src="vendor/xterm-addon-fit.js"></script>

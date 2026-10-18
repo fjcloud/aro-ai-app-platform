@@ -1,0 +1,6 @@
+#!/bin/bash
+# Keep the tmux pane alive if the shell exits, so scrollback stays put.
+while true; do
+  /bin/bash --rcfile /etc/workshop.bashrc -i
+  printf '\r\nShell exited. Starting it again.\r\n'
+done

@@ -18,7 +18,7 @@ GPU nodes are expensive. One `Standard_NC24ads_A100_v4` (NVIDIA A100 80 GB) is a
 
 A *node pool* is a group of worker nodes with a shared VM size. ARO HCP manages the VMs in your subscription — provisioning and replacing them — so the platform engineer does not build virtual machines by hand.
 
-The CPU pool `workers` (three `Standard_D8s_v3`) already exists from Act 0. This lab adds a second pool.
+The CPU pool `workers` (two `Standard_D4s_v3`) already exists from Act 0. This lab adds a second pool.
 
 [cols="1,2", options="header"]
 |===

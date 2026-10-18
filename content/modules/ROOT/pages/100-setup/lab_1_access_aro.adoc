@@ -11,21 +11,21 @@ The subscription is empty. This lab creates the ARO HCP cluster, writes an admin
 
 == From the browser
 
-The link:https://aro-terminal-fja.azurewebsites.net/[browser launcher] takes the lab export (`GUID`, `CLIENT_ID`, `PASSWORD`, `TENANT`, `SUBSCRIPTION`, `RESOURCEGROUP`). *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, then paste the deploy command. The cluster is created in the lab resource group.
+The link:https://aro-terminal-fja.azurewebsites.net/[browser launcher] takes the lab export (`GUID`, `CLIENT_ID`, `PASSWORD`, `TENANT`, `SUBSCRIPTION`, `RESOURCEGROUP`). *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, paste the prerequisite command, then paste the `az aro hcp cluster create` command. The cluster is created in the lab resource group.
 
 Stay in that shell for later `oc` commands, or download `~/aro-ai-app-platform/state/kubeconfig` and continue at <<_log_in>> on your laptop.
 
 == Prerequisites
 
-On the machine you will use for the labs:
+Have these before you paste the commands:
 
-* `az login` against the subscription that should own the cluster
-* `az extension add --name aro`, then `az aro hcp cluster --help` succeeds
+* `az login` against the subscription that should own the cluster. The browser terminal is already signed in.
+* The `aro-hcp` extension. `az aro hcp cluster create -h` shows `--operators-authentication`. Do not install the published `aro` extension.
 * `oc` on `PATH`
 * Permission to create Entra app registrations in that tenant
 * `~/pull_secret.json` with `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com` (Insights). Override the path with `PULL_SECRET_FILE`. Do not commit it.
 * Quota in West Europe:
-** *Standard DSv3 Family vCPUs* ≥ 24
+** *Standard DSv3 Family vCPUs* ≥ 8
 ** *Standard NCADS_A100_v4 Family vCPUs* ≥ 24
 
 The A100 quota is 0 on a new subscription. Request it before you start. Lab 1.1 cannot create the GPU node without it.
@@ -40,22 +40,74 @@ git clone https://github.com/fjcloud/aro-ai-app-platform.git
 cd aro-ai-app-platform
 ----
 
-== Create the cluster
-
-`make deploy` is safe to run again. It keeps what already exists and finishes the step that stopped.
-
-It creates `aro-ai-weu` in `westeurope`: a hosted control plane, three `Standard_D8s_v3` workers, a customer-managed key for etcd, Entra ID for the console, and the Red Hat pull secret. The API and the ingress are public, so the later labs reach `oc`, Dev Spaces, and routes from this machine.
+This command does the Azure prerequisites. It creates the network security group, the worker subnet, the hosted-control-plane integration subnet, the 13 managed identities and their role assignments, and the customer-managed etcd key. It writes `state/cluster.env`. In the browser terminal, `RESOURCEGROUP` is the lab resource group and is reused. On a laptop, set `CUSTOMER_RG_NAME` first if the cluster should live in a group that already exists. The last line is `PREP_DONE`.
 
 [source,sh,role=execute]
 ----
-make deploy
+if [[ -n "${RESOURCEGROUP:-}" ]]; then
+  export CUSTOMER_RG_NAME="$RESOURCEGROUP"
+fi
+bash scripts/lib/prepare.sh
 ----
 
-When it finishes, the last lines include `CONFIGURE_DONE` and a `KUBECONFIG=` path.
+== Create the cluster
+
+Source the file from the prerequisite step, then paste this command. It creates `aro-ai-weu` in West Europe with a public API and a public ingress. The workers are a second command: two `Standard_D4s_v3` nodes, 4 vCPUs each.
+
+[source,sh,role=execute]
+----
+set -a
+source state/cluster.env
+set +a
+az aro hcp cluster create \
+  --name "$CLUSTER_NAME" \
+  --resource-group "$CUSTOMER_RG_NAME" \
+  --location "$LOCATION" \
+  --version "$CLUSTER_VERSION" \
+  --channel-group stable \
+  --subnet-id "$SUBNET_ID" \
+  --vnet-integration-subnet-id "$VNET_INTEGRATION_SUBNET_ID" \
+  --nsg "$NSG_ID" \
+  --managed-resource-group-name "$MANAGED_RESOURCE_GROUP" \
+  --key-management-mode CustomerManaged \
+  --etcd-encryption-type KMS \
+  --kms-vault-name "$KEYVAULT_NAME" \
+  --vault-visibility Public \
+  --kms-active-key "{name:${KMS_KEY_NAME},version:${KMS_KEY_VERSION}}" \
+  --api-visibility Public \
+  --ingress-visibility Public \
+  --user-assigned-identities "{${SERVICE_MI_ID}:{},${CLUSTER_API_AZURE_MI_ID}:{},${CONTROL_PLANE_MI_ID}:{},${CLOUD_CONTROLLER_MANAGER_MI_ID}:{},${INGRESS_MI_ID}:{},${DISK_CSI_DRIVER_MI_ID}:{},${FILE_CSI_DRIVER_MI_ID}:{},${IMAGE_REGISTRY_MI_ID}:{},${CLOUD_NETWORK_CONFIG_MI_ID}:{},${KMS_MI_ID}:{}}" \
+  --operators-authentication "{user-assigned-identities:{control-plane-operators:{cluster-api-azure:${CLUSTER_API_AZURE_MI_ID},control-plane:${CONTROL_PLANE_MI_ID},cloud-controller-manager:${CLOUD_CONTROLLER_MANAGER_MI_ID},ingress:${INGRESS_MI_ID},disk-csi-driver:${DISK_CSI_DRIVER_MI_ID},file-csi-driver:${FILE_CSI_DRIVER_MI_ID},image-registry:${IMAGE_REGISTRY_MI_ID},cloud-network-config:${CLOUD_NETWORK_CONFIG_MI_ID},kms:${KMS_MI_ID}},data-plane-operators:{disk-csi-driver:${DP_DISK_CSI_DRIVER_MI_ID},file-csi-driver:${DP_FILE_CSI_DRIVER_MI_ID},image-registry:${DP_IMAGE_REGISTRY_MI_ID}},service-managed-identity:${SERVICE_MI_ID}}}"
+----
+
+[source,sh,role=execute]
+----
+set -a
+source state/cluster.env
+set +a
+az aro hcp cluster nodepool create \
+  --resource-group "$CUSTOMER_RG_NAME" \
+  --cluster-name "$CLUSTER_NAME" \
+  --name "$NP_NAME" \
+  --location "$LOCATION" \
+  --subscription "$SUBSCRIPTION_ID" \
+  --subnet-id "$SUBNET_ID" \
+  --vm-size Standard_D4s_v3 \
+  --replicas 2 \
+  --version "$NP_VERSION" \
+  --channel-group stable
+----
+
+Azure provisions the cluster after the command returns. The next command waits until it is Succeeded, installs the pull secret, and writes the admin kubeconfig. The last lines include `CONFIGURE_DONE` and a `KUBECONFIG=` path.
+
+[source,sh,role=execute]
+----
+bash scripts/lib/configure.sh
+----
 
 == Log in
 
-The admin kubeconfig is `state/kubeconfig`. It is gitignored. There is no kubeadmin password. The console uses the Microsoft account that ran `make deploy`, and that account is `cluster-admin`.
+The admin kubeconfig is `state/kubeconfig`. It is gitignored. There is no kubeadmin password. The console uses the Microsoft account that created the cluster, and that account is `cluster-admin`.
 
 [source,sh,role=execute]
 ----
@@ -63,7 +115,7 @@ export KUBECONFIG="$PWD/state/kubeconfig"
 oc whoami && oc get nodes
 ----
 
-You should see a cluster-admin identity and three Ready workers. *No GPU node yet* — that is Lab 1.1.
+You should see a cluster-admin identity and two Ready workers. *No GPU node yet* — that is Lab 1.1.
 
 Console URL:
 
@@ -87,6 +139,6 @@ export KUBECONFIG="$PWD/state/kubeconfig"
 * [x] Workshop repo on disk (`aro-ai-app-platform`)
 * [x] ARO HCP cluster `aro-ai-weu` in the subscription
 * [x] `oc` connected with `state/kubeconfig`
-* [x] Three CPU workers, no GPU node
+* [x] Two CPU workers (`Standard_D4s_v3`), no GPU node
 
 ➡️ Move on to *Act 1 — Stand up the agent* (Lab 1.1).
