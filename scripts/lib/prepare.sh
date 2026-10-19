@@ -8,9 +8,10 @@ az() {
   command "${AZ}" "$@"
 }
 
-LOCATION="${LOCATION:-westeurope}"
+# East US is the only region this workshop deploys into.
+LOCATION="eastus"
 SUBSCRIPTION_ID="$(az account show --query id --output tsv)"
-CLUSTER_NAME="${CLUSTER_NAME:-aro-ai-weu}"
+CLUSTER_NAME="${CLUSTER_NAME:-aro-ai-eus}"
 if [[ -n "${CUSTOMER_RG_NAME:-}" ]]; then
   KEEP_RESOURCE_GROUP=yes
 else

@@ -33,6 +33,11 @@ set -a
 source "${ENV_FILE}"
 set +a
 
+if [[ "${LOCATION}" != "eastus" ]]; then
+  echo "This workshop deploys only in East US (eastus). state/cluster.env has LOCATION=${LOCATION}." >&2
+  exit 1
+fi
+
 if ! "${AZ}" aro hcp cluster show \
   --resource-group "${CUSTOMER_RG_NAME}" \
   --name "${CLUSTER_NAME}" \

@@ -13,7 +13,7 @@ The cluster steps follow link:https://github.com/fjcloud/aro-hcp-quickstart[`fjc
 * `oc` on `PATH`
 * Permission to create Entra app registrations in that tenant
 * A Red Hat pull secret at `~/pull_secret.json` (override with `PULL_SECRET_FILE`). It must contain `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com`. It is not written into this repository.
-* Quota in `westeurope` before Lab 1.1:
+* Quota in `eastus` before Lab 1.1:
 ** *Standard DSv3 Family vCPUs* — at least 8 (two `Standard_D4s_v3` workers)
 ** *Standard NCADS_A100_v4 Family vCPUs* — at least 24 (one `Standard_NC24ads_A100_v4`)
 
@@ -41,10 +41,10 @@ make delete CONFIRM=yes
 | Piece | Value
 
 | Region
-| `westeurope`
+| `eastus`
 
 | Cluster
-| `aro-ai-weu`, OpenShift 4.22
+| `aro-ai-eus`, OpenShift 4.22
 
 | Workers
 | `workers`, 2 × `Standard_D4s_v3` (4 vCPUs each)

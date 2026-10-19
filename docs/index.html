@@ -97,8 +97,8 @@
       border-radius: 3px;
       background: #fafafa;
     }
-    #creds { min-height: 168px; resize: vertical; }
-    #creds:focus, input:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+    .field { margin: 0 0 14px; }
+    input:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
     .card .actions { margin-top: 16px; }
     .sr {
       position: absolute;
@@ -151,7 +151,7 @@
         <h1>ARO workshop</h1>
       </div>
     </div>
-    <p id="status" role="status">Paste the lab export to open the workshop.</p>
+    <p id="status" role="status">Sign in with the workshop link.</p>
     <div class="actions">
       <button type="button" class="secondary" id="copy">Copy command</button>
       <button type="button" class="secondary" id="remove">Remove terminal</button>
@@ -161,9 +161,19 @@
     <section id="gate">
       <div class="card">
         <h2>Start the workshop</h2>
-        <p>Paste the lab export. The workshop opens on the left. An Azure CLI terminal, already signed in, opens on the right.</p>
-        <label for="creds">Lab export</label>
-        <textarea id="creds" spellcheck="false" autocomplete="off" placeholder="export GUID=&#10;export CLIENT_ID=&#10;export PASSWORD=&#10;export TENANT=&#10;export SUBSCRIPTION=&#10;export RESOURCEGROUP="></textarea>
+        <p>Use the workshop link, your email, and the workshop password. The lab opens on the left. An Azure CLI terminal, already signed in, opens on the right.</p>
+        <div class="field">
+          <label for="workshop-link">Workshop link</label>
+          <input id="workshop-link" name="workshop" required autocomplete="off" spellcheck="false" placeholder="https://catalog.demo.redhat.com/workshop/…">
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="username" spellcheck="false" placeholder="name@redhat.com">
+        </div>
+        <div class="field">
+          <label for="access">Workshop password</label>
+          <input id="access" name="access" type="password" required autocomplete="current-password">
+        </div>
         <p id="parsed" class="sr"></p>
         <input id="repo" class="sr" name="repo" required type="url" value="https://github.com/fjcloud/aro-ai-app-platform.git" tabindex="-1">
         <textarea id="command" class="sr" readonly aria-label="Deploy command preview" tabindex="-1"></textarea>
@@ -205,20 +215,6 @@
       return `'${String(value).replace(/'/g, `'\\''`)}'`;
     }
 
-    function parseExports(text) {
-      const out = {};
-      for (const line of text.split(/\r?\n/)) {
-        const match = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
-        if (!match) continue;
-        let value = match[2];
-        if ((value.startsWith("'") && value.endsWith("'")) || (value.startsWith('"') && value.endsWith('"'))) {
-          value = value.slice(1, -1);
-        }
-        out[match[1]] = value;
-      }
-      return out;
-    }
-
     function clusterName(guid, resourceGroup) {
       const raw = (guid || String(resourceGroup || "").replace(/^openenv-/i, "")).toLowerCase();
       const slug = raw.replace(/[^a-z0-9]/g, "").slice(0, 10);
@@ -226,15 +222,14 @@
     }
 
     function fields() {
-      const env = parseExports(document.querySelector("#creds").value);
-      const guid = (env.GUID || "").trim();
-      const resourceGroup = (env.RESOURCEGROUP || "").trim();
+      const data = lab || {};
+      const guid = String(data.guid || "").trim();
+      const resourceGroup = String(data.resourceGroup || "").trim();
       return {
         guid,
-        clientId: (env.CLIENT_ID || "").trim(),
-        password: env.PASSWORD || "",
-        tenant: (env.TENANT || "").trim(),
-        subscription: (env.SUBSCRIPTION || "").trim(),
+        clientId: String(data.clientId || "").trim(),
+        tenant: String(data.tenant || "").trim(),
+        subscription: String(data.subscription || "").trim(),
         resourceGroup,
         cluster: clusterName(guid, resourceGroup),
         repo: document.querySelector("#repo").value.trim(),
@@ -242,8 +237,8 @@
     }
 
     function fieldError(data) {
-      if (!data.clientId || !data.password || !data.tenant || !data.subscription || !data.resourceGroup) {
-        return "Paste GUID, CLIENT_ID, PASSWORD, TENANT, SUBSCRIPTION, and RESOURCEGROUP.";
+      if (!data.clientId || !data.tenant || !data.subscription || !data.resourceGroup) {
+        return "Open the workshop before copying the deploy command.";
       }
       if (!/^[0-9a-fA-F-]{36}$/.test(data.clientId) || !/^[0-9a-fA-F-]{36}$/.test(data.subscription)) {
         return "CLIENT_ID and SUBSCRIPTION must be ids.";
@@ -256,9 +251,6 @@
       }
       if (!/^[a-z][a-z0-9-]{1,13}$/.test(data.cluster)) {
         return "GUID must produce a cluster name of 2–14 lowercase letters, numbers, or hyphens.";
-      }
-      if (/[\r\n]/.test(data.password)) {
-        return "PASSWORD cannot contain a line break.";
       }
       if (!/^https:\/\/\S+$/.test(data.repo)) {
         return "Repository must be an https URL.";
@@ -276,11 +268,11 @@ export RESOURCEGROUP=${sh(data.resourceGroup)}
 export CLUSTER_NAME=${sh(data.cluster)}
 export CUSTOMER_RG_NAME="$RESOURCEGROUP"
 az account set --subscription "$SUBSCRIPTION"
-export LOCATION="$(az group show --name "$CUSTOMER_RG_NAME" --query location --output tsv)"
-if [[ -z "$LOCATION" ]]; then
+if ! az group show --name "$CUSTOMER_RG_NAME" --query name --output tsv >/dev/null; then
   echo "Resource group $CUSTOMER_RG_NAME was not found in subscription $SUBSCRIPTION."
   exit 1
 fi
+export LOCATION="eastus"
 if ! az aro hcp cluster create -h 2>&1 | grep -q -- '--operators-authentication'; then
   echo "This shell still has the published aro extension. Refresh the page and press Start."
   exit 1
@@ -311,9 +303,9 @@ fi
     function refresh() {
       const data = fields();
       const parsed = document.querySelector("#parsed");
-      if (!data.clientId && !data.password && !data.tenant && !data.subscription && !data.resourceGroup) {
+      if (!data.clientId) {
         command.value = "";
-        parsed.textContent = "Paste the export block from the lab.";
+        parsed.textContent = "The deploy command appears after the workshop opens.";
         return;
       }
       const problem = fieldError(data);
@@ -321,6 +313,37 @@ fi
       parsed.textContent = problem
         ? problem
         : `Cluster ${data.cluster} in ${data.resourceGroup}. Secret captured. Region comes from the resource group.`;
+    }
+
+    function copyText(text) {
+      if (!text) return Promise.resolve(false);
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).then(() => {
+          status.textContent = "Selection copied.";
+          return true;
+        }).catch(() => false);
+      }
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.top = "0";
+      area.style.left = "0";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      let ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch {
+        ok = false;
+      }
+      document.body.removeChild(area);
+      if (ok) status.textContent = "Selection copied.";
+      const view = term;
+      if (view) view.focus();
+      return Promise.resolve(ok);
     }
 
     function copyCommand() {
@@ -350,11 +373,28 @@ fi
     }
 
     const sessionKey = "terminal-session";
+    const labKey = "terminal-lab";
     let sessionId = "";
     let socket = null;
     let term = null;
     let reconnects = 0;
     let reconnectTimer = 0;
+    let lab = null;
+
+    function loadLab() {
+      try {
+        lab = JSON.parse(sessionStorage.getItem(labKey) || "null");
+      } catch {
+        lab = null;
+      }
+      if (!lab || !lab.clientId) lab = null;
+    }
+
+    function rememberLab(next) {
+      lab = next && next.clientId ? next : null;
+      if (lab) sessionStorage.setItem(labKey, JSON.stringify(lab));
+      else sessionStorage.removeItem(labKey);
+    }
 
     function terminal() {
       if (term) return term;
@@ -383,6 +423,10 @@ fi
         if (socket && socket.readyState === WebSocket.OPEN) {
           socket.send(new TextEncoder().encode(data));
         }
+      });
+      term.onSelectionChange(() => {
+        const text = term.getSelection();
+        if (text) copyText(text);
       });
       return term;
     }
@@ -459,44 +503,49 @@ fi
 
     let createToken = 0;
 
+    function signInFields() {
+      return {
+        workshop: document.querySelector("#workshop-link").value.trim(),
+        email: document.querySelector("#email").value.trim(),
+        accessPassword: document.querySelector("#access").value,
+      };
+    }
+
     async function createTerminal() {
       const token = ++createToken;
-      const data = fields();
-      const problem = fieldError(data);
-      if (problem) {
-        status.textContent = problem;
-        refresh();
+      const signIn = signInFields();
+      if (!signIn.workshop || !signIn.email || !signIn.accessPassword) {
+        status.textContent = "Enter the workshop link, email, and workshop password.";
         return;
       }
       if (!form.reportValidity()) return;
-      refresh();
-      copyCommand();
-      showWorkshop();
       const button = document.querySelector("#create");
       button.disabled = true;
-      status.textContent = "Starting the Azure CLI container…";
-      const view = terminal();
-      if (view.fitAddon) view.fitAddon.fit();
-      view.write("\r\nStarting the Azure CLI container…\r\n");
+      status.textContent = "Opening the workshop…";
       try {
         const response = await fetch("/api/terminal", {
           method: "POST",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            guid: data.guid,
-            clientId: data.clientId,
-            password: data.password,
-            tenant: data.tenant,
-            subscription: data.subscription,
-            resourceGroup: data.resourceGroup,
-            cols: view.cols || 80,
-            rows: view.rows || 24,
-          }),
+          body: JSON.stringify(signIn),
         });
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.message || "The terminal service rejected the request.");
+        document.querySelector("#access").value = "";
+        rememberLab({
+          guid: payload.guid || "",
+          clientId: payload.clientId || "",
+          tenant: payload.tenant || "",
+          subscription: payload.subscription || "",
+          resourceGroup: payload.resourceGroup || "",
+        });
         remember(payload.id);
+        refresh();
+        showWorkshop();
+        const view = terminal();
+        if (view.fitAddon) view.fitAddon.fit();
+        view.write("\r\nStarting the Azure CLI container…\r\n");
+        status.textContent = "Starting the Azure CLI container…";
         await watch(token);
       } catch (error) {
         status.textContent = error.message === "Failed to fetch"
@@ -538,7 +587,11 @@ fi
         const response = await fetch(`/api/terminal/${removing}`, { method: "DELETE", credentials: "same-origin" });
         const payload = await response.json().catch(() => ({}));
         status.textContent = payload.message || (response.ok ? "Terminal container removed. The home directory was kept." : "Could not remove the container.");
-        if (response.ok) showGate();
+        if (response.ok) {
+          rememberLab(null);
+          refresh();
+          showGate();
+        }
       } finally {
         button.disabled = false;
       }
@@ -561,6 +614,8 @@ fi
     });
     splitter.addEventListener("pointerup", () => { dragging = false; });
     refresh();
+    loadLab();
+    refresh();
     resume().catch(() => {});
 
     async function resume() {
@@ -577,6 +632,7 @@ fi
       const state = await response.json();
       if (!state.id || state.status === "deleted") return;
       remember(state.id);
+      loadLab();
       showWorkshop();
       status.textContent = state.message || "Reattaching to the existing terminal…";
       const token = ++createToken;

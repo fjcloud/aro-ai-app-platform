@@ -11,7 +11,7 @@ Act 1 starts here. Add a GPU node pool to the ARO HCP cluster. This is the NVIDI
 
 [IMPORTANT]
 ====
-GPU nodes are expensive. One `Standard_NC24ads_A100_v4` (NVIDIA A100 80 GB) is about $4.78/hr in West Europe on Linux pay-as-you-go. The pool is fixed at one node for this workshop. Delete it with the cluster when you are done (`make delete CONFIRM=yes`).
+GPU nodes are expensive. One `Standard_NC24ads_A100_v4` (NVIDIA A100 80 GB) is about $3.67/hr in East US on Linux pay-as-you-go. The pool is fixed at one node for this workshop. Delete it with the cluster when you are done (`make delete CONFIRM=yes`).
 ====
 
 == Understanding ARO HCP node pools
@@ -38,7 +38,7 @@ The CPU pool `workers` (two `Standard_D4s_v3`) already exists from Act 0. This l
 
 == Create the GPU node pool
 
-Quota for *Standard NCADS_A100_v4 Family vCPUs* in West Europe must be at least 24. If it is still 0, this command fails until the request is approved.
+Quota for *Standard NCADS_A100_v4 Family vCPUs* in East US must be at least 24. If it is still 0, this command fails until the request is approved.
 
 [source,sh,role=execute]
 ----

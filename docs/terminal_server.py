@@ -34,7 +34,7 @@ HOST = os.environ.get("HOST", "127.0.0.1")
 PORT = int(os.environ.get("PORT", "8780"))
 API = "2023-05-01"
 STORAGE_API = "2023-01-01"
-IMAGE = os.environ.get("CLI_IMAGE", "fjaazcli.azurecr.io/az:4")
+IMAGE = os.environ.get("CLI_IMAGE", "fjaazcli.azurecr.io/az:5")
 HOME_MOUNT = "/home/az"
 EXEC_COMMAND = "/usr/local/bin/workshop-shell"
 WS_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
@@ -820,8 +820,16 @@ def bridge(browser, session, columns, rows):
                 return False
             return bool(ready)
 
+        def wait_io():
+            if stop.is_set():
+                return
+            try:
+                select.select([azure_sock, browser], [], [], 0.01)
+            except (OSError, ValueError):
+                stop.set()
+
         def pump_azure():
-            if stop.is_set() or not readable(azure_sock, 0.05):
+            if stop.is_set() or not readable(azure_sock, 0):
                 return False
             try:
                 frame = reader.read_frame()
@@ -837,14 +845,13 @@ def bridge(browser, session, columns, rows):
                 return False
             return True
 
-        side = {"pump": lambda: None}
+        io = {"drain": lambda: None}
 
         def wait_for(predicate, previous, timeout):
             deadline = time.time() + timeout
             stable_since = None
             while time.time() < deadline and not stop.is_set():
-                pump_azure()
-                side["pump"]()
+                io["drain"]()
                 maybe_ping()
                 maybe_azure()
                 if generation[0] != previous and predicate(recent[0]):
@@ -907,8 +914,7 @@ def bridge(browser, session, columns, rows):
                 send_azure(b"read -r AZURE_CLIENT_SECRET\n")
                 quiet = time.time() + 0.6
                 while time.time() < quiet and not stop.is_set():
-                    pump_azure()
-                    side["pump"]()
+                    io["drain"]()
                     maybe_azure()
                 if stop.is_set():
                     with state["lock"]:
@@ -930,30 +936,39 @@ def bridge(browser, session, columns, rows):
             browser_reader = BROWSER_READERS[id(browser)]
 
         def read_browser():
-            if stop.is_set() or not readable(browser, 0.05):
-                return
+            if stop.is_set() or not readable(browser, 0):
+                return False
             try:
                 opcode, payload = browser_reader.read_frame()
             except TimeoutError:
-                return
+                return False
             except OSError:
                 stop.set()
-                return
+                return False
             try:
                 if opcode == 0x8:
                     stop.set()
-                elif opcode == 0x9:
+                    return False
+                if opcode == 0x9:
                     send_browser(payload, 0xA)
                 elif opcode in (0x1, 0x2) and payload:
                     send_azure(payload, 0x2)
             except OSError:
                 stop.set()
+                return False
+            return True
 
-        side["pump"] = read_browser
+        def drain():
+            wait_io()
+            while pump_azure():
+                pass
+            while read_browser():
+                pass
+
+        io["drain"] = drain
         sign_in()
         while not stop.is_set():
-            pump_azure()
-            read_browser()
+            drain()
             maybe_ping()
             maybe_azure()
     except Exception as error:
@@ -984,16 +999,111 @@ ID_RE = re.compile(r"[0-9a-fA-F-]{36}\Z")
 TENANT_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9.-]{0,127}\Z")
 RG_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._()-]{0,89}\Z")
 GUID_RE = re.compile(r"[A-Za-z0-9-]{0,64}\Z")
+WORKSHOP_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{1,63}\Z")
+EMAIL_RE = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+\Z")
+CATALOG_ORIGIN = "https://catalog.demo.redhat.com"
 VENDOR_TYPES = {
     ".js": "text/javascript; charset=utf-8",
     ".css": "text/css; charset=utf-8",
 }
 
 
+def workshop_id_from(value):
+    text = str(value or "").strip()
+    if not text or len(text) > 300:
+        return ""
+    if "://" not in text and "/" not in text:
+        return text if WORKSHOP_ID_RE.fullmatch(text) else ""
+    parsed = urllib.parse.urlparse(text)
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme != "https" or host != "catalog.demo.redhat.com":
+        return ""
+    if parsed.username or parsed.password or parsed.port not in (None, 443):
+        return ""
+    parts = [part for part in parsed.path.split("/") if part]
+    if len(parts) != 2 or parts[0] != "workshop" or not WORKSHOP_ID_RE.fullmatch(parts[1]):
+        return ""
+    return parts[1]
+
+
+def lab_from_catalog(payload):
+    data = (payload.get("assignment") or {}).get("data")
+    if not isinstance(data, dict):
+        return None
+    for value in data.values():
+        if isinstance(value, dict) and value.get("azure_service_principal_id") and value.get("azure_service_principal_password"):
+            return value
+    return None
+
+
+def fetch_lab(workshop_id, email, access_password):
+    url = f"{CATALOG_ORIGIN}/api/workshop/{urllib.parse.quote(workshop_id)}"
+    body = json.dumps({"email": email, "accessPassword": access_password}).encode()
+    request = urllib.request.Request(
+        url,
+        data=body,
+        method="PUT",
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "User-Agent": "aro-workshop",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            raw = response.read(1_000_000)
+    except urllib.error.HTTPError as error:
+        error.read(4096)
+        if error.code == 403:
+            raise ValueError("The workshop password was not accepted.")
+        if error.code == 400:
+            raise ValueError("The workshop rejected that email or password.")
+        if error.code == 404:
+            raise ValueError("That workshop was not found.")
+        if error.code == 409:
+            raise ValueError("No seats are left for this workshop.")
+        raise ValueError("The workshop catalog did not return the lab.")
+    try:
+        catalog = json.loads(raw.decode())
+    except json.JSONDecodeError as error:
+        raise ValueError("The workshop catalog did not return the lab.") from error
+    found = lab_from_catalog(catalog)
+    if not found:
+        raise ValueError("That workshop has no Azure lab yet.")
+    return {
+        "guid": str(found.get("guid") or "").strip(),
+        "clientId": str(found.get("azure_service_principal_id") or "").strip(),
+        "password": str(found.get("azure_service_principal_password") or ""),
+        "tenant": str(found.get("azure_tenant") or found.get("azure_tenant_id") or "").strip(),
+        "subscription": str(found.get("azure_subscription") or "").strip(),
+        "resourceGroup": str(found.get("azure_resource_group") or "").strip(),
+    }
+
+
+def resolve_lab(payload):
+    workshop = str(payload.get("workshop") or payload.get("workshopUrl") or "").strip()
+    email = str(payload.get("email") or "").strip()
+    access_password = str(payload.get("accessPassword") or "")
+    if not workshop and not email and not access_password:
+        return payload
+    workshop_id = workshop_id_from(workshop)
+    if not workshop_id:
+        raise ValueError("Use a link like https://catalog.demo.redhat.com/workshop/…")
+    if not EMAIL_RE.fullmatch(email) or len(email) > 254:
+        raise ValueError("Enter the email for this workshop.")
+    if not access_password or len(access_password) > 128 or re.search(r"[\r\n\x00]", access_password):
+        raise ValueError("Enter the workshop password.")
+    lab = fetch_lab(workshop_id, email, access_password)
+    merged = dict(payload)
+    merged.update(lab)
+    merged.pop("accessPassword", None)
+    return merged
+
+
 def validate_payload(payload):
     required = ("clientId", "password", "tenant", "subscription", "resourceGroup")
     if any(not str(payload.get(key) or "").strip() for key in required):
-        return "Paste GUID, CLIENT_ID, PASSWORD, TENANT, SUBSCRIPTION, and RESOURCEGROUP."
+        return "The workshop did not include a complete Azure lab."
     if not ID_RE.fullmatch(str(payload["clientId"]).strip()) or not ID_RE.fullmatch(str(payload["subscription"]).strip()):
         return "CLIENT_ID and SUBSCRIPTION must be ids."
     if not TENANT_RE.fullmatch(str(payload["tenant"]).strip()):
@@ -1276,6 +1386,17 @@ class Handler(BaseHTTPRequestHandler):
         self._json(200, self.session_view(session))
 
     def create_session(self, payload):
+        if not isinstance(payload, dict):
+            self._json(400, {"message": "The request was not JSON."})
+            return
+        try:
+            payload = resolve_lab(payload)
+        except ValueError as error:
+            self._json(400, {"message": str(error)})
+            return
+        except (urllib.error.URLError, TimeoutError, OSError):
+            self._json(502, {"message": "The workshop catalog could not be reached."})
+            return
         problem = validate_payload(payload)
         if problem:
             self._json(400, {"message": problem})
@@ -1323,7 +1444,16 @@ class Handler(BaseHTTPRequestHandler):
         start_background(provision, (session,))
         self._json(
             200,
-            {"id": session["id"], "group": name, "status": session["status"]},
+            {
+                "id": session["id"],
+                "group": name,
+                "status": session["status"],
+                "guid": session["guid"],
+                "clientId": session["clientId"],
+                "tenant": session["tenant"],
+                "subscription": session["subscription"],
+                "resourceGroup": session["resourceGroup"],
+            },
             session_cookie(session["secret"], self.https_request()),
         )
 

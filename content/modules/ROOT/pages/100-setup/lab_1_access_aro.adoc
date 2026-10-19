@@ -11,7 +11,7 @@ The subscription is empty. This lab creates the ARO HCP cluster, writes an admin
 
 == From the browser
 
-The link:https://aro-terminal-fja.azurewebsites.net/[browser launcher] takes the lab export (`GUID`, `CLIENT_ID`, `PASSWORD`, `TENANT`, `SUBSCRIPTION`, `RESOURCEGROUP`). *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, paste the prerequisite command, then paste the `az aro hcp cluster create` command. The cluster is created in the lab resource group.
+The link:https://aro-terminal-fja.azurewebsites.net/[browser launcher] takes the workshop link, your email, and the workshop password. *Start* opens an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, paste the prerequisite command, then paste the `az aro hcp cluster create` command. The cluster is created in East US, in the lab resource group.
 
 Stay in that shell for later `oc` commands, or download `~/aro-ai-app-platform/state/kubeconfig` and continue at <<_log_in>> on your laptop.
 
@@ -24,7 +24,7 @@ Have these before you paste the commands:
 * `oc` on `PATH`
 * Permission to create Entra app registrations in that tenant
 * `~/pull_secret.json` with `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com` (Insights). Override the path with `PULL_SECRET_FILE`. Do not commit it.
-* Quota in West Europe:
+* Quota in East US (`eastus`):
 ** *Standard DSv3 Family vCPUs* ≥ 8
 ** *Standard NCADS_A100_v4 Family vCPUs* ≥ 24
 
@@ -52,7 +52,7 @@ bash scripts/lib/prepare.sh
 
 == Create the cluster
 
-Source the file from the prerequisite step, then paste this command. It creates `aro-ai-weu` in West Europe with a public API and a public ingress. The workers are a second command: two `Standard_D4s_v3` nodes, 4 vCPUs each.
+Source the file from the prerequisite step, then paste this command. It creates `aro-ai-eus` in East US with a public API and a public ingress. The workers are a second command: two `Standard_D4s_v3` nodes, 4 vCPUs each.
 
 [source,sh,role=execute]
 ----
@@ -137,7 +137,7 @@ export KUBECONFIG="$PWD/state/kubeconfig"
 == Summary
 
 * [x] Workshop repo on disk (`aro-ai-app-platform`)
-* [x] ARO HCP cluster `aro-ai-weu` in the subscription
+* [x] ARO HCP cluster `aro-ai-eus` in East US
 * [x] `oc` connected with `state/kubeconfig`
 * [x] Two CPU workers (`Standard_D4s_v3`), no GPU node
 

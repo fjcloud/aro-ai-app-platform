@@ -140,7 +140,7 @@ sum by (namespace) (increase(vllm:prompt_tokens_total{namespace="llm-serving"}[1
 
 Prompt tokens are usually much larger than generation tokens (OpenCode sends `AGENTS.md` and the conversation). That is expected.
 
-Rough cost model for this A100 in West Europe (~$4.78/hr Linux pay-as-you-go). Divide the hourly price by the decode rate on the graph:
+Rough cost model for this A100 in East US (~$3.67/hr Linux pay-as-you-go). Divide the hourly price by the decode rate on the graph:
 
 [source]
 ----
