@@ -17,7 +17,7 @@ data:
           "id": "opencodeai/opencode",
           "name": "OpenCode",
           "publisher": "opencode.ai",
-          "description": "Open-source terminal AI coding agent, pre-wired to Qwen3.8 via Models-as-a-Service.",
+          "description": "Open-source terminal AI coding agent, pre-wired to DeepSeek-V4 Pro on Microsoft Foundry.",
           "docsUrl": "https://opencode.ai",
           "icon": "https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@latest/icons/opencode.svg",
           "tags": ["Tech-Preview"]

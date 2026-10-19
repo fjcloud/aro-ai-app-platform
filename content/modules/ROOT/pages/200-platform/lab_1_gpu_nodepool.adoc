@@ -1,102 +1,116 @@
-= Lab 1.1 — Deploy a GPU Node Pool
+= Lab 1.1 — Publish DeepSeek on Foundry
 
-Act 1 starts here. Add a GPU node pool to the ARO HCP cluster. This is the NVIDIA A100 80 GB that will run Qwen3.8 — the in-cluster model OpenCode will call this afternoon.
+Act 1 starts here. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. This workshop does not add a GPU node, and it does not load a model onto the cluster.
 
 [NOTE]
 ====
-*Estimated time:* 15 minutes (5 min active + ~10 min wait) +
+*Estimated time:* 15 minutes +
 *Persona:* Platform Engineer +
-*Fire and forget:* Trigger this lab first, then move on. The GPU node will be ready by the time you need it.
+*Blocking:* Lab 1.3 reads `state/foundry.env` from this lab. Stay in this shell until the curl returns a sentence.
 ====
 
 [IMPORTANT]
 ====
-GPU nodes are expensive. One `Standard_NC24ads_A100_v4` (NVIDIA A100 80 GB) is about $3.67/hr in East US on Linux pay-as-you-go. The pool is fixed at one node for this workshop. Delete it with the cluster when you are done (`make delete CONFIRM=yes`).
+This is Global Standard, pay per token, in East US 2. DeepSeek-V4 Pro is *$1.74 per million input tokens* and *$3.48 per million output tokens*. Cached input is $0.145 per million. An idle deployment costs nothing. Reasoning tokens are billed as output. Delete the deployment at the end of the day (Lab 3.1).
 ====
 
-== Understanding ARO HCP node pools
-
-A *node pool* is a group of worker nodes with a shared VM size. ARO HCP manages the VMs in your subscription — provisioning and replacing them — so the platform engineer does not build virtual machines by hand.
-
-The CPU pool `workers` (two `Standard_D4s_v3`) already exists from Act 0. This lab adds a second pool.
+== What you are creating
 
 [cols="1,2", options="header"]
 |===
-| Parameter | Value & Rationale
+| Setting | Value
 
-| `--vm-size Standard_NC24ads_A100_v4`
-| 1× NVIDIA A100 80 GB. Qwen3.8-27B INT4 is ~19.5 GB and this workshop serves it at a 256K context, which does not fit a 16 GB T4.
+| Foundry account
+| `arodeepseek<lab-suffix>` in the lab resource group, kind `AIServices`, East US 2
 
-| `--replicas 1`
-| One GPU node. Enough for the workshop, and the hourly price stays predictable.
+| Deployment
+| `deepseekv4pro`
 
-| `--taints nvidia.com/gpu=present:NoSchedule`
-| Dev Spaces and build pods stay on the CPU workers.
+| Model
+| `DeepSeek-V4-Pro`, format `DeepSeek`, version `2026-04-23`
+
+| SKU
+| `GlobalStandard`, capacity `1`
 |===
 
-`make gpu` reads `state/cluster.env` and runs `az aro hcp cluster nodepool create` with those values. Run it again and it leaves an existing `gpu` pool in place.
+The login script does not export `SUBSCRIPTION` or `RESOURCEGROUP`. Read them from Azure.
 
-== Create the GPU node pool
-
-Quota for *Standard NCADS_A100_v4 Family vCPUs* in East US must be at least 24. If it is still 0, this command fails until the request is approved.
+== Create the account and the deployment
 
 [source,sh,role=execute]
 ----
-make gpu
+SUBSCRIPTION=$(az account show --query id -o tsv)
+RESOURCEGROUP=$(az group list --query "[?starts_with(name, 'openenv-')].name | [0]" -o tsv)
+SUFFIX="${RESOURCEGROUP#openenv-}"
+FOUNDRY_NAME="$(printf 'arodeepseek%s' "$SUFFIX" | tr -cd '[:alnum:]')"
+API=2025-06-01
+DEPLOYMENT=deepseekv4pro
+LOCATION=eastus2
+
+az rest --method put \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}" \
+  --body "{\"location\":\"${LOCATION}\",\"kind\":\"AIServices\",\"sku\":{\"name\":\"S0\"},\"properties\":{\"customSubDomainName\":\"${FOUNDRY_NAME}\",\"publicNetworkAccess\":\"Enabled\"}}"
+
+until [[ "$(az rest --method get \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}" \
+  --query "properties.provisioningState" -o tsv)" == "Succeeded" ]]; do
+  sleep 10
+done
+
+az rest --method get \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/models?api-version=${API}" \
+  --query "value[?name=='DeepSeek-V4-Pro'].{name:name,format:format,version:version,sku:skus[0].name}" -o table
 ----
 
-.Sample Output
-[source,text,options=nowrap]
-----
-Creating node pool gpu (1 x Standard_NC24ads_A100_v4)
-{
-  "name": "gpu",
-  "replicas": 1,
-  "state": "Succeeded",
-  "vmSize": "Standard_NC24ads_A100_v4"
-}
-----
-
-[WARNING]
-====
-If Azure returns a capacity error, delete the pool and try again later, or pick another region and recreate the cluster. GPU sizes are not available in every region at all times.
-
-[source,sh]
-----
-set -a
-source state/cluster.env
-set +a
-az aro hcp cluster nodepool delete \
-  --resource-group "${CUSTOMER_RG_NAME}" \
-  --cluster-name "${CLUSTER_NAME}" \
-  --name gpu \
-  --subscription "${SUBSCRIPTION_ID}" \
-  --yes
-----
-====
-
-Start a background wait for the GPU node to become Ready. `oc wait` only works after the node *exists* — poll until the label appears, then wait for Ready. Continue to the next lab while it completes:
+The table should show format `DeepSeek`, version `2026-04-23`, SKU `GlobalStandard`. Then create the deployment:
 
 [source,sh,role=execute]
 ----
-(
-  until oc get node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4 \
-      --no-headers 2>/dev/null | grep -q .; do
-    sleep 10
-  done
-  oc wait node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4 \
-    --for=condition=Ready --timeout=900s
-) &
-echo "GPU node wait started in background (PID $!)"
+az rest --method put \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}" \
+  --body '{"sku":{"name":"GlobalStandard","capacity":1},"properties":{"model":{"format":"DeepSeek","name":"DeepSeek-V4-Pro","version":"2026-04-23"}}}'
+
+until [[ "$(az rest --method get \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}" \
+  --query "properties.provisioningState" -o tsv)" == "Succeeded" ]]; do
+  sleep 10
+done
 ----
+
+== Test it
+
+The key stays in the shell variable. Do not paste it into the chat or the workshop repo.
+
+[source,sh,role=execute]
+----
+ENDPOINT=$(az rest --method get \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}" \
+  --query "properties.endpoint" -o tsv)
+ENDPOINT="${ENDPOINT%/}/"
+KEY=$(az rest --method post \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
+  --query key1 -o tsv)
+
+curl -sS --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "api-key: ${KEY}" \
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":512}'
+
+mkdir -p state
+cat > state/foundry.env << EOF
+SUBSCRIPTION=${SUBSCRIPTION}
+RESOURCEGROUP=${RESOURCEGROUP}
+FOUNDRY_NAME=${FOUNDRY_NAME}
+DEPLOYMENT=${DEPLOYMENT}
+API=${API}
+ENDPOINT=${ENDPOINT}
+EOF
+----
+
+The answer is in `choices[0].message.content`. `state/foundry.env` has no key. Lab 1.3 reads the key again from Azure.
 
 == ✅ Checkpoint
 
-[source,sh,role=execute]
-----
-make status
-----
+`state/foundry.env` exists, and the curl returned a sentence. ✓
 
-The `gpu` node pool shows one `Standard_NC24ads_A100_v4` replica. ✓
-
-➡️ Move immediately to the next lab. *Do not wait for the node* — it will be ready by the time you need it.
+➡️ Move on to *Lab 1.2*. The endpoint is already live. Do not run `make gpu`.

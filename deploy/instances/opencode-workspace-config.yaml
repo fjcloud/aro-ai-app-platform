@@ -3,10 +3,10 @@
 # ConfigMap-mount files under that path: kubelet creates the parents as root:root
 # and the workspace user gets EACCES. XDG_* below keeps config/state on the home PVC.
 #
-# Developers call Models-as-a-Service (not the predictor Service). The API model id
-# stays "qwen3"; the display name is Qwen3.8. After MaaS is Ready, mint a key:
-#   bash deploy/inference/mint-workshop-key.sh
-# That writes Secret ai-provider-openai-api-key (OPENAI_API_KEY + OPENAI_BASE_URL).
+# OpenCode calls the Foundry deployment deepseekv4pro. Lab 1.3 writes Secret
+# ai-provider-openai-api-key (OPENAI_API_KEY + OPENAI_BASE_URL). The base URL
+# is https://<account>.cognitiveservices.azure.com/openai/v1. The api-key
+# header is what that endpoint accepts.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -44,53 +44,59 @@ data:
     {
       "$schema": "https://opencode.ai/config.json",
       "provider": {
-        "qwen3": {
+        "deepseek": {
           "npm": "@ai-sdk/openai-compatible",
-          "name": "Qwen3.8",
+          "name": "DeepSeek-V4 Pro",
           "options": {
             "baseURL": "{env:OPENAI_BASE_URL}",
             "apiKey": "{env:OPENAI_API_KEY}",
+            "headers": {
+              "api-key": "{env:OPENAI_API_KEY}"
+            },
             "chunkTimeout": 120000,
             "timeout": 600000
           },
           "models": {
-            "qwen3": {
-              "name": "Qwen3.8",
+            "deepseekv4pro": {
+              "name": "DeepSeek-V4 Pro",
               "limit": {
-                "context": 262144,
+                "context": 131072,
                 "output": 32768
               }
             }
           }
         }
       },
-      "model": "qwen3/qwen3",
+      "model": "deepseek/deepseekv4pro",
       "autoupdate": false
     }
   opencode.jsonc: |
     {
       "$schema": "https://opencode.ai/config.json",
       "provider": {
-        "qwen3": {
+        "deepseek": {
           "npm": "@ai-sdk/openai-compatible",
-          "name": "Qwen3.8",
+          "name": "DeepSeek-V4 Pro",
           "options": {
             "baseURL": "{env:OPENAI_BASE_URL}",
             "apiKey": "{env:OPENAI_API_KEY}",
+            "headers": {
+              "api-key": "{env:OPENAI_API_KEY}"
+            },
             "chunkTimeout": 120000,
             "timeout": 600000
           },
           "models": {
-            "qwen3": {
-              "name": "Qwen3.8",
+            "deepseekv4pro": {
+              "name": "DeepSeek-V4 Pro",
               "limit": {
-                "context": 262144,
+                "context": 131072,
                 "output": 32768
               }
             }
           }
         }
       },
-      "model": "qwen3/qwen3",
+      "model": "deepseek/deepseekv4pro",
       "autoupdate": false
     }

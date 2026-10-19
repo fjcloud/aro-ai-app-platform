@@ -151,7 +151,7 @@
         <h1>ARO workshop</h1>
       </div>
     </div>
-    <p id="status" role="status">Sign in with the workshop link.</p>
+    <p id="status" role="status">Sign in with the workshop id.</p>
     <div class="actions">
       <button type="button" class="secondary" id="copy">Copy command</button>
       <button type="button" class="secondary" id="remove">Remove terminal</button>
@@ -161,10 +161,10 @@
     <section id="gate">
       <div class="card">
         <h2>Start the workshop</h2>
-        <p>Use the workshop link, your email, and the workshop password. The lab opens on the left. An Azure CLI terminal, already signed in, opens on the right.</p>
+        <p>Use the workshop id, your email, and the workshop password. The lab opens on the left. An Azure CLI terminal, already signed in, opens on the right.</p>
         <div class="field">
-          <label for="workshop-link">Workshop link</label>
-          <input id="workshop-link" name="workshop" required autocomplete="off" spellcheck="false" placeholder="https://catalog.demo.redhat.com/workshop/…">
+          <label for="workshop-id">Workshop id</label>
+          <input id="workshop-id" name="workshop" required autocomplete="off" spellcheck="false" placeholder="ws49sk">
         </div>
         <div class="field">
           <label for="email">Email</label>
@@ -272,7 +272,7 @@ if ! az group show --name "$CUSTOMER_RG_NAME" --query name --output tsv >/dev/nu
   echo "Resource group $CUSTOMER_RG_NAME was not found in subscription $SUBSCRIPTION."
   exit 1
 fi
-export LOCATION="eastus"
+export LOCATION="eastus2"
 if ! az aro hcp cluster create -h 2>&1 | grep -q -- '--operators-authentication'; then
   echo "This shell still has the published aro extension. Refresh the page and press Start."
   exit 1
@@ -505,7 +505,7 @@ fi
 
     function signInFields() {
       return {
-        workshop: document.querySelector("#workshop-link").value.trim(),
+        workshop: document.querySelector("#workshop-id").value.trim(),
         email: document.querySelector("#email").value.trim(),
         accessPassword: document.querySelector("#access").value,
       };
@@ -515,7 +515,7 @@ fi
       const token = ++createToken;
       const signIn = signInFields();
       if (!signIn.workshop || !signIn.email || !signIn.accessPassword) {
-        status.textContent = "Enter the workshop link, email, and workshop password.";
+        status.textContent = "Enter the workshop id, email, and workshop password.";
         return;
       }
       if (!form.reportValidity()) return;

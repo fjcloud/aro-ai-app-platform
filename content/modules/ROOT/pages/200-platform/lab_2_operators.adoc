@@ -1,29 +1,27 @@
 = Lab 1.2 — Install Platform Operators
 
-Install the operators the coding-agent platform needs, from Kustomize in this repo — not by clicking OperatorHub. Reproducible, auditable, GitOps-friendly.
+Install the operators the afternoon needs, from the manifests in this repo. The model is already the Foundry endpoint from Lab 1.1. Do not install a GPU node pool, and do not apply `deploy/inference`.
 
-Trigger the apply and move on. Lab 1.3 waits for them before it publishes Qwen3.8.
+Trigger the apply and move on. Lab 1.3 waits for Dev Spaces, GitOps, and Pipelines before it stores the Foundry key.
 
 [NOTE]
 ====
 *Estimated time:* 5 minutes active + ~20 minutes background installation +
 *Persona:* Platform Engineer +
-*Fire and forget:* Trigger all installs, then move immediately to Lab 1.3 while they complete.
+*Fire and forget:* Trigger the installs, then move immediately to Lab 1.3 while they complete.
 ====
 
 == What Gets Installed
-
-Two groups, one `oc apply`. You do not configure any of these by hand — Lab 1.3 turns them on.
 
 [cols="1,2", options="header"]
 |===
 | Group | Operators
 
-| *Serve the model*
-| OpenShift AI (KServe + MaaS + dashboard), NVIDIA GPU Operator, Node Feature Discovery, Leader Worker Set, cert-manager, Red Hat Connectivity Link (API keys and token quotas)
+| *Edit*
+| Dev Spaces (cloud IDE, OpenCode injection)
 
 | *Ship the app*
-| Dev Spaces (cloud IDE), OpenShift GitOps (Argo CD), OpenShift Pipelines (Tekton)
+| OpenShift GitOps (Argo CD), OpenShift Pipelines (Tekton)
 |===
 
 [TIP]
@@ -31,55 +29,41 @@ Two groups, one `oc apply`. You do not configure any of these by hand — Lab 1.
 Developers deploy their own Argo CD instance inside their project namespace — they never touch `openshift-gitops`. Your only job here is to ensure the operators are available cluster-wide.
 ====
 
-== Step 1: Install All Operators
+== Step 1: Install the operators
 
-All operator manifests are in the workshop repo you cloned in Act 0. From that directory:
+From the workshop repository you cloned in Act 0:
 
 [source,sh,role=execute]
 ----
-oc apply -k deploy/operators
+oc apply -f deploy/operators/devspaces-subscription.yaml
+oc apply -f deploy/operators/gitops-namespace.yaml \
+  -f deploy/operators/gitops-operatorgroup.yaml \
+  -f deploy/operators/gitops-subscription.yaml
+oc apply -f deploy/operators/pipelines-subscription.yaml
 ----
 
 .Sample Output
 [source,text,options=nowrap]
 ----
-namespace/openshift-nfd created
-namespace/nvidia-gpu-operator created
-namespace/redhat-ods-operator created
-namespace/openshift-gitops-operator created
-operatorgroup.operators.coreos.com/openshift-nfd created
-operatorgroup.operators.coreos.com/nvidia-gpu-operator created
-operatorgroup.operators.coreos.com/rhods-operator created
-operatorgroup.operators.coreos.com/openshift-gitops-operator created
 subscription.operators.coreos.com/devspaces created
-subscription.operators.coreos.com/nfd created
-subscription.operators.coreos.com/gpu-operator-certified created
-subscription.operators.coreos.com/rhods-operator created
+namespace/openshift-gitops-operator created
+operatorgroup.operators.coreos.com/openshift-gitops-operator created
 subscription.operators.coreos.com/openshift-gitops-operator created
 subscription.operators.coreos.com/openshift-pipelines-operator-rh created
-subscription.operators.coreos.com/cert-manager created
-subscription.operators.coreos.com/leader-worker-set created
-subscription.operators.coreos.com/rhcl-operator created
 ----
 
-The first apply may report that `Task` CRDs are not found yet. That is expected — OpenShift Pipelines has not finished installing. Re-run the same command after the operators are `Succeeded` (start of Lab 1.3); the bundled `git-clone` and `buildah` tasks will then apply.
+The Tekton `git-clone` and `buildah` tasks are applied at the start of Lab 1.3, after the Pipeline CRDs exist.
 
 == Step 2: Start Background Health Checks
 
-Kick off watches for the operators in the background, then move on immediately. `oc wait` exits immediately if the Deployment does not exist yet — wait for OLM to create it first:
+`oc wait` exits immediately if the Deployment does not exist yet. Wait for OLM to create it first:
 
 [source,sh,role=execute]
 ----
 for check in \
   "openshift-operators:devspaces-operator:Dev Spaces" \
-  "openshift-nfd:nfd-controller-manager:NFD" \
-  "nvidia-gpu-operator:gpu-operator:GPU Operator" \
-  "redhat-ods-operator:rhods-operator:OpenShift AI" \
   "openshift-gitops:openshift-gitops-server:GitOps (Argo CD)" \
-  "openshift-pipelines:tekton-pipelines-controller:Pipelines (Tekton)" \
-  "cert-manager:cert-manager:cert-manager" \
-  "openshift-lws-operator:openshift-lws-operator:LeaderWorkerSet" \
-  "kuadrant-system:kuadrant-operator-controller-manager:Connectivity Link"; do
+  "openshift-pipelines:tekton-pipelines-controller:Pipelines (Tekton)"; do
   IFS=: read ns dep label <<< "$check"
   (
     until oc get deployment/${dep} -n ${ns} >/dev/null 2>&1; do sleep 5; done
@@ -89,17 +73,15 @@ for check in \
   ) &
 done
 
-echo "All operator checks running in background — move on to Lab 1.3."
+echo "Operator checks running in background — move on to Lab 1.3."
 ----
 
 == What is Happening Under the Hood
 
-OLM (Operator Lifecycle Manager) resolves each `Subscription` against the operator registry, generates an `InstallPlan`, installs CRDs and RBAC, then deploys the operator pod:
+OLM resolves each `Subscription`, installs CRDs and RBAC, then deploys the operator pod:
 
 ----
 Subscription → InstallPlan → CRDs → RBAC → Operator Pod → Succeeded
 ----
 
-Each operator registers Kubernetes types you will use next: `LLMInferenceService`, `MaaSModelRef`, `CheCluster`, `ClusterPolicy`, `Kuadrant`.
-
-➡️ Move immediately to *Lab 1.3: Publish Qwen3.8 as a Service* while operators install in the background.
+➡️ Move immediately to *Lab 1.3: Hand DeepSeek to Dev Spaces* while the operators install.

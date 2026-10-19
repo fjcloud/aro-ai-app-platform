@@ -8,10 +8,11 @@ az() {
   command "${AZ}" "$@"
 }
 
-# East US is the only region this workshop deploys into.
-LOCATION="eastus"
+# East US 2 is the only region this workshop deploys into.
+# ARO HCP is not offered in eastus.
+LOCATION="eastus2"
 SUBSCRIPTION_ID="$(az account show --query id --output tsv)"
-CLUSTER_NAME="${CLUSTER_NAME:-aro-ai-eus}"
+CLUSTER_NAME="${CLUSTER_NAME:-aro-ai-eus2}"
 if [[ -n "${CUSTOMER_RG_NAME:-}" ]]; then
   KEEP_RESOURCE_GROUP=yes
 else
@@ -51,11 +52,39 @@ assign_role() {
 
 echo "subscription ${SUBSCRIPTION_ID} location ${LOCATION} keyvault ${KEYVAULT_NAME}"
 
+# A previous run may have created the network in eastus. The cluster subnet has to
+# live in the same region as the cluster, so replace those resources.
+replace_if_wrong_region() {
+  local kind="$1" name="$2" loc=""
+  case "${kind}" in
+    vnet)
+      loc="$(az network vnet show --name "${name}" --resource-group "${CUSTOMER_RG_NAME}" --query location --output tsv 2>/dev/null || true)"
+      ;;
+    nsg)
+      loc="$(az network nsg show --name "${name}" --resource-group "${CUSTOMER_RG_NAME}" --query location --output tsv 2>/dev/null || true)"
+      ;;
+    identity)
+      loc="$(az identity show --name "${name}" --resource-group "${CUSTOMER_RG_NAME}" --query location --output tsv 2>/dev/null || true)"
+      ;;
+  esac
+  if [[ -n "${loc}" && "${loc}" != "${LOCATION}" ]]; then
+    echo "Replacing ${kind} ${name} (${loc} -> ${LOCATION})"
+    case "${kind}" in
+      vnet) az network vnet delete --name "${name}" --resource-group "${CUSTOMER_RG_NAME}" --output none ;;
+      nsg) az network nsg delete --name "${name}" --resource-group "${CUSTOMER_RG_NAME}" --output none ;;
+      identity) az identity delete --name "${name}" --resource-group "${CUSTOMER_RG_NAME}" --output none ;;
+    esac
+  fi
+}
+
 az group create \
   --name "${CUSTOMER_RG_NAME}" \
   --subscription "${SUBSCRIPTION_ID}" \
   --location "${LOCATION}" \
   --output none
+
+replace_if_wrong_region vnet "${CUSTOMER_VNET_NAME}"
+replace_if_wrong_region nsg "${CUSTOMER_NSG}"
 
 if ! az network nsg show --name "${CUSTOMER_NSG}" --resource-group "${CUSTOMER_RG_NAME}" --output none 2>/dev/null; then
   az network nsg create \
@@ -104,6 +133,7 @@ for name in \
   "${CLUSTER_NAME}-dp-image-registry" \
   "${CLUSTER_NAME}-service-managed-identity"
 do
+  replace_if_wrong_region identity "${name}"
   az identity create --name "${name}" --resource-group "${CUSTOMER_RG_NAME}" --location "${LOCATION}" --output none
 done
 

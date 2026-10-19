@@ -1088,7 +1088,7 @@ def resolve_lab(payload):
         return payload
     workshop_id = workshop_id_from(workshop)
     if not workshop_id:
-        raise ValueError("Use a link like https://catalog.demo.redhat.com/workshop/…")
+        raise ValueError("Enter the workshop id, such as ws49sk.")
     if not EMAIL_RE.fullmatch(email) or len(email) > 254:
         raise ValueError("Enter the email for this workshop.")
     if not access_password or len(access_password) > 128 or re.search(r"[\r\n\x00]", access_password):

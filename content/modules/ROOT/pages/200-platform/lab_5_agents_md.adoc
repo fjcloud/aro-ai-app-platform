@@ -1,6 +1,6 @@
 = Lab 1.4 — Hand the Keys
 
-The GPU is warming Qwen3.8. Your job now is to hand the afternoon developer a *launch URL* and a short runbook — not a wiki, not Ansible, not a tour of every Kustomize file.
+DeepSeek-V4 Pro is already answering. Your job now is to hand the afternoon developer a *launch URL* and a short runbook — not a wiki, not Ansible, not a tour of every Kustomize file.
 
 The template is already on GitHub: https://github.com/fjcloud/go-app-template[fjcloud/go-app-template].
 
@@ -21,7 +21,7 @@ The template is already on GitHub: https://github.com/fjcloud/go-app-template[fj
 | The only runbook OpenCode reads. Generate `main.go` / `go.mod` / `Dockerfile`, then git, ephemeral Git, and `oc`.
 
 | `opencode.json`
-| Pins OpenCode to in-cluster Qwen3.8 via MaaS. The API key is `$OPENAI_API_KEY` (injected). The OpenCode *binary* is still injected by Dev Spaces.
+| The template still names the old model. Lab 2.1 overwrites it so the project pin is `deepseek/deepseekv4pro`. The key and base URL stay `$OPENAI_API_KEY` and `$OPENAI_BASE_URL`.
 
 | `devfile.yaml`
 | Dev Spaces workspace. Installs the ephemeral Git client.
@@ -30,7 +30,7 @@ The template is already on GitHub: https://github.com/fjcloud/go-app-template[fj
 | Golden-path Kustomize. The model applies it; it must not rewrite it (except the Deployment `image:` at deploy time).
 |===
 
-There is no `scripts/` directory and no Ansible. Qwen3.8 follows `AGENTS.md`.
+There is no `scripts/` directory and no Ansible. DeepSeek-V4 Pro follows `AGENTS.md`.
 
 == Step 1: Read AGENTS.md
 
@@ -47,7 +47,7 @@ cat AGENTS.md
 You should see a short file. Notice:
 
 * *Files YOU must generate* — `main.go`, `go.mod`, `Dockerfile` with an exact two-stage template
-* *Files already in the repository* — do not rewrite `deploy/`, `pipeline/`, `gitops/`, `devfile.yaml`, or `opencode.json`
+* *Files already in the repository* — do not rewrite `deploy/`, `pipeline/`, `gitops/`, or `devfile.yaml`
 * *Three deploy phases* — ephemeral Git → Tekton PipelineRun → Argo CD Application
 * *Namespaces* — `${APP_NAME}-build` and `${APP_NAME}-dev` only. Never namespace `default` for the app, Argo CD, or the Application.
 
@@ -70,24 +70,17 @@ You should see a short file. Notice:
 
 image::cicd-gitops.png[Prompt to production, align="center"]
 
-== Step 2: Confirm OpenCode is wired to MaaS
+== Step 2: Confirm OpenCode is wired to Foundry
 
-OpenCode is injected from the AI tool registry you applied in Lab 1.3. The *binary* comes from the platform. The *model pin* is `opencode.json` in the template — that file wins over `~/.config/opencode`.
+OpenCode is injected from the AI tool registry you applied in Lab 1.3. The *binary* comes from the platform. The platform model pin is the ConfigMap. The *project* file in the template wins once the workspace opens, which is why Lab 2.1 rewrites it.
 
 [source,sh,role=execute]
 ----
-CHE_NS=$(oc get checluster -A -o jsonpath='{.items[0].metadata.namespace}')
-
-oc get configmap opencode-workspace-config -n "$CHE_NS" \
+oc get configmap opencode-workspace-config -n openshift-operators \
   -o jsonpath='{.data.opencode\.json}' | python3 -m json.tool
 ----
 
-You should see `baseURL` `{env:OPENAI_BASE_URL}` (mint + `configure-platform.sh` set that env to `https://maas.<apps-domain>/llm-serving/qwen3/v1`), provider/model *name* `Qwen3.8`, API id `qwen3`, `limit.context: 262144`, and `limit.output: 32768`.
-
-[NOTE]
-====
-If you are on the shared workshop cluster, the ephemeral Git URL in `devfile.yaml` already matches. Do not fork and sed unless you are adapting this template to another cluster.
-====
+You should see `baseURL` `{env:OPENAI_BASE_URL}`, an `api-key` header, provider name `DeepSeek-V4 Pro`, model id `deepseekv4pro`, and `"model": "deepseek/deepseekv4pro"`.
 
 == Step 3: Copy the developer launch URL
 
@@ -106,7 +99,7 @@ echo "  $DEVSPACES_URL/#$TEMPLATE_URL?ai-provider=opencodeai/opencode"
 echo "============================================"
 ----
 
-When a developer opens that URL, Dev Spaces clones the template (including `opencode.json`), injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. They talk to Qwen3.8; `AGENTS.md` is the runbook.
+When a developer opens that URL, Dev Spaces clones the template, injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. Lab 2.1 points the project at DeepSeek-V4 Pro. `AGENTS.md` is the runbook.
 
 == Act 1 complete
 
@@ -114,17 +107,17 @@ When a developer opens that URL, Dev Spaces clones the template (including `open
 |===
 | Component | Status
 
-| GPU node pool (1× A100 80 GB)
-| ✅ Provisioned on ARO HCP
+| Foundry deployment `deepseekv4pro`
+| ✅ Global Standard, pay per token
 
-| Operators + dashboard
-| ✅ `https://rh-ai.apps.<apps-domain>/`
+| Dev Spaces
+| ✅ Launch URL ready to paste
 
-| Qwen3.8 as Models-as-a-Service
-| ✅ Gateway + `sk-oai-` key; model finishing load in the background
+| Workspace secret
+| ✅ `OPENAI_BASE_URL` ends in `/openai/v1`
 
 | Go app template
-| ✅ Short `AGENTS.md`; Dev Spaces URL ready to paste
+| ✅ Short `AGENTS.md`
 |===
 
 Switch persona — move on to *Act 2: first day* (Lab 2.1).

@@ -1,188 +1,118 @@
-= Lab 3.1 — GPU and Token Metrics
+= Lab 3.1 — The Token Bill
 
-Act 3 is required. You stood up an in-cluster coding agent this morning and spent the afternoon prompting it. That is real GPU time and real tokens. Look at the bill before you leave.
-
-The GPU graph is OpenCode sessions (and the one-time model load), not HTTP hits to `/`.
+Act 3 is required. You spent the afternoon prompting DeepSeek-V4 Pro. That bill is tokens, not a GPU node. Read one response, price it, then delete the deployment.
 
 [NOTE]
 ====
 *Estimated time:* 15 minutes +
-*Personas:* Platform Engineer + Developer (together) +
-*Access:* OpenShift Web Console
+*Personas:* Platform Engineer + Developer (together)
 ====
 
-image::the-bill-observability.png[The bill — GPU and tokens, align="center"]
+== The rate
 
-Stay in the *Administrator* perspective of the OpenShift Web Console. Every graph in this lab is there. The OpenShift AI dashboard is only for the token quota, not for GPU charts.
+Global Standard, East US 2, from the Foundry price sheet:
 
-== Two surfaces
-
-[cols="1,2", options="header"]
+[cols="1,1", options="header"]
 |===
-| Where | What you open
+| Meter | Per 1 million tokens
 
-| OpenShift Web Console → *Observe → Dashboards*
-| *NVIDIA DCGM Exporter Dashboard* — GPU %, framebuffer, temperature, watts
+| Input
+| $1.74
 
-| OpenShift Web Console → *Observe → Metrics*
-| vLLM PromQL — tokens/sec, time-to-first-token, in-flight requests
+| Cached input
+| $0.145
 
-| OpenShift AI → *Models as a service*
-| Catalog, the `sk-oai-` key, and the 5M tokens / 24h subscription
+| Output, including reasoning tokens
+| $3.48
 |===
 
-These series are already on the cluster (DCGM from the GPU Operator, `vllm:…` from the Qwen3.8 pod). You are not installing Prometheus.
+An idle deployment costs nothing. A deployment left in place still has a key. Delete it before you leave.
 
-== Part 1: NVIDIA DCGM (Web Console dashboards)
+== Part 1: Read one usage object
 
-. Open the OpenShift Web Console and stay in *Administrator*.
-. Left nav: *Observe → Dashboards*.
-. *Dashboard* dropdown: *NVIDIA DCGM Exporter Dashboard* (ConfigMap `nvidia-dcgm-exporter-dashboard` in `openshift-config-managed`).
-. At the top of the dashboard, set:
-** *Instance* — the GPU worker (the series labelled `NVIDIA A100` / `exported_namespace=llm-serving`). There is no “instance type” filter; pick that instance, not a CPU worker.
-** *GPU* — `0` (this workshop has one A100).
-. Time range: last few hours so you see model load *and* the OpenCode afternoon.
-
-Read these four panels (those names are on the dashboard):
-
-[cols="1,2,2", options="header"]
-|===
-| Panel | What it tells you | What you should see
-
-| *GPU Utilization*
-| Compute cores. High during OpenCode prompts, near 0 when idle.
-| Idle ≈ 0%. During OpenCode bursts, 30–95%.
-
-| *GPU Framebuffer Mem Used*
-| VRAM: Qwen3.8 weights + KV cache on the 80 GiB A100.
-| Once the model is Ready, typically ~35–42 GiB (not the 19.5 GiB checkpoint alone).
-
-| *GPU Temperature*
-| A100 80 GB PCIe slows as it approaches ~85°C.
-| Idle ~45–55°C; keep it under 80°C.
-
-| *GPU Power Usage*
-| Watts — the electricity line on the bill.
-| Idle ~90–120 W; under load up to ~300 W.
-|===
-
-On *GPU Utilization* over the last few hours you should see:
-
-* A spike when weights loaded into VRAM
-* Bursts when you used OpenCode (plan, build, the audit)
-* Idle valleys between prompts — the GPU is not at 100% when nobody is chatting
-
-[TIP]
-====
-If 50 developers used OpenCode all day, what would this graph look like? When would you add a second GPU node? That is how the platform team justifies a second replica on the `gpu` node pool.
-====
-
-== Part 2: vLLM tokens (Web Console metrics)
-
-There is no separate “model metrics” page in OpenShift AI for this stack. Use the same console.
-
-. Left nav: *Observe → Metrics*.
-. Clear any sample query. Paste *one* expression below into the query box.
-. Click *Run queries*. Set the time range to the last hour (or the afternoon).
-. Repeat for each query (add a query with *Add query*, or replace the box).
-
-Names use a *colon* (`vllm:generation_tokens_total`), not an underscore. Namespace is `llm-serving`.
-
-[cols="1,2", options="header"]
-|===
-| Paste this | What you should see
-
-| `rate(vllm:request_success_total{namespace="llm-serving"}[5m])`
-| Successful completions. `finished_reason="stop"` is the normal path.
-
-| `rate(vllm:generation_tokens_total{namespace="llm-serving"}[5m])`
-| Decode throughput while OpenCode is answering. Read the number on this graph. An A100 80 GB is the card; the rate depends on the prompt.
-
-| `histogram_quantile(0.95, rate(vllm:time_to_first_token_seconds_bucket{namespace="llm-serving"}[5m]))`
-| p95 time-to-first-token. Interactive use should stay under 2–3 seconds.
-
-| `vllm:num_requests_running{namespace="llm-serving"}`
-| In-flight requests. 0 when idle.
-
-| `vllm:num_requests_waiting{namespace="llm-serving"}`
-| Queue. 0 unless the GPU is saturated. llm-d's WVA uses this (and KV-cache %) when KEDA scales replicas.
-|===
-
-If a query returns *No datapoints*, stay in *Administrator* → *Observe → Metrics* (not the Developer perspective) and confirm `LLMInferenceService/qwen3` is Ready. User-workload monitoring is already on.
-
-== Part 3: Token quota (OpenShift AI dashboard)
-
-Graphs above are *usage*. The cap is the MaaS subscription — 5 000 000 tokens / 24h. Over quota the gateway returns HTTP 429.
-
-. In the OpenShift Web Console, open the *Application launcher* (the grid) → *Red Hat OpenShift AI*, or go to `https://rh-ai.apps.<apps-domain>/`.
-. Log in with the same cluster user as `oc`.
-. Open *Gen AI* / *Models as a service*.
-. Find *Qwen3.8* / `qwen3` in the catalog. The workshop subscription is *5 000 000 tokens / 24h* for `system:authenticated`. Extra keys can be minted here; they do not replace the Dev Spaces Secret.
-
-Confirm the same objects from a terminal if you want:
+In the Dev Space terminal, `$OPENAI_BASE_URL` and `$OPENAI_API_KEY` are already set. In the platform shell, load them from Lab 1.1 first:
 
 [source,sh,role=execute]
 ----
-oc get maasmodelref -n llm-serving
-oc get maasauthpolicy,maassubscription -n models-as-a-service
-oc get tokenratelimitpolicy -n llm-serving
+if [[ -z "${OPENAI_BASE_URL:-}" ]]; then
+  set -a
+  source state/foundry.env
+  set +a
+  export OPENAI_BASE_URL="${ENDPOINT}openai/v1"
+  export OPENAI_API_KEY=$(az rest --method post \
+    --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
+    --query key1 -o tsv)
+fi
+
+curl -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "api-key: $OPENAI_API_KEY" \
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' \
+  | python3 -m json.tool
 ----
 
-You should see `MaaSModelRef/qwen3`, `MaaSAuthPolicy/qwen3-access`, `MaaSSubscription/qwen3-workshop`, and a Kuadrant `TokenRateLimitPolicy` derived from the subscription. Auth only → 429 (no quota). Subscription only → 403 (no gateway access). Both are required.
+Find `usage`. A typical short reply looks like this:
 
-Back in *Observe → Metrics*, the afternoon’s token count:
-
-[source,promql]
+[source,json]
 ----
-sum by (namespace) (increase(vllm:generation_tokens_total{namespace="llm-serving"}[1h]))
-sum by (namespace) (increase(vllm:prompt_tokens_total{namespace="llm-serving"}[1h]))
+"usage": {
+  "prompt_tokens": 12,
+  "completion_tokens": 18,
+  "total_tokens": 30
+}
 ----
 
-Prompt tokens are usually much larger than generation tokens (OpenCode sends `AGENTS.md` and the conversation). That is expected.
-
-Rough cost model for this A100 in East US (~$3.67/hr Linux pay-as-you-go). Divide the hourly price by the decode rate on the graph:
+Price that call:
 
 [source]
 ----
-Cost/token = 4.78 / (tokens_per_sec × 3600)
+dollars = prompt_tokens / 1_000_000 * 1.74
+        + completion_tokens / 1_000_000 * 3.48
 ----
 
-Example if the graph shows about 80 tokens/sec:
+Twelve input tokens and eighteen output tokens are a fraction of a cent. An OpenCode session is larger because it sends `AGENTS.md` and the conversation on every turn, and reasoning tokens count as output.
 
-[source]
-----
-Cost/token           ≈ $0.000017
-OpenCode session     ≈ 50 000 tokens → ~$0.83
-10 concurrent devs   ≈ 500 000 tokens → ~$8.30 / hour of chatting
-----
+== Part 2: What the afternoon was worth
 
-The Fortune Cookie route is not on this invoice. Token quota on the MaaS gateway is how you stop an afternoon of OpenCode from becoming an unbounded GPU bill.
+Use the last OpenCode session as the estimate. If you did not record `usage`, use this workshop-sized example and say so:
 
-[cols="1,2", options="header"]
+[cols="1,1,1", options="header"]
 |===
-| Capability | Mechanism
+| | Tokens | Cost
 
-| Per-group token quotas
-| `MaaSSubscription` → Kuadrant `TokenRateLimitPolicy`
+| One short curl
+| 12 in, 18 out
+| under $0.01
 
-| Self-service API keys
-| OpenShift AI dashboard
+| One OpenCode turn that sends the runbook
+| 20 000 in, 2 000 out
+| about $0.04
 
-| Usage tracking
-| vLLM `vllm:generation_tokens_total` / `vllm:prompt_tokens_total` in *Observe → Metrics*
-
-| Chargeback
-| Prometheus → cost model → cloud billing
+| A full generate-and-audit afternoon, about 30 turns
+| 600 000 in, 60 000 out
+| about $1.25
 |===
+
+The Fortune Cookie route is not on this invoice. The cluster workers are the other line: two `Standard_D4s_v3` nodes, billed while the cluster exists.
+
+== Part 3: Delete the deployment
+
+Run this in the platform shell, in the workshop repository. It removes the pay-per-token deployment. It leaves the Foundry account in place.
+
+[source,sh,role=execute]
+----
+set -a
+source state/foundry.env
+set +a
+
+az rest --method delete \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}"
+----
 
 == ✅ Act 3 checkpoint
 
 [source,sh,role=execute]
 ----
-oc get node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4
-
-oc get llminferenceservice,maasmodelref -n llm-serving
-
 curl -s https://$(oc get route fortune-cookie -n fortune-cookie-dev \
   -o jsonpath='{.spec.host}')/healthz
 ----
@@ -190,15 +120,9 @@ curl -s https://$(oc get route fortune-cookie -n fortune-cookie-dev \
 .Expected
 [source,text,options=nowrap]
 ----
-NAME                     STATUS   ROLES    AGE
-ip-10-x-x-x.compute.internal   Ready    worker   ...
-
-NAME     URL                                            READY
-qwen3    https://maas.apps.<apps-domain>/llm-serving/qwen3   True
-
 {"status":"ok"}
 ----
 
-You have also opened *Observe → Dashboards* (DCGM), *Observe → Metrics* (`vllm:…`), and the OpenShift AI catalog (5M tokens / 24h).
+You priced a call from `usage`, and the `deepseekv4pro` deployment is deleted. ✓
 
 ➡️ Move on to *Conclusion & What's Next*.

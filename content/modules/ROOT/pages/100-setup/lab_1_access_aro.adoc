@@ -6,12 +6,12 @@ The subscription is empty. This lab creates the ARO HCP cluster, writes an admin
 ====
 *Estimated time:* 45 minutes (about 15 active, the rest is Azure provisioning) +
 *Persona:* Platform Engineer +
-*Blocking:* Act 1 starts after `oc get nodes` shows the CPU workers. The GPU node is Lab 1.1.
+*Blocking:* Act 1 starts after `oc get nodes` shows the CPU workers. Lab 1.1 publishes the model on Foundry. It does not add a node.
 ====
 
 == From the browser
 
-The link:https://aro-terminal-fja.azurewebsites.net/[browser launcher] takes the workshop link, your email, and the workshop password. *Start* opens an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, paste the prerequisite command, then paste the `az aro hcp cluster create` command. The cluster is created in East US, in the lab resource group.
+The link:https://aro-terminal-fja.azurewebsites.net/[browser launcher] takes the workshop id, your email, and the workshop password. *Start* opens an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, paste the prerequisite command, then paste the `az aro hcp cluster create` command. The cluster is created in East US 2, in the lab resource group.
 
 Stay in that shell for later `oc` commands, or download `~/aro-ai-app-platform/state/kubeconfig` and continue at <<_log_in>> on your laptop.
 
@@ -24,11 +24,7 @@ Have these before you paste the commands:
 * `oc` on `PATH`
 * Permission to create Entra app registrations in that tenant
 * `~/pull_secret.json` with `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com` (Insights). Override the path with `PULL_SECRET_FILE`. Do not commit it.
-* Quota in East US (`eastus`):
-** *Standard DSv3 Family vCPUs* ≥ 8
-** *Standard NCADS_A100_v4 Family vCPUs* ≥ 24
-
-The A100 quota is 0 on a new subscription. Request it before you start. Lab 1.1 cannot create the GPU node without it.
+* Quota in East US 2 (`eastus2`): *Standard DSv3 Family vCPUs* ≥ 8, for the two worker nodes. The model is a Foundry deployment, so this lab does not need GPU quota.
 
 == Clone the workshop
 
@@ -52,7 +48,7 @@ bash scripts/lib/prepare.sh
 
 == Create the cluster
 
-Source the file from the prerequisite step, then paste this command. It creates `aro-ai-eus` in East US with a public API and a public ingress. The workers are a second command: two `Standard_D4s_v3` nodes, 4 vCPUs each.
+Source the file from the prerequisite step, then paste this command. It creates `aro-ai-eus2` in East US 2 with a public API and a public ingress. The workers are a second command: two `Standard_D4s_v3` nodes, 4 vCPUs each.
 
 [source,sh,role=execute]
 ----
@@ -115,7 +111,7 @@ export KUBECONFIG="$PWD/state/kubeconfig"
 oc whoami && oc get nodes
 ----
 
-You should see a cluster-admin identity and two Ready workers. *No GPU node yet* — that is Lab 1.1.
+You should see a cluster-admin identity and two Ready workers. The model is not a node. Lab 1.1 publishes it on Foundry.
 
 Console URL:
 
@@ -137,8 +133,8 @@ export KUBECONFIG="$PWD/state/kubeconfig"
 == Summary
 
 * [x] Workshop repo on disk (`aro-ai-app-platform`)
-* [x] ARO HCP cluster `aro-ai-eus` in East US
+* [x] ARO HCP cluster `aro-ai-eus2` in East US 2
 * [x] `oc` connected with `state/kubeconfig`
-* [x] Two CPU workers (`Standard_D4s_v3`), no GPU node
+* [x] Two CPU workers (`Standard_D4s_v3`)
 
 ➡️ Move on to *Act 1 — Stand up the agent* (Lab 1.1).

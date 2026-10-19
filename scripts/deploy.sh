@@ -33,8 +33,9 @@ set -a
 source "${ENV_FILE}"
 set +a
 
-if [[ "${LOCATION}" != "eastus" ]]; then
-  echo "This workshop deploys only in East US (eastus). state/cluster.env has LOCATION=${LOCATION}." >&2
+if [[ "${LOCATION}" != "eastus2" ]]; then
+  echo "This workshop deploys only in East US 2 (eastus2). state/cluster.env has LOCATION=${LOCATION}." >&2
+  echo "Remove state/cluster.env and run the prerequisite step again." >&2
   exit 1
 fi
 

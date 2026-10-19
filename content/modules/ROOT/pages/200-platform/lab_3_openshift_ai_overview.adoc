@@ -1,76 +1,52 @@
-= Lab 1.3 — Publish Qwen3.8 as a Service
+= Lab 1.3 — Hand DeepSeek to Dev Spaces
 
-Operators are still installing. Understand *why* Models-as-a-Service, wait until the operators are Ready, then apply the serving stack. Developers get one HTTPS front door and one `sk-oai-` key — not a raw predictor Service, and not `api.openai.com`.
+Operators are still installing. Wait until Dev Spaces, GitOps, and Pipelines are up, then store the Foundry endpoint where OpenCode will read it. Developers get one base URL and one key. They do not get a GPU, a vLLM pod, or `api.openai.com`.
 
 [NOTE]
 ====
-*Estimated time:* 15 minutes active + model load in the background +
+*Estimated time:* 15 minutes +
 *Persona:* Platform Engineer +
-*Fire and forget:* After you apply inference, move to Lab 1.4. The model is Ready before Act 2.
+*Needs:* `state/foundry.env` from Lab 1.1, in this repository
 ====
 
-== Why Models-as-a-Service
+== Why a managed endpoint
 
-OpenShift AI 3.5 serves the model as an `LLMInferenceService`. Models-as-a-Service sits in front: Gateway, API keys, token quota. GitOps still owns the serving stack. The dashboard is the UI for catalog, subscriptions, and extra keys.
-
-image::model-serving-architecture.png[Qwen3.8 as Models-as-a-Service, align="center"]
-
-Anything that already speaks OpenAI works. One key, not an access/secret pair. Do not install Service Mesh 3 — OpenShift 4.22 already has Gateway API.
+The cluster stays a place to edit, build, and deploy. The model stays on Foundry.
 
 [cols="1,2", options="header"]
 |===
-| Compared with a plain Deployment | What MaaS adds
+| What the developer sees | What it is
 
-| You wire GPU tolerations and a Route yourself
-| Same placement, plus KServe TLS, shm, probes, HTTPRoute on `maas-default-gateway`
+| `$OPENAI_BASE_URL`
+| `https://<account>.cognitiveservices.azure.com/openai/v1`
 
-| No auth
-| `sk-oai-` keys, groups, 429 when over budget
+| `$OPENAI_API_KEY`
+| The Foundry account key, injected into every Dev Spaces workspace
 
-| Generic CPU/memory metrics
-| vLLM tokens/s + consumption per key
+| Model id
+| `deepseekv4pro` — the deployment name from Lab 1.1
 |===
 
-=== Qwen3.8 on this GPU
-
-[cols="1,2", options="header"]
-|===
-| Property | Value
-
-| Checkpoint
-| `RedHatAI/Qwen3.8-27B-INT4` (~19.5 GB, fits one A100 80 GB)
-
-| Engine
-| Red Hat vLLM CUDA 3.5.0 — `registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5.0`
-
-| Context
-| Native *262,144* (`--max-model-len=262144`, 256K)
-
-| API id / display name
-| `qwen3` / *Qwen3.8*
-
-| Tools / reasoning
-| `--tool-call-parser=qwen3_coder`, `--reasoning-parser=qwen3`
-|===
-
-OpenCode needs `--enable-auto-tool-choice`. `limit.output: 32768` matches OpenCode's default and stays well below the 262,144 window.
-
-Same JSON as cloud OpenAI, different host:
+Same JSON as a cloud OpenAI chat call, different host:
 
 [source,sh]
 ----
-curl https://maas.<apps-domain>/llm-serving/qwen3/v1/chat/completions \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{"model": "qwen3", "messages": [{"role": "user", "content": "Hello"}]}'
+curl "${OPENAI_BASE_URL}/chat/completions" \
+  -H "api-key: $OPENAI_API_KEY" \
+  -d '{"model": "deepseekv4pro", "messages": [{"role": "user", "content": "Hello"}]}'
 ----
 
 == ✅ Checkpoint: Operators Ready
 
-Lab 1.2 is still running in the background. Wait here before you apply instances. Re-apply operators first so the Tekton `git-clone` and `buildah` tasks land after the CRDs exist. `oc wait` only works after each Deployment exists.
+Lab 1.2 is still running in the background. Wait here before you create Dev Spaces. Re-apply the three operators first so the Tekton `git-clone` and `buildah` tasks land after the CRDs exist.
 
 [source,sh,role=execute]
 ----
-oc apply -k deploy/operators
+oc apply -f deploy/operators/devspaces-subscription.yaml
+oc apply -f deploy/operators/gitops-namespace.yaml \
+  -f deploy/operators/gitops-operatorgroup.yaml \
+  -f deploy/operators/gitops-subscription.yaml
+oc apply -f deploy/operators/pipelines-subscription.yaml
 
 wait_deploy() {
   local ns=$1 dep=$2
@@ -79,108 +55,34 @@ wait_deploy() {
 }
 
 wait_deploy openshift-operators devspaces-operator
-wait_deploy openshift-nfd nfd-controller-manager
-wait_deploy nvidia-gpu-operator gpu-operator
-wait_deploy redhat-ods-operator rhods-operator
-wait_deploy kuadrant-system kuadrant-operator-controller-manager
-wait_deploy openshift-lws-operator openshift-lws-operator
-wait_deploy cert-manager cert-manager
+wait_deploy openshift-gitops openshift-gitops-server
+wait_deploy openshift-pipelines tekton-pipelines-controller
+oc apply -f deploy/operators/tekton-tasks.yaml
 ----
 
 .Expected Output
 [source,text,options=nowrap]
 ----
 deployment.apps/devspaces-operator condition met
-deployment.apps/nfd-controller-manager condition met
-deployment.apps/gpu-operator condition met
-deployment.apps/rhods-operator condition met
-deployment.apps/kuadrant-operator-controller-manager condition met
-deployment.apps/openshift-lws-operator condition met
-deployment.apps/cert-manager condition met
+deployment.apps/openshift-gitops-server condition met
+deployment.apps/tekton-pipelines-controller condition met
 ----
 
-[WARNING]
-====
-If any `wait` times out, check `oc get pods -n <namespace>`. Common causes: image pull throttling, or worker CPU pressure. Lab 1.3 `configure-platform.sh` scales LeaderWorkerSet to one replica so Dev Spaces can schedule on a 3-worker cluster.
-====
+== Step 1: Create Dev Spaces
 
-== Step 1: Create Platform Instances
-
-This instantiates the serving control plane, Dev Spaces, GPU policies, and the MaaS gateway. One apply, then one configure script (LeaderWorkerSet to one replica so Dev Spaces has CPU, Authorino TLS, bind the Gateway to *this* cluster's apps domain and wildcard cert, recycle Kuadrant after Gateway API CRDs exist, dashboard GPU taints and MaaS UI flags).
+This creates the Che cluster, the OpenCode tool registry, and the workspace model pin. It does not create a GPU policy or a serving stack.
 
 [source,sh,role=execute]
 ----
-oc apply -k deploy/instances
-bash deploy/instances/configure-platform.sh
-----
+oc apply -f deploy/instances/checluster.yaml \
+  -f deploy/instances/ai-tool-registry.yaml \
+  -f deploy/instances/opencode-workspace-config.yaml \
+  -f deploy/instances/vscode-editor-configurations.yaml
 
-.Sample Output
-[source,text,options=nowrap]
-----
-datasciencecluster.datasciencecluster.opendatahub.io/default-dsc created
-checluster.org.eclipse.che/devspaces created
-gateway.gateway.networking.k8s.io/maas-default-gateway created
-kuadrant.kuadrant.io/kuadrant created
-LeaderWorkerSet manager scaled to 1 (CPU headroom for Dev Spaces).
-Authorino TLS configured.
-MaaS Gateway bound to this cluster.
-Kuadrant operator recycled after Gateway API CRDs.
-Dashboard GPU-node tolerations and MaaS UI flags applied.
-Platform instances configured (LWS CPU + Authorino TLS + MaaS Gateway + Kuadrant + dashboard).
-----
-
-[NOTE]
-====
-Kuadrant registers Istio reconcilers only if the `EnvoyFilter` CRD exists when the operator *process* starts. OpenShift 4.22 Gateway API (`openshift-default`) creates that CRD when you apply the Gateway — the RHCL operator from Lab 1.2 is already running. `configure-platform.sh` waits for the CRD, then *deletes* the Kuadrant operator pod so it starts again. Do not `oc rollout restart` that Deployment (OLM reverts it). Do not install Service Mesh 3.
-====
-
-=== What was created
-
-[cols="1,2", options="header"]
-|===
-| Object | Purpose
-
-| `DataScienceCluster`
-| Turns on KServe, MaaS, the dashboard, and OGX (Gen AI studio).
-
-| `Gateway` (`maas-default-gateway`)
-| One HTTPS front door: `https://maas.<apps-domain>/`
-
-| `Kuadrant` + workshop Postgres
-| API-key auth (Authorino) and token quota (Limitador). Postgres is POC-only.
-
-| `CheCluster` + OpenCode ConfigMaps
-| Dev Spaces workspaces pointed at MaaS. The key is minted in Step 3.
-
-| `NodeFeatureDiscovery` / `ClusterPolicy`
-| GPU labels, drivers, device plugin.
-|===
-
-=== Wait for MaaS
-
-`chePhase` stays empty until the Dev Spaces gateway is scheduled. On a 3-worker cluster that can take several minutes. Wait until each object exists, then wait for Ready (15 minutes).
-
-[source,sh,role=execute]
-----
 until oc get checluster/devspaces -n openshift-operators >/dev/null 2>&1; do sleep 5; done
 oc wait checluster/devspaces \
   -n openshift-operators \
   --for=jsonpath='{.status.chePhase}'=Active \
-  --timeout=900s
-
-until oc get datasciencecluster/default-dsc >/dev/null 2>&1; do sleep 5; done
-oc wait datasciencecluster/default-dsc \
-  --for=jsonpath='{.status.conditions[?(@.type=="ModelsAsAServiceReady")].status}'=True \
-  --timeout=900s
-
-oc wait datasciencecluster/default-dsc \
-  --for=jsonpath='{.status.conditions[?(@.type=="DashboardReady")].status}'=True \
-  --timeout=900s
-
-until oc get maastenantconfig/default-tenant -n models-as-a-service >/dev/null 2>&1; do sleep 5; done
-oc wait maastenantconfig/default-tenant \
-  -n models-as-a-service \
-  --for=jsonpath='{.status.conditions[?(@.type=="Ready")].status}'=True \
   --timeout=900s
 ----
 
@@ -188,109 +90,67 @@ oc wait maastenantconfig/default-tenant \
 [source,text,options=nowrap]
 ----
 checluster.org.eclipse.che/devspaces condition met
-datasciencecluster.datasciencecluster.opendatahub.io/default-dsc condition met
-datasciencecluster.datasciencecluster.opendatahub.io/default-dsc condition met
-maastenantconfig.maas.opendatahub.io/default-tenant condition met
 ----
 
-Dashboard: `https://rh-ai.apps.<apps-domain>/` (also *Red Hat OpenShift AI* in the OpenShift Application launcher). Log in with cluster-admin. Catalog and extra keys live under Gen AI / Models-as-a-Service. Dev Spaces still needs the key in Secret `ai-provider-openai-api-key` — that is Step 3, not the dashboard.
+Dashboard: the `cheURL` printed in Lab 1.4.
 
-== Step 2: Publish Qwen3.8 to MaaS
+== Step 2: Store the Foundry key for every workspace
 
-This creates:
-
-* The `llm-serving` namespace and 50 Gi model-cache PVC
-* `LLMInferenceService/qwen3` — Red Hat vLLM CUDA 3.5.0 on the GPU node, attached to `maas-default-gateway`
-* `MaaSModelRef` (catalog), `MaaSAuthPolicy` (who can call it), `MaaSSubscription` (token quota)
-
-Wait until the GPU node is Ready, then apply:
+Run this in the same repository as Lab 1.1. The key is written into Secret `ai-provider-openai-api-key` and is not printed.
 
 [source,sh,role=execute]
 ----
-until oc get node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4 \
-    --no-headers 2>/dev/null | grep -q .; do
-  sleep 10
-done
-oc wait node -l node.kubernetes.io/instance-type=Standard_NC24ads_A100_v4 \
-  --for=condition=Ready --timeout=900s
+set -a
+source state/foundry.env
+set +a
 
-oc apply -k deploy/inference
+KEY=$(az rest --method post \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
+  --query key1 -o tsv)
+
+oc create secret generic ai-provider-openai-api-key \
+  -n openshift-operators \
+  --from-literal=OPENAI_API_KEY="${KEY}" \
+  --from-literal=OPENAI_BASE_URL="${ENDPOINT}openai/v1" \
+  --dry-run=client -o yaml | oc apply -f -
+
+oc label secret ai-provider-openai-api-key -n openshift-operators \
+  app.kubernetes.io/part-of=che.eclipse.org \
+  app.kubernetes.io/component=workspaces-config \
+  controller.devfile.io/mount-to-devworkspace=true \
+  controller.devfile.io/watch-secret=true \
+  che.eclipse.org/ai-provider-id=opencodeai-opencode \
+  --overwrite
+oc annotate secret ai-provider-openai-api-key -n openshift-operators \
+  controller.devfile.io/mount-as=env \
+  controller.devfile.io/mount-on-start=true \
+  --overwrite
+
+unset KEY
+oc get secret ai-provider-openai-api-key -n openshift-operators \
+  -o jsonpath='{.data.OPENAI_BASE_URL}' | base64 -d; echo
 ----
 
-.Sample Output
-[source,text,options=nowrap]
-----
-namespace/llm-serving created
-persistentvolumeclaim/qwen-model-cache created
-llminferenceservice.serving.kserve.io/qwen3 created
-maasmodelref.maas.opendatahub.io/qwen3 created
-maasauthpolicy.maas.opendatahub.io/qwen3-access created
-maassubscription.maas.opendatahub.io/qwen3-workshop created
-----
+The printed line is the base URL only. It ends in `/openai/v1`.
 
-=== The LLMInferenceService (after the apply)
-
-[source,yaml]
-----
-spec:
-  replicas: 1
-  model:
-    uri: hf://RedHatAI/Qwen3.8-27B-INT4
-    name: qwen3                          # <1>
-  storageInitializer:
-    enabled: false                       # <2>
-  router:
-    gateway:
-      refs:
-        - name: maas-default-gateway     # <3>
-          namespace: openshift-ingress
-  template:
-    containers:
-      - name: main
-        image: registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5.0
-        args:
-          - --served-model-name=qwen3
-          - --max-model-len=262144
-          - --ssl-certfile=/var/run/kserve/tls/tls.crt   # <4>
-----
-
-<1> API model id stays `qwen3`; the display name is Qwen3.8
-<2> Weights already live on PVC `qwen-model-cache` (`HF_HOME=/opt/models`). Skip the storage-initializer re-download.
-<3> Required for MaaS: the HTTPRoute attaches to `maas-default-gateway`
-<4> OpenShift AI 3.5 enables backend TLS by default; vLLM must present the KServe service-CA cert
-
-The image is *Red Hat AI Inference* CUDA (`rhaii/vllm-cuda-rhel9:3.5.0`) — not community `vllm/vllm-openai`.
-
-=== Let the model load in the background
-
-A cold cluster downloads ~18 GiB from Hugging Face into PVC `qwen-model-cache` (`HF_HOME=/opt/models`). If that cache is empty, first Ready can take 10–20 minutes. If weights are already on the PVC, vLLM mainly loads them into GPU memory (~5–8 minutes). Wait in the background for 20 minutes so a cold pull can finish:
+== ✅ Checkpoint
 
 [source,sh,role=execute]
 ----
-until oc get llminferenceservice/qwen3 -n llm-serving >/dev/null 2>&1; do sleep 5; done
-oc wait llminferenceservice/qwen3 -n llm-serving \
-  --for=jsonpath='{.status.conditions[?(@.type=="Ready")].status}'=True \
-  --timeout=1200s &
-echo "Model wait started in background (PID $!)"
+set -a
+source state/foundry.env
+set +a
+KEY=$(az rest --method post \
+  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
+  --query key1 -o tsv)
+curl -sS --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "api-key: ${KEY}" \
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' \
+  | python3 -c 'import sys,json; print(json.load(sys.stdin)["choices"][0]["message"]["content"])'
+unset KEY
 ----
 
-== Step 3: Mint the workshop API key
+You have a live DeepSeek deployment and a Dev Spaces secret that points at it. ✓
 
-Inference uses *one* `sk-oai-` Bearer token (not an access key + secret). The script mints a key bound to `qwen3-workshop` (5 000 000 tokens / 24h) and stores it as `OPENAI_API_KEY` for every Dev Spaces workspace.
-
-[source,sh,role=execute]
-----
-bash deploy/inference/mint-workshop-key.sh
-----
-
-You have now:
-
-* Dashboard — `https://rh-ai.apps.<apps-domain>/`
-* Gateway — `https://maas.<apps-domain>/`
-* `LLMInferenceService/qwen3` loading on the GPU
-* Catalog, access, quota (`MaaSModelRef` / `MaaSAuthPolicy` / `MaaSSubscription`)
-* One `sk-oai-` key in Secret `ai-provider-openai-api-key`
-
-Lab 2.1 smoke-tests the same URL OpenCode will call. Extra keys for curl can also be created in the dashboard; they do not replace this Secret.
-
-➡️ Move to *Lab 1.4: Hand the Keys*. Developers call MaaS; they never talk to the predictor Service.
+➡️ Move to *Lab 1.4: Hand the Keys*.

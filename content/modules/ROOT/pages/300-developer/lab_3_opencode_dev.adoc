@@ -1,6 +1,6 @@
 = Lab 2.2 — Prompt to Production
 
-You have a Dev Space, an in-cluster LLM, and a short `AGENTS.md`. Three OpenCode sessions take you from an empty tree to a live Fortune Cookie app, then through a real change — still no Ansible, no local Docker, no public LLM.
+You have a Dev Space, DeepSeek-V4 Pro on Foundry, and a short `AGENTS.md`. Three OpenCode sessions take you from an empty tree to a live Fortune Cookie app, then through a real change — still no Ansible, no local Docker.
 
 [NOTE]
 ====

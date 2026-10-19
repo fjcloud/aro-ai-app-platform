@@ -2,7 +2,7 @@
 
 This repository is the ARO version of the AI-powered developer platform workshop.
 
-The subscription starts empty. `make deploy` creates an Azure Red Hat OpenShift cluster with a hosted control plane, then Act 1 publishes Qwen3.8 and Act 2 ships an app with it. Instruction pages are in `content/modules/ROOT/pages`.
+The subscription starts empty. `make deploy` creates an Azure Red Hat OpenShift cluster with a hosted control plane. Act 1 publishes DeepSeek-V4 Pro on Microsoft Foundry and points Dev Spaces at it. Act 2 ships an app with that endpoint. Instruction pages are in `content/modules/ROOT/pages`.
 
 The cluster steps follow link:https://github.com/fjcloud/aro-hcp-quickstart[`fjcloud/aro-hcp-quickstart`]: customer resource group, managed identities, a customer-managed etcd key, Entra ID for the console, and a Red Hat pull secret. This workshop publishes the API and the ingress, so `oc`, Dev Spaces, and application routes work from the machine that ran `az login`. The quickstart keeps both private and publishes only the console.
 
@@ -13,11 +13,7 @@ The cluster steps follow link:https://github.com/fjcloud/aro-hcp-quickstart[`fjc
 * `oc` on `PATH`
 * Permission to create Entra app registrations in that tenant
 * A Red Hat pull secret at `~/pull_secret.json` (override with `PULL_SECRET_FILE`). It must contain `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com`. It is not written into this repository.
-* Quota in `eastus` before Lab 1.1:
-** *Standard DSv3 Family vCPUs* — at least 8 (two `Standard_D4s_v3` workers)
-** *Standard NCADS_A100_v4 Family vCPUs* — at least 24 (one `Standard_NC24ads_A100_v4`)
-
-GPU quota on a new subscription is 0. Request it before the workshop day. Approval is not instant.
+* Quota in `eastus2` for the workers: *Standard DSv3 Family vCPUs* at least 8 (two `Standard_D4s_v3`). The workshop model is Foundry Global Standard. It does not need a GPU quota.
 
 The same flow is in the browser at https://aro-terminal-fja.azurewebsites.net/. *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Paste the deploy command into that terminal.
 
@@ -28,7 +24,6 @@ The same flow is in the browser at https://aro-terminal-fja.azurewebsites.net/. 
 make deploy
 export KUBECONFIG="$PWD/state/kubeconfig"
 make status
-make gpu
 make delete CONFIRM=yes
 ----
 
@@ -41,10 +36,10 @@ make delete CONFIRM=yes
 | Piece | Value
 
 | Region
-| `eastus`
+| `eastus2`
 
 | Cluster
-| `aro-ai-eus`, OpenShift 4.22
+| `aro-ai-eus2`, OpenShift 4.22
 
 | Workers
 | `workers`, 2 × `Standard_D4s_v3` (4 vCPUs each)
@@ -61,7 +56,7 @@ make delete CONFIRM=yes
 
 `state/cluster.env` and `state/kubeconfig` are generated locally and gitignored.
 
-`make gpu` adds one `Standard_NC24ads_A100_v4` node (NVIDIA A100 80 GB) tainted `nvidia.com/gpu=present:NoSchedule`. That is Lab 1.1. Qwen3.8-27B INT4 at a 256K context needs more than 24 GB of VRAM, so the workshop uses this A100 size rather than a T4.
+Lab 1.1 creates a Foundry account and a `deepseekv4pro` deployment of DeepSeek-V4 Pro (Global Standard, pay per token). Lab 1.3 stores that endpoint in the Dev Spaces secret. Do not run `make gpu` for this workshop.
 
 Sign in to the console URL from `make status` with the same Microsoft account that ran `make deploy`.
 
@@ -72,7 +67,7 @@ Sign in to the console URL from `make status` with the same Microsoft account th
 [source]
 ----
 Makefile
-scripts/          cluster create, GPU node pool, delete
+scripts/          cluster create and delete
 state/            generated cluster.env and kubeconfig
 deploy/           operators, instances, inference
 content/          workshop modules

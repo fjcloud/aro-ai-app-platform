@@ -186,10 +186,10 @@ The governance is real — the running pod has the right security context, probe
 |===
 | Achievement | Status
 
-| Dev Space launched, OpenCode connected to in-cluster LLM
+| Dev Space launched, OpenCode connected to DeepSeek-V4 Pro
 | ✅
 
-| Fortune Cookie app generated live by OpenCode + Qwen3.8
+| Fortune Cookie app generated live by OpenCode + DeepSeek-V4 Pro
 | ✅ (`main.go`, `go.mod`, `Dockerfile` — all from a prompt)
 
 | Binary compiled and verified locally before pushing
@@ -208,4 +208,4 @@ The governance is real — the running pod has the right security context, probe
 | ✅
 |===
 
-➡️ Move on to *Act 3: The bill* — GPU watts and token quota from this afternoon.
+➡️ Move on to *Act 3: The bill* — what this afternoon's tokens cost, then delete the deployment.

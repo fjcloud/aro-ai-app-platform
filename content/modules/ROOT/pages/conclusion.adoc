@@ -2,7 +2,7 @@
 
 *Congratulations!* 🥠
 
-You finished the Monday story: an in-cluster coding agent on ARO, no public LLM. In a half day you published Qwen3.8 as a service, shipped Fortune Cookie from a prompt, and looked at the GPU and token bill.
+You finished the Monday story: a coding agent on ARO, with the model on a managed Foundry endpoint. In a half day you published DeepSeek-V4 Pro, shipped Fortune Cookie from a prompt, and priced the tokens.
 
 == What You Built
 
@@ -12,11 +12,11 @@ You finished the Monday story: an in-cluster coding agent on ARO, no public LLM.
 |===
 | Component | Technology
 
-| GPU infrastructure
-| ARO HCP node pool (fixed 1 node), NVIDIA A100 80 GB
+| Cluster
+| ARO HCP, two `Standard_D4s_v3` workers, public API and ingress
 
-| LLM as a Service
-| OpenShift AI 3.5 dashboard + Models-as-a-Service + `LLMInferenceService` + Red Hat vLLM + Qwen3.8-27B-INT4
+| Model
+| Microsoft Foundry, DeepSeek-V4 Pro, deployment `deepseekv4pro`, Global Standard
 
 | AI-native governance
 | `AGENTS.md` — machine-readable platform conventions enforced by OpenCode
@@ -26,9 +26,6 @@ You finished the Monday story: an in-cluster coding agent on ARO, no public LLM.
 
 | GitOps delivery backbone
 | OpenShift GitOps (Argo CD) + OpenShift Pipelines (Tekton)
-
-| LLM observability
-| NVIDIA DCGM dashboard + OpenShift AI model metrics (Prometheus)
 |===
 
 === As a Developer
@@ -41,7 +38,7 @@ You finished the Monday story: an in-cluster coding agent on ARO, no public LLM.
 | Created in seconds on ephemeral Git — no GitHub account, no SSH key setup
 
 | Fortune Cookie app
-| Generated live by OpenCode + Qwen3.8 — `main.go`, `go.mod`, `Dockerfile`, all from a single prompt
+| Generated live by OpenCode + DeepSeek-V4 Pro — `main.go`, `go.mod`, `Dockerfile`, all from a single prompt
 
 | Compile gate
 | `CGO_ENABLED=0 go build -buildvcs=false` verified code before pushing — zero broken builds
@@ -58,36 +55,34 @@ You finished the Monday story: an in-cluster coding agent on ARO, no public LLM.
 
 == The Key Insights
 
-*1. ARO HCP makes GPU infrastructure a Platform Engineer concern, not a developer concern.*
-`make gpu` adds one A100 node pool in the subscription. Developers never pick a VM size or a taint.
+*1. The cluster and the model are different bills.*
+ARO HCP is the place developers edit and ship. DeepSeek-V4 Pro is a Foundry deployment. No GPU node is required for this workshop.
 
-*2. OpenShift AI makes LLM serving a catalog item, not a project.*
-`oc apply -k` deploying an `LLMInferenceService` plus MaaS CRs gives every team a governed OpenAI-compatible API — keys, quotas, and the same interface they already know.
+*2. The endpoint is OpenAI-shaped.*
+OpenCode sends chat completions to `/openai/v1` with the deployment name `deepseekv4pro`. The platform injects the base URL and the key. Developers do not create Azure resources.
 
 *3. AGENTS.md shifts governance from documentation to code.*
-Platform conventions encoded in a Markdown file are read and enforced by the LLM at generation time. The developer gets a compliant app without opening a checklist.
+Platform conventions encoded in a Markdown file are read and enforced by the model at generation time. The developer gets a compliant app without opening a checklist.
 
-*4. The same LLM powers the developer inner loop.*
-OpenCode uses Qwen3.8 to write the Fortune Cookie app. Qwen3.8 is a *platform* capability.
+*4. The same model powers the developer inner loop.*
+OpenCode uses DeepSeek-V4 Pro to write the Fortune Cookie app. That endpoint is a *platform* capability.
 
-*5. Observability closes the loop.*
-GPU utilization, token throughput, and TTFT are visible in the same console as all other cluster metrics. Token quotas on the MaaS gateway make consumption attributable.
+*5. Tokens are the invoice.*
+Input is $1.74 per million tokens. Output, including reasoning, is $3.48 per million. Delete the deployment when the day ends.
 
 == What We Did Not Cover (But You Can Explore)
 
-* *LLM scale-out with llm-d:* This workshop pins one vLLM replica. OpenShift AI's path is *Distributed Inference with llm-d* on `LLMInferenceService`: vLLM engines, an inference gateway and scheduler, KV-cache-aware routing, and LeaderWorkerSet when the model spans GPUs or nodes. Replica count is still moved by *KEDA* (it owns the HPA). The scaling *signal* is the workload variant autoscaler (WVA) — KV cache (`vllm:kv_cache_usage_perc`) and queue (`vllm:num_requests_waiting`), not CPU or memory. WVA is Developer Preview in OpenShift AI 3.5.
+* *A model on a GPU node:* `make gpu` and `deploy/inference` still describe an in-cluster vLLM path. This subscription has no GPU quota, so the workshop uses Foundry instead.
 * *Multi-environment GitOps:* Add `deploy/overlays/stage/` and `deploy/overlays/prod/` with Kustomize overlays; use separate Argo CD `Application` objects per environment
 * *Webhook-triggered pipelines:* Add an `EventListener` + `TriggerBinding` to Tekton so `git push` triggers builds automatically
 * *Application autoscaling:* Add an HPA to the Fortune Cookie `Deployment` to scale based on HTTP requests
-* *Model fine-tuning:* OpenShift AI Data Science Projects support fine-tuning workflows on proprietary data using distributed training
 * *ARO hosted control planes:* This workshop already runs on ARO HCP. Microsoft hosts the control plane. Worker nodes are node pools in your subscription.
-* *OpenShift Service Mesh:* Do not install OSSM 3 by hand on OpenShift 4.22 — this cluster uses the Gateway API (`openshift-default`). Istio remains optional for app-to-app mTLS later.
 
 == Get Started with ARO
 
 * https://learn.microsoft.com/en-us/azure/openshift/quickstart-create-default-hosted-cluster[Create an ARO HCP cluster, window=_blank]
 * https://www.redhat.com/en/technologies/cloud-computing/openshift/azure[OpenShift on Azure, window=_blank]
-* https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed[OpenShift AI Documentation, window=_blank]
+* https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/deepseek/[Foundry DeepSeek pricing, window=_blank]
 * https://github.com/fjcloud/opencode-devspace[opencode-devspace reference architecture (GitHub), window=_blank]
 * https://opencode.ai[OpenCode CLI, window=_blank]
 
