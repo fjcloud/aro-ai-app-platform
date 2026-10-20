@@ -6,7 +6,7 @@ the environment. The password is sent only to the terminal service and is
 removed from anything this script prints.
 
 Example:
-  TERMINAL_URL=https://aro-terminal-fja.azurewebsites.net python3 docs/terminal_e2e.py
+  TERMINAL_URL=https://cloud-terminal.azurewebsites.net python3 docs/terminal_e2e.py
 """
 
 import argparse
@@ -86,6 +86,7 @@ class Client:
 
     def create(self):
         status, payload = self.request("POST", "/api/terminal", {
+            "repo": os.environ.get("WORKSHOP_REPO", "fjcloud/aro-ai-app-platform"),
             "guid": os.environ["GUID"],
             "clientId": os.environ["CLIENT_ID"],
             "password": os.environ["PASSWORD"],
@@ -357,7 +358,7 @@ async def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Exercise the workshop terminal until it stays attached.")
-    parser.add_argument("--url", default=os.environ.get("TERMINAL_URL", "https://aro-terminal-fja.azurewebsites.net"))
+    parser.add_argument("--url", default=os.environ.get("TERMINAL_URL", "https://cloud-terminal.azurewebsites.net"))
     parser.add_argument("--cycles", type=int, default=5)
     parser.add_argument("--pause", type=float, default=1.5)
     parser.add_argument("--idle", type=float, default=75)

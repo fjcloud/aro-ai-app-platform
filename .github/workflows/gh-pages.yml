@@ -36,7 +36,7 @@ jobs:
       - name: antora generate
         run: antora generate default-site.yml --stacktrace
       - name: publish docs launcher
-        run: mkdir -p www/docs && cp docs/index.html www/docs/index.html && cp -a docs/vendor www/docs/vendor
+        run: mkdir -p www/docs && cp docs/index.html www/docs/index.html
       - name: upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
