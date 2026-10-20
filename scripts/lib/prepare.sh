@@ -78,11 +78,15 @@ replace_if_wrong_region() {
   fi
 }
 
-az group create \
-  --name "${CUSTOMER_RG_NAME}" \
-  --subscription "${SUBSCRIPTION_ID}" \
-  --location "${LOCATION}" \
-  --output none
+# The lab group can be in eastus while its cluster resources are in eastus2.
+# Recreating an existing group with a different location is rejected by Azure.
+if ! az group show --name "${CUSTOMER_RG_NAME}" --subscription "${SUBSCRIPTION_ID}" --output none; then
+  az group create \
+    --name "${CUSTOMER_RG_NAME}" \
+    --subscription "${SUBSCRIPTION_ID}" \
+    --location "${LOCATION}" \
+    --output none
+fi
 
 replace_if_wrong_region vnet "${CUSTOMER_VNET_NAME}"
 replace_if_wrong_region nsg "${CUSTOMER_NSG}"
