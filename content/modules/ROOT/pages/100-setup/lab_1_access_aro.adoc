@@ -11,7 +11,9 @@ The subscription is empty. This lab creates the ARO HCP cluster, writes an admin
 
 == From the browser
 
-The link:https://aro-terminal-fja.azurewebsites.net/[browser launcher] takes the workshop id, your email, and the workshop password. *Start* opens an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Put `~/pull_secret.json` in that shell, paste the prerequisite command, then paste the `az aro hcp cluster create` command. The cluster is created in East US 2, in the lab resource group.
+Open link:https://cloud-terminal.azurewebsites.net/[Cloud Terminal], choose *Azure*, then *aro-ai-app-platform*. Enter your assigned workshop id (or catalog URL), email and workshop password. *Start* opens an Azure CLI container in the lab resource group and signs in as the lab service principal. The terminal supplies `RESOURCEGROUP`, the ARO extension, `oc` and Red Hat credentials. The cluster is created in East US 2, in the lab resource group.
+
+Closing the browser keeps the tmux session and running commands. *Remove terminal* deletes the container while preserving its home directory and the lab. Red Hat accounts expire at midnight Europe/Paris; start again after midnight to refresh them.
 
 Stay in that shell for later `oc` commands, or download `~/aro-ai-app-platform/state/kubeconfig` and continue at <<_log_in>> on your laptop.
 
@@ -22,8 +24,8 @@ Have these before you paste the commands:
 * `az login` against the subscription that should own the cluster. The browser terminal is already signed in.
 * The `aro-hcp` extension. `az aro hcp cluster create -h` shows `--operators-authentication`. Do not install the published `aro` extension.
 * `oc` on `PATH`
-* Permission to create Entra app registrations in that tenant
-* `~/pull_secret.json` with `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com` (Insights). Override the path with `PULL_SECRET_FILE`. Do not commit it.
+* Permission to create Entra app registrations in that tenant. Subscription Contributor permission alone is insufficient. Set `CLUSTER_ADMIN_USER` to the Entra user email that will open the console; the service principal id cannot be used as a human console login.
+* `make onboard` downloads `~/pull_secret.json` using the Red Hat service account supplied by the launcher. If the Red Hat organization does not permit this, download it from https://console.redhat.com/openshift/install/pull-secret[OpenShift Cluster Manager]. It must contain `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com` (Insights). Override the path with `PULL_SECRET_FILE`. Do not commit it.
 * Quota in East US 2 (`eastus2`): *Standard DSv3 Family vCPUs* ≥ 8, for the two worker nodes. The model is a Foundry deployment, so this lab does not need GPU quota.
 
 == Clone the workshop
@@ -34,6 +36,13 @@ This is https://github.com/fjcloud/aro-ai-app-platform[`fjcloud/aro-ai-app-platf
 ----
 git clone https://github.com/fjcloud/aro-ai-app-platform.git
 cd aro-ai-app-platform
+----
+
+Check the shell before creating resources. Cloud Terminal sets `CLUSTER_ADMIN_USER` to your workshop email. This user must exist in the lab Entra tenant as a member or invited guest; an arbitrary email is insufficient. Override `CLUSTER_ADMIN_USER` only if the facilitator provides another tenant user. This check obtains and validates the pull secret, and stops before provisioning if required credentials or tools are missing.
+
+[source,sh,role=execute]
+----
+make onboard
 ----
 
 This command does the Azure prerequisites. It creates the network security group, the worker subnet, the hosted-control-plane integration subnet, the 13 managed identities and their role assignments, and the customer-managed etcd key. It writes `state/cluster.env`. In the browser terminal, `RESOURCEGROUP` is the lab resource group and is reused. On a laptop, set `CUSTOMER_RG_NAME` first if the cluster should live in a group that already exists. The last line is `PREP_DONE`.

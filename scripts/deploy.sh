@@ -7,12 +7,15 @@ PULL_SECRET_FILE="${PULL_SECRET_FILE:-${HOME}/pull_secret.json}"
 NP_VM_SIZE="${NP_VM_SIZE:-Standard_D4s_v3}"
 NP_REPLICAS="${NP_REPLICAS:-2}"
 
+# Fail before provisioning when shell credentials or console prerequisites are missing.
+bash "${ROOT}/scripts/onboard.sh"
+
 if ! "${AZ}" account show --query id --output tsv >/dev/null 2>&1; then
   echo "Not logged in to Azure. Run az login against the subscription that should own the cluster." >&2
   exit 1
 fi
 
-if ! "${AZ}" aro hcp cluster create -h 2>&1 | grep -q -- '--operators-authentication'; then
+if ! "${AZ}" aro hcp cluster create -h 2>&1 | grep -- '--operators-authentication' >/dev/null; then
   echo "This az aro hcp command is the published aro extension. It does not accept --operators-authentication." >&2
   echo "Refresh the workshop page and press Start so the terminal uses the aro-hcp extension." >&2
   exit 1

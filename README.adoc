@@ -15,12 +15,13 @@ The cluster steps follow link:https://github.com/fjcloud/aro-hcp-quickstart[`fjc
 * A Red Hat pull secret at `~/pull_secret.json` (override with `PULL_SECRET_FILE`). It must contain `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com`. It is not written into this repository.
 * Quota in `eastus2` for the workers: *Standard DSv3 Family vCPUs* at least 8 (two `Standard_D4s_v3`). The workshop model is Foundry Global Standard. It does not need a GPU quota.
 
-The same flow is in the browser at https://aro-terminal-fja.azurewebsites.net/. *Create* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Paste the deploy command into that terminal.
+The same flow is in the browser at https://cloud-terminal.azurewebsites.net/. Choose *Azure* and this workshop, then *Start* starts an Azure CLI container in the lab resource group and attaches the terminal on the page. It signs in as the service principal. Paste the deploy command into that terminal.
 
 == Use
 
 [source,bash]
 ----
+make onboard
 make deploy
 export KUBECONFIG="$PWD/state/kubeconfig"
 make status

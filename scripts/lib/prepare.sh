@@ -13,6 +13,7 @@ az() {
 LOCATION="eastus2"
 SUBSCRIPTION_ID="$(az account show --query id --output tsv)"
 CLUSTER_NAME="${CLUSTER_NAME:-aro-ai-eus2}"
+CUSTOMER_RG_NAME="${CUSTOMER_RG_NAME:-${RESOURCEGROUP:-}}"
 if [[ -n "${CUSTOMER_RG_NAME:-}" ]]; then
   KEEP_RESOURCE_GROUP=yes
 else

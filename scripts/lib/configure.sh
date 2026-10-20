@@ -60,7 +60,14 @@ json.dump({"auths": keep}, open(dest, "w"))
 PY
 
 TENANT_ID="$("${AZ}" account show --query tenantId --output tsv)"
-ADMIN_USER="${CLUSTER_ADMIN_USER:-$("${AZ}" account show --query user.name --output tsv)}"
+ADMIN_USER="${CLUSTER_ADMIN_USER:-${WORKSHOP_EMAIL:-}}"
+if [[ -z "${ADMIN_USER}" ]]; then
+  if [[ "$("${AZ}" account show --query user.type --output tsv)" == "servicePrincipal" ]]; then
+    echo 'Set CLUSTER_ADMIN_USER to an existing Entra user in the lab tenant; a service principal cannot sign in to the console.' >&2
+    exit 1
+  fi
+  ADMIN_USER="$("${AZ}" account show --query user.name --output tsv)"
+fi
 
 echo "Waiting for cluster ${CLUSTER_NAME} to finish provisioning"
 state=""

@@ -3,9 +3,10 @@ CONFIRM ?=
 
 .DEFAULT_GOAL := help
 
-.PHONY: help deploy status kubeconfig gpu delete terminal
+.PHONY: help onboard deploy status kubeconfig gpu delete terminal
 
 help:
+	@echo "make onboard         Check shell credentials and obtain the pull secret before deploying."
 	@echo "make deploy          Create the ARO HCP cluster, pull secret, and console login."
 	@echo "make status          Show the cluster, node pools, and console URL."
 	@echo "make kubeconfig      Refresh state/kubeconfig for oc."
@@ -16,6 +17,9 @@ help:
 
 deploy:
 	@"$(ROOT)scripts/deploy.sh"
+
+onboard:
+	@bash "$(ROOT)scripts/onboard.sh"
 
 status:
 	@"$(ROOT)scripts/status.sh"
@@ -30,4 +34,4 @@ delete:
 	@CONFIRM="$(CONFIRM)" "$(ROOT)scripts/delete.sh"
 
 terminal:
-	@python3 "$(ROOT)docs/terminal_server.py"
+	@echo "Open https://cloud-terminal.azurewebsites.net/ and choose Azure, then this workshop."
