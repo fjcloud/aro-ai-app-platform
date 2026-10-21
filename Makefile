@@ -34,4 +34,4 @@ delete:
 	@CONFIRM="$(CONFIRM)" "$(ROOT)scripts/delete.sh"
 
 terminal:
-	@echo "Open https://fjcloud.github.io/cloud-terminal-pages/ and select the ARO guide and your assigned Showroom URL."
+	@echo "Open https://fjcloud.github.io/cloud-terminal-pages/ and select the ARO guide, and enter your workshop ID, email, and workshop password."

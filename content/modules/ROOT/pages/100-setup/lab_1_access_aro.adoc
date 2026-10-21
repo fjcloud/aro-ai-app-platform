@@ -12,8 +12,8 @@ Your assigned RHDP environment already contains an ARO cluster and a bastion wit
 == Open your environment
 
 . Sign in to https://demo.redhat.com[Red Hat Demo Platform] and open the assigned environment.
-. Copy its *Showroom URL*.
-. Open https://fjcloud.github.io/cloud-terminal-pages/[Cloud Terminal], choose *Azure · AI developer platform on ARO*, paste that URL, and click *Open workshop*.
+. Use the *workshop ID, assigned email, and workshop password* supplied by your facilitator.
+. Open https://fjcloud.github.io/cloud-terminal-pages/[Cloud Terminal], choose *Azure · AI developer platform on ARO*, enter those details, and click *Open workshop*. The launcher retrieves your assigned Showroom URL automatically.
 
 The guide opens beside the existing terminal. Use *Open in new tab* and the environment's supplied access details if the terminal does not appear or requires a login. RHDP controls the environment's lifetime.
 
