@@ -33,14 +33,15 @@ This is Global Standard, pay per token, in East US 2. DeepSeek-V4 Pro is *$1.74 
 | `GlobalStandard`, capacity `1`
 |===
 
-The login script does not export `SUBSCRIPTION` or `RESOURCEGROUP`. Read them from Azure.
+Use the exact Azure resource group assigned in your RHDP environment details. Export it as `RESOURCEGROUP` before continuing; the commands do not guess a group from the subscription.
 
 == Create the account and the deployment
 
 [source,sh,role=execute]
 ----
 SUBSCRIPTION=$(az account show --query id -o tsv)
-RESOURCEGROUP=$(az group list --query "[?starts_with(name, 'openenv-')].name | [0]" -o tsv)
+: "${RESOURCEGROUP:?Export RESOURCEGROUP from the assigned RHDP environment details first}"
+az group show --name "$RESOURCEGROUP" --output none
 SUFFIX="${RESOURCEGROUP#openenv-}"
 FOUNDRY_NAME="$(printf 'arodeepseek%s' "$SUFFIX" | tr -cd '[:alnum:]')"
 API=2025-06-01

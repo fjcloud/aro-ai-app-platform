@@ -58,8 +58,8 @@ After completing this workshop, you will understand:
 
 | *0 — Get in*
 | —
-| Deploy the ARO HCP cluster and log in with `oc`
-| 45 min
+| Connect to the existing RHDP cluster and log in with `oc`
+| 10 min
 
 .4+| *1 — Stand up the agent*
 | 1.1
@@ -112,7 +112,8 @@ After completing this workshop, you will understand:
 You will need:
 
 * A web browser
-* An empty Azure subscription. Act 0 can run in a local terminal, or from the link:https://cloud-terminal.azurewebsites.net/[browser launcher], which starts an Azure CLI terminal in the lab resource group
+* An assigned RHDP ARO environment with a ready cluster, bastion, and WeTTY terminal
+* Cluster-admin access and an Azure identity allowed to create Foundry resources in the assigned resource group
 * This workshop repository (cloned in Act 0) — not the Go app template
 
 Let's get started.

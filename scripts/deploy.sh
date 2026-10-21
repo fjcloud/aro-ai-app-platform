@@ -8,7 +8,7 @@ NP_VM_SIZE="${NP_VM_SIZE:-Standard_D4s_v3}"
 NP_REPLICAS="${NP_REPLICAS:-2}"
 
 # Fail before provisioning when shell credentials or console prerequisites are missing.
-bash "${ROOT}/scripts/onboard.sh"
+bash "${ROOT}/scripts/onboard-provision.sh"
 
 if ! "${AZ}" account show --query id --output tsv >/dev/null 2>&1; then
   echo "Not logged in to Azure. Run az login against the subscription that should own the cluster." >&2

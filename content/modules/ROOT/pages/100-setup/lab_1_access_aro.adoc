@@ -1,149 +1,56 @@
 = Act 0 — Get in
 
-The subscription is empty. This lab creates the ARO HCP cluster, writes an admin kubeconfig, and leaves you in this repository for every later `oc apply -k deploy/...` command.
+Your assigned RHDP environment already contains an ARO cluster and a bastion with a WeTTY browser terminal. This lab connects to that cluster; it does not deploy another one.
 
 [NOTE]
 ====
-*Estimated time:* 45 minutes (about 15 active, the rest is Azure provisioning) +
+*Estimated time:* 10 minutes +
 *Persona:* Platform Engineer +
-*Blocking:* Act 1 starts after `oc get nodes` shows the CPU workers. Lab 1.1 publishes the model on Foundry. It does not add a node.
+*Blocking:* Act 1 requires OpenShift 4.22 or later, Ready workers, cluster-admin access, and permission to create Foundry resources in the assigned Azure resource group.
 ====
 
-== From the browser
+== Open your environment
 
-Open link:https://cloud-terminal.azurewebsites.net/[Cloud Terminal], choose *Azure*, then *aro-ai-app-platform*. Enter your assigned workshop id (or catalog URL), email and workshop password. *Start* opens an Azure CLI container in the lab resource group and signs in as the lab service principal. The terminal supplies `RESOURCEGROUP`, the ARO extension, `oc` and Red Hat credentials. The cluster is created in East US 2, in the lab resource group.
+. Sign in to https://demo.redhat.com[Red Hat Demo Platform] and open the assigned environment.
+. Copy its *Showroom URL*.
+. Open https://kind-stone-0a3af6003.2.azurestaticapps.net/[Cloud Terminal], choose *Azure · AI developer platform on ARO*, paste that URL, and click *Open workshop*.
 
-Closing the browser keeps the tmux session and running commands. *Remove terminal* deletes the container while preserving its home directory and the lab. Red Hat accounts expire at midnight Europe/Paris; start again after midnight to refresh them.
-
-Stay in that shell for later `oc` commands, or download `~/aro-ai-app-platform/state/kubeconfig` and continue at <<_log_in>> on your laptop.
-
-== Prerequisites
-
-Have these before you paste the commands:
-
-* `az login` against the subscription that should own the cluster. The browser terminal is already signed in.
-* The `aro-hcp` extension. `az aro hcp cluster create -h` shows `--operators-authentication`. Do not install the published `aro` extension.
-* `oc` on `PATH`
-* Permission to create Entra app registrations in that tenant. Subscription Contributor permission alone is insufficient. Set `CLUSTER_ADMIN_USER` to the Entra user email that will open the console; the service principal id cannot be used as a human console login.
-* `make onboard` downloads `~/pull_secret.json` using the Red Hat service account supplied by the launcher. If the Red Hat organization does not permit this, download it from https://console.redhat.com/openshift/install/pull-secret[OpenShift Cluster Manager]. It must contain `registry.redhat.io`, `registry.connect.redhat.com`, and `cloud.openshift.com` (Insights). Override the path with `PULL_SECRET_FILE`. Do not commit it.
-* Quota in East US 2 (`eastus2`): *Standard DSv3 Family vCPUs* ≥ 8, for the two worker nodes. The model is a Foundry deployment, so this lab does not need GPU quota.
-
-== Clone the workshop
-
-This is https://github.com/fjcloud/aro-ai-app-platform[`fjcloud/aro-ai-app-platform`] — cluster scripts, operators, instances, inference, and lab assets. Stay in this directory for the rest of the day.
-
-[source,sh,role=execute]
-----
-git clone https://github.com/fjcloud/aro-ai-app-platform.git
-cd aro-ai-app-platform
-----
-
-Check the shell before creating resources. Cloud Terminal sets `CLUSTER_ADMIN_USER` to your workshop email. This user must exist in the lab Entra tenant as a member or invited guest; an arbitrary email is insufficient. Override `CLUSTER_ADMIN_USER` only if the facilitator provides another tenant user. This check obtains and validates the pull secret, and stops before provisioning if required credentials or tools are missing.
-
-[source,sh,role=execute]
-----
-make onboard
-----
-
-This command does the Azure prerequisites. It creates the network security group, the worker subnet, the hosted-control-plane integration subnet, the 13 managed identities and their role assignments, and the customer-managed etcd key. It writes `state/cluster.env`. In the browser terminal, `RESOURCEGROUP` is the lab resource group and is reused. On a laptop, set `CUSTOMER_RG_NAME` first if the cluster should live in a group that already exists. The last line is `PREP_DONE`.
-
-[source,sh,role=execute]
-----
-if [[ -n "${RESOURCEGROUP:-}" ]]; then
-  export CUSTOMER_RG_NAME="$RESOURCEGROUP"
-fi
-bash scripts/lib/prepare.sh
-----
-
-== Create the cluster
-
-Source the file from the prerequisite step, then paste this command. It creates `aro-ai-eus2` in East US 2 with a public API and a public ingress. The workers are a second command: two `Standard_D4s_v3` nodes, 4 vCPUs each.
-
-[source,sh,role=execute]
-----
-set -a
-source state/cluster.env
-set +a
-az aro hcp cluster create \
-  --name "$CLUSTER_NAME" \
-  --resource-group "$CUSTOMER_RG_NAME" \
-  --location "$LOCATION" \
-  --version "$CLUSTER_VERSION" \
-  --channel-group stable \
-  --subnet-id "$SUBNET_ID" \
-  --vnet-integration-subnet-id "$VNET_INTEGRATION_SUBNET_ID" \
-  --nsg "$NSG_ID" \
-  --managed-resource-group-name "$MANAGED_RESOURCE_GROUP" \
-  --key-management-mode CustomerManaged \
-  --etcd-encryption-type KMS \
-  --kms-vault-name "$KEYVAULT_NAME" \
-  --vault-visibility Public \
-  --kms-active-key "{name:${KMS_KEY_NAME},version:${KMS_KEY_VERSION}}" \
-  --api-visibility Public \
-  --ingress-visibility Public \
-  --user-assigned-identities "{${SERVICE_MI_ID}:{},${CLUSTER_API_AZURE_MI_ID}:{},${CONTROL_PLANE_MI_ID}:{},${CLOUD_CONTROLLER_MANAGER_MI_ID}:{},${INGRESS_MI_ID}:{},${DISK_CSI_DRIVER_MI_ID}:{},${FILE_CSI_DRIVER_MI_ID}:{},${IMAGE_REGISTRY_MI_ID}:{},${CLOUD_NETWORK_CONFIG_MI_ID}:{},${KMS_MI_ID}:{}}" \
-  --operators-authentication "{user-assigned-identities:{control-plane-operators:{cluster-api-azure:${CLUSTER_API_AZURE_MI_ID},control-plane:${CONTROL_PLANE_MI_ID},cloud-controller-manager:${CLOUD_CONTROLLER_MANAGER_MI_ID},ingress:${INGRESS_MI_ID},disk-csi-driver:${DISK_CSI_DRIVER_MI_ID},file-csi-driver:${FILE_CSI_DRIVER_MI_ID},image-registry:${IMAGE_REGISTRY_MI_ID},cloud-network-config:${CLOUD_NETWORK_CONFIG_MI_ID},kms:${KMS_MI_ID}},data-plane-operators:{disk-csi-driver:${DP_DISK_CSI_DRIVER_MI_ID},file-csi-driver:${DP_FILE_CSI_DRIVER_MI_ID},image-registry:${DP_IMAGE_REGISTRY_MI_ID}},service-managed-identity:${SERVICE_MI_ID}}}"
-----
-
-[source,sh,role=execute]
-----
-set -a
-source state/cluster.env
-set +a
-az aro hcp cluster nodepool create \
-  --resource-group "$CUSTOMER_RG_NAME" \
-  --cluster-name "$CLUSTER_NAME" \
-  --name "$NP_NAME" \
-  --location "$LOCATION" \
-  --subscription "$SUBSCRIPTION_ID" \
-  --subnet-id "$SUBNET_ID" \
-  --vm-size Standard_D4s_v3 \
-  --replicas 2 \
-  --version "$NP_VERSION" \
-  --channel-group stable
-----
-
-Azure provisions the cluster after the command returns. The next command waits until it is Succeeded, installs the pull secret, and writes the admin kubeconfig. The last lines include `CONFIGURE_DONE` and a `KUBECONFIG=` path.
-
-[source,sh,role=execute]
-----
-bash scripts/lib/configure.sh
-----
+The guide opens beside the existing terminal. Use *Open in new tab* and the environment's supplied access details if the terminal does not appear or requires a login. RHDP controls the environment's lifetime.
 
 == Log in
 
-The admin kubeconfig is `state/kubeconfig`. It is gitignored. There is no kubeadmin password. The console uses the Microsoft account that created the cluster, and that account is `cluster-admin`.
+Use the Azure identity and OpenShift access instructions supplied with this environment. Do not replace its cluster credentials or create another ARO cluster. If `oc` is not logged in, open the existing cluster console and use *Copy login command* from your user menu.
 
 [source,sh,role=execute]
 ----
-export KUBECONFIG="$PWD/state/kubeconfig"
-oc whoami && oc get nodes
+az account show --query '{subscription:id, identity:user.name}' --output table
+oc whoami
+oc get nodes
+oc auth can-i '*' '*' --all-namespaces
+oc whoami --show-console
 ----
 
-You should see a cluster-admin identity and two Ready workers. The model is not a node. Lab 1.1 publishes it on Foundry.
+The permission check must return `yes` and the workers must be Ready. The platform operators require a compatible OpenShift version; the facilitator must validate the chosen RHDP environment before distributing access.
 
-Console URL:
+== Clone the workshop
 
 [source,sh,role=execute]
 ----
-make status
+cd "$HOME"
+git clone https://github.com/fjcloud/aro-ai-app-platform.git
+cd aro-ai-app-platform
+make onboard
 ----
 
-Open the `console` URL from that output and sign in with the same Microsoft account.
+The check reads the existing Azure and cluster identities and worker readiness. It does not create identities, fetch a new pull secret, or provision a cluster. Keep this directory for the later `oc apply -k deploy/...` commands.
 
-If `oc` later says the credential expired, refresh it:
+Before Lab 1.1, obtain the exact *assigned Azure resource group* from RHDP. Export it as `RESOURCEGROUP`. Foundry resources must be created in that group; do not select the first group in the subscription. The Azure identity needs permission to create those resources and access the model.
 
-[source,sh,role=execute]
-----
-make kubeconfig
-export KUBECONFIG="$PWD/state/kubeconfig"
-----
+== Checkpoint
 
-== Summary
+* [x] Existing ARO cluster accessible with cluster-admin permissions
+* [x] Workers Ready
+* [x] Azure identity and assigned resource group available
+* [x] Workshop repository cloned
 
-* [x] Workshop repo on disk (`aro-ai-app-platform`)
-* [x] ARO HCP cluster `aro-ai-eus2` in East US 2
-* [x] `oc` connected with `state/kubeconfig`
-* [x] Two CPU workers (`Standard_D4s_v3`)
-
-➡️ Move on to *Act 1 — Stand up the agent* (Lab 1.1).
+Continue to *Lab 1.1 — Publish DeepSeek on Foundry*.

@@ -6,7 +6,7 @@ CONFIRM ?=
 .PHONY: help onboard deploy status kubeconfig gpu delete terminal
 
 help:
-	@echo "make onboard         Check shell credentials and obtain the pull secret before deploying."
+	@echo "make onboard         Check access to the existing ARO cluster and Azure lab."
 	@echo "make deploy          Create the ARO HCP cluster, pull secret, and console login."
 	@echo "make status          Show the cluster, node pools, and console URL."
 	@echo "make kubeconfig      Refresh state/kubeconfig for oc."
@@ -34,4 +34,4 @@ delete:
 	@CONFIRM="$(CONFIRM)" "$(ROOT)scripts/delete.sh"
 
 terminal:
-	@echo "Open https://cloud-terminal.azurewebsites.net/ and choose Azure, then this workshop."
+	@echo "Open https://kind-stone-0a3af6003.2.azurestaticapps.net/ and select the ARO guide and your assigned Showroom URL."
