@@ -107,6 +107,14 @@ Open both URLs in your browser:
 * The app URL shows a random fortune cookie message
 * The Argo CD console shows your `fortune-cookie` Application in *Synced / Healthy* — *your* Argo CD instance, scoped to your project
 
+For the Argo CD console, sign in as `admin`. Retrieve the password for *your instance* from the workspace terminal:
+
+[source,sh,role=execute]
+----
+oc get secret argocd-cluster -n ${APP_NAME}-dev \
+  -o jsonpath='{.data.admin\.password}' | base64 -d; echo
+----
+
 The model wrote the code; the running app serves a slice of strings.
 
 ---
