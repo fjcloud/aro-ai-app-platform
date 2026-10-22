@@ -1,8 +1,8 @@
-= Lab 1.4 — Hand the Keys
+= Lab 1.5 — Hand the Keys
 
 DeepSeek-V4 Pro is already answering. Your job now is to hand the afternoon developer a *launch URL* and a short runbook — not a wiki, not Ansible, not a tour of every Kustomize file.
 
-The template is already on GitHub: https://github.com/fjcloud/go-app-template[fjcloud/go-app-template].
+The ARO transcription template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-transcription[fjcloud/go-app-template].
 
 [NOTE]
 ====
@@ -38,9 +38,9 @@ Clone only if you want it on disk. On a shared workshop cluster you can also ope
 
 [source,sh,role=execute]
 ----
-git clone --depth 1 https://github.com/fjcloud/go-app-template "$HOME/go-app-template"
-wc -l "$HOME/go-app-template/AGENTS.md"
-cat "$HOME/go-app-template/AGENTS.md"
+git clone --depth 1 --branch aro-transcription https://github.com/fjcloud/go-app-template "$HOME/aro-transcription-template"
+wc -l "$HOME/aro-transcription-template/AGENTS.md"
+cat "$HOME/aro-transcription-template/AGENTS.md"
 ----
 
 You should see a short file. Notice:
@@ -90,7 +90,7 @@ if [[ -z "$DEVSPACES_URL" ]]; then
   DEVSPACES_URL="https://$(oc get route devspaces -n openshift-operators \
     -o jsonpath='{.spec.host}')"
 fi
-TEMPLATE_URL="https://github.com/fjcloud/go-app-template"
+TEMPLATE_URL="https://github.com/fjcloud/go-app-template/tree/aro-transcription"
 
 echo "============================================"
 echo " Participant workspace URL:"
@@ -98,7 +98,7 @@ echo "  $DEVSPACES_URL/#$TEMPLATE_URL?ai-provider=opencodeai/opencode"
 echo "============================================"
 ----
 
-When a developer opens that URL, Dev Spaces clones the template, injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. Lab 2.1 points the project at DeepSeek-V4 Pro. `AGENTS.md` is the runbook.
+When a developer opens that URL, Dev Spaces clones the template, injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. Lab 2.1 points the project at DeepSeek-V4 Pro. `AGENTS.md` is the runbook, including the browser audio and Whisper API contract.
 
 == Act 1 complete
 
@@ -115,8 +115,11 @@ When a developer opens that URL, Dev Spaces clones the template, injects the Ope
 | Workspace secret
 | ✅ `OPENAI_BASE_URL` ends in `/openai/v1`
 
+| Whisper speech service
+| ✅ Ready on one T4; internal endpoint only
+
 | Go app template
-| ✅ Short `AGENTS.md`
+| ✅ Transcription branch and speech contract in `AGENTS.md`
 |===
 
 Switch persona — move on to *Act 2: first day* (Lab 2.1).

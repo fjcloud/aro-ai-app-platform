@@ -59,7 +59,7 @@ Verify the probes are working after re-deploy:
 
 [source,sh,role=execute]
 ----
-APP_NAME="${APP_NAME:-fortune-cookie}"
+APP_NAME="${APP_NAME:-live-transcript}"
 ROUTE=$(oc get route $APP_NAME -n ${APP_NAME}-dev -o jsonpath='{.spec.host}')
 curl -fsS https://${ROUTE}/healthz
 ----
@@ -81,7 +81,7 @@ Verify the security context on the running pod:
 
 [source,sh,role=execute]
 ----
-APP_NAME="${APP_NAME:-fortune-cookie}"
+APP_NAME="${APP_NAME:-live-transcript}"
 oc get pod -n ${APP_NAME}-dev -l app.kubernetes.io/name=$APP_NAME \
   -o jsonpath='{.items[0].spec.securityContext}' | python3 -m json.tool
 ----
@@ -101,7 +101,7 @@ Verify Route TLS:
 
 [source,sh,role=execute]
 ----
-APP_NAME="${APP_NAME:-fortune-cookie}"
+APP_NAME="${APP_NAME:-live-transcript}"
 oc get route $APP_NAME -n ${APP_NAME}-dev \
   -o jsonpath='{.spec.tls.termination}'
 ----
@@ -116,7 +116,7 @@ edge
 
 [source,sh,role=execute]
 ----
-APP_NAME="${APP_NAME:-fortune-cookie}"
+APP_NAME="${APP_NAME:-live-transcript}"
 
 echo "=== Resource Limits ==="
 oc get deployment $APP_NAME -n ${APP_NAME}-dev \
@@ -189,7 +189,7 @@ The governance is real — the running pod has the right security context, probe
 | Dev Space launched, OpenCode connected to DeepSeek-V4 Pro
 | ✅
 
-| Fortune Cookie app generated live by OpenCode + DeepSeek-V4 Pro
+| Live Transcript app generated live by OpenCode + DeepSeek-V4 Pro
 | ✅ (`main.go`, `go.mod`, `Dockerfile` — all from a prompt)
 
 | Binary compiled and verified locally before pushing

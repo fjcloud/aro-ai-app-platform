@@ -6,7 +6,7 @@ Welcome to Act 2. You are now the *Developer*. Everything you need — editor, t
 ====
 *Estimated time:* 10 minutes +
 *Persona:* Developer +
-*What you need:* The launch URL from Lab 1.4 and your cluster login
+*What you need:* The launch URL from Lab 1.5 and your cluster login
 ====
 
 == What is OpenShift Dev Spaces?
@@ -20,11 +20,11 @@ OpenShift Dev Spaces provides *cloud-based developer workspaces* — VS Code-com
 
 == Get the Dev Spaces URL
 
-Use the URL you printed in Lab 1.4. It clones the Go app template (`go-app-template`) — not this workshop repo — and creates a workspace from its `devfile.yaml`:
+Use the URL you printed in Lab 1.5. It clones the Go app template (`go-app-template`) — not this workshop repo — and creates a workspace from its `devfile.yaml`:
 
 [source,text,options=nowrap]
 ----
-https://devspaces.apps.<cluster>/#https://github.com/fjcloud/go-app-template?ai-provider=opencodeai/opencode
+https://devspaces.apps.<cluster>/#https://github.com/fjcloud/go-app-template/tree/aro-transcription?ai-provider=opencodeai/opencode
 ----
 
 [NOTE]

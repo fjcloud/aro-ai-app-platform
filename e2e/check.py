@@ -76,8 +76,22 @@ def platform():
         require(error.code in (401, 403), 'Foundry rejects an invalid API key')
 
 
+def speech():
+    dsc = resource('dsc', 'default-dsc')
+    require(any(c['type'] == 'Ready' and c['status'] == 'True' for c in dsc['status']['conditions']), 'OpenShift AI Ready')
+    model = resource('inferenceservice', 'whisper', 'speech-serving')
+    require(any(c['type'] == 'Ready' and c['status'] == 'True' for c in model['status']['conditions']), 'Whisper InferenceService Ready')
+    predictor = model['spec']['predictor']
+    require(predictor['model']['resources']['limits']['nvidia.com/gpu'] == '1', 'Whisper requests exactly one GPU')
+    nodes = json.loads(oc('get', 'nodes', '-l', 'node.kubernetes.io/instance-type=Standard_NC8as_T4_v3', '-o', 'json'))['items']
+    require(len(nodes) == 1 and nodes[0]['status']['allocatable'].get('nvidia.com/gpu') == '1', 'One physical T4 on the speech VM')
+    require(not json.loads(oc('get', 'route', '-n', 'speech-serving', '-o', 'json'))['items'], 'Whisper has no public model Route')
+    resource('networkpolicy', 'whisper-clients', 'speech-serving')
+    print('PASS: Model ingress restricted to workshop application and monitoring')
+
+
 def developer():
-    app = os.environ.get('APP_NAME', 'fortune-cookie')
+    app = os.environ.get('APP_NAME', 'live-transcript')
     ns = app + '-dev'
     deployment = resource('deployment', app, ns)
     require(deployment.get('status', {}).get('availableReplicas', 0) >= 1, 'Application available')
@@ -95,7 +109,7 @@ def developer():
     with urllib.request.urlopen(url, timeout=30) as response:
         page = response.read().decode('utf-8')
     if os.environ.get('EXPECT_UPDATED_APP') == 'true':
-        require('🥠' in html.unescape(page), 'Shipped update contains the fortune cookie emoji')
+        require('Download transcript' in html.unescape(page), 'Shipped update exports the transcript')
     spec = deployment['spec']['template']['spec']
     container = spec['containers'][0]
     resources = container.get('resources', {})
@@ -124,7 +138,7 @@ def developer():
 
 if __name__ == '__main__':
     try:
-        {'platform': platform, 'developer': developer, 'usage': completion}[sys.argv[1]]()
+        {'platform': platform, 'developer': developer, 'usage': completion, 'speech': speech}[sys.argv[1]]()
     except AssertionError as error:
         sys.exit('FAIL: ' + str(error))
     except urllib.error.HTTPError as error:

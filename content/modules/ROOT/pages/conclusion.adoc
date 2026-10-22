@@ -1,97 +1,25 @@
-= Conclusion & What's Next
+= Conclusion
 
-*Congratulations!* 🥠
+You used two models for two different jobs:
 
-You finished the Monday story: a coding agent on ARO, with the model on a managed Foundry endpoint. In a half day you published DeepSeek-V4 Pro, shipped Fortune Cookie from a prompt, and priced the tokens.
+* *DeepSeek on Foundry* powered OpenCode in Dev Spaces.
+* *Whisper on one T4* transcribed the application’s audio through OpenShift AI, KServe and Red Hat AI Inference.
 
-== What You Built
+The Go application captured microphone audio in the browser, sent short WAV clips through its backend, and displayed the transcript. Tekton built the image; your project’s Argo CD deployed it. The model service stayed inside the cluster.
 
-=== As a Platform Engineer
+This is *near-real-time transcription*: results arrive after each short clip. Whisper is not a native continuous streaming model. Test accents, background noise, long sentences and slow networks before using this pattern beyond a workshop.
 
-[cols="1,2", options="header"]
-|===
-| Component | Technology
+== Costs and cleanup
 
-| Cluster
-| ARO HCP, two `Standard_D4s_v3` workers, public API and ingress
+Foundry charges for coding tokens. The T4 VM, ARO worker licence and disks are billed while provisioned, even when nobody speaks. Deleting or stopping the Whisper pod alone does not remove those costs.
 
-| Model
-| Microsoft Foundry, DeepSeek-V4 Pro, deployment `deepseekv4pro`, Global Standard
+Follow Lab 3.1 for scoped cleanup. Never delete the shared RHDP cluster. On a multi-user workshop, only the facilitator removes the shared inference service, model cache and GPU worker after all participants finish.
 
-| AI-native governance
-| `AGENTS.md` — machine-readable platform conventions enforced by OpenCode
+== Next steps
 
-| Developer enablement
-| Go app template + OpenShift Dev Spaces pre-configured with OpenCode
+* Add authentication before exposing the demo to a wider audience.
+* Measure transcription latency and accuracy with representative audio.
+* Add voice activity detection and overlapping windows for better sentence boundaries.
+* Explore application and GPU metrics in the OpenShift console.
 
-| GitOps delivery backbone
-| OpenShift GitOps (Argo CD) + OpenShift Pipelines (Tekton)
-|===
-
-=== As a Developer
-
-[cols="1,2", options="header"]
-|===
-| Milestone | Details
-
-| Personal Git repo
-| Created in seconds on ephemeral Git — no GitHub account, no SSH key setup
-
-| Fortune Cookie app
-| Generated live by OpenCode + DeepSeek-V4 Pro — `main.go`, `go.mod`, `Dockerfile`, all from a single prompt
-
-| Compile gate
-| `CGO_ENABLED=0 go build -buildvcs=false` verified code before pushing — zero broken builds
-
-| Container image
-| Built by OpenShift Pipelines (Tekton): `git-clone + buildah` — no local Docker required
-
-| GitOps deployment
-| Developer-owned Argo CD instance synced `deploy/base/` → app live at a public HTTPS route
-
-| Compliance audit
-| OpenCode reviewed and fixed resource limits, probes, security context, TLS — all per `AGENTS.md`
-|===
-
-== The Key Insights
-
-*1. The cluster and the model are different bills.*
-ARO HCP is the place developers edit and ship. DeepSeek-V4 Pro is a Foundry deployment. No GPU node is required for this workshop.
-
-*2. The endpoint is OpenAI-shaped.*
-OpenCode sends chat completions to `/openai/v1` with the deployment name `deepseekv4pro`. The platform injects the base URL and the key. Developers do not create Azure resources.
-
-*3. AGENTS.md shifts governance from documentation to code.*
-Platform conventions encoded in a Markdown file are read and enforced by the model at generation time. The developer gets a compliant app without opening a checklist.
-
-*4. The same model powers the developer inner loop.*
-OpenCode uses DeepSeek-V4 Pro to write the Fortune Cookie app. That endpoint is a *platform* capability.
-
-*5. Tokens are the invoice.*
-Input is $1.74 per million tokens. Output, including reasoning, is $3.48 per million. Delete the deployment when the day ends.
-
-== What We Did Not Cover (But You Can Explore)
-
-* *A model on a GPU node:* `make gpu` and `deploy/inference` still describe an in-cluster vLLM path. This subscription has no GPU quota, so the workshop uses Foundry instead.
-* *Multi-environment GitOps:* Add `deploy/overlays/stage/` and `deploy/overlays/prod/` with Kustomize overlays; use separate Argo CD `Application` objects per environment
-* *Webhook-triggered pipelines:* Add an `EventListener` + `TriggerBinding` to Tekton so `git push` triggers builds automatically
-* *Application autoscaling:* Add an HPA to the Fortune Cookie `Deployment` to scale based on HTTP requests
-* *ARO hosted control planes:* This workshop already runs on ARO HCP. Microsoft hosts the control plane. Worker nodes are node pools in your subscription.
-
-== Get Started with ARO
-
-* https://learn.microsoft.com/en-us/azure/openshift/quickstart-create-default-hosted-cluster[Create an ARO HCP cluster, window=_blank]
-* https://www.redhat.com/en/technologies/cloud-computing/openshift/azure[OpenShift on Azure, window=_blank]
-* https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/deepseek/[Foundry DeepSeek pricing, window=_blank]
-* https://github.com/fjcloud/opencode-devspace[opencode-devspace reference architecture (GitHub), window=_blank]
-* https://opencode.ai[OpenCode CLI, window=_blank]
-
-== Talk to Us
-
-If you have questions or want to explore ARO for your organization, our team is here to help. Use the blue hat icon in the https://console.redhat.com[Red Hat Hybrid Cloud Console, window=_blank] to start a conversation.
-
----
-
-*Thank you for attending the AI-Powered Developer Platform on ARO workshop!*
-
-_May your deployments be swift, your models be accurate, and your fortunes be wise._ 🥠
+The experimental OpenCode workshop companion remains separate from this path.

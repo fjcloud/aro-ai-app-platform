@@ -10,7 +10,7 @@ help:
 	@echo "make deploy          Create the ARO HCP cluster, pull secret, and console login."
 	@echo "make status          Show the cluster, node pools, and console URL."
 	@echo "make kubeconfig      Refresh state/kubeconfig for oc."
-	@echo "make gpu-classic     Plan an A100 worker for an existing classic ARO cluster (quota required)."
+	@echo "make gpu-classic     Plan a single-T4 worker for an existing classic ARO cluster (quota required)."
 	@echo "make gpu             Add one GPU node to a separately provisioned ARO HCP cluster."
 	@echo "make delete CONFIRM=yes"
 	@echo "                     Delete the cluster, its resource groups, and the Entra apps."

@@ -2,7 +2,7 @@
 
 Welcome to the *AI-Powered Developer Platform on ARO* workshop.
 
-The story for today is a Monday at a company that keeps source code on its own cluster. This morning the platform team publishes DeepSeek-V4 Pro as a managed Foundry endpoint. This afternoon a developer ships an app with it from OpenShift Dev Spaces. You wear both hats, then you look at the token bill.
+The story for today is a Monday at a company that keeps source code on its own cluster. This morning the platform team publishes DeepSeek-V4 Pro as a managed Foundry endpoint. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships a browser transcription app from OpenShift Dev Spaces. You wear both hats, then you look at the token bill.
 
 
 == Who This Workshop Is For
@@ -20,19 +20,28 @@ The story for today is a Monday at a company that keeps source code on its own c
 
 == What You Will Build
 
-image::architecture-overview.png[Coding agent on ARO, model on Foundry, align="center"]
+[source,text]
+----
+Dev Spaces + OpenCode ── coding requests ──> DeepSeek / Foundry
+          │ generates and ships
+          ▼
+Browser microphone ── HTTPS ──> Go app ── WAV clips ──> OpenShift AI
+                                                        KServe + Red Hat vLLM
+                                                        Whisper / one T4
+----
 
 The LLM writes the app. DeepSeek-V4 Pro is a *platform* capability, published as a managed endpoint.
 
 === Act 1 — Platform
 * *DeepSeek-V4 Pro* on Microsoft Foundry, Global Standard, pay per token
 * *OpenShift Dev Spaces* pointed at that endpoint with one injected key
+* *OpenShift AI + KServe + Red Hat AI Inference* serving Whisper Large v3 Turbo on one NVIDIA T4
 * *AGENTS.md* — the only runbook OpenCode reads
 * *OpenShift GitOps* (Argo CD) and *OpenShift Pipelines* (Tekton)
 
 === Act 2 — Developer
 * A personal Git repository on *ephemeral Git* (workshop-scoped, no GitHub account)
-* A *Fortune Cookie* Go app generated live by OpenCode + DeepSeek-V4 Pro
+* A *Live Transcript* Go app with browser microphone capture, generated live by OpenCode + DeepSeek-V4 Pro
 * Image build and GitOps deploy from git, ephemeral Git, and `oc` — no Ansible, no local Docker
 * Platform rules (limits, probes, SCC, TLS) audited by the same model
 
@@ -44,7 +53,7 @@ The LLM writes the app. DeepSeek-V4 Pro is a *platform* capability, published as
 
 After completing this workshop, you will understand:
 
-* How a Foundry Global Standard deployment publishes an OpenAI-compatible model without a GPU node
+* How a Foundry Global Standard deployment publishes an OpenAI-compatible model for coding, alongside a separate T4 speech model
 * How `AGENTS.md` shifts platform governance from documentation to something the model enforces
 * How Dev Spaces + OpenCode is an AI-augmented inner loop with no laptop install
 * How Tekton and Argo CD form a GitOps path from a single repository
@@ -61,7 +70,7 @@ After completing this workshop, you will understand:
 | Connect to the existing RHDP cluster and log in with `oc`
 | 10 min
 
-.4+| *1 — Stand up the agent*
+.5+| *1 — Stand up the agent*
 | 1.1
 | Publish DeepSeek on Foundry
 | 15 min
@@ -75,6 +84,10 @@ After completing this workshop, you will understand:
 | 15 min
 
 | 1.4
+| Serve Whisper on one T4
+| 15 min active / ~25 min background
+
+| 1.5
 | Hand the Keys (`AGENTS.md` + Dev Spaces URL)
 | 10 min
 
@@ -111,7 +124,7 @@ After completing this workshop, you will understand:
 
 You will need:
 
-* A web browser
+* A current web browser and a microphone
 * An assigned RHDP ARO environment with a ready cluster, bastion, and WeTTY terminal
 * Cluster-admin access and an Azure identity allowed to create Foundry resources in the assigned resource group
 * This workshop repository (cloned in Act 0) — not the Go app template

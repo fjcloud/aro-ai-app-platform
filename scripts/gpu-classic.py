@@ -6,8 +6,9 @@ import subprocess
 import sys
 
 
-VM_SIZE = "Standard_NC24ads_A100_v4"
-GPU_SIZES = {VM_SIZE: ("a100", 24), "Standard_NV72ads_A10_v5": ("a10", 72),
+VM_SIZE = "Standard_NC8as_T4_v3"
+GPU_SIZES = {"Standard_NC24ads_A100_v4": ("a100", 24),
+             VM_SIZE: ("t4", 8), "Standard_NC4as_T4_v3": ("t4", 4), "Standard_NV72ads_A10_v5": ("a10", 72),
              "Standard_NC64as_T4_v3": ("t4", 64)}
 NAMESPACE = "openshift-machine-api"
 MACHINESET_LABEL = "machine.openshift.io/cluster-api-machineset"
@@ -43,7 +44,7 @@ def plan(machine_sets, sku, usage, resource_group_id, subscription):
     if "v2" not in provider["image"].get("sku", ""):
         raise ValueError("This helper requires a generation 2 ARO image; the selected template is not v2.")
     infra = machine["spec"]["selector"]["matchLabels"]["machine.openshift.io/cluster-api-cluster"]
-    name = f"{infra}-gpu-{gpu_name}-{provider['location']}{provider['zone']}"
+    name = f"{infra}-gpu-{gpu_name}-{required_cores}-{provider['location']}{provider['zone']}"
     machine["metadata"] = {"name": name, "namespace": NAMESPACE,
                            "labels": {"machine.openshift.io/cluster-api-cluster": infra,
                                       "workshop.fjcloud.io/experiment": gpu_name}}

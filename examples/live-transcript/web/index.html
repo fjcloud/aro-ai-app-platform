@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Live Transcript</title><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
+<body><main>
+<p class="eyebrow">RED HAT OPENSHIFT AI · SPEECH TO TEXT</p>
+<h1>Your voice, in writing.</h1>
+<p>Speak into your microphone. Your words appear a few seconds later.</p>
+<section class="controls" aria-label="Recording controls">
+<label for="language">Spoken language</label><select id="language"><option value="fr">French</option><option value="en">English</option><option value="">Detect automatically</option></select>
+<button id="start">Start microphone</button><button id="stop" disabled>Stop</button><button id="clear">Clear</button><button id="download">Download transcript</button>
+</section>
+<p id="status" role="status">Ready. Your microphone is off.</p>
+<article id="transcript" aria-label="Transcript" aria-live="polite" aria-atomic="false"></article>
+<p id="error" role="alert"></p>
+<footer>Audio is processed by Whisper on this workshop’s OpenShift cluster. The app does not save recordings. Transcription may contain mistakes.</footer>
+</main></body></html>

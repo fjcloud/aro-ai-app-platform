@@ -1,0 +1,122 @@
+= Lab 1.4 — Serve Whisper on one T4
+
+Keep DeepSeek on Foundry for OpenCode. Add a separate speech model for the application: *Whisper Large v3 Turbo*, served by *Red Hat AI Inference 3.5* on *OpenShift AI 3.5 / KServe*, using one NVIDIA T4.
+
+[NOTE]
+====
+*Persona:* Platform Engineer +
+*Time:* ~15 minutes active; allow 25–40 minutes for a new worker, driver and first image/model download. +
+*Requires:* Classic ARO, cluster-admin, Azure VM permissions, T4 quota and capacity. Keep the existing CPU workers. Allow CPU headroom for OpenShift AI, Dev Spaces and Tekton; three small D4 workers can run out of schedulable CPU. If a workspace is Pending, check its events and provision additional CPU capacity in the zone of its PVC.
+====
+
+== Why this model
+
+The https://access.redhat.com/articles/rhoai-supported-configs[OpenShift AI support matrix] includes ARO and OpenShift 4.21 for OpenShift AI 3.5. The https://docs.redhat.com/en/documentation/red_hat_ai/3/html-single/supported_product_and_hardware_configurations/index[Red Hat AI hardware matrix] includes the T4 for the CUDA runtime, but excludes T4 from the supported INT4 configuration. Use the upstream OpenAI Whisper weights in *FP16*, without custom kernels. The runtime image and model revision are pinned in `deploy/speech/servingruntime.yaml`.
+
+The inference runtime is a Red Hat product. Whisper weights are an upstream model, not a Red Hat LLM. This workshop does not imply certification of the generated application or a blanket support guarantee for every model/configuration; production support requires the appropriate subscriptions and supported hardware/operator versions.
+
+== Check CPU capacity first
+
+On a small RHDP cluster, provision one additional `Standard_D8s_v3` CPU worker before installing OpenShift AI. The helper creates a separate MachineSet and preserves the original CPU pools. Inspect your existing workspace PVC’s zone if one exists:
+
+[source,sh,role=execute]
+----
+oc get pv -o 'custom-columns=NAME:.metadata.name,CLAIM:.spec.claimRef.name,ZONE:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values'
+python3 scripts/speech-cpu.py --zone 3
+python3 scripts/speech-cpu.py --zone 3 --apply
+----
+
+Replace `3` with the appropriate zone from the existing CPU MachineSets / workspace PVC. A workspace using a zonal disk needs available CPU in that same zone. If the cluster already has sufficient headroom, skip the extra worker. This VM has a separate hourly cost and is labelled for scoped cleanup.
+
+== Step 1: Add one T4 worker
+
+Run from the workshop checkout on the bastion, after `make onboard`. The helper checks the selected Azure subscription, region, zones, quota and generation-2 CPU template. Its default VM is `Standard_NC8as_T4_v3`: *one* 16 GB T4, 8 vCPUs, 56 GiB RAM.
+
+[source,sh,role=execute]
+----
+make gpu-classic
+make gpu-classic GPU_ARGS=--apply
+oc get machines -n openshift-machine-api
+oc get nodes -l workshop.fjcloud.io/gpu=t4
+----
+
+Wait for the new Machine to be Running and the node Ready. Do not use `make gpu`, which targets separately provisioned ARO HCP clusters. Do not substitute the four-T4 `NC64` size: requesting one GPU in a pod does not reduce the price of a four-GPU VM.
+
+== Step 2: Install the speech operators
+
+[source,sh,role=execute]
+----
+oc apply -f deploy/operators/cert-manager-namespace.yaml \
+  -f deploy/operators/cert-manager-operatorgroup.yaml \
+  -f deploy/operators/cert-manager-subscription.yaml
+oc apply -f deploy/operators/rhoai-namespace.yaml \
+  -f deploy/operators/rhoai-operatorgroup.yaml \
+  -f deploy/operators/rhoai-subscription.yaml
+oc apply -f deploy/operators/nfd-namespace.yaml \
+  -f deploy/operators/nfd-operatorgroup.yaml \
+  -f deploy/operators/nfd-subscription.yaml
+oc apply -f deploy/operators/nvidia-namespace.yaml \
+  -f deploy/operators/nvidia-operatorgroup.yaml \
+  -f deploy/operators/nvidia-subscription.yaml
+oc get subscription -A
+----
+
+Wait for these operators to show *Succeeded* under *Ecosystem → Installed Operators*. Then configure GPU discovery and the driver:
+
+[source,sh,role=execute]
+----
+oc apply -f deploy/instances/nfd-instance.yaml
+oc apply -f deploy/instances/nvidia-clusterpolicy.yaml
+oc get clusterpolicy gpu-cluster-policy
+oc get nodes -l workshop.fjcloud.io/gpu=t4 \
+  -o 'custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu'
+----
+
+Continue when `GPU` is `1`. A Ready node alone does not prove that its GPU driver is ready.
+
+== Step 3: Enable OpenShift AI model serving
+
+[source,sh,role=execute]
+----
+oc apply -f deploy/instances/rhoai-dsci.yaml
+oc apply -f deploy/speech/rhoai-dsc.yaml
+oc wait dsc/default-dsc --for=condition=Ready --timeout=900s
+oc apply -k deploy/speech
+oc wait inferenceservice/whisper -n speech-serving \
+  --for=condition=Ready --timeout=1800s
+----
+
+This enables the dashboard and KServe. It does not deploy the historical Qwen/MaaS stack. Do not apply `deploy/instances` or `deploy/inference` as a whole.
+
+[source,sh,role=execute]
+----
+oc get inferenceservice,servingruntime,pvc -n speech-serving
+oc get pods -n speech-serving
+oc get route -n speech-serving
+----
+
+Expect a Ready `whisper` inference service and *no public model Route*. The internal endpoint is:
+
+[source,text]
+----
+http://whisper-predictor.speech-serving.svc.cluster.local/v1/audio/transcriptions
+----
+
+KServe publishes the service on port 80 and forwards to vLLM on 8080. The network policy allows the `live-transcript-dev` application namespace to reach the model. The browser contacts only the Go app over HTTPS; audio and any future model credentials stay behind that backend.
+
+Open the *Red Hat OpenShift AI* link in the OpenShift application launcher. In *Projects*, select *Workshop speech transcription* and inspect the Whisper deployment. The dashboard is the management view; it is not a second coding endpoint.
+
+== Step 4: Understand the audio path
+
+[source,text]
+----
+Microphone → AudioWorklet → independent 16 kHz PCM16 WAV clips
+           → Go POST /api/transcribe → KServe / vLLM → Whisper
+           ← transcript JSON        ← model output
+----
+
+The app sends short clips sequentially, displays each result and flushes the last clip on Stop. This provides *near-real-time* transcription, with a delay from capture plus inference. It is not native Whisper WebSocket streaming. WAV avoids the problem of later WebM recorder slices not being independently decodable.
+
+The application keeps audio in memory, skips silence, bounds uploads and queued clips, and stops the microphone on Stop or failure. It requires browser microphone permission and the HTTPS application Route. Do not record sensitive conversations in a shared demo environment.
+
+➡️ Move to *Lab 1.5: Hand the Keys*.

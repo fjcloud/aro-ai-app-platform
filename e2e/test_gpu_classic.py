@@ -21,7 +21,7 @@ class GPUPlanTest(unittest.TestCase):
                                 "providerSpec": {"value": {"image": {"sku": "421-v2"},
                                                            "zone": "2", "location": "eastus", "vmSize": "Standard_D4s_v3",
                                                            "subnet": "existing-worker-subnet", "credentialsSecret": {"name": "existing"}}}}}}}
-        self.sku = {"name": gpu.VM_SIZE, "family": "StandardNCADSA100v4Family", "restrictions": [], "locationInfo": [{"zones": ["2"]}]}
+        self.sku = {"name": "Standard_NC24ads_A100_v4", "family": "StandardNCADSA100v4Family", "restrictions": [], "locationInfo": [{"zones": ["2"]}]}
         self.usage = [{"name": {"value": "StandardNCADSA100v4Family"}, "limit": 24, "currentValue": 0},
                       {"name": {"value": "cores"}, "limit": 100, "currentValue": 38}]
 

@@ -1,6 +1,6 @@
 = Lab 1.1 — Publish DeepSeek on Foundry
 
-Act 1 starts here. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. This workshop does not add a GPU node, and it does not load a model onto the cluster.
+Act 1 starts here. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. Whisper will run separately on one T4 in Lab 1.4; it is the application’s speech model, not OpenCode’s coding model.
 
 [NOTE]
 ====

@@ -1,12 +1,12 @@
 = Lab 2.2 — Prompt to Production
 
-You have a Dev Space, DeepSeek-V4 Pro on Foundry, and a short `AGENTS.md`. Three OpenCode sessions take you from an empty tree to a live Fortune Cookie app, then through a real change — still no Ansible, no local Docker.
+You have a Dev Space, DeepSeek-V4 Pro on Foundry, and a short `AGENTS.md`. Three OpenCode sessions take you from an empty tree to a live transcription app, then through a real change — still no Ansible, no local Docker.
 
 [NOTE]
 ====
 *Estimated time:* 35 minutes +
 *Persona:* Developer +
-*What you build:* A Fortune Cookie web application in Go — generated, built with Tekton, deployed via your own Argo CD instance, then updated
+*What you build:* A Live Transcript web application in Go — generated, built with Tekton, deployed via your own Argo CD instance, then updated
 ====
 
 [TIP]
@@ -16,7 +16,7 @@ OpenCode reads `AGENTS.md` before every prompt. You do not repeat platform rules
 
 == Step 1: Open the Project and Launch OpenCode
 
-Dev Spaces already cloned the template — it is in `$\{PROJECT_SOURCE}`. The template sets `APP_NAME=fortune-cookie`.
+Dev Spaces already cloned the template — it is in `$\{PROJECT_SOURCE}`. The template sets `APP_NAME=live-transcript`.
 
 [source,sh,role=execute]
 ----
@@ -28,7 +28,7 @@ ls
 .Expected
 [source,console]
 ----
-APP_NAME=fortune-cookie
+APP_NAME=live-transcript
 AGENTS.md  deploy/  devfile.yaml  gitops/  opencode.json  pipeline/
 ----
 
@@ -55,7 +55,7 @@ Press kbd:[Tab] until the TUI shows *plan*, then paste. Stay in this session —
 
 [source,text,role=execute]
 ----
-Fortune Cookie in Go: GET / is HTML with a random fortune from at least 10 hard-coded messages.
+Live Transcript in Go: a browser microphone app with Start/Stop, French/English language selection, and text appearing as I speak. Use the speech contract in AGENTS.md and the internal Whisper endpoint. Keep audio in memory and show permission or inference errors.
 ----
 
 Review the plan. Adjust if needed. The plan is the context for the next prompt.
@@ -78,7 +78,7 @@ OpenCode writes the files, compiles, then ships from `AGENTS.md`. When it is don
 
 [source,sh,role=execute]
 ----
-APP_NAME="${APP_NAME:-fortune-cookie}"
+APP_NAME="${APP_NAME:-live-transcript}"
 
 APP_ROUTE=$(oc get route $APP_NAME -n ${APP_NAME}-dev \
   -o jsonpath='{.spec.host}' 2>/dev/null)
@@ -105,8 +105,8 @@ Expected:
 
 Open both URLs in your browser:
 
-* The app URL shows a random fortune cookie message
-* The Argo CD console shows your `fortune-cookie` Application in *Synced / Healthy* — *your* Argo CD instance, scoped to your project
+* The app URL shows microphone controls. Allow the microphone, speak a French sentence, and verify that its text appears within a few seconds. Stop and check that the browser microphone indicator switches off.
+* The Argo CD console shows your `live-transcript` Application in *Synced / Healthy* — *your* Argo CD instance, scoped to your project
 
 For the Argo CD console, sign in as `admin`. Retrieve the password for *your instance* from the workspace terminal:
 
@@ -116,7 +116,7 @@ oc get secret argocd-cluster -n ${APP_NAME}-dev \
   -o jsonpath='{.data.admin\.password}' | base64 -d; echo
 ----
 
-The model wrote the code; the running app serves a slice of strings.
+DeepSeek wrote the app. Its Go backend sends short WAV clips to Whisper on OpenShift AI; microphone audio never goes to the coding LLM.
 
 ---
 
@@ -128,18 +128,18 @@ Start a new OpenCode session in `$\{PROJECT_SOURCE}`. Press kbd:[Tab] to *build*
 
 [source,text,role=execute]
 ----
-Add 10 more fortunes and show the message in a styled card with 🥠. Then ship it.
+Add a Download transcript button that exports the text as UTF-8, without saving audio. Keep Start/Stop working. Then ship it.
 ----
 
 Wait for OpenCode to confirm the PipelineRun succeeded.
 
-You can watch the build in the OpenShift console: *Pipelines → PipelineRuns* in the `fortune-cookie-build` namespace.
+You can watch the build in the OpenShift console: *Pipelines → PipelineRuns* in the `live-transcript-build` namespace.
 
 Argo CD polls Git. Refresh it and wait for the pushed commit; `Synced / Healthy` can still describe the previous revision immediately after a push.
 
 [source,sh,role=execute]
 ----
-APP_NAME="${APP_NAME:-fortune-cookie}"
+APP_NAME="${APP_NAME:-live-transcript}"
 
 oc annotate application $APP_NAME -n ${APP_NAME}-dev \
   argocd.argoproj.io/refresh=hard --overwrite
@@ -162,7 +162,7 @@ curl -fsS https://${ROUTE}/healthz
 Synced / Healthy
 ----
 
-Open the URL — you should see the cookie emoji 🥠 and the new fortunes.
+Open the URL, record another sentence, stop, and download the transcript. Check that the file contains your words.
 
 [cols="1,2", options="header"]
 |===

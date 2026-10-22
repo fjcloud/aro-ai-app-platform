@@ -1,6 +1,6 @@
 = Lab 3.1 — The Token Bill
 
-Act 3 is required. You spent the afternoon prompting DeepSeek-V4 Pro. That bill is tokens, not a GPU node. Read one response, price it, then delete the deployment.
+Act 3 is required. You spent the afternoon prompting DeepSeek-V4 Pro. Coding is billed in tokens; the speech service also has a GPU VM and disk bill. Read one response, price it, then delete the deployment.
 
 [NOTE]
 ====
@@ -96,7 +96,7 @@ Use the last OpenCode session as the estimate. If you did not record `usage`, us
 | about $1.25
 |===
 
-The Fortune Cookie route is not on this invoice. The cluster workers are the other line: your assigned environment's worker VMs are billed while they exist. Worker counts and VM sizes depend on the RHDP environment.
+Whisper’s T4 worker, the additional CPU worker (if added), and storage are not on the Foundry token invoice. The cluster workers are the other line: your assigned environment's worker VMs are billed while they exist. Worker counts and VM sizes depend on the RHDP environment.
 
 == Part 3: Delete the deployment
 
@@ -117,7 +117,7 @@ az rest --method delete \
 
 [source,sh,role=execute]
 ----
-curl -fsS https://$(oc get route fortune-cookie -n fortune-cookie-dev \
+curl -fsS https://$(oc get route live-transcript -n live-transcript-dev \
   -o jsonpath='{.spec.host}')/healthz
 ----
 
@@ -130,3 +130,21 @@ curl -fsS https://$(oc get route fortune-cookie -n fortune-cookie-dev \
 You priced a call from `usage`, and the `deepseekv4pro` deployment is deleted. ✓
 
 ➡️ Move on to *Conclusion & What's Next*.
+
+
+== Facilitator: remove the speech resources after everyone finishes
+
+The model is shared. Keep it available while participants test their apps. Deleting the model pod alone does not stop the VM or disk charges.
+
+[source,sh,role=execute]
+----
+# Remove only workshop speech resources, not the assigned RHDP cluster.
+oc delete -k deploy/speech
+oc delete machineset -n openshift-machine-api \
+  -l workshop.fjcloud.io/experiment=t4
+oc delete machineset -n openshift-machine-api \
+  -l workshop.fjcloud.io/speech-capacity=true
+oc get machines -n openshift-machine-api
+----
+
+Wait for the labelled workers to disappear and check the Azure resource group. The original CPU MachineSets remain. This also deletes the Whisper model cache PVC; Azure may take time to reclaim its disk. The operator installations remain available for later exercises.

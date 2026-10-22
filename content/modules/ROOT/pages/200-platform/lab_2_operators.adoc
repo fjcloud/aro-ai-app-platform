@@ -1,6 +1,6 @@
 = Lab 1.2 — Install Platform Operators
 
-Install the operators the afternoon needs, from the manifests in this repo. The model is already the Foundry endpoint from Lab 1.1. Do not install a GPU node pool, and do not apply `deploy/inference`.
+Install the operators the afternoon needs, from the manifests in this repo. The model is already the Foundry endpoint from Lab 1.1. Lab 1.4 adds one T4 and OpenShift AI for Whisper. Do not apply the historical Qwen manifests in `deploy/inference`.
 
 Trigger the apply and move on. Lab 1.3 waits for Dev Spaces, GitOps, and Pipelines before it stores the Foundry key.
 
