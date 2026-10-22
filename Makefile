@@ -32,7 +32,7 @@ gpu:
 	@"$(ROOT)scripts/gpu.sh"
 
 gpu-classic:
-	@python3 "$(ROOT)scripts/gpu-classic.py" $(GPU_ARGS)
+	@python3 "$(ROOT)scripts/gpu-classic.py" $(if $(filter yes,$(APPLY)),--apply,) $(GPU_ARGS)
 
 delete:
 	@CONFIRM="$(CONFIRM)" "$(ROOT)scripts/delete.sh"

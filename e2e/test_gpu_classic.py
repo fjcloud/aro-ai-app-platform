@@ -71,6 +71,18 @@ class GPUPlanTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "64 unused"):
             self.plan()
 
+    def test_single_t4_default_checks_eight_cores(self):
+        self.assertEqual(gpu.VM_SIZE, "Standard_NC8as_T4_v3")
+        self.sku["name"] = gpu.VM_SIZE
+        self.sku["family"] = "StandardNCASv3_T4Family"
+        self.usage[0]["name"]["value"] = self.sku["family"]
+        self.usage[0]["limit"] = 8
+        result = self.plan()
+        self.assertEqual(result["spec"]["template"]["spec"]["providerSpec"]["value"]["vmSize"], gpu.VM_SIZE)
+        self.usage[0]["limit"] = 7
+        with self.assertRaisesRegex(ValueError, "8 unused"):
+            self.plan()
+
     def test_generation_one(self):
         self.machine["spec"]["template"]["spec"]["providerSpec"]["value"]["image"]["sku"] = "aro_421"
         with self.assertRaisesRegex(ValueError, "generation 2"):

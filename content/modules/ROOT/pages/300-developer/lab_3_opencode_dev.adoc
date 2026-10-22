@@ -55,7 +55,7 @@ Press kbd:[Tab] until the TUI shows *plan*, then paste. Stay in this session —
 
 [source,text,role=execute]
 ----
-Live Transcript in Go: a browser microphone app with Start/Stop, French/English language selection, and text appearing as I speak. Use the speech contract in AGENTS.md and the internal Whisper endpoint. Keep audio in memory and show permission or inference errors.
+Live Transcript in Go: a browser microphone app with Start/Stop, French/English language selection, and text appearing as I speak. Use the speech contract and tested reference audio implementation linked in AGENTS.md. The backend calls the internal Whisper endpoint. Keep audio in memory and show permission or inference errors.
 ----
 
 Review the plan. Adjust if needed. The plan is the context for the next prompt.
@@ -128,7 +128,8 @@ Start a new OpenCode session in `$\{PROJECT_SOURCE}`. Press kbd:[Tab] to *build*
 
 [source,text,role=execute]
 ----
-Add a Download transcript button that exports the text as UTF-8, without saving audio. Keep Start/Stop working. Then ship it.
+Add a Copy transcript button that copies the text to the clipboard, without saving audio. Keep Start/Stop working. Commit and push, rebuild with Tekton, and deploy using AGENTS.md.
+Wait for the matching Git revision in Argo CD to be Synced / Healthy, then print the app URL.
 ----
 
 Wait for OpenCode to confirm the PipelineRun succeeded.
@@ -162,7 +163,7 @@ curl -fsS https://${ROUTE}/healthz
 Synced / Healthy
 ----
 
-Open the URL, record another sentence, stop, and download the transcript. Check that the file contains your words.
+Open the URL, record another sentence, stop, and copy the transcript. Paste it into a text editor and check your words.
 
 [cols="1,2", options="header"]
 |===

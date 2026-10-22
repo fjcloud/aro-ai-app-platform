@@ -76,8 +76,8 @@ def main():
     if existing:
         current_size = existing[0]["spec"]["template"]["spec"]["providerSpec"]["value"]["vmSize"]
         if current_size != args.vm_size:
-            raise ValueError(f"A GPU comparison worker already exists with {current_size}; finish that test first.")
-        print(f"GPU comparison MachineSet already exists: {existing[0]['metadata']['name']}", file=sys.stderr)
+            raise ValueError(f"A GPU worker already exists with {current_size}; finish that test first.")
+        print(f"GPU MachineSet already exists: {existing[0]['metadata']['name']}", file=sys.stderr)
         return
     cpu = [m for m in machines if m["spec"]["template"]["spec"]["providerSpec"]["value"].get("kind") == "AzureMachineProviderSpec"
            and not m["spec"]["template"]["spec"]["providerSpec"]["value"].get("vmSize", "").startswith("Standard_N")]

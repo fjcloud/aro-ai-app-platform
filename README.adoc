@@ -31,4 +31,4 @@ Browser microphone ──> Go app ──> OpenShift AI / vLLM / Whisper (one T4)
 
 Use the `aro-transcription` branch of https://github.com/fjcloud/go-app-template/tree/aro-transcription[the app template]. ROSA keeps its existing template. A working reference app is in `examples/live-transcript`; speech manifests are in `deploy/speech`.
 
-Prepare T4 quota and capacity for one `Standard_NC8as_T4_v3` worker. `make gpu-classic` prints a checked MachineSet; `make gpu-classic GPU_ARGS=--apply` creates it. Lab 1.4 installs the speech stack. The application sends independent short WAV clips for near-real-time results; it does not use a native Whisper WebSocket stream.
+Prepare T4 quota and capacity for one `Standard_NC8as_T4_v3` worker. `make gpu-classic` prints a checked MachineSet; `make gpu-classic APPLY=yes` creates it. Lab 1.4 installs the speech stack. The application sends independent short WAV clips for near-real-time results; it does not use a native Whisper WebSocket stream.

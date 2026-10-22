@@ -87,7 +87,7 @@ def speech():
     require(len(nodes) == 1 and nodes[0]['status']['allocatable'].get('nvidia.com/gpu') == '1', 'One physical T4 on the speech VM')
     require(not json.loads(oc('get', 'route', '-n', 'speech-serving', '-o', 'json'))['items'], 'Whisper has no public model Route')
     resource('networkpolicy', 'whisper-clients', 'speech-serving')
-    print('PASS: Model ingress restricted to workshop application and monitoring')
+    print('PASS: Model ingress restricted to workshop application, Dev Spaces and monitoring')
 
 
 def developer():
@@ -109,7 +109,7 @@ def developer():
     with urllib.request.urlopen(url, timeout=30) as response:
         page = response.read().decode('utf-8')
     if os.environ.get('EXPECT_UPDATED_APP') == 'true':
-        require('Download transcript' in html.unescape(page), 'Shipped update exports the transcript')
+        require('Copy transcript' in html.unescape(page), 'Shipped update copies the transcript')
     spec = deployment['spec']['template']['spec']
     container = spec['containers'][0]
     resources = container.get('resources', {})

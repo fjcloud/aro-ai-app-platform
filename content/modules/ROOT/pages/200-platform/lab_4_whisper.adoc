@@ -35,7 +35,7 @@ Run from the workshop checkout on the bastion, after `make onboard`. The helper 
 [source,sh,role=execute]
 ----
 make gpu-classic
-make gpu-classic GPU_ARGS=--apply
+make gpu-classic APPLY=yes
 oc get machines -n openshift-machine-api
 oc get nodes -l workshop.fjcloud.io/gpu=t4
 ----
@@ -102,7 +102,7 @@ Expect a Ready `whisper` inference service and *no public model Route*. The inte
 http://whisper-predictor.speech-serving.svc.cluster.local/v1/audio/transcriptions
 ----
 
-KServe publishes the service on port 80 and forwards to vLLM on 8080. The network policy allows the `live-transcript-dev` application namespace to reach the model. The browser contacts only the Go app over HTTPS; audio and any future model credentials stay behind that backend.
+KServe publishes the service on port 80 and forwards to vLLM on 8080. The network policy allows the `live-transcript-dev` application namespace and Dev Spaces workspaces to reach the model. The browser contacts only the Go app over HTTPS; audio and any future model credentials stay behind that backend.
 
 Open the *Red Hat OpenShift AI* link in the OpenShift application launcher. In *Projects*, select *Workshop speech transcription* and inspect the Whisper deployment. The dashboard is the management view; it is not a second coding endpoint.
 

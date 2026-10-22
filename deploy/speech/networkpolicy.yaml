@@ -1,5 +1,5 @@
 # No public model Route. Only the application namespace and cluster monitoring
-# can reach the inference port; OpenShift AI's own controller probes remain local.
+# and Dev Spaces can reach the inference port; probes remain local.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -12,6 +12,10 @@ spec:
   policyTypes: [Ingress]
   ingress:
     - from:
+        - namespaceSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: che.eclipse.org
+              app.kubernetes.io/component: workspaces-namespace
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: live-transcript-dev

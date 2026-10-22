@@ -13,10 +13,10 @@ bash e2e/usage-run.sh
 | Check | Evidence |
 |---|---|
 | Platform | Ready workers, cluster-admin, Dev Spaces / GitOps / Pipelines, workshop Tasks, Foundry configuration, real completion |
-| Developer | Latest Tekton build Succeeded, personal Application Synced / Healthy, public HTTPS app and health endpoint, transcript export, resource / probe / security / TLS audit |
+| Developer | Latest Tekton build Succeeded, personal Application Synced / Healthy, public HTTPS app and health endpoint, transcript copy/export, resource / probe / security / TLS audit |
 | Usage | Real Foundry response with input and output token counts, before the Act 3 deployment deletion |
 
-The scripts use Python 3 and `oc`. They print no credentials, create no cluster resources, and do not mint or rotate keys. Platform and usage checks each make one billable model call. `APP_NAME` defaults to `live-transcript`; `EXPECT_UPDATED_APP=true` checks the ship-a-change exercise.
+The scripts use Python 3 and `oc`. They print no credentials, create no cluster resources, and do not mint or rotate keys. Platform and usage checks each make one billable model call. `APP_NAME` defaults to `live-transcript`; `EXPECT_UPDATED_APP=true` checks the Copy transcript exercise.
 
 To also verify the generated source, local Go build and pushed Git revision in the real workspace, pass `E2E_NS=<workspace-namespace> DEV_POD=<workspace-pod> DEV_CONTAINER=dev` to `dev-run.sh`.
 

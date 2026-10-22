@@ -60,6 +60,20 @@ Do **not** sign in to GitHub Copilot. Che Code ships Copilot as a built-in; the 
 
 If the editor opens in *Restricted Mode*, open *Manage Workspace Trust*, trust this repository, and confirm. The IDE may reload before its terminal becomes available.
 
+== Log the workspace terminal into OpenShift
+
+The browser SSO session does not authenticate the `oc` CLI inside a newly created workspace. Its default service account cannot create the namespaces and build permissions used in this lab.
+
+In the OpenShift console, open your user menu → *Copy login command*. Complete login and paste the resulting `oc login` command into the *Dev Spaces terminal*, using the assigned lab administrator from Act 0. Do not paste the token into OpenCode or commit it.
+
+[source,sh,role=execute]
+----
+oc whoami
+oc auth can-i '*' '*' --all-namespaces
+----
+
+The permission check must return `yes` before you ask OpenCode to deploy. These are deliberately administrator labs; a production platform would pre-create project permissions and build service accounts for developers. If the answer is `no`, ask the facilitator to prepare the assigned access rather than searching for other credentials.
+
 == Verify OpenCode is Running
 
 . Open a terminal in the workspace (*Terminal → New Terminal* or press kbd:[Ctrl+`]).

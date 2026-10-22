@@ -1,0 +1,49 @@
+{
+  "clusterVersion": "4.21.22",
+  "gpu": {
+    "node": "aro-cluster-vcdhr-kbz27-gpu-t4-8-eastus2-j7wrw",
+    "vmSize": "Standard_NC8as_T4_v3",
+    "allocatable": "1"
+  },
+  "whisper": {
+    "namespace": "speech-serving",
+    "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5.0@sha256:5d4434598dc702b89c8d63b9fa6e2378130abf649c95f4211fb93e325cfd7698",
+    "args": [
+      "--port=8080",
+      "--model=openai/whisper-large-v3-turbo",
+      "--revision=41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+      "--served-model-name=whisper",
+      "--dtype=half",
+      "--max-model-len=448",
+      "--max-num-seqs=4",
+      "--gpu-memory-utilization=0.50",
+      "--enforce-eager"
+    ],
+    "readyContainers": 3,
+    "publicRoutes": 0
+  },
+  "application": {
+    "url": "https://live-transcript-live-transcript-dev.apps.ytlbb232.eastus.aroapp.io",
+    "gitRevision": "187b5c6ebe3189bd1ab289284972bc2750210f56",
+    "sync": "Synced",
+    "health": "Healthy",
+    "imageIDs": [
+      "image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript@sha256:8869a8365b45075d7336e38fd59c661ff1ddef2412787aa73003ed6fb4a07517"
+    ]
+  },
+  "builds": [
+    {
+      "name": "build-app-jnjp8",
+      "succeeded": "True"
+    },
+    {
+      "name": "build-app-zqhz8",
+      "succeeded": "True"
+    }
+  ],
+  "networkIsolation": {
+    "allowedDevSpaces": true,
+    "unrelatedNamespaceBlocked": true,
+    "temporaryTestPodRemoved": true
+  }
+}

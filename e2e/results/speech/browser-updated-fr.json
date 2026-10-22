@@ -1,0 +1,15 @@
+{
+  "language": "fr",
+  "modelRequests": 2,
+  "latencyMs": [
+    302,
+    248
+  ],
+  "firstTextMs": 5323,
+  "textWhileRecording": "Bonjour, nous testons la transcription avec Reda OpenShift.",
+  "finalTranscript": "Bonjour, nous testons la transcription avec Reda OpenShift. Le modèle fonctionne sur une seule carte graphique.",
+  "clipboardCopied": true,
+  "microphoneReleased": true,
+  "outageHandled": true,
+  "permissionDeniedHandled": true
+}

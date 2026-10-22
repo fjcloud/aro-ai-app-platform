@@ -34,6 +34,8 @@ def main():
     size = 'Standard_D8s_v3'
     skus = read('az', 'vm', 'list-skus', '-l', provider['location'], '--resource-type', 'virtualMachines', '--all', '-o', 'json')
     sku = next(s for s in skus if s['name'] == size)
+    if args.zone not in sku.get('locationInfo', [{}])[0].get('zones', []):
+        sys.exit('CPU VM size does not list that availability zone.')
     if any(r['type'] == 'Location' or args.zone in r.get('restrictionInfo', {}).get('zones', []) for r in sku.get('restrictions', [])):
         sys.exit('CPU VM size is unavailable in that zone.')
     quotas = read('az', 'vm', 'list-usage', '-l', provider['location'], '-o', 'json')

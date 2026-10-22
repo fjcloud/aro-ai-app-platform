@@ -11,11 +11,11 @@ const assert = require('node:assert/strict');
   if (!url || !fixture || !fs.existsSync(fixture)) throw Error('Set APP_URL and AUDIO_FIXTURE (a spoken WAV fixture).');
   const language = process.env.SPEECH_LANGUAGE || 'fr';
   const expected = new RegExp(process.env.SPEECH_EXPECT || (language === 'fr' ? 'bonjour|transcription|openshift' : 'hello|transcription|openshift'), 'i');
-  const args = ['--use-mock-keychain', '--use-fake-device-for-media-stream', `--use-file-for-fake-audio-capture=${fixture}`];
+  const args = ['--use-mock-keychain', '--use-fake-device-for-media-stream', `--use-file-for-fake-audio-capture=${fixture}%noloop`];
   const browser = await chromium.launch({headless: true, args: [...args, '--use-fake-ui-for-media-stream']});
   const result = {language, modelRequests: 0, latencyMs: []};
   try {
-    const context = await browser.newContext({permissions: ['microphone'], viewport: {width: 1280, height: 900}});
+    const context = await browser.newContext({permissions: ['microphone', 'clipboard-read', 'clipboard-write'], viewport: {width: 1280, height: 900}});
     await context.addInitScript(() => {
       const get = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
       navigator.mediaDevices.getUserMedia = async constraints => {
@@ -63,6 +63,12 @@ const assert = require('node:assert/strict');
     let text = '';for await (const chunk of stream) text += chunk.toString();
     assert.match(text, expected);
     result.finalTranscript = text.trim();
+    if (process.env.EXPECT_UPDATED_APP === 'true') {
+      await page.getByRole('button', {name: 'Copy transcript', exact: true}).click();
+      const copied = await page.evaluate(() => navigator.clipboard.readText());
+      assert.match(copied, expected);
+      result.clipboardCopied = true;
+    }
     if (process.env.SPEECH_SCREENSHOT) await page.screenshot({path: process.env.SPEECH_SCREENSHOT, fullPage: true});
     await page.getByRole('button', {name: 'Clear', exact: true}).click();
     await expect(page.getByLabel('Transcript', {exact: true})).toBeEmpty();
