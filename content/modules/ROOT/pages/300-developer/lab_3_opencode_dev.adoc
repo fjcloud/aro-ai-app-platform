@@ -16,7 +16,7 @@ OpenCode reads `AGENTS.md` before every prompt. You do not repeat platform rules
 
 == Step 1: Open the Project and Launch OpenCode
 
-Dev Spaces already cloned the template — it is in `${PROJECT_SOURCE}`. The template sets `APP_NAME=fortune-cookie`.
+Dev Spaces already cloned the template — it is in `$\{PROJECT_SOURCE}`. The template sets `APP_NAME=fortune-cookie`.
 
 [source,sh,role=execute]
 ----
@@ -68,10 +68,11 @@ Press kbd:[Tab] to *build* in the *same* session.
 
 [source,text,role=execute]
 ----
-Implement the plan.
+Implement the plan and deploy it using AGENTS.md.
+Wait for Tekton to succeed and Argo CD to be Synced / Healthy, then print the app and Argo CD URLs.
 ----
 
-OpenCode writes the files, compiles, then ships from `AGENTS.md`. When it is done it should print the app route and the Argo CD console URL. The Argo CD `Application` must live in `${APP_NAME}-dev` (never `default`).
+OpenCode writes the files, compiles, then ships from `AGENTS.md`. When it is done it should print the app route and the Argo CD console URL. The Argo CD `Application` must live in `$\{APP_NAME}-dev` (never `default`).
 
 === Checkpoint — the app is live
 
@@ -92,7 +93,7 @@ echo "================================================"
 oc get application $APP_NAME -n ${APP_NAME}-dev \
   -o jsonpath='{.status.sync.status} / {.status.health.status}' && echo
 
-curl -sk https://${APP_ROUTE}/healthz
+curl -fsS https://${APP_ROUTE}/healthz
 ----
 
 Expected:
@@ -123,7 +124,7 @@ The model wrote the code; the running app serves a slice of strings.
 
 Close the GitOps loop: change the app, push, watch Tekton rebuild, roll the deployment. Still no hand-written `kubectl apply` for the app.
 
-Start a new OpenCode session in `${PROJECT_SOURCE}`. Press kbd:[Tab] to *build*:
+Start a new OpenCode session in `$\{PROJECT_SOURCE}`. Press kbd:[Tab] to *build*:
 
 [source,text,role=execute]
 ----
@@ -134,9 +135,16 @@ Wait for OpenCode to confirm the PipelineRun succeeded.
 
 You can watch the build in the OpenShift console: *Pipelines → PipelineRuns* in the `fortune-cookie-build` namespace.
 
+Argo CD polls Git. Refresh it and wait for the pushed commit; `Synced / Healthy` can still describe the previous revision immediately after a push.
+
 [source,sh,role=execute]
 ----
 APP_NAME="${APP_NAME:-fortune-cookie}"
+
+oc annotate application $APP_NAME -n ${APP_NAME}-dev \
+  argocd.argoproj.io/refresh=hard --overwrite
+oc wait application/$APP_NAME -n ${APP_NAME}-dev \
+  --for=jsonpath='{.status.sync.revision}'="$(git rev-parse HEAD)" --timeout=180s
 
 oc get application $APP_NAME -n ${APP_NAME}-dev \
   -o jsonpath='{.status.sync.status} / {.status.health.status}' && echo
@@ -145,7 +153,7 @@ oc rollout status deployment/$APP_NAME -n ${APP_NAME}-dev --timeout=120s
 
 ROUTE=$(oc get route $APP_NAME -n ${APP_NAME}-dev -o jsonpath='{.spec.host}')
 echo "https://${ROUTE}"
-curl -sk https://${ROUTE}/healthz
+curl -fsS https://${ROUTE}/healthz
 ----
 
 .Expected
@@ -167,7 +175,7 @@ Open the URL — you should see the cookie emoji 🥠 and the new fortunes.
 | `git-clone` + `buildah`, image to the internal registry
 
 | `oc rollout restart`
-| Pods pull `${APP_NAME}:latest`
+| Pods pull `$\{APP_NAME}:latest`
 |===
 
 ➡️ Move on to *Lab 2.3: Audit with OpenCode*.

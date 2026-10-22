@@ -49,7 +49,7 @@ spec:
     secondsOfInactivityBeforeIdling: 1800
     secondsOfRunBeforeIdling: -1
     security: {}
-    startTimeoutSeconds: 300
+    startTimeoutSeconds: 900
     storage:
       pvcStrategy: per-user
   gitServices: {}

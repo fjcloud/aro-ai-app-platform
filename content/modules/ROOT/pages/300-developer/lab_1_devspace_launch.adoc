@@ -49,7 +49,7 @@ Running postStart commands...
   ✓ Installing the ephemeral Git client
 ----
 +
-This takes approximately 2-3 minutes on first launch. *Subsequent launches are faster* — the image is cached.
+The first launch can take up to 15 minutes while the images are pulled. *Subsequent launches are faster* — the images are cached.
 
 . When the workspace is ready, a VS Code-like editor opens in the browser. You will see:
 ** A file explorer on the left
@@ -57,6 +57,8 @@ This takes approximately 2-3 minutes on first launch. *Subsequent launches are f
 ** OpenCode available on `PATH` (injected by Dev Spaces, not by the template)
 +
 Do **not** sign in to GitHub Copilot. Che Code ships Copilot as a built-in; the platform disables it. Do not install Continue. The model is OpenCode in the terminal, calling DeepSeek-V4 Pro.
+
+If the editor opens in *Restricted Mode*, open *Manage Workspace Trust*, trust this repository, and confirm. The IDE may reload before its terminal becomes available.
 
 == Verify OpenCode is Running
 
@@ -72,52 +74,26 @@ opencode --version && echo "GIT_SERVER=$GIT_SERVER"
 .Sample Output
 [source,text,options=nowrap]
 ----
-opencode 0.x.x
+1.x.x
 GIT_SERVER=https://git.<workshop-domain>
 ----
 
-. Point the project at the Foundry deployment. The template's `opencode.json` wins over the platform file, and it still names the old model. From the workspace terminal:
+. Point the project at the Foundry deployment. The template's `opencode.json` wins over the platform file. Copy the platform configuration and commit it so the personal repository keeps the correct model. This file contains environment references; it contains no key. From the workspace terminal:
 +
 [source,sh,role=execute]
 ----
-cd ${PROJECT_SOURCE}
-python3 - << 'PY'
-import json
-p = "opencode.json"
-doc = {
-  "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "deepseek": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "DeepSeek-V4 Pro",
-      "options": {
-        "baseURL": "{env:OPENAI_BASE_URL}",
-        "apiKey": "{env:OPENAI_API_KEY}",
-        "headers": {"api-key": "{env:OPENAI_API_KEY}"},
-        "chunkTimeout": 120000,
-        "timeout": 600000
-      },
-      "models": {
-        "deepseekv4pro": {
-          "name": "DeepSeek-V4 Pro",
-          "limit": {"context": 131072, "output": 32768}
-        }
-      }
-    }
-  },
-  "model": "deepseek/deepseekv4pro",
-  "autoupdate": False
-}
-open(p, "w").write(json.dumps(doc, indent=2) + "\n")
-print("wrote", p)
-PY
+cd "${PROJECT_SOURCE}"
+cp "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/opencode.json" opencode.json
+git add opencode.json
+git -c user.name="Workshop Developer" -c user.email="dev@workshop.local" \
+  commit -m "Use the workshop Foundry model"
 ----
 +
 . Ask DeepSeek for one sentence. `$OPENAI_BASE_URL` already ends in `/openai/v1`.
 +
 [source,sh,role=execute]
 ----
-curl -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
+curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Content-Type: application/json" \
   -H "api-key: $OPENAI_API_KEY" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}'
@@ -137,7 +113,7 @@ opencode
 +
 The OpenCode TUI (Terminal UI) launches. It reads `AGENTS.md` and connects to DeepSeek-V4 Pro automatically.
 Two session modes are available: *plan* (read-only — no file writes) and *build* (writes files). Press kbd:[Tab] to switch from one to the other.
-Press `q` to exit OpenCode when needed.
+Use `/exit` to leave OpenCode when needed.
 
 == Understanding the OpenCode Configuration
 
@@ -200,7 +176,7 @@ python3 -c 'import json; print(json.load(open("opencode.json"))["model"])'
 .Expected Output
 [source,text,options=nowrap]
 ----
-opencode 0.x.x
+1.x.x
 GIT_SERVER=https://git.<workshop-domain>
 deepseek/deepseekv4pro
 ----

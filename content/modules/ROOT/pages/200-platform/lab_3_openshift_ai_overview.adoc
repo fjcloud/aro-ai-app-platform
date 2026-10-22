@@ -143,7 +143,7 @@ set +a
 KEY=$(az rest --method post \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
   --query key1 -o tsv)
-curl -sS --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
+curl --fail-with-body -sS --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "api-key: ${KEY}" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' \

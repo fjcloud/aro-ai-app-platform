@@ -16,3 +16,7 @@ docs/worker/pylock.toml
 docs/worker/public/
 docs/worker/.dev.vars
 docs/worker/.wrangler/
+
+state/foundry.env
+__pycache__/
+*.py[cod]

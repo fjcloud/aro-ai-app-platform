@@ -6,7 +6,7 @@ Your assigned RHDP environment already contains an ARO cluster and a bastion wit
 ====
 *Estimated time:* 10 minutes +
 *Persona:* Platform Engineer +
-*Blocking:* Act 1 requires OpenShift 4.22 or later, Ready workers, cluster-admin access, and permission to create Foundry resources in the assigned Azure resource group.
+*Blocking:* Act 1 requires OpenShift 4.21 or later, Ready workers, cluster-admin access, and permission to create Foundry resources in the assigned Azure resource group.
 ====
 
 == Open your environment
@@ -45,6 +45,14 @@ make onboard
 The check reads the existing Azure and cluster identities and worker readiness. It does not create identities, fetch a new pull secret, or provision a cluster. Keep this directory for the later `oc apply -k deploy/...` commands.
 
 Before Lab 1.1, obtain the exact *assigned Azure resource group* from RHDP. Export it as `RESOURCEGROUP`. Foundry resources must be created in that group; do not select the first group in the subscription. The Azure identity needs permission to create those resources and access the model.
+
+[source,sh,role=execute]
+----
+export RESOURCEGROUP="<assigned-resource-group>"
+az group show --name "$RESOURCEGROUP" --query '{name:name,location:location}' -o table
+----
+
+For example, use `openenv-<your-lab-guid>` only when that exact name appears in your RHDP assignment.
 
 == Checkpoint
 

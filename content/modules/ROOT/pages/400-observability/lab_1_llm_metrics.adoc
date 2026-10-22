@@ -12,6 +12,8 @@ Act 3 is required. You spent the afternoon prompting DeepSeek-V4 Pro. That bill 
 
 Global Standard, East US 2, from the Foundry price sheet:
 
+The https://prices.azure.com/api/retail/prices?$filter=productName%20eq%20%27Azure%20Deepseek%20Models%27%20and%20armRegionName%20eq%20%27eastus2%27[Azure Retail Prices API] lists these Global rates in USD per 1K tokens. The table below converts them to 1M tokens; check the current rates when running the workshop.
+
 [cols="1,1", options="header"]
 |===
 | Meter | Per 1 million tokens
@@ -35,6 +37,7 @@ In the Dev Space terminal, `$OPENAI_BASE_URL` and `$OPENAI_API_KEY` are already 
 [source,sh,role=execute]
 ----
 if [[ -z "${OPENAI_BASE_URL:-}" ]]; then
+  cd "$HOME/aro-ai-app-platform"
   set -a
   source state/foundry.env
   set +a
@@ -44,7 +47,7 @@ if [[ -z "${OPENAI_BASE_URL:-}" ]]; then
     --query key1 -o tsv)
 fi
 
-curl -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
+curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Content-Type: application/json" \
   -H "api-key: $OPENAI_API_KEY" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' \
@@ -93,7 +96,7 @@ Use the last OpenCode session as the estimate. If you did not record `usage`, us
 | about $1.25
 |===
 
-The Fortune Cookie route is not on this invoice. The cluster workers are the other line: two `Standard_D4s_v3` nodes, billed while the cluster exists.
+The Fortune Cookie route is not on this invoice. The cluster workers are the other line: your assigned environment's worker VMs are billed while they exist. Worker counts and VM sizes depend on the RHDP environment.
 
 == Part 3: Delete the deployment
 
@@ -101,6 +104,7 @@ Run this in the platform shell, in the workshop repository. It removes the pay-p
 
 [source,sh,role=execute]
 ----
+cd "$HOME/aro-ai-app-platform"
 set -a
 source state/foundry.env
 set +a
@@ -113,7 +117,7 @@ az rest --method delete \
 
 [source,sh,role=execute]
 ----
-curl -s https://$(oc get route fortune-cookie -n fortune-cookie-dev \
+curl -fsS https://$(oc get route fortune-cookie -n fortune-cookie-dev \
   -o jsonpath='{.spec.host}')/healthz
 ----
 

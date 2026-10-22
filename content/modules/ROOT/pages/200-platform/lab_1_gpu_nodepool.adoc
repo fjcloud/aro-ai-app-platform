@@ -30,10 +30,14 @@ This is Global Standard, pay per token, in East US 2. DeepSeek-V4 Pro is *$1.74 
 | `DeepSeek-V4-Pro`, format `DeepSeek`, version `2026-04-23`
 
 | SKU
-| `GlobalStandard`, capacity `1`
+| `GlobalStandard`, capacity `500` (500 000 tokens/minute)
 |===
 
 Use the exact Azure resource group assigned in your RHDP environment details. Export it as `RESOURCEGROUP` before continuing; the commands do not guess a group from the subscription.
+
+Capacity controls throughput, not a fixed hourly charge. Capacity `1` only allows 1 000 tokens/minute in this lab: a short curl works, but coding prompts receive HTTP 429. Allocate `500` for this single-participant run; check the model quota before sharing the endpoint with a group.
+
+If you resize an existing deployment, https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/quota[quota changes can take up to 15 minutes to propagate]. The inference response headers `x-ratelimit-limit-tokens` and `x-ratelimit-limit-requests` show the limits currently applied; the Azure provisioning status alone does not confirm that change.
 
 == Create the account and the deployment
 
@@ -48,15 +52,25 @@ API=2025-06-01
 DEPLOYMENT=deepseekv4pro
 LOCATION=eastus2
 
+wait_foundry() {
+  local url=$1 state deadline=$((SECONDS + 600))
+  while (( SECONDS < deadline )); do
+    state=$(az rest --method get --url "$url" --query properties.provisioningState -o tsv) || return 1
+    case "$state" in
+      Succeeded) return 0 ;;
+      Failed|Canceled) echo "Foundry provisioning: $state" >&2; return 1 ;;
+    esac
+    sleep 10
+  done
+  echo "Foundry provisioning timed out; check the Azure deployment before continuing." >&2
+  return 1
+}
+
 az rest --method put \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}" \
   --body "{\"location\":\"${LOCATION}\",\"kind\":\"AIServices\",\"sku\":{\"name\":\"S0\"},\"properties\":{\"customSubDomainName\":\"${FOUNDRY_NAME}\",\"publicNetworkAccess\":\"Enabled\"}}"
 
-until [[ "$(az rest --method get \
-  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}" \
-  --query "properties.provisioningState" -o tsv)" == "Succeeded" ]]; do
-  sleep 10
-done
+wait_foundry "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}"
 
 az rest --method get \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/models?api-version=${API}" \
@@ -69,13 +83,9 @@ The table should show format `DeepSeek`, version `2026-04-23`, SKU `GlobalStanda
 ----
 az rest --method put \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}" \
-  --body '{"sku":{"name":"GlobalStandard","capacity":1},"properties":{"model":{"format":"DeepSeek","name":"DeepSeek-V4-Pro","version":"2026-04-23"}}}'
+  --body '{"sku":{"name":"GlobalStandard","capacity":500},"properties":{"model":{"format":"DeepSeek","name":"DeepSeek-V4-Pro","version":"2026-04-23"}}}'
 
-until [[ "$(az rest --method get \
-  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}" \
-  --query "properties.provisioningState" -o tsv)" == "Succeeded" ]]; do
-  sleep 10
-done
+wait_foundry "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}"
 ----
 
 == Test it
@@ -92,7 +102,7 @@ KEY=$(az rest --method post \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
   --query key1 -o tsv)
 
-curl -sS --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
+curl --fail-with-body -sS --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "api-key: ${KEY}" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":512}'

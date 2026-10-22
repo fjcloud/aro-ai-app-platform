@@ -38,10 +38,9 @@ Clone only if you want it on disk. On a shared workshop cluster you can also ope
 
 [source,sh,role=execute]
 ----
-git clone --depth 1 https://github.com/fjcloud/go-app-template
-cd go-app-template
-wc -l AGENTS.md
-cat AGENTS.md
+git clone --depth 1 https://github.com/fjcloud/go-app-template "$HOME/go-app-template"
+wc -l "$HOME/go-app-template/AGENTS.md"
+cat "$HOME/go-app-template/AGENTS.md"
 ----
 
 You should see a short file. Notice:
@@ -49,7 +48,7 @@ You should see a short file. Notice:
 * *Files YOU must generate* — `main.go`, `go.mod`, `Dockerfile` with an exact two-stage template
 * *Files already in the repository* — do not rewrite `deploy/`, `pipeline/`, `gitops/`, or `devfile.yaml`
 * *Three deploy phases* — ephemeral Git → Tekton PipelineRun → Argo CD Application
-* *Namespaces* — `${APP_NAME}-build` and `${APP_NAME}-dev` only. Never namespace `default` for the app, Argo CD, or the Application.
+* *Namespaces* — `$\{APP_NAME}-build` and `$\{APP_NAME}-dev` only. Never namespace `default` for the app, Argo CD, or the Application.
 
 [cols="1,2,2", options="header"]
 |===

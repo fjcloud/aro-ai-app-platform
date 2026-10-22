@@ -25,7 +25,7 @@ oc get clusterversion version -o json | python3 -c '
 import json,re,sys
 version=json.load(sys.stdin).get("status",{}).get("desired",{}).get("version","")
 m=re.match(r"^(\d+)\.(\d+)\.",version)
-if not m or tuple(map(int,m.groups())) < (4,22):
-    sys.exit("This guide targets OpenShift 4.22 or later; the existing cluster reports "+(version or "an unknown version")+". Ask the facilitator for a compatible RHDP environment before Act 1.")
+if not m or tuple(map(int,m.groups())) < (4,21):
+    sys.exit("This guide targets OpenShift 4.21 or later; the existing cluster reports "+(version or "an unknown version")+". Ask the facilitator for a compatible RHDP environment before Act 1.")
 print("OpenShift version:",version)'
 echo 'Ready for Act 1. No cluster, identity, or billing resources were created.'

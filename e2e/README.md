@@ -1,36 +1,27 @@
-# E2E Workshop Validation
+# ARO workshop validation
 
-Maps to workshop Act 1 (labs 1.1–1.4) and Act 2 (labs 2.1–2.3). Neither needs the Dev Spaces UI.
+Follow Acts 0–3 on the assigned ARO environment, including the real Dev Spaces browser session, OpenCode plan/build/change/audit prompts, Tekton builds, and personal Argo CD. These checks verify the resulting resources; they do not replace the participant exercises.
 
-| Script | Persona | What it checks |
-|--------|---------|----------------|
-| `e2e/platform-run.sh` | Platform Engineer | GPU node pool, operators, DSC (KServe + MaaS + dashboard + OGX), Dev Spaces, `LLMInferenceService/qwen3`, MaaS CRs, minted `sk-oai-` key, smoke `POST /chat/completions` |
-| `e2e/dev-run.sh` | Developer | Template repo, OpenCode-generated Fortune Cookie, Tekton image, Argo CD sync, live route |
+Run from the bastion with `oc` authenticated to the assigned cluster:
 
-Cleanup: `e2e/platform-cleanup.sh` and `e2e/dev-cleanup.sh`.
-
-## Prerequisites
-
-- `oc` logged in with cluster-admin
-- Workshop GitOps already applied (`deploy/operators`, `deploy/instances`, `deploy/inference`)
-- `LLMInferenceService/qwen3` Ready in `llm-serving` and published through Models-as-a-Service
-
-## Usage
-
-```bash
-export GIT_SERVER=https://gitpop.apps.sno.msl.cloud
+```sh
 bash e2e/platform-run.sh
-bash e2e/dev-run.sh
+EXPECT_UPDATED_APP=true bash e2e/dev-run.sh
+bash e2e/usage-run.sh
 ```
 
-## Environment variables
+| Check | Evidence |
+|---|---|
+| Platform | Ready workers, cluster-admin, Dev Spaces / GitOps / Pipelines, workshop Tasks, Foundry configuration, real completion |
+| Developer | Latest Tekton build Succeeded, personal Application Synced / Healthy, public HTTPS app and health endpoint, updated cookie emoji, resource / probe / security / TLS audit |
+| Usage | Real Foundry response with input and output token counts, before the Act 3 deployment deletion |
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `GIT_SERVER` | `https://gitpop.apps.sno.msl.cloud` | Git server base URL |
-| `APP_NAME` | `fortune-cookie` | Name of the generated app (`dev-run.sh`) |
-| `E2E_NS` | `workshop-e2e` | Namespace for the developer simulation pod |
-| `LLM_NS` | `llm-serving` | Model namespace (`platform-run.sh`) |
-| `MAAS_HOST` | `maas.<apps-domain>` | MaaS gateway hostname |
+The scripts use Python 3 and `oc`. They print no credentials, create no cluster resources, and do not mint or rotate keys. Platform and usage checks each make one billable model call. `APP_NAME` defaults to `fortune-cookie`; `EXPECT_UPDATED_APP=true` checks the ship-a-change exercise.
 
-The scripts exit 0 if all checks pass, 1 if any fail. Each check prints ✅ or ⚠️ FAIL.
+To also verify the generated source, local Go build and pushed Git revision in the real workspace, pass `E2E_NS=<workspace-namespace> DEV_POD=<workspace-pod> DEV_CONTAINER=dev` to `dev-run.sh`.
+
+For browser checks, launch Chromium with `--use-mock-keychain`. Verify catalog login in the published Cloud Terminal, the embedded WeTTY shell, OpenShift login, the Dev Spaces factory and editor, the public app, and the personal Argo CD console.
+
+At the end, follow Lab 3.1 to delete only the Foundry deployment created for the workshop. RHDP owns the assigned cluster and its lifetime. The older cleanup scripts predate the Foundry flow and are not part of these validation commands.
+
+[Full live validation and final environment state](VALIDATION.md) records the 2026-10-22 run on ARO 4.21.22.

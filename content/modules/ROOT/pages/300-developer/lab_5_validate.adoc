@@ -61,7 +61,7 @@ Verify the probes are working after re-deploy:
 ----
 APP_NAME="${APP_NAME:-fortune-cookie}"
 ROUTE=$(oc get route $APP_NAME -n ${APP_NAME}-dev -o jsonpath='{.spec.host}')
-curl -s https://${ROUTE}/healthz
+curl -fsS https://${ROUTE}/healthz
 ----
 
 .Expected

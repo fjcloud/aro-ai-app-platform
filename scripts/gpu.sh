@@ -9,7 +9,8 @@ GPU_VM_SIZE="${GPU_VM_SIZE:-Standard_NC24ads_A100_v4}"
 GPU_REPLICAS="${GPU_REPLICAS:-1}"
 
 if [[ ! -f "${ENV_FILE}" ]]; then
-  echo "No state/cluster.env. Run make deploy." >&2
+  echo "This helper requires state/cluster.env from a separately provisioned ARO HCP cluster." >&2
+  echo "Assigned classic ARO clusters use MachineSets for GPU workers. Do not run make deploy to add a GPU to an existing RHDP cluster." >&2
   exit 1
 fi
 
