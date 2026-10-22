@@ -40,3 +40,5 @@ Successful PipelineRuns: `build-app-bdfwk` and `build-app-2mkxs`.
 The cluster, platform, workspace, application and personal Argo CD remain. The Foundry account remains, but **`deepseekv4pro` was deleted as required by Lab 3.1**. Recreate the deployment with Lab 1.1 before making further model requests.
 
 GPU checks were read-only: East US reports 512 vCPUs of NCASv3 T4 family quota with none used; A100 and H100 family quotas are zero. Quota does not prove VM capacity or a successful GPU launch. No GPU was provisioned, and no in-cluster model was tested. This classic ARO cluster uses GPU MachineSets; the existing `make gpu` helper targets separately provisioned ARO HCP clusters.
+
+Subsequent GPU experiment on the same environment: [live GPU comparison](GPU-VALIDATION.md). Four T4s were later added and tested separately; the normal Foundry workshop remains unchanged.

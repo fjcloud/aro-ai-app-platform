@@ -25,3 +25,7 @@ For browser checks, launch Chromium with `--use-mock-keychain`. Verify catalog l
 At the end, follow Lab 3.1 to delete only the Foundry deployment created for the workshop. RHDP owns the assigned cluster and its lifetime. The older cleanup scripts predate the Foundry flow and are not part of these validation commands.
 
 [Full live validation and final environment state](VALIDATION.md) records the 2026-10-22 run on ARO 4.21.22.
+
+## Optional GPU experiment
+
+See [the live GPU comparison](GPU-VALIDATION.md) and [the isolated experiment](../experiments/gpu/README.md). This does not replace the validated Foundry workshop or deploy the full RHOAI/MaaS stack.

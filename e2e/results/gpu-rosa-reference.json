@@ -1,0 +1,90 @@
+{
+  "environment": "ROSA reference",
+  "instance": "g6e.xlarge",
+  "gpu": "NVIDIA L40S 48 GB",
+  "model": "RedHatAI/Qwen3.8-27B-INT4",
+  "revision": "91bd022d5b49442a868bc35008f6c21e1860edfa",
+  "image": "registry.redhat.io/rhaii/vllm-cuda-rhel9@sha256:5d4434598dc702b89c8d63b9fa6e2378130abf649c95f4211fb93e325cfd7698",
+  "results": [
+    {
+      "case": "five-go-tips",
+      "run": 1,
+      "seconds": 3.529,
+      "usage": {
+        "prompt_tokens": 26,
+        "total_tokens": 177,
+        "completion_tokens": 151,
+        "prompt_tokens_details": null
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case": "five-go-tips",
+      "run": 2,
+      "seconds": 3.538,
+      "usage": {
+        "prompt_tokens": 26,
+        "total_tokens": 177,
+        "completion_tokens": 151,
+        "prompt_tokens_details": null
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case": "five-go-tips",
+      "run": 3,
+      "seconds": 3.538,
+      "usage": {
+        "prompt_tokens": 26,
+        "total_tokens": 177,
+        "completion_tokens": 151,
+        "prompt_tokens_details": null
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case": "tool-call",
+      "seconds": 0.927,
+      "usage": {
+        "prompt_tokens": 290,
+        "total_tokens": 326,
+        "completion_tokens": 36,
+        "prompt_tokens_details": null
+      },
+      "passed": true
+    },
+    {
+      "case": "tool-result",
+      "seconds": 0.34,
+      "usage": {
+        "prompt_tokens": 345,
+        "total_tokens": 355,
+        "completion_tokens": 10,
+        "prompt_tokens_details": null
+      },
+      "passed": true
+    },
+    {
+      "case": "long-prompt",
+      "seconds": 4.034,
+      "usage": {
+        "prompt_tokens": 12527,
+        "total_tokens": 12533,
+        "completion_tokens": 6,
+        "prompt_tokens_details": null
+      },
+      "passed": true
+    },
+    {
+      "case": "long-prompt-warm-kernels-new-prefix",
+      "seconds": 3.957,
+      "usage": {
+        "prompt_tokens": 12527,
+        "total_tokens": 12533,
+        "completion_tokens": 6,
+        "prompt_tokens_details": null
+      },
+      "passed": true
+    }
+  ]
+}
