@@ -3,11 +3,13 @@ kind: MaaSModelRef
 metadata:
   name: qwen3
   namespace: llm-serving
+  # Omit optional context-window metadata: RHOAI 3.5 MaaS serializes it as a
+  # string, while the Gen AI catalog expects an integer (HTTP 502). vLLM and
+  # OpenCode still configure the real 262144-token window independently.
   annotations:
     openshift.io/display-name: Qwen3.8
     openshift.io/description: Red Hat AI Qwen3.8-27B-INT4 served with Red Hat vLLM CUDA
     opendatahub.io/genai-use-case: chat
-    opendatahub.io/context-window: "262144"
 spec:
   modelRef:
     kind: LLMInferenceService
