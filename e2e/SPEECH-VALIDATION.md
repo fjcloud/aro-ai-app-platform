@@ -1,6 +1,6 @@
 # ARO speech workshop validation
 
-Completed on 2026-10-22 against the assigned classic ARO 4.21.22 lab. This is the current transcription path; `VALIDATION.md` and the GPU LLM comparisons describe the earlier Fortune Cookie/model experiments.
+Completed on 2026-10-22 against the assigned classic ARO 4.21.22 lab. This records the initial FP16 transcription baseline. The active workshop now uses the RedHatAI INT8 model: see [INT8 validation](WHISPER-INT8-VALIDATION.md). `VALIDATION.md` and the GPU LLM comparisons describe earlier Fortune Cookie/model experiments.
 
 Application: **https://live-transcript-live-transcript-dev.apps.ytlbb232.eastus.aroapp.io/**
 

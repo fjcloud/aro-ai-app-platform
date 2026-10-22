@@ -1,0 +1,15 @@
+{
+  "language": "en",
+  "modelRequests": 2,
+  "latencyMs": [
+    293,
+    239
+  ],
+  "firstTextMs": 5287,
+  "textWhileRecording": "Hello, we are testing speech transcription on Red Hat OpenShift.",
+  "finalTranscript": "Hello, we are testing speech transcription on Red Hat OpenShift. The model runs on a single graphics card.",
+  "clipboardCopied": true,
+  "microphoneReleased": true,
+  "outageHandled": true,
+  "permissionDeniedHandled": true
+}

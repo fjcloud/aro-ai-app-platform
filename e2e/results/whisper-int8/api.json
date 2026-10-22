@@ -1,0 +1,23 @@
+[
+  {
+    "audio": "fr",
+    "language": "fr",
+    "elapsed_ms": 3540,
+    "latency_ms": 2758,
+    "text": "Bonjour, nous testons la transcription avec Red à OpenShift. Le modèle fonctionne sur une seule carte graphique."
+  },
+  {
+    "audio": "en",
+    "language": "en",
+    "elapsed_ms": 1138,
+    "latency_ms": 325,
+    "text": "Hello, we are testing speech transcription on Red Hat OpenShift. The model runs on a single graphics card."
+  },
+  {
+    "audio": "fr",
+    "language": "auto",
+    "elapsed_ms": 1199,
+    "latency_ms": 406,
+    "text": "Bonjour, nous testons la transcription avec Red à OpenShift. Le modèle fonctionne sur une seule carte graphique."
+  }
+]

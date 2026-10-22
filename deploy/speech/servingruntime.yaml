@@ -19,8 +19,8 @@ spec:
       command: [python, -m, vllm.entrypoints.openai.api_server]
       args:
         - --port=8080
-        - --model=openai/whisper-large-v3-turbo
-        - --revision=41f01f3fe87f28c78e2fbf8b568835947dd65ed9
+        - --model=RedHatAI/whisper-large-v3-turbo-quantized.w8a8
+        - --revision=95991fd06170e03c8fa55595958972e6cb76c441
         - --served-model-name=whisper
         - --dtype=half
         - --max-model-len=448

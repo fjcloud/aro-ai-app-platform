@@ -81,6 +81,8 @@ def speech():
     require(any(c['type'] == 'Ready' and c['status'] == 'True' for c in dsc['status']['conditions']), 'OpenShift AI Ready')
     model = resource('inferenceservice', 'whisper', 'speech-serving')
     require(any(c['type'] == 'Ready' and c['status'] == 'True' for c in model['status']['conditions']), 'Whisper InferenceService Ready')
+    runtime = resource('servingruntime', 'whisper-vllm', 'speech-serving')
+    require('--model=RedHatAI/whisper-large-v3-turbo-quantized.w8a8' in runtime['spec']['containers'][0]['args'], 'Whisper uses the RedHatAI INT8 model')
     predictor = model['spec']['predictor']
     require(predictor['model']['resources']['limits']['nvidia.com/gpu'] == '1', 'Whisper requests exactly one GPU')
     nodes = json.loads(oc('get', 'nodes', '-l', 'node.kubernetes.io/instance-type=Standard_NC8as_T4_v3', '-o', 'json'))['items']

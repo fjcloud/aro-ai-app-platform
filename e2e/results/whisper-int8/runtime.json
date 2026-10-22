@@ -1,0 +1,13 @@
+{
+  "model": "RedHatAI/whisper-large-v3-turbo-quantized.w8a8",
+  "revision": "95991fd06170e03c8fa55595958972e6cb76c441",
+  "nativeKernel": "CutlassInt8ScaledMMLinearKernel",
+  "compressedTensorsDetected": true,
+  "startupEvidence": [
+    "(EngineCore pid=91) INFO 10-22 13:31:21 [__init__.py:629] Selected CutlassInt8ScaledMMLinearKernel for CompressedTensorsW8A8Int8",
+    "(EngineCore pid=91) INFO 10-22 13:31:49 [weight_utils.py:849] Filesystem type for checkpoints: EXT4. Checkpoint size: 0.89 GiB. Available RAM: 47.76 GiB.",
+    "(EngineCore pid=91) INFO 10-22 13:31:50 [default_loader.py:430] Loading weights took 0.25 seconds",
+    "(EngineCore pid=91) INFO 10-22 13:31:50 [gpu_model_runner.py:5282] Model loading took 0.83 GiB memory and 28.330704 seconds"
+  ],
+  "gpuMemory": "Tesla T4, 8141 MiB, 16384 MiB"
+}

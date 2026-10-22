@@ -1,6 +1,6 @@
 = Lab 1.4 — Serve Whisper on one T4
 
-Keep DeepSeek on Foundry for OpenCode. Add a separate speech model for the application: *Whisper Large v3 Turbo*, served by *Red Hat AI Inference 3.5* on *OpenShift AI 3.5 / KServe*, using one NVIDIA T4.
+Keep DeepSeek on Foundry for OpenCode. Add a separate speech model for the application: *RedHatAI Whisper Large v3 Turbo INT8*, served by *Red Hat AI Inference 3.5* on *OpenShift AI 3.5 / KServe*, using one NVIDIA T4.
 
 [NOTE]
 ====
@@ -11,9 +11,9 @@ Keep DeepSeek on Foundry for OpenCode. Add a separate speech model for the appli
 
 == Why this model
 
-The https://access.redhat.com/articles/rhoai-supported-configs[OpenShift AI support matrix] includes ARO and OpenShift 4.21 for OpenShift AI 3.5. The https://docs.redhat.com/en/documentation/red_hat_ai/3/html-single/supported_product_and_hardware_configurations/index[Red Hat AI hardware matrix] includes the T4 for the CUDA runtime, but excludes T4 from the supported INT4 configuration. Use the upstream OpenAI Whisper weights in *FP16*, without custom kernels. The runtime image and model revision are pinned in `deploy/speech/servingruntime.yaml`.
+The https://access.redhat.com/articles/rhoai-supported-configs[OpenShift AI support matrix] includes ARO and OpenShift 4.21 for OpenShift AI 3.5. The https://docs.redhat.com/en/documentation/red_hat_ai/3/html-single/supported_product_and_hardware_configurations/index[Red Hat AI hardware matrix] includes the T4 for the CUDA runtime and *INT8 W8A8*. Use https://huggingface.co/RedHatAI/whisper-large-v3-turbo-quantized.w8a8[RedHatAI/whisper-large-v3-turbo-quantized.w8a8], without custom kernels. The INT4 and FP8 W8A8 variants are not the supported T4 path. The runtime image and model revision are pinned in `deploy/speech/servingruntime.yaml`.
 
-The inference runtime is a Red Hat product. Whisper weights are an upstream model, not a Red Hat LLM. This workshop does not imply certification of the generated application or a blanket support guarantee for every model/configuration; production support requires the appropriate subscriptions and supported hardware/operator versions.
+The inference runtime is a Red Hat product. The Whisper weights are published by the *RedHatAI* Hugging Face organization as an INT8 quantization of OpenAI Whisper. `--dtype=half` applies to non-quantized operations; vLLM detects INT8 from the model’s quantization configuration. This workshop does not imply certification of the generated application or a blanket support guarantee for every model/configuration; production support requires the appropriate subscriptions and supported hardware/operator versions.
 
 == Check CPU capacity first
 

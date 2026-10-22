@@ -35,7 +35,7 @@ The LLM writes the app. DeepSeek-V4 Pro is a *platform* capability, published as
 === Act 1 — Platform
 * *DeepSeek-V4 Pro* on Microsoft Foundry, Global Standard, pay per token
 * *OpenShift Dev Spaces* pointed at that endpoint with one injected key
-* *OpenShift AI + KServe + Red Hat AI Inference* serving Whisper Large v3 Turbo on one NVIDIA T4
+* *OpenShift AI + KServe + Red Hat AI Inference* serving RedHatAI Whisper Large v3 Turbo INT8 on one NVIDIA T4
 * *AGENTS.md* — the only runbook OpenCode reads
 * *OpenShift GitOps* (Argo CD) and *OpenShift Pipelines* (Tekton)
 

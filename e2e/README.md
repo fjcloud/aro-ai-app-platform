@@ -41,7 +41,7 @@ APP_URL=https://your-app-route AUDIO_FIXTURE=/absolute/french-speech.wav \
 
 Use a synthetic spoken WAV fixture, with `SPEECH_LANGUAGE=en` and an English fixture for the second pass. The browser test uses real microphone capture with Chromium's fake audio device, the live Go backend and the actual Whisper service. It checks text before Stop, multiple independent WAV clips, transcript download, microphone release, backend failure and permission denial. Every browser launch uses `--use-mock-keychain`.
 
-See [speech validation](SPEECH-VALIDATION.md) for the live results and resource versions. `VALIDATION.md` records the earlier Fortune Cookie baseline and is historical.
+See [RedHatAI INT8 validation](WHISPER-INT8-VALIDATION.md) for the active model and [speech validation](SPEECH-VALIDATION.md) for the initial FP16 baseline. `VALIDATION.md` records the earlier Fortune Cookie baseline and is historical.
 
 ## Historical GPU experiments
 

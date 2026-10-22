@@ -1,0 +1,15 @@
+{
+  "language": "fr",
+  "modelRequests": 2,
+  "latencyMs": [
+    289,
+    246
+  ],
+  "firstTextMs": 6319,
+  "textWhileRecording": "Bonjour, nous testons la transcription avec Red à OpenShift.",
+  "finalTranscript": "Bonjour, nous testons la transcription avec Red à OpenShift. Le modèle fonctionne sur une seule carte graphique.",
+  "clipboardCopied": true,
+  "microphoneReleased": true,
+  "outageHandled": true,
+  "permissionDeniedHandled": true
+}
