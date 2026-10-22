@@ -6,7 +6,7 @@
 apiVersion: tekton.dev/v1
 kind: Task
 metadata:
-  name: git-clone
+  name: workshop-git-clone
   namespace: openshift-pipelines
   labels:
     app.kubernetes.io/version: "workshop"
@@ -74,7 +74,7 @@ spec:
 apiVersion: tekton.dev/v1
 kind: Task
 metadata:
-  name: buildah
+  name: workshop-buildah
   namespace: openshift-pipelines
   labels:
     app.kubernetes.io/version: "workshop"

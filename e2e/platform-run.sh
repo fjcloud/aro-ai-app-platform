@@ -177,10 +177,10 @@ check "Tekton remote resolvers deployment Available" \
    -o jsonpath='{.status.availableReplicas}' | grep -qE '[1-9]'"
 
 check "buildah Task installed in openshift-pipelines" \
-  "oc get task buildah -n openshift-pipelines"
+  "oc get task workshop-buildah -n openshift-pipelines"
 
 check "git-clone Task installed in openshift-pipelines" \
-  "oc get task git-clone -n openshift-pipelines"
+  "oc get task workshop-git-clone -n openshift-pipelines"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PHASE 3 — Platform Instances (lab 1.3 Step 1)
