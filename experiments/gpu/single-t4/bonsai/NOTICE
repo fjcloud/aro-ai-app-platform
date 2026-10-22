@@ -1,0 +1,19 @@
+bonsai-vllm
+Copyright 2026 Fraser Price
+
+This is an unofficial, community vLLM runtime for Bonsai 2 27B. It is not affiliated with Prism ML.
+
+Created using Bonsai by Prism ML. Bonsai 2 27B is copyright 2026-present Prism ML, Inc. and is
+available under the Apache 2.0 License: https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-mlx-2bit
+
+Bonsai 2 27B is built from Qwen3.8-27B, Copyright 2026 Alibaba Cloud, which is available under the
+Apache 2.0 License: https://huggingface.co/Qwen/Qwen3.8-27B/blob/main/LICENSE
+
+The container image is built on vLLM, Copyright the vLLM team, which is available under the
+Apache 2.0 License: https://github.com/vllm-project/vllm
+
+Experimental SM75 backend: packed layout and plugin interface from
+https://github.com/fraserprice/bonsai-vllm (Apache-2.0).
+The signed Hadamard and packed GEMV/GEMM approach also references
+https://github.com/wonder-dot-ai/bonsai2-vllm-plugin (Apache-2.0).
+This backend is a workshop experiment, not an upstream-supported T4 release.

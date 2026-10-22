@@ -1,0 +1,9 @@
+{
+  "model": "fraserprice/Ternary-Bonsai-2-27B-vllm",
+  "model_revision": "1e1d7c0f5cb02b71d81b0574c54ddd1dc9088495",
+  "plugin_commit": "e5ed2454a6b06a857a2146ba8cc60b7814c54bdf",
+  "vllm": "0.24.0+rhaiv.9",
+  "gpu": "Tesla T4",
+  "exit_code": 1,
+  "error": "The quantization method prism_ternary is not supported for the current GPU. Minimum capability: 80. Current capability: 75."
+}

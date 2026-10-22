@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bonsai2-t4
+  namespace: gpu-comparison
+spec:
+  restartPolicy: Never
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  nodeSelector:
+    workshop.fjcloud.io/gpu: t4
+  tolerations:
+  - key: nvidia.com/gpu
+    operator: Equal
+    value: present
+    effect: NoSchedule
+  containers:
+  - name: vllm
+    image: registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5.0@sha256:5d4434598dc702b89c8d63b9fa6e2378130abf649c95f4211fb93e325cfd7698
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    command:
+    - bash
+    - -c
+    args:
+    - |
+      set -euo pipefail
+      python -m pip install --no-deps --target /tmp/bonsai-plugin \
+        https://github.com/fraserprice/bonsai-vllm/archive/e5ed2454a6b06a857a2146ba8cc60b7814c54bdf.tar.gz
+      python /t4/patch_plugin.py /tmp/bonsai-plugin
+      export PYTHONPATH=/tmp/bonsai-plugin
+      exec python -m vllm.entrypoints.openai.api_server \
+        --host 127.0.0.1 --port 8000 \
+        --model fraserprice/Ternary-Bonsai-2-27B-vllm \
+        --revision 1e1d7c0f5cb02b71d81b0574c54ddd1dc9088495 \
+        --served-model-name bonsai2 --dtype half --kv-cache-dtype float16 \
+        --max-model-len 16384 --max-num-seqs 1 --max-num-batched-tokens 256 \
+        --gpu-memory-utilization 0.90 --language-model-only --enforce-eager \
+        --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder
+    env:
+    - name: HF_HUB_OFFLINE
+      value: '0'
+    - name: TRANSFORMERS_OFFLINE
+      value: '0'
+    - name: HF_HOME
+      value: /opt/models
+    - name: HOME
+      value: /opt/models
+    resources:
+      requests:
+        cpu: '4'
+        memory: 16Gi
+        nvidia.com/gpu: '1'
+      limits:
+        cpu: '8'
+        memory: 64Gi
+        nvidia.com/gpu: '1'
+    volumeMounts:
+    - name: cache
+      mountPath: /opt/models
+    - name: shm
+      mountPath: /dev/shm
+    - name: backend
+      mountPath: /t4
+      readOnly: true
+  volumes:
+  - name: cache
+    persistentVolumeClaim:
+      claimName: model-cache
+  - name: shm
+    emptyDir:
+      medium: Memory
+      sizeLimit: 16Gi
+  - name: backend
+    configMap:
+      name: bonsai-t4-backend

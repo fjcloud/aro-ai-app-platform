@@ -1,0 +1,11 @@
+{
+  "model": "cyankiwi/Qwen3.8-27B-AWQ-INT4",
+  "revision": "e3a700906e6a73ba4290b1873dc2ba8198527ab5",
+  "checkpoint_bytes": 21018000080,
+  "tensor_bytes": {
+    "text": 19246830832,
+    "vision": 921460192,
+    "mtp": 849398784
+  },
+  "method": "Safetensors shard headers: sum data_offsets excluding metadata; vision=model.visual.*, MTP=mtp.*"
+}

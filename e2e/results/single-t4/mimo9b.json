@@ -1,0 +1,277 @@
+[
+  {
+    "model": "mimo9b",
+    "case": "five-go-tips-1",
+    "seconds": 8.222,
+    "usage": {
+      "prompt_tokens": 23,
+      "total_tokens": 120,
+      "completion_tokens": 97,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "1. Set a timeout on every request and use `context` to cancel work cleanly.\n2. Validate and sanitize all input before parsing it, and never trust client-supplied data.\n3. Return proper HTTP status codes and structured JSON errors instead of panicking.\n4. Keep handlers small and testable, with unit tests covering success and failure paths.\n5. Run the server with `http.ListenAndServe` or `http.Serve` and handle shutdown gracefully.",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "passed": true
+  },
+  {
+    "model": "mimo9b",
+    "case": "five-go-tips-2",
+    "seconds": 4.131,
+    "usage": {
+      "prompt_tokens": 23,
+      "total_tokens": 120,
+      "completion_tokens": 97,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "1. Set a timeout on every request and use `context` to cancel work cleanly.\n2. Validate and sanitize all input before parsing it, and never trust client-supplied data.\n3. Return proper HTTP status codes and structured JSON errors instead of panicking.\n4. Keep handlers small and testable, with unit tests covering success and failure paths.\n5. Run the server with `http.ListenAndServe` or `http.Serve` and handle shutdown gracefully.",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "passed": true
+  },
+  {
+    "model": "mimo9b",
+    "case": "five-go-tips-3",
+    "seconds": 4.132,
+    "usage": {
+      "prompt_tokens": 23,
+      "total_tokens": 120,
+      "completion_tokens": 97,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "1. Set a timeout on every request and use `context` to cancel work cleanly.\n2. Validate and sanitize all input before parsing it, and never trust client-supplied data.\n3. Return proper HTTP status codes and structured JSON errors instead of panicking.\n4. Keep handlers small and testable, with unit tests covering success and failure paths.\n5. Run the server with `http.ListenAndServe` or `http.Serve` and handle shutdown gracefully.",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "passed": true
+  },
+  {
+    "model": "mimo9b",
+    "case": "tool-call",
+    "seconds": 0.985,
+    "usage": {
+      "prompt_tokens": 111,
+      "total_tokens": 132,
+      "completion_tokens": 21,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-92815d84141e406e",
+            "type": "function",
+            "function": {
+              "name": "multiply",
+              "arguments": "{}"
+            }
+          }
+        ],
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "passed": false
+  },
+  {
+    "model": "mimo9b",
+    "case": "long-prompt",
+    "seconds": 29.129,
+    "usage": {
+      "prompt_tokens": 12524,
+      "total_tokens": 12530,
+      "completion_tokens": 6,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "GPU-CONTEXT-OK",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "passed": true
+  },
+  {
+    "model": "mimo9b",
+    "case": "long-prompt-new-prefix",
+    "seconds": 29.427,
+    "usage": {
+      "prompt_tokens": 12524,
+      "total_tokens": 12530,
+      "completion_tokens": 6,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "GPU-CONTEXT-OK",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "passed": true
+  },
+  {
+    "model": "mimo9b",
+    "case": "json-instructions",
+    "seconds": 0.997,
+    "usage": {
+      "prompt_tokens": 52,
+      "total_tokens": 74,
+      "completion_tokens": 22,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"cloud\": \"azure\", \"gpu_count\": 1, \"runtime\": \"vllm\"}",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "passed": true
+  },
+  {
+    "model": "mimo9b",
+    "case": "go-first-unique",
+    "seconds": 3.726,
+    "usage": {
+      "prompt_tokens": 81,
+      "total_tokens": 168,
+      "completion_tokens": 87,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "package candidate {\nfunc FirstUnique(values []string) (string, bool) {\n\tcounts := make(map[string]int, len(values))\n\tfor _, value := range values {\n\t\tcounts[value]++\n\t}\n\tfor _, value := range values {\n\t\tif counts[value] == 1 {\n\t\t\treturn value, true\n\t\t}\n\t}\n\treturn \"\", false\n}\n}",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "source_returned": true
+  },
+  {
+    "model": "mimo9b",
+    "case": "go-retry-after",
+    "seconds": 11.95,
+    "usage": {
+      "prompt_tokens": 121,
+      "total_tokens": 406,
+      "completion_tokens": 285,
+      "prompt_tokens_details": null
+    },
+    "response": {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "package candidate\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"strconv\"\n\t\"strings\"\n\t\"time\"\n)\n\n// ParseRetryAfter parses an HTTP Retry-After header value.\n//\n// The value may be a nonnegative decimal integer number of seconds, or an\n// HTTP date accepted by http.ParseTime. A valid past date yields zero and nil.\nfunc ParseRetryAfter(value string, now time.Time) (time.Duration, error) {\n\tvalue = strings.TrimSpace(value)\n\tif value == \"\" {\n\t\treturn 0, fmt.Errorf(\"candidate: empty Retry-After value\")\n\t}\n\n\tif seconds, err := strconv.ParseInt(value, 10, 64); err == nil && seconds >= 0 {\n\t\td := time.Duration(seconds) * time.Second\n\t\tif d < 0 {\n\t\t\treturn 0, fmt.Errorf(\"candidate: Retry-After overflow\")\n\t\t}\n\t\treturn d, nil\n\t}\n\n\tif t, err := http.ParseTime(value); err == nil {\n\t\tif !t.IsZero() && t.Before(now) {\n\t\t\treturn 0, nil\n\t\t}\n\t\treturn time.Until(t), nil\n\t}\n\n\treturn 0, fmt.Errorf(\"candidate: cannot parse Retry-After value %q\", value)\n}",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    },
+    "source_returned": true
+  },
+  {
+    "model": "mimo9b",
+    "case": "complete"
+  }
+]

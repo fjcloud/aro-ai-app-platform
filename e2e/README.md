@@ -29,3 +29,5 @@ At the end, follow Lab 3.1 to delete only the Foundry deployment created for the
 ## Optional GPU experiment
 
 See [the live GPU comparison](GPU-VALIDATION.md) and [the isolated experiment](../experiments/gpu/README.md). This does not replace the validated Foundry workshop or deploy the full RHOAI/MaaS stack.
+
+Single-GPU model trials, including Bonsai 2 and cyankiwi models, are recorded in [the one-T4 report](SINGLE-T4-VALIDATION.md).

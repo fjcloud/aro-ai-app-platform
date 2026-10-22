@@ -2,6 +2,8 @@
 
 This is an isolated GPU experiment. The normal workshop continues to use Azure AI Foundry. See [the live test report](../../e2e/GPU-VALIDATION.md) before provisioning anything.
 
+For single-card alternatives, see the [one-T4 experiments](single-t4/README.md).
+
 The AWS reference uses **one L40S 48 GB** (`g6e.xlarge`), `RedHatAI/Qwen3.8-27B-INT4`, Red Hat vLLM image `3.5.0`, and a 262,144-token context.
 
 | Azure VM | GPU memory | Comparison |
