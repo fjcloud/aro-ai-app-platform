@@ -1,23 +1,19 @@
 = AI Developer Platform on ARO
 
-Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platform. Participants connect to that cluster, publish the model on Foundry, and configure the developer platform.
+Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platform. Cloud SSAs use this guide to prepare access and lead participants through the platform and developer roles.
 
 == Run the workshop
 
-. Prepare and assign an RHDP environment with a ready ARO cluster, OpenShift 4.21 or later, and a browser terminal. An Azure Blank Environment alone does not include these.
+. Prepare and assign an RHDP environment with a ready classic ARO cluster, OpenShift 4.21 or later, and a browser terminal. An Azure Blank Environment alone does not include these.
 . Open https://fjcloud.github.io/cloud-terminal-pages/[Cloud Terminal], select *Azure · AI developer platform on ARO*, and enter the *workshop ID, assigned email, and workshop password*.
 . The launcher retrieves the assigned Showroom URL. Shared links contain only the guide and workshop ID; each participant signs in separately.
 . Follow Act 0 to log in to the existing cluster, clone the repository, and run `make onboard`.
 
 Platform labs require cluster-admin access and an Azure identity with permission to create Foundry resources in the exact assigned resource group. DeepSeek on Foundry powers OpenCode. RedHatAI Whisper Large v3 Turbo INT8 runs on one T4 through OpenShift AI and Red Hat AI Inference. The sample app transcribes browser microphone audio.
 
+Use one assigned cluster per participant. On a shared cluster, the facilitator prepares the platform once and isolates each app’s namespaces and access.
+
 Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are in `deploy`.
-
-== Optional cluster provisioning
-
-Operators who need to provision a separate ARO HCP cluster can use the existing `make deploy` tooling. It invokes `scripts/onboard-provision.sh` before provisioning, requires the ARO HCP CLI extension, Azure and Entra permissions, and a valid Red Hat pull secret. `make status`, `make kubeconfig`, and `make delete CONFIRM=yes` operate only on that tooling's local `state/cluster.env`.
-
-These commands are separate from participant onboarding. Do not run cluster provisioning or deletion against an assigned ready RHDP environment.
 
 == Architecture
 
@@ -31,4 +27,10 @@ Browser microphone ──> Go app ──> OpenShift AI / vLLM / Whisper (one T4)
 
 Use the `aro-transcription` branch of https://github.com/fjcloud/go-app-template/tree/aro-transcription[the app template]. ROSA keeps its existing template. A working reference app is in `examples/live-transcript`; speech manifests are in `deploy/speech`.
 
-Prepare T4 quota and capacity for one `Standard_NC8as_T4_v3` worker. `make gpu-classic` prints a checked MachineSet; `make gpu-classic APPLY=yes` creates it. Lab 1.4 installs the speech stack. The application sends independent short WAV clips for near-real-time results; it does not use a native Whisper WebSocket stream.
+Allow CPU headroom for OpenShift AI, Dev Spaces and Tekton; Lab 1.4 includes a helper for one additional D8 worker on small clusters. Prepare T4 quota and capacity for one `Standard_NC8as_T4_v3` worker. `make gpu-classic` prints a checked MachineSet; `make gpu-classic APPLY=yes` creates it. Lab 1.4 installs the speech stack. The application sends independent short WAV clips for near-real-time results; it does not use a native Whisper WebSocket stream.
+
+== Optional cluster provisioning
+
+Operators who need to provision a separate ARO HCP cluster can use the existing `make deploy` tooling. It invokes `scripts/onboard-provision.sh` before provisioning, requires the ARO HCP CLI extension, Azure and Entra permissions, and a valid Red Hat pull secret. `make status`, `make kubeconfig`, and `make delete CONFIRM=yes` operate only on that tooling's local `state/cluster.env`.
+
+These commands are separate from participant onboarding. Do not run cluster provisioning or deletion against an assigned ready RHDP environment.

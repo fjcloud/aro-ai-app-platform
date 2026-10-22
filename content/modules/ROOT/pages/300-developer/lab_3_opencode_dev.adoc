@@ -1,6 +1,6 @@
-= Lab 2.2 — Prompt to Production
+= Lab 2.2 — Prompt to Deployment
 
-You have a Dev Space, DeepSeek-V4 Pro on Foundry, and a short `AGENTS.md`. Three OpenCode sessions take you from an empty tree to a live transcription app, then through a real change — still no Ansible, no local Docker.
+You have a Dev Space, DeepSeek-V4 Pro on Foundry, and a short `AGENTS.md`. Three steps in OpenCode take you from an application template to a live transcription app, then through a real change — still no Ansible, no local Docker.
 
 [NOTE]
 ====
@@ -11,7 +11,7 @@ You have a Dev Space, DeepSeek-V4 Pro on Foundry, and a short `AGENTS.md`. Three
 
 [TIP]
 ====
-OpenCode reads `AGENTS.md` before every prompt. You do not repeat platform rules — describe what you want. The LLM knows the Dockerfile template and the git, ephemeral Git, and `oc` deploy phases.
+OpenCode includes `AGENTS.md` in its project context. Describe the application and review the proposed plan. The runbook supplies the Dockerfile and the Git, Tekton and Argo CD steps; the checkpoints verify the result.
 ====
 
 == Step 1: Open the Project and Launch OpenCode
@@ -25,7 +25,7 @@ echo "APP_NAME=$APP_NAME"
 ls
 ----
 
-.Expected
+.Expected key entries
 [source,console]
 ----
 APP_NAME=live-transcript
@@ -45,13 +45,13 @@ opencode
 | GitOps | Point `image:` at the build, apply `gitops/base`, create the Argo CD Application | 2–3 min
 |===
 
-image::cicd-gitops.png[Prompt to production, align="center"]
+image::cicd-gitops.png[Prompt to deployment, align="center"]
 
 ---
 
-== Session 1: Plan
+== Step 2: Plan
 
-Press kbd:[Tab] until the TUI shows *plan*, then paste. Stay in this session — do not start a new one (`Ctrl+N`).
+Press kbd:[Tab] until the TUI shows *plan*, then paste. Keep this session open for the build step.
 
 [source,text,role=execute]
 ----
@@ -62,7 +62,7 @@ Review the plan. Adjust if needed. The plan is the context for the next prompt.
 
 ---
 
-== Session 2: Build and Deploy
+== Step 3: Build and Deploy
 
 Press kbd:[Tab] to *build* in the *same* session.
 
@@ -120,9 +120,9 @@ DeepSeek wrote the app. Its Go backend sends short WAV clips to Whisper on OpenS
 
 ---
 
-== Session 3: Ship a change
+== Step 4: Ship a change
 
-Close the GitOps loop: change the app, push, watch Tekton rebuild, roll the deployment. Still no hand-written `kubectl apply` for the app.
+Close the GitOps loop: change the app, push, start a new Tekton build, then restart the Deployment to pull the updated image. In this workshop, builds are started explicitly; a Git push alone does not trigger Tekton.
 
 Start a new OpenCode session in `$\{PROJECT_SOURCE}`. Press kbd:[Tab] to *build*:
 

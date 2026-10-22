@@ -1,6 +1,6 @@
 = Lab 1.5 — Hand the Keys
 
-DeepSeek-V4 Pro is already answering. Your job now is to hand the afternoon developer a *launch URL* and a short runbook — not a wiki, not Ansible, not a tour of every Kustomize file.
+DeepSeek-V4 Pro is already answering. Prepare a *Dev Spaces launch URL* and the project runbook for the developer in Act 2.
 
 The ARO transcription template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-transcription[fjcloud/go-app-template].
 
@@ -18,7 +18,7 @@ The ARO transcription template is on its own branch: https://github.com/fjcloud/
 | Path | Why it exists
 
 | `AGENTS.md`
-| The only runbook OpenCode reads. Generate `main.go` / `go.mod` / `Dockerfile`, then git, ephemeral Git, and `oc`.
+| The project runbook for OpenCode. Generate `main.go` / `go.mod` / `Dockerfile`, then git, ephemeral Git, and `oc`.
 
 | `opencode.json`
 | The template still names the old model. Lab 2.1 overwrites it so the project pin is `deepseek/deepseekv4pro`. The key and base URL stay `$OPENAI_API_KEY` and `$OPENAI_BASE_URL`.
@@ -43,7 +43,7 @@ wc -l "$HOME/aro-transcription-template/AGENTS.md"
 cat "$HOME/aro-transcription-template/AGENTS.md"
 ----
 
-You should see a short file. Notice:
+Focus on these sections:
 
 * *Files YOU must generate* — `main.go`, `go.mod`, `Dockerfile` with an exact two-stage template
 * *Files already in the repository* — do not rewrite `deploy/`, `pipeline/`, `gitops/`, or `devfile.yaml`
@@ -67,7 +67,7 @@ You should see a short file. Notice:
 | 2–3 min
 |===
 
-image::cicd-gitops.png[Prompt to production, align="center"]
+image::cicd-gitops.png[Prompt to deployment, align="center"]
 
 == Step 2: Confirm OpenCode is wired to Foundry
 

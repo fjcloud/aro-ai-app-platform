@@ -6,7 +6,7 @@ Your assigned RHDP environment already contains an ARO cluster and a bastion wit
 ====
 *Estimated time:* 10 minutes +
 *Persona:* Platform Engineer +
-*Blocking:* Act 1 requires OpenShift 4.21 or later, Ready workers, cluster-admin access, and permission to create Foundry resources in the assigned Azure resource group.
+*Blocking:* Act 1 requires a classic ARO cluster on OpenShift 4.21 or later, Ready workers, cluster-admin access, and Azure permissions for Foundry and the extra GPU/CPU workers. Check T4 quota and regional capacity with the facilitator before Act 1.
 ====
 
 == Open your environment

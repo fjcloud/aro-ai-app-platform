@@ -11,7 +11,7 @@ Operators are still installing. Wait until Dev Spaces, GitOps, and Pipelines are
 
 == Why a managed endpoint
 
-The cluster stays a place to edit, build, and deploy. The model stays on Foundry.
+The coding model runs on Foundry. The cluster hosts the editor, build and delivery tools, and the separate Whisper speech service. OpenCode sends coding prompts and source context to the managed endpoint.
 
 [cols="1,2", options="header"]
 |===
@@ -33,12 +33,13 @@ Same JSON as a cloud OpenAI chat call, different host:
 ----
 curl "${OPENAI_BASE_URL}/chat/completions" \
   -H "api-key: $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
   -d '{"model": "deepseekv4pro", "messages": [{"role": "user", "content": "Hello"}]}'
 ----
 
 == ✅ Checkpoint: Operators Ready
 
-Lab 1.2 is still running in the background. Wait here before you create Dev Spaces. Re-apply the three operators first so the Tekton `git-clone` and `buildah` tasks land after the CRDs exist.
+Lab 1.2 is still running in the background. Wait here before you create Dev Spaces. Re-apply the operator manifests if needed, wait for their Deployments, then install the Tekton `git-clone` and `buildah` tasks after their CRDs exist.
 
 [source,sh,role=execute]
 ----

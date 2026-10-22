@@ -1,6 +1,6 @@
-= Lab 3.1 — The Token Bill
+= Lab 3.1 — Tokens, Infrastructure and Cleanup
 
-Act 3 is required. You spent the afternoon prompting DeepSeek-V4 Pro. Coding is billed in tokens; the speech service also has a GPU VM and disk bill. Read one response, price it, then delete the deployment.
+Act 3 is required. You spent the afternoon prompting DeepSeek-V4 Pro. Coding is billed in tokens; the speech service also has a GPU VM and disk bill. Read one response, estimate its cost, then identify which resources the facilitator removes after everyone finishes.
 
 [NOTE]
 ====
@@ -8,9 +8,11 @@ Act 3 is required. You spent the afternoon prompting DeepSeek-V4 Pro. Coding is 
 *Personas:* Platform Engineer + Developer (together)
 ====
 
-== The rate
+image::the-bill-observability.png[Managed coding tokens and provisioned speech infrastructure, align="center"]
 
-Global Standard, East US 2, from the Foundry price sheet:
+== The coding model rate
+
+Example rates checked on *22 October 2026*, Global Standard, East US 2. These are public list rates, not a quote for your account:
 
 The https://prices.azure.com/api/retail/prices?$filter=productName%20eq%20%27Azure%20Deepseek%20Models%27%20and%20armRegionName%20eq%20%27eastus2%27[Azure Retail Prices API] lists these Global rates in USD per 1K tokens. The table below converts them to 1M tokens; check the current rates when running the workshop.
 
@@ -28,7 +30,7 @@ The https://prices.azure.com/api/retail/prices?$filter=productName%20eq%20%27Azu
 | $3.48
 |===
 
-An idle deployment costs nothing. A deployment left in place still has a key. Delete it before you leave.
+An idle Global Standard deployment has no token usage charge. Its account key remains valid while the account exists. Remove the workshop deployment after all users have finished; deleting a deployment does not revoke the account key.
 
 == Part 1: Read one usage object
 
@@ -69,15 +71,19 @@ Price that call:
 
 [source]
 ----
-dollars = prompt_tokens / 1_000_000 * 1.74
+uncached_input = prompt_tokens - cached_input_tokens
+dollars = uncached_input / 1_000_000 * 1.74
+        + cached_input_tokens / 1_000_000 * 0.145
         + completion_tokens / 1_000_000 * 3.48
 ----
 
+Use the cached input count from `usage.prompt_tokens_details.cached_tokens` when provided, otherwise use zero for this estimate. Do not add reasoning tokens again when they are already included in `completion_tokens`.
+
 Twelve input tokens and eighteen output tokens are a fraction of a cent. An OpenCode session is larger because it sends `AGENTS.md` and the conversation on every turn, and reasoning tokens count as output.
 
-== Part 2: What the afternoon was worth
+== Part 2: Estimate the session cost
 
-Use the last OpenCode session as the estimate. If you did not record `usage`, use this workshop-sized example and say so:
+Use recorded OpenCode usage if available. Otherwise use these illustrative, uncached-input examples. They are not measured workshop totals:
 
 [cols="1,1,1", options="header"]
 |===
@@ -98,9 +104,9 @@ Use the last OpenCode session as the estimate. If you did not record `usage`, us
 
 Whisper’s T4 worker, the additional CPU worker (if added), and storage are not on the Foundry token invoice. The cluster workers are the other line: your assigned environment's worker VMs are billed while they exist. Worker counts and VM sizes depend on the RHDP environment.
 
-== Part 3: Delete the deployment
+== Part 3: Facilitator cleanup — coding deployment
 
-Run this in the platform shell, in the workshop repository. It removes the pay-per-token deployment. It leaves the Foundry account in place.
+After *all participants* finish using OpenCode, the facilitator runs this in the *bastion terminal*, in the workshop repository. On a single-user assignment, you perform this step yourself. It deletes only the coding deployment and its injection Secret; it leaves the Foundry account and its keys in place. Do not remove resources used by another workshop.
 
 [source,sh,role=execute]
 ----
@@ -111,28 +117,10 @@ set +a
 
 az rest --method delete \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}"
+oc delete secret ai-provider-openai-api-key -n openshift-operators --ignore-not-found
 ----
 
-== ✅ Act 3 checkpoint
-
-[source,sh,role=execute]
-----
-curl -fsS https://$(oc get route live-transcript -n live-transcript-dev \
-  -o jsonpath='{.spec.host}')/healthz
-----
-
-.Expected
-[source,text,options=nowrap]
-----
-{"status":"ok"}
-----
-
-You priced a call from `usage`, and the `deepseekv4pro` deployment is deleted. ✓
-
-➡️ Move on to *Conclusion & What's Next*.
-
-
-== Facilitator: remove the speech resources after everyone finishes
+== Part 4: Facilitator cleanup — speech infrastructure
 
 The model is shared. Keep it available while participants test their apps. Deleting the model pod alone does not stop the VM or disk charges.
 
@@ -148,3 +136,13 @@ oc get machines -n openshift-machine-api
 ----
 
 Wait for the labelled workers to disappear and check the Azure resource group. The original CPU MachineSets remain. This also deletes the Whisper model cache PVC; Azure may take time to reclaim its disk. The operator installations remain available for later exercises.
+
+== Act 3 checkpoint
+
+* You can distinguish coding token charges from GPU, CPU and disk charges.
+* You priced a response from its `usage`, or labelled the worked example as an estimate.
+* After everyone finishes, the facilitator confirms the coding deployment and labelled speech workers are removed, and checks disk reclamation in Azure. Existing workspaces can retain injected credentials until stopped; do not reuse this demo key for another environment.
+
+The Go app’s `/healthz` can stay healthy after model cleanup, but transcription then fails because Whisper is gone. Test the app *before* cleanup. Never delete the assigned RHDP cluster or its original CPU workers.
+
+➡️ Move on to *Conclusion & Next Steps*.

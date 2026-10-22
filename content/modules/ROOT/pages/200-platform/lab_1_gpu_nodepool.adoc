@@ -11,7 +11,7 @@ Act 1 starts here. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft 
 
 [IMPORTANT]
 ====
-This is Global Standard, pay per token, in East US 2. DeepSeek-V4 Pro is *$1.74 per million input tokens* and *$3.48 per million output tokens*. Cached input is $0.145 per million. An idle deployment costs nothing. Reasoning tokens are billed as output. Delete the deployment at the end of the day (Lab 3.1).
+This deployment uses Global Standard, pay-per-token pricing in East US 2. Reasoning tokens count as output. See xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1] for the dated price example and cleanup. An idle coding deployment has no token usage charge; the cluster and speech workers have separate infrastructure costs.
 ====
 
 == What you are creating

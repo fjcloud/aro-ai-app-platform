@@ -1,6 +1,6 @@
 = Lab 2.1 — Launch Your Dev Space
 
-Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop install. The model is the Foundry endpoint from this morning.
+Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is the Foundry endpoint from this morning.
 
 [NOTE]
 ====
@@ -16,7 +16,7 @@ OpenShift Dev Spaces provides *cloud-based developer workspaces* — VS Code-com
 * *Zero local setup:* the workspace comes pre-configured; just open a browser
 * *Consistent environment:* every developer gets the same tools, versions, and configuration
 * *Model access:* the workspace calls Foundry at `$OPENAI_BASE_URL` with the injected key — same chat-completions JSON, pay per token
-* *Persistent storage:* your work is saved on a per-user PVC even if you close the browser
+* *Persistent storage:* your work survives closing the browser, but remains tied to the lifetime of this RHDP environment. Export anything you want to keep before it expires
 
 == Get the Dev Spaces URL
 
@@ -56,7 +56,7 @@ The first launch can take up to 15 minutes while the images are pulled. *Subsequ
 ** A terminal at the bottom
 ** OpenCode available on `PATH` (injected by Dev Spaces, not by the template)
 +
-Do **not** sign in to GitHub Copilot. Che Code ships Copilot as a built-in; the platform disables it. Do not install Continue. The model is OpenCode in the terminal, calling DeepSeek-V4 Pro.
+Do **not** sign in to GitHub Copilot. Che Code ships Copilot as a built-in; the platform disables it. Do not install Continue. Use OpenCode in the terminal to call DeepSeek-V4 Pro.
 
 If the editor opens in *Restricted Mode*, open *Manage Workspace Trust*, trust this repository, and confirm. The IDE may reload before its terminal becomes available.
 
@@ -125,7 +125,7 @@ curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
 opencode
 ----
 +
-The OpenCode TUI (Terminal UI) launches. It reads `AGENTS.md` and connects to DeepSeek-V4 Pro automatically.
+The OpenCode terminal user interface (TUI) launches. It reads `AGENTS.md` and connects to DeepSeek-V4 Pro automatically.
 Two session modes are available: *plan* (read-only — no file writes) and *build* (writes files). Press kbd:[Tab] to switch from one to the other.
 Use `/exit` to leave OpenCode when needed.
 
@@ -173,9 +173,9 @@ Expected content:
 }
 ----
 
-OpenCode still reads `AGENTS.md` from the project directory at the start of every session. That is how the Platform Engineer's rules are enforced.
+OpenCode still reads `AGENTS.md` from the project directory at the start of every session. These instructions guide generation; the audit in Lab 2.3 checks the deployed result.
 
-`limit.output` is 32 768. Input is $1.74 per million tokens and output is $3.48 per million, so keep prompts specific.
+`limit.output` is 32 768. Keep prompts specific and review usage and pricing in Lab 3.1.
 
 == ✅ Checkpoint
 
@@ -197,4 +197,4 @@ deepseek/deepseekv4pro
 
 Your Dev Space is running, tools are installed, and the LLM is reachable. ✓
 
-➡️ Move on to *Lab 2.2: Prompt to Production*.
+➡️ Move on to *Lab 2.2: Prompt to Deployment*.

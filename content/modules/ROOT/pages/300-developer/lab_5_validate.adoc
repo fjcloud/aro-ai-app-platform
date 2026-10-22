@@ -1,33 +1,19 @@
 = Lab 2.3 — Audit with OpenCode
 
-Your application is live. But did OpenCode actually follow all the platform rules from `AGENTS.md`? Use the same LLM that wrote the code to *audit* it — and automatically fix any gaps.
+Your application is live. Check whether its manifests and running resources match `AGENTS.md`. OpenCode can help explain discrepancies; you verify the result.
 
 [NOTE]
 ====
 *Estimated time:* 10 minutes +
 *Persona:* Developer +
-*The punchline:* The model that generated your app can also police it.
+*Outcome:* Resource limits, probes, security context and Route TLS checked against the platform conventions.
 ====
 
-== Why This Matters
+== Why this matters
 
-In traditional platform governance:
+`AGENTS.md` supplies instructions to the model. It is not a policy enforcement mechanism, and a model can miss a rule. Keep CI checks, OpenShift admission controls and human review as independent safeguards. This lab combines an agent-assisted review with direct checks of cluster resources.
 
-* Platform team writes a checklist → developers ignore it
-* Platform team adds a CI linter → developers work around it
-* Platform team holds code reviews → bottleneck, friction, slow
-
-With an AI-native platform:
-
-* `AGENTS.md` defines the rules
-* OpenCode follows them when generating code (proactive)
-* OpenCode audits them when asked (reactive)
-* The developer never reads documentation — the model does
-
-[TIP]
-====
-*Governance as a conversation.* Instead of "your PR failed the security check", it becomes "ask the model to verify and fix". The outcome is identical (compliant code), but the experience is radically better.
-====
+The template protects `deploy/`, `pipeline/` and `gitops/` from agent rewrites. Ask OpenCode to report differences first. If a correction to the scaffold is needed, the platform owner reviews and applies it, then you rebuild and deploy using the same delivery steps as Lab 2.2.
 
 == Open OpenCode
 
@@ -37,25 +23,25 @@ cd ${PROJECT_SOURCE}
 opencode
 ----
 
-Audits change files, so stay in *build* mode. Press kbd:[Tab] until the TUI shows build.
+Use *plan* mode for the audit. Press kbd:[Tab] until the TUI shows plan.
 
 == Audit 1: Resource Governance
 
 [source,text,role=execute]
 ----
-Check resource requests and limits on deploy/base/deployment.yaml. Fix if needed.
+Compare resource requests and limits in deploy/base/deployment.yaml with AGENTS.md. Report any differences; do not edit files.
 ----
 
-If it patches the file, tell it to ship the change.
+Compare the answer with the live resource values in the final check below.
 
 == Audit 2: Observability
 
 [source,text,role=execute]
 ----
-Check liveness and readiness probes on the Deployment. Fix if needed.
+Compare liveness and readiness probes in deploy/base/deployment.yaml with AGENTS.md. Explain how /healthz is used; report differences without editing files.
 ----
 
-Verify the probes are working after re-deploy:
+Check that the deployed health endpoint responds:
 
 [source,sh,role=execute]
 ----
@@ -74,16 +60,16 @@ curl -fsS https://${ROUTE}/healthz
 
 [source,text,role=execute]
 ----
-Audit pod security and Route TLS in deploy/base/. Fix if needed.
+Review pod and container security and Route TLS in deploy/base/ against AGENTS.md. Report differences without editing files, including non-root execution, dropped capabilities and HTTPS redirect.
 ----
 
-Verify the security context on the running pod:
+Inspect the security context declared in the Deployment:
 
 [source,sh,role=execute]
 ----
 APP_NAME="${APP_NAME:-live-transcript}"
-oc get pod -n ${APP_NAME}-dev -l app.kubernetes.io/name=$APP_NAME \
-  -o jsonpath='{.items[0].spec.securityContext}' | python3 -m json.tool
+oc get deployment "$APP_NAME" -n "${APP_NAME}-dev" \
+  -o jsonpath='{.spec.template.spec.securityContext}' | python3 -m json.tool
 ----
 
 .Expected
@@ -95,7 +81,19 @@ oc get pod -n ${APP_NAME}-dev -l app.kubernetes.io/name=$APP_NAME \
 }
 ----
 
-Note: `runAsUser` is *absent* — OpenShift assigned a UID from the namespace range (typically `1000990000+`). This is `restricted-v2` SCC compliance.
+The Deployment leaves `runAsUser` unset so OpenShift can assign a UID from the namespace range. The admitted Pod can contain fields added by the SCC; its JSON need not match this excerpt exactly. Also verify the container drops `ALL` capabilities and sets `allowPrivilegeEscalation: false`.
+
+Check container security and the SCC selected for the running Pod:
+
+[source,sh,role=execute]
+----
+oc get deployment "$APP_NAME" -n "${APP_NAME}-dev" \
+  -o jsonpath='{.spec.template.spec.containers[0].securityContext}' | python3 -m json.tool
+oc get pods -n "${APP_NAME}-dev" -l app.kubernetes.io/name="$APP_NAME" \
+  -o 'custom-columns=NAME:.metadata.name,SCC:.metadata.annotations.openshift\.io/scc'
+----
+
+Expect `allowPrivilegeEscalation: false`, `capabilities.drop: ["ALL"]`, and the `restricted-v2` SCC. This application’s SCC is distinct from the privileged SCC used by the Tekton build service account.
 
 Verify Route TLS:
 
@@ -103,13 +101,13 @@ Verify Route TLS:
 ----
 APP_NAME="${APP_NAME:-live-transcript}"
 oc get route $APP_NAME -n ${APP_NAME}-dev \
-  -o jsonpath='{.spec.tls.termination}'
+  -o jsonpath='{.spec.tls.termination} / {.spec.tls.insecureEdgeTerminationPolicy}'
 ----
 
 .Expected
 [source,text,options=nowrap]
 ----
-edge
+edge / Redirect
 ----
 
 == Final State Check
@@ -135,10 +133,10 @@ oc get deployment $APP_NAME -n ${APP_NAME}-dev \
 echo ""
 echo "=== Route TLS ==="
 oc get route $APP_NAME -n ${APP_NAME}-dev \
-  -o jsonpath='{.spec.tls.termination}' && echo
+  -o jsonpath='{.spec.tls.termination} / {.spec.tls.insecureEdgeTerminationPolicy}' && echo
 ----
 
-.Expected (fully compliant)
+.Expected values for the checks above
 [source,text,options=nowrap]
 ----
 === Resource Limits ===
@@ -154,31 +152,14 @@ oc get route $APP_NAME -n ${APP_NAME}-dev \
 { "runAsNonRoot": true, "seccompProfile": { "type": "RuntimeDefault" } }
 
 === Route TLS ===
-edge
+edge / Redirect
 ----
 
-== The Closing Narrative
+== What you verified
 
-[cols="1,2", options="header"]
-|===
-| Who | What They Did
+The platform engineer supplied a template and a runbook. OpenCode used them to generate and ship the application, and helped you review the result. You checked the live deployment rather than relying on the model’s own assessment.
 
-| Platform Engineer
-| Wrote `AGENTS.md` — a machine-readable rulebook for how apps must run on ARO
-
-| OpenCode (generating)
-| Read `AGENTS.md` before writing any code. Applied rules proactively.
-
-| OpenCode (auditing)
-| Re-read `AGENTS.md`, compared it against the actual manifests, found gaps, fixed them.
-
-| Developer
-| Never read a runbook. Never opened a checklist. Just talked to the model.
-|===
-
-The governance is real — the running pod has the right security context, probes, and resource limits. The route is encrypted. But the developer experience was conversational, not bureaucratic.
-
-*This is AI-native platform engineering.*
+These checks cover the workshop conventions. They are not a complete application security or production-readiness audit.
 
 == Act 2 complete 🎉
 
@@ -201,11 +182,11 @@ The governance is real — the running pod has the right security context, probe
 | App deployed via personal Argo CD instance (GitOps)
 | ✅
 
-| Platform compliance verified and auto-fixed by OpenCode
+| Platform conventions reviewed with OpenCode and checked on the cluster
 | ✅
 
 | App live at public HTTPS route
 | ✅
 |===
 
-➡️ Move on to *Act 3: The bill* — what this afternoon's tokens cost, then delete the deployment.
+➡️ Move on to *Act 3: The bill* — coding token costs, provisioned speech resources and scoped cleanup.

@@ -9,6 +9,9 @@ content:
     start_path: content
 
 ui:
+  supplemental_files:
+  - path: img/favicon.ico
+    contents: ./content/supplemental-ui/img/favicon.ico
   bundle:
     url: https://github.com/rhpds/rhdp_showroom_theme/releases/download/v0.0.1/ui-bundle.zip
 

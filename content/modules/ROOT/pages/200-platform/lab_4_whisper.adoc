@@ -102,11 +102,13 @@ Expect a Ready `whisper` inference service and *no public model Route*. The inte
 http://whisper-predictor.speech-serving.svc.cluster.local/v1/audio/transcriptions
 ----
 
-KServe publishes the service on port 80 and forwards to vLLM on 8080. The network policy allows the `live-transcript-dev` application namespace and Dev Spaces workspaces to reach the model. The browser contacts only the Go app over HTTPS; audio and any future model credentials stay behind that backend.
+KServe publishes the service on port 80 and forwards to vLLM on 8080. The network policy allows the `live-transcript-dev` application namespace and Dev Spaces workspaces to reach the model. The browser contacts only the Go app over HTTPS; the backend forwards audio to Whisper without exposing a model endpoint or credentials to browser code.
 
 Open the *Red Hat OpenShift AI* link in the OpenShift application launcher. In *Projects*, select *Workshop speech transcription* and inspect the Whisper deployment. The dashboard is the management view; it is not a second coding endpoint.
 
 == Step 4: Understand the audio path
+
+image::model-serving-architecture.png[Go backend to internal Whisper serving on one T4, align="center"]
 
 [source,text]
 ----

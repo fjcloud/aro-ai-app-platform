@@ -3,7 +3,7 @@
 * xref:index.adoc[Workshop Overview]
 * xref:100-setup/lab_1_access_aro.adoc[Act 0 — Get in]
 
-*Act 1 — Platform: stand up the agent*
+*Act 1 — Build the platform*
 
 * xref:200-platform/lab_1_gpu_nodepool.adoc[Lab 1.1 — Publish DeepSeek on Foundry]
 * xref:200-platform/lab_2_operators.adoc[Lab 1.2 — Install Platform Operators]
@@ -14,13 +14,13 @@
 *Act 2 — Developer: first day*
 
 * xref:300-developer/lab_1_devspace_launch.adoc[Lab 2.1 — Launch Your Dev Space]
-* xref:300-developer/lab_3_opencode_dev.adoc[Lab 2.2 — Prompt to Production]
+* xref:300-developer/lab_3_opencode_dev.adoc[Lab 2.2 — Prompt to Deployment]
 * xref:300-developer/lab_5_validate.adoc[Lab 2.3 — Audit with OpenCode]
 
 *Act 3 — The bill*
 
-* xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1 — The Token Bill]
+* xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1 — Tokens, Infrastructure and Cleanup]
 
 *Wrap-up*
 
-* xref:conclusion.adoc[Conclusion & What's Next]
+* xref:conclusion.adoc[Conclusion & Next Steps]

@@ -265,88 +265,59 @@ class Board:
 
 
 def architecture() -> None:
-    b = Board(1280, 960)
+    b = Board(1280, 850)
     b.frame()
-    b.title("In-cluster coding agent on ARO")
-
-    b.band((36, 100, 1244, 310))
-    b.text((56, 114), "Act 1 — platform", b.display(SECTION), fill=RED)
-    a1 = b.columns(3, 160, 288, left=56, right=1224, gap=36)
-    labels1 = [
-        ("ARO HCP", "workers + 1× A100 GPU"),
-        ("OpenShift AI MaaS", "Qwen3.8-27B INT4"),
-        ("Gateway", "maas.apps… · one sk-oai- key"),
-    ]
-    for box, (t, s) in zip(a1, labels1):
-        b.card(box, t, s)
-    mid1 = (160 + 288) / 2
-    b.arrow((a1[0][2], mid1), (a1[1][0], mid1), head=12)
-    b.arrow((a1[1][2], mid1), (a1[2][0], mid1), head=12)
-
-    b.band((36, 348, 1244, 620))
-    b.text((56, 362), "Act 2 — developer", b.display(SECTION), fill=RED)
-    a2 = b.columns(3, 414, 598, left=56, right=1224, gap=36)
-    labels2 = [
-        ("Dev Spaces", "browser IDE"),
-        ("OpenCode + AGENTS.md", "~45-line runbook"),
-        ("Fortune Cookie app", "Go, Tekton, Argo CD"),
-    ]
-    for box, (t, s) in zip(a2, labels2):
-        b.card(box, t, s)
-    mid2 = (414 + 598) / 2
-    b.arrow((a2[0][2], mid2), (a2[1][0], mid2), head=12)
-    b.arrow((a2[1][2], mid2), (a2[2][0], mid2), head=12)
-
-    src = ((a2[1][0] + a2[1][2]) / 2, a2[1][1])
-    dst = ((a1[2][0] + a1[2][2]) / 2, a1[2][3])
-    b.dashed(src, dst, fill=GRAY, width=2)
-    b.arrow(src, dst, fill=GRAY, width=2, head=12)
-    b.text((src[0] + 18, (src[1] + dst[1]) / 2 - 8), "chat completions", b.body_font(CAPTION), fill=GRAY)
-
-    b.band((36, 648, 1244, 860))
-    b.text((56, 662), "Act 3 — the bill", b.display(SECTION), fill=RED)
-    b.card((56, 708, 1224, 840), "GPU metrics + token quota", "DCGM + MaaS subscription")
-
-    b.footer("The LLM writes the app. Qwen3.8 is a platform capability.")
+    b.title("Two model paths on ARO")
+    b.band((36, 110, 1244, 360))
+    b.text((56, 125), "Coding — prompts and source context", b.display(SECTION), fill=RED)
+    b.card((56, 185, 550, 330), "Dev Spaces + OpenCode", "AGENTS.md guides generation")
+    b.card((730, 185, 1224, 330), "DeepSeek / Foundry", "Managed coding endpoint · token charges")
+    b.arrow((550, 255), (730, 255))
+    b.caption_stack(640, 208, ["HTTPS"])
+    b.band((36, 390, 1244, 700))
+    b.text((56, 405), "Application — microphone audio", b.display(SECTION), fill=RED)
+    boxes = b.columns(3, 475, 665, left=56, right=1224, gap=36)
+    for box, (title, sub) in zip(boxes, [
+        ("Browser microphone", "Independent short WAV clips"),
+        ("Live Transcript", "Go backend · Tekton + Argo CD"),
+        ("Whisper INT8", "OpenShift AI + Red Hat vLLM · one T4"),
+    ]):
+        b.card(box, title, sub)
+    b.arrow((boxes[0][2], 565), (boxes[1][0], 565), head=12)
+    b.arrow((boxes[1][2], 565), (boxes[2][0], 565), head=12)
+    b.footer("DeepSeek writes code. Whisper transcribes audio inside the cluster.")
     b.save(OUT_DIR / "architecture-overview.png")
 
 
 def model_serving() -> None:
     b = Board(1280, 720)
     b.frame()
-    b.title("Qwen3.8 as Models-as-a-Service")
-
-    client = (48, 210, 380, 400)
-    gw = (500, 150, 780, 340)
-    llm = (900, 210, 1232, 400)
-    dash = (500, 400, 780, 590)
-
-    b.card(client, "OpenCode / curl", "Authorization: Bearer sk-oai-…")
-    b.card(gw, "Gateway", "maas.<apps-domain> · Authorino + Limitador")
-    b.card(llm, "LLMInferenceService", "qwen3 · Red Hat vLLM on A100", pad=16)
-    b.card(dash, "Dashboard", "rh-ai.apps… · catalog, extra keys")
-
-    b.arrow((380, 305), (500, 245), head=12)
-    b.caption_stack(440, 188, ["HTTPS", "OpenAI API"])
-    b.arrow((780, 245), (900, 305), head=12)
-    b.caption_stack(840, 188, ["TLS", "to GPU"])
-    b.line((640, 340), (640, 400), fill=GRAY, width=2)
-
-    b.footer("One front door. One API key. GitOps owns the serving stack.")
+    b.title("Whisper on one T4")
+    boxes = b.columns(3, 220, 470, left=56, right=1224, gap=36)
+    for box, (title, sub) in zip(boxes, [
+        ("Go backend", "POST /api/transcribe · bounded WAV uploads"),
+        ("KServe", "Internal service only · network policy"),
+        ("Red Hat vLLM", "RedHatAI Whisper Turbo INT8 · one 16 GB T4"),
+    ]):
+        b.card(box, title, sub)
+    for left, right in zip(boxes, boxes[1:]):
+        b.arrow((left[2], 340), (right[0], 340), head=12)
+    b.text((56, 520), "Browser → HTTPS app → internal /v1/audio/transcriptions", b.display(26))
+    b.footer("Near-real-time results from short clips; no public model Route.")
     b.save(OUT_DIR / "model-serving-architecture.png")
 
 
 def cicd() -> None:
     b = Board(1280, 680)
     b.frame()
-    b.title("Prompt to production")
+    b.title("Prompt to deployment")
 
     steps = [
         ("1", "Prompt OpenCode", "reads AGENTS.md"),
         ("2", "Ephemeral Git", "personal repo"),
         ("3", "Tekton", "git-clone + buildah"),
         ("4", "Argo CD", "developer instance"),
-        ("5", "HTTPS Route", "Fortune Cookie live"),
+        ("5", "HTTPS Route", "Live Transcript live"),
     ]
     y0, y1 = 250, 560
     boxes = b.columns(5, y0, y1, left=40, right=1240, gap=20)
@@ -385,68 +356,31 @@ def cicd() -> None:
     chip_w = 240
     call = (mid_x - chip_w / 2, 118, mid_x + chip_w / 2, 200)
     b.rounded(call, radius=8, fill=WHITE, outline=LINE, width=1.5)
-    b.text((mid_x, 140), "Qwen3.8 MaaS", b.display(24), fill=BLACK, anchor="mt")
+    b.text((mid_x, 140), "DeepSeek / Foundry", b.display(24), fill=BLACK, anchor="mt")
     b.dashed((mid_x, y0), (mid_x, call[3]), fill=GRAY, width=2)
     b.arrow((mid_x, y0), (mid_x, call[3] + 1), fill=GRAY, width=2, head=10)
 
-    b.footer("No Ansible. No local Docker. No public LLM.")
+    b.footer("Coding on Foundry. Speech inference inside ARO.")
     b.save(OUT_DIR / "cicd-gitops.png")
 
 
 def the_bill() -> None:
     b = Board(1280, 800)
     b.frame()
-    b.title("The bill — GPU and tokens")
-
-    left = (48, 120, 560, 680)
-    right = (720, 120, 1232, 680)
-    b.band(left)
-    b.band(right)
-    b.text((68, 140), "What you provisioned", b.display(SECTION), fill=BLACK)
-    b.text((740, 140), "What you measure", b.display(SECTION), fill=BLACK)
-
-    left_items = [
-        ("NC24ads A100", "one NVIDIA A100 80GB"),
-        ("Qwen3.8 INT4 in VRAM", "fits a single A100"),
-        ("MaaS subscription", "5M tokens / 24h"),
+    b.title("Tokens and provisioned infrastructure")
+    b.band((36, 120, 610, 680))
+    b.band((650, 120, 1244, 680))
+    b.text((56, 140), "Coding model", b.display(SECTION), fill=RED)
+    b.text((670, 140), "Speech and platform", b.display(SECTION), fill=RED)
+    items = [
+        (56, "DeepSeek on Foundry", "Input, cached input and output tokens", 205),
+        (56, "Usage object", "Estimate request cost at current rates", 420),
+        (670, "Whisper on one T4", "GPU VM + CPU workers + disks", 205),
+        (670, "Provisioned time", "Worker and disk charges continue when idle", 420),
     ]
-    right_items = [
-        ("NVIDIA DCGM", "GPU % and watts"),
-        ("vLLM", "tokens / sec and TTFT"),
-        ("Limitador", "429 when over quota"),
-    ]
-
-    def stack(x0, items):
-        top = 200
-        h = 130
-        gap = 18
-        for i, (title, sub) in enumerate(items):
-            y = top + i * (h + gap)
-            b.card((x0, y, x0 + 460, y + h), title, sub, pad=20)
-
-    stack(68, left_items)
-    stack(740, right_items)
-
-    ay0, ay1 = 360, 510
-    ax0, ax1 = 568, 704
-    b.rounded((ax0, ay0, ax1, ay1), radius=8, fill=RED, outline=RED, width=0)
-    mid = (ay0 + ay1) / 2
-    b.draw.polygon(
-        [
-            b.s(ax1 + 14),
-            b.s(mid),
-            b.s(ax1),
-            b.s(ay0 + 8),
-            b.s(ax1),
-            b.s(ay1 - 8),
-        ],
-        fill=RED,
-    )
-    b.text((ax0 + 10, ay0 + 22), "OpenCode", b.display(20), fill=WHITE)
-    b.text((ax0 + 10, ay0 + 52), "sessions", b.display(20), fill=WHITE)
-    b.text((ax0 + 10, ay0 + 88), "this afternoon", b.display(18), fill=WHITE)
-
-    b.footer("Token quota is how the platform team caps cost.")
+    for x, title, subtitle, y in items:
+        b.card((x, y, x + 530, y + 185), title, subtitle)
+    b.footer("Facilitator cleanup after everyone finishes; preserve the base RHDP cluster.")
     b.save(OUT_DIR / "the-bill-observability.png")
 
 

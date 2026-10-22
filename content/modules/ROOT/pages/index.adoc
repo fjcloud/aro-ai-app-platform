@@ -2,7 +2,7 @@
 
 Welcome to the *AI-Powered Developer Platform on ARO* workshop.
 
-The story for today is a Monday at a company that keeps source code on its own cluster. This morning the platform team publishes DeepSeek-V4 Pro as a managed Foundry endpoint. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships a browser transcription app from OpenShift Dev Spaces. You wear both hats, then you look at the token bill.
+The story for today is a Monday at a company that uses a managed coding model and keeps speech inference on its own cluster. This morning the platform team publishes DeepSeek-V4 Pro as a managed Foundry endpoint. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships a browser transcription app from OpenShift Dev Spaces. You wear both hats, then you review token usage, infrastructure costs and cleanup.
 
 
 == Who This Workshop Is For
@@ -12,7 +12,7 @@ The story for today is a Monday at a company that keeps source code on its own c
 | Persona | Role in This Workshop
 
 | *Platform Engineer* (morning)
-| Publishes DeepSeek-V4 Pro on Microsoft Foundry, installs Dev Spaces, GitOps, and Pipelines, and hands developers a short `AGENTS.md`.
+| Publishes DeepSeek-V4 Pro on Microsoft Foundry, serves Whisper on one T4 with OpenShift AI, and prepares Dev Spaces, delivery tools and `AGENTS.md`.
 
 | *Developer* (afternoon)
 | Launches OpenShift Dev Spaces, talks to OpenCode backed by that Foundry endpoint, ships a real app through Tekton and Argo CD, then asks the same model to audit the manifests.
@@ -20,23 +20,15 @@ The story for today is a Monday at a company that keeps source code on its own c
 
 == What You Will Build
 
-[source,text]
-----
-Dev Spaces + OpenCode ── coding requests ──> DeepSeek / Foundry
-          │ generates and ships
-          ▼
-Browser microphone ── HTTPS ──> Go app ── WAV clips ──> OpenShift AI
-                                                        KServe + Red Hat vLLM
-                                                        Whisper / one T4
-----
+image::architecture-overview.png[Separate coding and speech model paths on ARO, align="center"]
 
-The LLM writes the app. DeepSeek-V4 Pro is a *platform* capability, published as a managed endpoint.
+DeepSeek writes the app; Whisper transcribes its audio. Coding prompts and source context leave the cluster for Foundry. Browser audio goes through the Go backend to the internal Whisper service.
 
 === Act 1 — Platform
 * *DeepSeek-V4 Pro* on Microsoft Foundry, Global Standard, pay per token
 * *OpenShift Dev Spaces* pointed at that endpoint with one injected key
 * *OpenShift AI + KServe + Red Hat AI Inference* serving RedHatAI Whisper Large v3 Turbo INT8 on one NVIDIA T4
-* *AGENTS.md* — the only runbook OpenCode reads
+* *AGENTS.md* — project instructions for OpenCode
 * *OpenShift GitOps* (Argo CD) and *OpenShift Pipelines* (Tekton)
 
 === Act 2 — Developer
@@ -47,17 +39,25 @@ The LLM writes the app. DeepSeek-V4 Pro is a *platform* capability, published as
 
 === Act 3 — The bill
 * Input and output tokens from the afternoon, priced from the Foundry list rate
-* Delete the deployment when the day is over so nothing is left reserved
+* GPU, CPU and storage costs while provisioned, plus scoped facilitator cleanup
 
 == Learning Outcomes
 
 After completing this workshop, you will understand:
 
 * How a Foundry Global Standard deployment publishes an OpenAI-compatible model for coding, alongside a separate T4 speech model
-* How `AGENTS.md` shifts platform governance from documentation to something the model enforces
+* How `AGENTS.md` gives the coding agent platform conventions, backed by deployment checks
 * How Dev Spaces + OpenCode is an AI-augmented inner loop with no laptop install
 * How Tekton and Argo CD form a GitOps path from a single repository
-* How input and output tokens are the bill for a managed coding model
+* How managed coding tokens and provisioned speech infrastructure have different cost models
+
+== How to follow the labs
+
+The morning/afternoon story represents two roles; you play both. Allow roughly half a day, including provisioning and image downloads. Timings are estimates.
+
+Run Acts 0 and 1 in the *bastion terminal* from Cloud Terminal. In Act 2, switch to the *Dev Spaces terminal* in the browser IDE. Lab 3.1 names the terminal to use for each task. Paste shell blocks into a terminal and prompt blocks into OpenCode. Use `/exit` to leave OpenCode, or open another terminal for checkpoint commands.
+
+The platform uses cluster-wide resources and the app uses fixed namespace names. Use one assigned cluster per participant. If several people share a cluster, the facilitator runs Act 1 once and assigns isolated app names, manifests and permissions before Act 2.
 
 == Workshop Structure
 
@@ -70,7 +70,7 @@ After completing this workshop, you will understand:
 | Connect to the existing RHDP cluster and log in with `oc`
 | 10 min
 
-.5+| *1 — Stand up the agent*
+.5+| *1 — Build the platform*
 | 1.1
 | Publish DeepSeek on Foundry
 | 15 min
@@ -85,7 +85,7 @@ After completing this workshop, you will understand:
 
 | 1.4
 | Serve Whisper on one T4
-| 15 min active / ~25 min background
+| 15 min active / 25–40 min background
 
 | 1.5
 | Hand the Keys (`AGENTS.md` + Dev Spaces URL)
@@ -97,7 +97,7 @@ After completing this workshop, you will understand:
 | 10 min
 
 | 2.2
-| Prompt to Production (generate, ship, change)
+| Prompt to Deployment (generate, ship, change)
 | 35 min
 
 | 2.3
@@ -106,7 +106,7 @@ After completing this workshop, you will understand:
 
 | *3 — The bill*
 | 3.1
-| The Token Bill
+| Tokens, Infrastructure and Cleanup
 | 15 min
 
 | *—*
@@ -117,7 +117,7 @@ After completing this workshop, you will understand:
 
 [TIP]
 ====
-*Fire-and-forget timing:* the Foundry deployment is live before the operators finish. By the time the developer opens Dev Spaces, DeepSeek-V4 Pro is already answering.
+*Readiness gates:* operator installs and GPU provisioning take time. Continue when the guide says work can run in the background, and complete each readiness check before starting the next dependent step.
 ====
 
 == Prerequisites
@@ -125,7 +125,8 @@ After completing this workshop, you will understand:
 You will need:
 
 * A current web browser and a microphone
-* An assigned RHDP ARO environment with a ready cluster, bastion, and WeTTY terminal
+* An assigned RHDP *classic ARO* environment with OpenShift 4.21 or later, a bastion and WeTTY terminal
+* Azure permissions, quota and capacity for one `Standard_NC8as_T4_v3` GPU worker and additional CPU headroom when needed
 * Cluster-admin access and an Azure identity allowed to create Foundry resources in the assigned resource group
 * This workshop repository (cloned in Act 0) — not the Go app template
 
