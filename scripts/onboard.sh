@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Validate an existing workshop environment without changing cloud or cluster resources.
 set -euo pipefail
-for tool in oc az git python3 curl; do
+for tool in oc az git jq python3 curl; do
   command -v "$tool" >/dev/null 2>&1 || { echo "Missing $tool. Ask the facilitator to prepare the RHDP bastion." >&2; exit 1; }
 done
 az account show --output none

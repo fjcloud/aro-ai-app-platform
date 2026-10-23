@@ -38,6 +38,20 @@ The regression checks cover an unrelated first cluster, ambiguous/missing matche
 
 Live check on 23 October 2026: the discovery helper and full onboarding script passed on RHDP workshop `natfzu`, ARO 4.21.22. They selected `openenv-tdfcw` and its resource group ID, matching the RHDP assignment, instead of managed machine group `aro-e4xkjsje`. A deliberately incorrect pre-existing `RESOURCEGROUP` value did not affect discovery. The test used read-only Azure/OpenShift calls and wrote only local non-secret environment files; it did not provision Foundry or GPU resources.
 
+## Visible worker CLI commands
+
+Lab 1.4 uses `az aro show` and Azure VM quota/SKU queries, then explicit `oc get` / `jq` / `oc create` / `oc wait` commands for classic ARO MachineSets. No provisioning helper or Makefile target is used by that lab. The `az aro hcp cluster nodepool` CLI belongs to HCP, not the classic cluster used here.
+
+Validation on `natfzu`, ARO 4.21.22, on 23 October 2026:
+
+- The commands generated a one-replica `Standard_D8s_v3` CPU MachineSet in zone 3 and a one-replica `Standard_NC8as_T4_v3` GPU MachineSet in zone 1.
+- Both manifests were accepted by `oc create --dry-run=server`; selectors, VM sizes, GPU node label and GPU taint were checked on the returned objects.
+- Azure quota queries returned the DSv3, NCASv3_T4 and regional vCPU limits. The documented SKU command listed the T4 size without restrictions in zones 1, 2 and 3; allow a few minutes for that query.
+- The documented MachineSet readiness check passed against the existing GPU pool. Its Node was Ready; the NVIDIA driver had not yet advertised an allocatable GPU on this assignment, which is the next step in Lab 1.4.
+- The existing single-T4 pool was already Ready with one replica. It was reused for inspection; no additional GPU was provisioned during this validation.
+
+This validates CLI output and server-side admission. The dry-run CPU/GPU previews were not persisted or provisioned. Earlier live speech reports remain separate evidence for driver and Whisper execution.
+
 ## Speech application
 
 After Lab 1.4 and the developer deployment:

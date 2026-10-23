@@ -15,32 +15,106 @@ The https://access.redhat.com/articles/rhoai-supported-configs[OpenShift AI supp
 
 The inference runtime is a Red Hat product. The Whisper weights are published by the *RedHatAI* Hugging Face organization as an INT8 quantization of OpenAI Whisper. `--dtype=half` applies to non-quantized operations; vLLM detects INT8 from the model’s quantization configuration. This workshop does not imply certification of the generated application or a blanket support guarantee for every model/configuration; production support requires the appropriate subscriptions and supported hardware/operator versions.
 
-== Check CPU capacity first
+== Inspect the cluster and worker pools
 
-On a small RHDP cluster, provision one additional `Standard_D8s_v3` CPU worker before installing OpenShift AI. The helper creates a separate MachineSet and preserves the original CPU pools. Inspect your existing workspace PVC’s zone if one exists:
+Run these commands in the bastion terminal, from the workshop checkout. Classic ARO adds worker pools with OpenShift MachineSets, following the https://learn.microsoft.com/en-us/azure/openshift/howto-gpu-workloads[Microsoft GPU guide]. The `az aro hcp cluster nodepool` commands belong to ARO HCP. This lab shows the actual pool definitions and CLI calls directly.
 
 [source,sh,role=execute]
 ----
-oc get pv -o 'custom-columns=NAME:.metadata.name,CLAIM:.spec.claimRef.name,ZONE:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values'
-python3 scripts/speech-cpu.py --zone 3
-python3 scripts/speech-cpu.py --zone 3 --apply
+source state/workshop.env
+set -o pipefail
+ARO_NAME="${ARO_CLUSTER_ID##*/}"
+INFRA=$(oc get infrastructure cluster -o jsonpath='{.status.infrastructureName}')
+REGION=$(az aro show --name "$ARO_NAME" --resource-group "$RESOURCEGROUP" \
+  --subscription "$SUBSCRIPTION" --query location -o tsv)
+
+oc get machinesets -n openshift-machine-api \
+  -o 'custom-columns=NAME:.metadata.name,SIZE:.spec.template.spec.providerSpec.value.vmSize,ZONE:.spec.template.spec.providerSpec.value.zone,DESIRED:.spec.replicas,READY:.status.readyReplicas'
+oc get pv -o 'custom-columns=CLAIM:.spec.claimRef.name,NAMESPACE:.spec.claimRef.namespace,ZONE:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values'
 ----
 
-Replace `3` with the appropriate zone from the existing CPU MachineSets / workspace PVC. A workspace using a zonal disk needs available CPU in that same zone. If the cluster already has sufficient headroom, skip the extra worker. This VM has a separate hourly cost and is labelled for scoped cleanup.
+Keep the original CPU pools. If a workshop CPU or T4 pool already exists, reuse it and skip its creation block below. Confirm its VM size and replica count in the table first.
+
+=== Check Azure quota and GPU zones
+
+[source,sh,role=execute]
+----
+az vm list-usage --location "$REGION" --subscription "$SUBSCRIPTION" \
+  --query "[?name.value=='cores' || name.value=='standardDSv3Family' || contains(name.value, 'T4')].{quota:name.localizedValue,used:currentValue,limit:limit}" -o table
+az vm list-skus --location "$REGION" --subscription "$SUBSCRIPTION" \
+  --resource-type virtualMachines --size Standard_NC8as_T4_v3 --all \
+  --query '[].{size:name,zones:locationInfo[0].zones,restrictions:restrictions}' -o json
+----
+
+The SKU lookup can take a few minutes. A new D8 CPU worker needs 8 free DSv3 vCPUs; a new T4 worker needs 8 free NCasT4_v3 vCPUs. Creating both needs 16 free regional vCPUs. The chosen GPU zone must be listed and unrestricted; quota does not guarantee available VM capacity.
+
+== Add one CPU worker when needed
+
+Three small D4 workers can run out of schedulable CPU with OpenShift AI, Dev Spaces and Tekton. If more headroom is needed, add one `Standard_D8s_v3` worker. Choose a zone containing an original CPU MachineSet. An existing Dev Spaces PVC requires CPU capacity in its own zone; adapt `CPU_ZONE=3` to the PV table above. Skip this step if the cluster already has enough capacity.
+
+[source,sh,role=execute]
+----
+CPU_ZONE=3
+CPU_TEMPLATE=$(oc get machinesets -n openshift-machine-api -o json |
+  jq -er --arg zone "$CPU_ZONE" '
+    [.items[] | select(.spec.template.spec.providerSpec.value.zone == $zone)
+     | select(.spec.template.spec.providerSpec.value.vmSize | startswith("Standard_D"))]
+    | sort_by(.metadata.name) | .[0].metadata.name // error("No CPU template in this zone")
+  ')
+CPU_POOL="${INFRA}-speech-cpu-${REGION}${CPU_ZONE}"
+
+oc get machineset "$CPU_TEMPLATE" -n openshift-machine-api -o json | \
+  jq --arg name "$CPU_POOL" '
+    del(.status)
+    | .metadata = {name: $name, namespace: "openshift-machine-api",
+        labels: {"workshop.fjcloud.io/speech-capacity": "true"}}
+    | .spec.replicas = 1
+    | .spec.selector.matchLabels["machine.openshift.io/cluster-api-machineset"] = $name
+    | .spec.template.metadata.labels["machine.openshift.io/cluster-api-machineset"] = $name
+    | .spec.template.spec.providerSpec.value.vmSize = "Standard_D8s_v3"
+  ' | oc create -f -
+
+oc wait machineset/"$CPU_POOL" -n openshift-machine-api \
+  --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
+----
+
+The new MachineSet inherits the cluster’s image, subnet, disks and bootstrap configuration. The original pools are unchanged. `replicas = 1` creates one additional worker, with its own hourly cost. Repeating `oc create` reports *AlreadyExists* for the same pool.
 
 == Step 1: Add one T4 worker
 
-Run from the workshop checkout on the bastion, after `make onboard`. The helper checks the selected Azure subscription, region, zones, quota and generation-2 CPU template. Its default VM is `Standard_NC8as_T4_v3`: *one* 16 GB T4, 8 vCPUs, 56 GiB RAM.
+Use `Standard_NC8as_T4_v3`: one 16 GB T4, 8 vCPUs and 56 GiB RAM. Set `GPU_ZONE` to an available zone from the Azure output above that also has an original CPU MachineSet. The GPU zone may differ from the Dev Spaces PVC zone.
 
 [source,sh,role=execute]
 ----
-make gpu-classic
-make gpu-classic APPLY=yes
+GPU_ZONE=1
+GPU_TEMPLATE=$(oc get machinesets -n openshift-machine-api -o json |
+  jq -er --arg zone "$GPU_ZONE" '
+    [.items[] | select(.spec.template.spec.providerSpec.value.zone == $zone)
+     | select(.spec.template.spec.providerSpec.value.vmSize | startswith("Standard_D"))]
+    | sort_by(.metadata.name) | .[0].metadata.name // error("No CPU template in this zone")
+  ')
+GPU_POOL="${INFRA}-gpu-t4-8-${REGION}${GPU_ZONE}"
+
+oc get machineset "$GPU_TEMPLATE" -n openshift-machine-api -o json | \
+  jq --arg name "$GPU_POOL" '
+    del(.status)
+    | .metadata = {name: $name, namespace: "openshift-machine-api",
+        labels: (.metadata.labels + {"workshop.fjcloud.io/experiment": "t4"})}
+    | .spec.replicas = 1
+    | .spec.selector.matchLabels["machine.openshift.io/cluster-api-machineset"] = $name
+    | .spec.template.metadata.labels["machine.openshift.io/cluster-api-machineset"] = $name
+    | .spec.template.spec.metadata.labels["workshop.fjcloud.io/gpu"] = "t4"
+    | .spec.template.spec.taints = [{key: "nvidia.com/gpu", value: "present", effect: "NoSchedule"}]
+    | .spec.template.spec.providerSpec.value.vmSize = "Standard_NC8as_T4_v3"
+  ' | oc create -f -
+
+oc wait machineset/"$GPU_POOL" -n openshift-machine-api \
+  --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
 oc get machines -n openshift-machine-api
 oc get nodes -l workshop.fjcloud.io/gpu=t4
 ----
 
-Wait for the new Machine to be Running and the node Ready. Do not use `make gpu`, which targets separately provisioned ARO HCP clusters. Do not substitute the four-T4 `NC64` size: requesting one GPU in a pod does not reduce the price of a four-GPU VM.
+The taint reserves the worker for workloads that explicitly tolerate `nvidia.com/gpu=present:NoSchedule`. Node readiness confirms provisioning; the NVIDIA operator in Step 2 makes the GPU available to pods. Do not substitute a four-T4 `NC64` size: requesting one GPU in a pod still incurs the cost of the entire VM.
 
 == Step 2: Install the speech operators
 

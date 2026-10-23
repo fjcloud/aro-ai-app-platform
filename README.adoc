@@ -29,7 +29,7 @@ Browser microphone ──> Go app ──> OpenShift AI / vLLM / Whisper (one T4)
 
 Use the `aro-transcription` branch of https://github.com/fjcloud/go-app-template/tree/aro-transcription[the app template]. ROSA keeps its existing template. A working reference app is in `examples/live-transcript`; speech manifests are in `deploy/speech`.
 
-Allow CPU headroom for OpenShift AI, Dev Spaces and Tekton; Lab 1.4 includes a helper for one additional D8 worker on small clusters. Prepare T4 quota and capacity for one `Standard_NC8as_T4_v3` worker. `make gpu-classic` prints a checked MachineSet; `make gpu-classic APPLY=yes` creates it. Lab 1.4 installs the speech stack. The application sends independent short WAV clips for near-real-time results; it does not use a native Whisper WebSocket stream.
+Allow CPU headroom for OpenShift AI, Dev Spaces and Tekton, plus quota and capacity for one `Standard_NC8as_T4_v3` worker. Lab 1.4 shows Azure CLI quota checks and explicit `oc` MachineSet commands for one D8 CPU worker when needed and one T4 GPU worker. It uses no provisioning helper or Makefile target. Classic ARO worker pools are managed through the OpenShift Machine API. The application sends independent short WAV clips for near-real-time results; it does not use a native Whisper WebSocket stream.
 
 == Optional cluster provisioning
 
