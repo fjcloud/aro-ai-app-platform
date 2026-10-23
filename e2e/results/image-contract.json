@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-23T16:15:05.388565+00:00",
+  "workshop": "natfzu",
+  "cases": {
+    "image-check-override": {
+      "status": "False",
+      "reason": "StepFailed"
+    },
+    "image-check-placeholder": {
+      "status": "False",
+      "reason": "StepFailed"
+    },
+    "image-check-valid": {
+      "status": "True",
+      "reason": "Succeeded"
+    },
+    "image-check-wrong-build": {
+      "status": "False",
+      "reason": "StepFailed"
+    }
+  },
+  "pipeline": {
+    "name": "image-guard-validation-42kth",
+    "status": "Succeeded",
+    "tasks": {
+      "clone": "True",
+      "validate-image": "True",
+      "build": "True"
+    }
+  },
+  "image": "image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript:latest",
+  "digest": "sha256:cf3b5017cf04a6f10af90276de36d11da6ad60bbff42a434e27b85456924e397",
+  "ready_pod_imageIDs": [
+    "image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript@sha256:cf3b5017cf04a6f10af90276de36d11da6ad60bbff42a434e27b85456924e397"
+  ],
+  "pullPolicy": "Always",
+  "gitops": {
+    "sync": "Synced",
+    "health": "Healthy",
+    "revision": "5133f0af049477b66d372be3d9a397af73204678"
+  },
+  "health": {
+    "status": "ok"
+  }
+}

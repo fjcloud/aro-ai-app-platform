@@ -27,7 +27,7 @@ The ARO transcription template is on its own branch: https://github.com/fjcloud/
 | Dev Spaces workspace. Installs the ephemeral Git client.
 
 | `deploy/` `pipeline/` `gitops/`
-| Golden-path Kustomize. The model applies it; it must not rewrite it (except the Deployment `image:` at deploy time).
+| Golden-path Kustomize. The Deployment already names the internal Tekton image. The pipeline validates that image before building; the model keeps the scaffold intact.
 |===
 
 There is no `scripts/` directory and no Ansible. DeepSeek-V4 Pro follows `AGENTS.md`.
@@ -47,7 +47,7 @@ Focus on these sections:
 
 * *Files YOU must generate* — `main.go`, `go.mod`, `Dockerfile` with an exact two-stage template
 * *Files already in the repository* — do not rewrite `deploy/`, `pipeline/`, `gitops/`, or `devfile.yaml`
-* *Three deploy phases* — ephemeral Git → Tekton PipelineRun → Argo CD Application
+* *Three deploy phases* — ephemeral Git → Tekton image validation/build → Argo CD Application; the Deployment image is preconfigured
 * *Namespaces* — `$\{APP_NAME}-build` and `$\{APP_NAME}-dev` only. Never namespace `default` for the app, Argo CD, or the Application.
 
 [cols="1,2,2", options="header"]
@@ -63,7 +63,7 @@ Focus on these sections:
 | 3–5 min
 
 | 3. GitOps
-| Point `image:` at the built image, `oc apply -k gitops/base`, create the Argo CD `Application`
+| Verify the preconfigured image, then apply `gitops/base` and create the Argo CD `Application`
 | 2–3 min
 |===
 

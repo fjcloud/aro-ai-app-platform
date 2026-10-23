@@ -114,6 +114,11 @@ def developer():
         require('Copy transcript' in html.unescape(page), 'Shipped update copies the transcript')
     spec = deployment['spec']['template']['spec']
     container = spec['containers'][0]
+    expected_image = f'image-registry.openshift-image-registry.svc:5000/{app}-build/{app}:latest'
+    require(container.get('image') == expected_image, 'Deployment uses the app image from its build namespace')
+    require(container.get('imagePullPolicy') == 'Always', 'Mutable latest tag is always pulled')
+    requested_image = next((p['value'] for p in latest['spec'].get('params', []) if p['name'] == 'image'), expected_image)
+    require(requested_image == container['image'], 'Successful Tekton target matches the deployed image')
     resources = container.get('resources', {})
     require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '200m', 'memory': '128Mi'}, 'Resource requests and limits match AGENTS.md')
     require(all(container.get(probe, {}).get('httpGet', {}).get('path') == '/healthz' and container[probe]['httpGet'].get('port') == 8080 for probe in ['livenessProbe', 'readinessProbe']), 'Liveness and readiness probes use /healthz:8080')

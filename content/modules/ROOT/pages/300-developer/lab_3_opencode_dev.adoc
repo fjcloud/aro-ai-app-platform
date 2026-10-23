@@ -42,7 +42,7 @@ opencode
 | Phase | What it does | Duration
 | Git | Create a personal repo on ephemeral Git, commit, and push | ~30s
 | Image | `oc apply -k pipeline/base` + Tekton PipelineRun | 3–5 min
-| GitOps | Point `image:` at the build, apply `gitops/base`, create the Argo CD Application | 2–3 min
+| GitOps | Verify the built image, apply `gitops/base`, create the Argo CD Application | 2–3 min
 |===
 
 image::cicd-gitops.png[Prompt to deployment, align="center"]
@@ -69,10 +69,17 @@ Press kbd:[Tab] to *build* in the *same* session.
 [source,text,role=execute]
 ----
 Implement the plan and deploy it using AGENTS.md.
-Wait for Tekton to succeed and Argo CD to be Synced / Healthy, then print the app and Argo CD URLs.
+Keep the preconfigured internal-registry image in the Deployment. Wait for Tekton to succeed and the image tag to exist before creating the Argo CD Application. Wait for Synced / Healthy and the Deployment rollout, then print the app and Argo CD URLs.
 ----
 
 OpenCode writes the files, compiles, then ships from `AGENTS.md`. When it is done it should print the app route and the Argo CD console URL. The Argo CD `Application` must live in `$\{APP_NAME}-dev` (never `default`).
+
+[IMPORTANT]
+====
+The template already declares `image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript:latest` with `imagePullPolicy: Always`. Tekton runs `clone → validate-image → build`. A placeholder, wrong build namespace or mismatched rendered image stops the pipeline before Buildah.
+
+For an older personal checkout containing `image: placeholder`, replace it with the reference above and commit/push before rebuilding. Argo CD deploys the manifest from Git; changing only the live Deployment is temporary and can be reverted by GitOps. If an existing app has an image pull error, inspect `oc describe pod` for the exact image and registry error before retrying.
+====
 
 === Checkpoint — the app is live
 

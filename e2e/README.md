@@ -74,3 +74,7 @@ See [RedHatAI INT8 validation](WHISPER-INT8-VALIDATION.md) for the active model 
 See [the live GPU comparison](GPU-VALIDATION.md) and [the isolated experiment](../experiments/gpu/README.md). These are historical LLM comparisons; the current workshop keeps Foundry for coding and uses one T4 for Whisper.
 
 Single-GPU model trials, including Bonsai 2 and cyankiwi models, are recorded in [the one-T4 report](SINGLE-T4-VALIDATION.md).
+
+## Deployment image regression
+
+See [image contract validation](IMAGE-CONTRACT-VALIDATION.md) for the placeholder regression, failing/passing Tekton cases, and the successful build and application rollout on `natfzu`.
