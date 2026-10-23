@@ -11,6 +11,8 @@ Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platf
 
 Platform labs require cluster-admin access and an Azure identity with permission to create Foundry resources in the exact assigned resource group. DeepSeek on Foundry powers OpenCode. RedHatAI Whisper Large v3 Turbo INT8 runs on one T4 through OpenShift AI and Red Hat AI Inference. The sample app transcribes browser microphone audio.
 
+`make onboard` detects the resource group containing the connected ARO resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
+
 Use one assigned cluster per participant. On a shared cluster, the facilitator prepares the platform once and isolates each app’s namespaces and access.
 
 Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are in `deploy`.

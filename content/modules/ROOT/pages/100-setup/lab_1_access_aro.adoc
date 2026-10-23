@@ -42,17 +42,17 @@ cd aro-ai-app-platform
 make onboard
 ----
 
-The check reads the existing Azure and cluster identities and worker readiness. It does not create identities, fetch a new pull secret, or provision a cluster. Keep this directory for the later `oc apply -k deploy/...` commands.
+The check reads the existing Azure and cluster identities and worker readiness. It also matches the connected cluster’s API URL to its Azure ARO resource and saves the subscription, resource group name and resource group ID in `state/workshop.env`. This local file contains no credentials. Keep this directory for later commands.
 
-Before Lab 1.1, obtain the exact *assigned Azure resource group* from RHDP. Export it as `RESOURCEGROUP`. Foundry resources must be created in that group; do not select the first group in the subscription. The Azure identity needs permission to create those resources and access the model.
+Load the detected values; there is no resource group name or ID to type:
 
 [source,sh,role=execute]
 ----
-export RESOURCEGROUP="<assigned-resource-group>"
-az group show --name "$RESOURCEGROUP" --query '{name:name,location:location}' -o table
+source state/workshop.env
+az group show --name "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" --query '{name:name,id:id,location:location}' -o table
 ----
 
-For example, use `openenv-<your-lab-guid>` only when that exact name appears in your RHDP assignment.
+This is the group containing the ARO resource, where the workshop creates Foundry resources. It is distinct from the managed group containing ARO’s machines. Detection stops if the Azure subscription is wrong, the cluster cannot be matched uniquely, or read access is missing. Do not continue after an error. The Azure identity also needs permission to create Foundry resources in this group.
 
 == Checkpoint
 

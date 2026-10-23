@@ -26,6 +26,18 @@ At the end, follow Lab 3.1 to delete only the Foundry deployment created for the
 
 [Full live validation and final environment state](VALIDATION.md) records the 2026-10-22 run on ARO 4.21.22.
 
+## Automatic Azure resource group discovery
+
+`make onboard` matches the connected OpenShift API URL to the Azure ARO resource in the selected subscription. It writes the owning resource group’s name and ID to `state/workshop.env`, distinct from ARO’s managed machine group. No cloud resources are created.
+
+```sh
+python3 -m unittest discover -s e2e -p 'test_workshop_env.py'
+```
+
+The regression checks cover an unrelated first cluster, ambiguous/missing matches, wrong subscriptions, wrong group responses, non-Azure clusters and API URL normalization.
+
+Live check on 23 October 2026: the discovery helper and full onboarding script passed on RHDP workshop `natfzu`, ARO 4.21.22. They selected `openenv-tdfcw` and its resource group ID, matching the RHDP assignment, instead of managed machine group `aro-e4xkjsje`. A deliberately incorrect pre-existing `RESOURCEGROUP` value did not affect discovery. The test used read-only Azure/OpenShift calls and wrote only local non-secret environment files; it did not provision Foundry or GPU resources.
+
 ## Speech application
 
 After Lab 1.4 and the developer deployment:

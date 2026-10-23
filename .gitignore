@@ -18,5 +18,7 @@ docs/worker/.dev.vars
 docs/worker/.wrangler/
 
 state/foundry.env
+state/workshop.env
+state/workshop.env.tmp
 __pycache__/
 *.py[cod]

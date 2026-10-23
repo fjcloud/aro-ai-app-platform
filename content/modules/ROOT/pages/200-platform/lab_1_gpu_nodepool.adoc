@@ -33,7 +33,7 @@ This deployment uses Global Standard, pay-per-token pricing in East US 2. Reason
 | `GlobalStandard`, capacity `500` (500 000 tokens/minute)
 |===
 
-Use the exact Azure resource group assigned in your RHDP environment details. Export it as `RESOURCEGROUP` before continuing; the commands do not guess a group from the subscription.
+Act 0 detected the subscription and the resource group containing your ARO resource. Load `state/workshop.env` below; no names or IDs need replacing. If you changed your Azure or OpenShift login since Act 0, rerun `make onboard` first.
 
 Capacity controls throughput, not a fixed hourly charge. Capacity `1` only allows 1 000 tokens/minute in this lab: a short curl works, but coding prompts receive HTTP 429. Allocate `500` for this single-participant run; check the model quota before sharing the endpoint with a group.
 
@@ -43,9 +43,9 @@ If you resize an existing deployment, https://learn.microsoft.com/en-us/azure/fo
 
 [source,sh,role=execute]
 ----
-SUBSCRIPTION=$(az account show --query id -o tsv)
-: "${RESOURCEGROUP:?Export RESOURCEGROUP from the assigned RHDP environment details first}"
-az group show --name "$RESOURCEGROUP" --output none
+source state/workshop.env
+: "${RESOURCEGROUP:?Run make onboard successfully before this lab}"
+az group show --name "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" --output none
 SUFFIX="${RESOURCEGROUP#openenv-}"
 FOUNDRY_NAME="$(printf 'arodeepseek%s' "$SUFFIX" | tr -cd '[:alnum:]')"
 API=2025-06-01
