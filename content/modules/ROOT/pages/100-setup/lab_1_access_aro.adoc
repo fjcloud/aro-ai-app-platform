@@ -54,6 +54,8 @@ az group show --name "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" --query '{n
 
 This is the group containing the ARO resource, where the workshop creates Foundry resources. It is distinct from the managed group containing ARO’s machines. Detection stops if the Azure subscription is wrong, the cluster cannot be matched uniquely, or read access is missing. Do not continue after an error. The Azure identity also needs permission to create Foundry resources in this group.
 
+Keep the OpenShift browser credentials from the RHDP assignment for Act 2. The catalog workshop password and the OpenShift password are different. Lab 2.1 shows how to retrieve the ARO `kubeadmin` password from this Azure-authenticated bastion if needed.
+
 == Checkpoint
 
 * [x] Existing ARO cluster accessible with cluster-admin permissions

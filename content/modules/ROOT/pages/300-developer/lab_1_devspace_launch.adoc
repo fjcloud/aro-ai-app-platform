@@ -34,9 +34,29 @@ The `#<template-url>` suffix tells Dev Spaces to clone the template and create a
 
 . Open that URL in your browser.
 
+== Get the OpenShift password from the bastion
+
+The RHDP catalog password opens your assigned environment; it is not the OpenShift password. Use the ARO administrator credentials in the assignment’s access details. If you need to retrieve the password, run this in the *bastion terminal*, where Azure CLI is already authenticated:
+
+[source,sh,role=execute]
+----
+cd "$HOME/aro-ai-app-platform"
+source state/workshop.env
+az aro list-credentials --name "${ARO_CLUSTER_ID##*/}" \
+  --resource-group "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" \
+  --query kubeadminPassword -o tsv
+----
+
+This displays the password for the `kubeadmin` browser login. Keep it out of OpenCode and Git. The Azure credentials used by this command remain on the bastion.
+
+[TIP]
+====
+A facilitator can configure a named https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html-single/authentication_and_authorization/authentication_and_authorization[HTPasswd user] for the console and Dev Spaces. Authentication does not grant deployment permissions: this workshop currently needs a lab administrator to create namespaces and grant the pipeline’s build SCC. A restricted developer flow requires the facilitator to pre-create the app namespaces, build service accounts and scoped permissions, and adapt the deployment runbook accordingly.
+====
+
 == Log In and Create Your Workspace
 
-. You will be redirected to OpenShift SSO. Log in with the same cluster user you used for `oc`.
+. You will be redirected to OpenShift SSO. Log in as `kubeadmin` with the ARO password, or use the named workshop user prepared by your facilitator. An administrative certificate login shown as `system:admin` by the bastion’s `oc whoami` is not a browser username.
 
 . On the Create Workspace page, confirm that **OpenCode** is selected under *AI Provider*. That selection injects the CLI at start; you do not install it yourself. You will see a progress screen:
 +
