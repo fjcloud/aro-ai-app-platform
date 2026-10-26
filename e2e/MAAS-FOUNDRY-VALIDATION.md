@@ -64,7 +64,7 @@ Local validation: 24 helper regression tests, 10 ARO template image-contract tes
 
 ## Environment retained
 
-The assigned cluster, CPU/T4 workers, platform, Foundry deployment, coding-model publication and Whisper service remain available for participant testing. All 33 cluster operators remained Available and nondegraded. The project remained clean after read-only OpenCode prompts. Only quota-test fixtures are removed. Use Lab 3.1 for facilitator cleanup after all participants finish.
+The assigned cluster, CPU/T4 workers, platform, Foundry deployment, coding-model publication and Whisper service remain available for participant testing. All 33 cluster operators remained Available and nondegraded. The project remained clean after read-only OpenCode prompts. Only quota-test fixtures are removed. The environment remains available until its RHDP expiration.
 
 ## Sources
 

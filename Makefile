@@ -1,41 +1,23 @@
-ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-CONFIRM ?=
-
 .DEFAULT_GOAL := help
-
-.PHONY: help onboard deploy status kubeconfig gpu gpu-classic delete terminal
+.PHONY: help onboard docs serve test
 
 help:
-	@echo "make onboard         Check access to the existing ARO cluster and Azure lab."
-	@echo "make deploy          Create the ARO HCP cluster, pull secret, and console login."
-	@echo "make status          Show the cluster, node pools, and console URL."
-	@echo "make kubeconfig      Refresh state/kubeconfig for oc."
-	@echo "make gpu-classic     Plan a single-T4 worker for an existing classic ARO cluster (quota required)."
-	@echo "make gpu             Add one GPU node to a separately provisioned ARO HCP cluster."
-	@echo "make delete CONFIRM=yes"
-	@echo "                     Delete the cluster, its resource groups, and the Entra apps."
-	@echo "make terminal        Open the browser Azure CLI terminal."
-
-deploy:
-	@"$(ROOT)scripts/deploy.sh"
+	@echo "make onboard  Check access to the assigned workshop environment."
+	@echo "make docs     Build the workshop guide."
+	@echo "make serve    Build and serve the guide on http://localhost:8443."
+	@echo "make test     Run local regression checks."
 
 onboard:
-	@bash "$(ROOT)scripts/onboard.sh"
+	bash scripts/onboard.sh
 
-status:
-	@"$(ROOT)scripts/status.sh"
+docs:
+	npx --yes --package @antora/cli@3.1 --package @antora/site-generator@3.1 antora generate default-site.yml --clean
+	touch www/.nojekyll
+	mkdir -p www/docs && cp docs/index.html www/docs/index.html
 
-kubeconfig:
-	@"$(ROOT)scripts/kubeconfig.sh"
+serve: docs
+	python3 -m http.server 8443 --bind 127.0.0.1 --directory www
 
-gpu:
-	@"$(ROOT)scripts/gpu.sh"
-
-gpu-classic:
-	@python3 "$(ROOT)scripts/gpu-classic.py" $(if $(filter yes,$(APPLY)),--apply,) $(GPU_ARGS)
-
-delete:
-	@CONFIRM="$(CONFIRM)" "$(ROOT)scripts/delete.sh"
-
-terminal:
-	@echo "Open https://fjcloud.github.io/cloud-terminal-pages/ and select the ARO guide, and enter your workshop ID, email, and workshop password."
+test:
+	python3 -m unittest discover -s e2e -p 'test_*.py'
+	cd examples/live-transcript && go test -race ./...

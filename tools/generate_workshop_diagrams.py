@@ -369,32 +369,11 @@ def cicd() -> None:
     b.save(OUT_DIR / "cicd-gitops.png")
 
 
-def the_bill() -> None:
-    b = Board(1280, 800)
-    b.frame()
-    b.title("Tokens and provisioned infrastructure")
-    b.band((36, 120, 610, 680))
-    b.band((650, 120, 1244, 680))
-    b.text((56, 140), "Coding model", b.display(SECTION), fill=RED)
-    b.text((670, 140), "Speech and platform", b.display(SECTION), fill=RED)
-    items = [
-        (56, "DeepSeek on Foundry", "Input, cached input and output tokens", 205),
-        (56, "Usage object", "Estimate request cost at current rates", 420),
-        (670, "Whisper on one T4", "GPU VM + CPU workers + disks", 205),
-        (670, "Provisioned time", "Worker and disk charges continue when idle", 420),
-    ]
-    for x, title, subtitle, y in items:
-        b.card((x, y, x + 530, y + 185), title, subtitle)
-    b.footer("Facilitator cleanup after everyone finishes; preserve the base RHDP cluster.")
-    b.save(OUT_DIR / "the-bill-observability.png")
-
-
 def main() -> None:
     ensure_fonts()
     architecture()
     model_serving()
     cicd()
-    the_bill()
 
 
 if __name__ == "__main__":

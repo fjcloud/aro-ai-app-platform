@@ -31,8 +31,10 @@ Use the `aro-transcription` branch of https://github.com/fjcloud/go-app-template
 
 Allow CPU headroom for OpenShift AI, Dev Spaces and Tekton, plus quota and capacity for one `Standard_NC8as_T4_v3` worker. Lab 1.4 shows Azure CLI quota checks and explicit `oc` MachineSet commands for one D8 CPU worker when needed and one T4 GPU worker. It uses no provisioning helper or Makefile target. Classic ARO worker pools are managed through the OpenShift Machine API. The application sends independent short WAV clips for near-real-time results; it does not use a native Whisper WebSocket stream.
 
-== Optional cluster provisioning
+== Maintain the workshop
 
-Operators who need to provision a separate ARO HCP cluster can use the existing `make deploy` tooling. It invokes `scripts/onboard-provision.sh` before provisioning, requires the ARO HCP CLI extension, Azure and Entra permissions, and a valid Red Hat pull secret. `make status`, `make kubeconfig`, and `make delete CONFIRM=yes` operate only on that tooling's local `state/cluster.env`.
+`make test` runs the helper and reference-app tests. `make docs` builds the guide; `make serve` previews it at http://localhost:8443.
 
-These commands are separate from participant onboarding. Do not run cluster provisioning or deletion against an assigned ready RHDP environment.
+`content/` contains the guide, `deploy/` the active platform/model manifests, `scripts/` the setup helpers, and `e2e/` the validation scripts and current evidence. `docs/index.html` preserves the old terminal link as a redirect to Cloud Terminal.
+
+Retired terminal hosting, HCP provisioning and GPU experiments remain in https://github.com/fjcloud/aro-ai-app-platform/tree/e333ecdf5aef0946cf747d7a970b6b386ce87835[the pre-cleanup revision].

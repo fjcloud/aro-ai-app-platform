@@ -109,7 +109,7 @@ oc wait inferenceservice/whisper -n speech-serving \
   --for=condition=Ready --timeout=1800s
 ----
 
-The platform DataScienceCluster from Lab 1.1 already enables KServe and MaaS. Keep that configuration: do not apply the old speech-only `deploy/speech/rhoai-dsc.yaml`, which disables MaaS. The historical Qwen manifests in `deploy/inference` are not used.
+The platform DataScienceCluster from Lab 1.1 enables both KServe and MaaS. Whisper uses that shared configuration.
 
 [source,sh,role=execute]
 ----
