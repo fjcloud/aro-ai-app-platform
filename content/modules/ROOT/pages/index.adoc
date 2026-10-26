@@ -2,7 +2,7 @@
 
 Welcome to the *AI-Powered Developer Platform on ARO* workshop.
 
-The story for today is a Monday at a company that uses a managed coding model and keeps speech inference on its own cluster. This morning the platform team installs the platform and publishes DeepSeek-V4 Pro on Foundry through OpenShift AI MaaS. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships a browser transcription app from OpenShift Dev Spaces. You wear both hats, then you review token usage, infrastructure costs and cleanup.
+The story for today is a Monday at a company that uses a managed coding model and keeps speech inference on its own cluster. This morning the platform team installs the platform and publishes DeepSeek-V4 Pro on Foundry through OpenShift AI MaaS. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships a browser transcription app from OpenShift Dev Spaces. You wear both hats, then you review token usage, infrastructure costs.
 
 
 == Who This Workshop Is For
@@ -39,7 +39,7 @@ DeepSeek writes the app; Whisper transcribes its audio. Coding prompts and sourc
 
 === Act 3 — The bill
 * Input and output tokens from the afternoon, priced from the Foundry list rate
-* GPU, CPU and storage costs while provisioned, plus scoped facilitator cleanup
+* Coding tokens and quotas through MaaS, speech latency and T4 activity, and their different cost models
 
 == Learning Outcomes
 
@@ -102,7 +102,7 @@ The platform uses cluster-wide resources and the app uses fixed namespace names.
 
 | *3 — The bill*
 | 3.1
-| Tokens, Infrastructure and Cleanup
+| Usage, Performance and Cost
 | 15 min
 
 | *—*

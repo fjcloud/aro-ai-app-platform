@@ -6,3 +6,4 @@ resources:
   - servingruntime.yaml
   - inferenceservice.yaml
   - networkpolicy.yaml
+  - metrics.yaml

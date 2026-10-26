@@ -51,7 +51,7 @@ This displays the password for the `kubeadmin` browser login. Keep it out of Ope
 
 [TIP]
 ====
-A facilitator can configure a named https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html-single/authentication_and_authorization/authentication_and_authorization[HTPasswd user] for the console and Dev Spaces. Authentication does not grant deployment permissions: this workshop currently needs a lab administrator to create namespaces and grant the pipeline’s build SCC. A restricted developer flow requires the facilitator to pre-create the app namespaces, build service accounts and scoped permissions, and adapt the deployment runbook accordingly.
+A facilitator can configure a named https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html-single/authentication_and_authorization/authentication_and_authorization[HTPasswd user] for the console and Dev Spaces. Browser authentication and deployment permissions are separate. The platform preparation step supplies namespaces, build permissions and a scoped CLI identity for the developer.
 ====
 
 == Log In and Create Your Workspace
@@ -80,19 +80,19 @@ Do **not** sign in to GitHub Copilot. Che Code ships Copilot as a built-in; the 
 
 If the editor opens in *Restricted Mode*, open *Manage Workspace Trust*, trust this repository, and confirm. The IDE may reload before its terminal becomes available.
 
-== Log the workspace terminal into OpenShift
+== Check your scoped CLI access
 
-The browser SSO session does not authenticate the `oc` CLI inside a newly created workspace. Its default service account cannot create the namespaces and build permissions used in this lab.
-
-In the OpenShift console, open your user menu → *Copy login command*. Complete login and paste the resulting `oc login` command into the *Dev Spaces terminal*, using the assigned lab administrator from Act 0. Do not paste the token into OpenCode or commit it.
+The platform injects a separate developer kubeconfig into the workspace. Browser SSO and CLI access are separate; you do not paste an administrator token into the terminal or OpenCode.
 
 [source,sh,role=execute]
 ----
 oc whoami
-oc auth can-i '*' '*' --all-namespaces
+oc auth can-i create pipelineruns -n "${APP_NAME}-build"
+oc auth can-i create deployments -n "${APP_NAME}-dev"
+oc auth can-i use scc/privileged -n "${APP_NAME}-build"
 ----
 
-The permission check must return `yes` before you ask OpenCode to deploy. These are deliberately administrator labs; a production platform would pre-create project permissions and build service accounts for developers. If the answer is `no`, ask the facilitator to prepare the assigned access rather than searching for other credentials.
+Expect the `workshop-developer` service account, then `yes`, `yes`, and `no`. The final `no` is intentional: OpenCode must not grant SCCs or use privileged containers. If build/deploy access is missing, ask the facilitator to rerun `scripts/prepare-developer.py` and restart the workspace. Keep the scoped identity; an administrator login is not a workaround.
 
 == Verify OpenCode is Running
 

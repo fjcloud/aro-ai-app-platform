@@ -13,4 +13,4 @@ spec:
     modelAsService: true
     genAiStudio: true
     vLLMDeploymentOnMaaS: true
-    observabilityDashboard: false
+    observabilityDashboard: true

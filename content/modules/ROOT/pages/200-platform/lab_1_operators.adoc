@@ -65,11 +65,11 @@ bash scripts/install-platform.sh
 
 The script runs these phases in order and stops on failure:
 
-. Apply `deploy/operators`: OpenShift AI 3.5, Dev Spaces, GitOps, Pipelines, NFD, NVIDIA, cert-manager, LeaderWorkerSet and Red Hat Connectivity Link.
+. Apply `deploy/operators`: OpenShift AI 3.5, Dev Spaces, GitOps, Pipelines, NFD, NVIDIA, cert-manager, LeaderWorkerSet, Red Hat Connectivity Link, Cluster Observability Operator and OpenTelemetry.
 . Wait for each operator Deployment to exist and become Available, with a bounded timeout. Install the workshop Tekton tasks after their CRDs exist.
 . Start the workshop PostgreSQL database, then apply `deploy/instances` to enable the IDE, KServe, MaaS, GPU discovery and driver management.
 . Bind the MaaS gateway to this cluster’s domain and ingress certificate; configure Authorino TLS and the OpenShift AI dashboard.
-. Wait for the gateway to be Programmed and Dev Spaces to be Active.
+. Enable MaaS telemetry and the OpenShift AI metrics stack (one 5 GiB metrics volume, seven-day retention), then wait for the gateway to be Programmed and Dev Spaces to be Active.
 
 The included PostgreSQL uses ephemeral storage for this disposable workshop. Use a persistent, backed-up database and independent credentials for production. Do not restart its storage during the workshop: MaaS API keys are stored there.
 

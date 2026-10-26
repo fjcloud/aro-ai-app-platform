@@ -18,7 +18,7 @@
 
 *Act 3 — The bill*
 
-* xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1 — Tokens, Infrastructure and Cleanup]
+* xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1 — Usage, Performance and Cost]
 
 *Wrap-up*
 

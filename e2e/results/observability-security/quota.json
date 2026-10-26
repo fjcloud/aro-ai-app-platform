@@ -1,0 +1,10 @@
+{
+  "quota_limit": 1,
+  "quota_window": "1h",
+  "request_statuses": [
+    200,
+    429
+  ],
+  "key_revoked": true,
+  "temporary_subscription_deleted": true
+}

@@ -29,3 +29,5 @@ wait_deploy openshift-lws-operator openshift-lws-operator
 wait_deploy cert-manager cert-manager
 wait_deploy openshift-pipelines tekton-pipelines-controller
 wait_deploy openshift-gitops openshift-gitops-server
+wait_deploy openshift-cluster-observability-operator observability-operator
+wait_deploy openshift-opentelemetry-operator opentelemetry-operator-controller-manager

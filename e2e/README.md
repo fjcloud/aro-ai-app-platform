@@ -14,7 +14,7 @@ bash e2e/usage-run.sh
 |---|---|
 | Platform | Ready workers, cluster-admin, Dev Spaces / GitOps / Pipelines, workshop Tasks, MaaS external provider/model/catalog, separate workspace key, real Foundry completion |
 | Developer | Latest Tekton build Succeeded, personal Application Synced / Healthy, public HTTPS app and health endpoint, transcript copy/export, independent resource / probe / security / TLS checks |
-| Usage | Real Foundry response through MaaS with input and output token counts, before the Act 3 deployment deletion |
+| Usage | Real Foundry response through MaaS with input and output token counts, with MaaS quota and model-side metrics |
 
 The scripts use Python 3 and `oc`. They print no credentials, create no cluster resources, and do not mint or rotate keys. Platform and usage checks each make one billable model call. `APP_NAME` defaults to `live-transcript`; `EXPECT_UPDATED_APP=true` checks the Copy transcript exercise.
 
@@ -22,9 +22,9 @@ To also verify the generated source, local Go build and pushed Git revision in t
 
 For browser checks, launch Chromium with `--use-mock-keychain`. Verify catalog login in the published Cloud Terminal, the embedded WeTTY shell, OpenShift login, the Dev Spaces factory and editor, the public app, and the personal Argo CD console.
 
-At the end, follow Lab 3.1 to revoke the injected MaaS key, remove the external-model publication and delete the workshop Foundry deployment. RHDP owns the assigned cluster and its lifetime. The older cleanup scripts predate the Foundry flow and are not part of these validation commands.
+The participant guide keeps the environment available until RHDP expiration. The older teardown scripts are outside the participant flow. Temporary fixtures created by validation scripts are still removed by those tests.
 
-[Full live validation and final environment state](VALIDATION.md) records the 2026-10-22 run on ARO 4.21.22.
+[Historical full live validation and final environment state](VALIDATION.md) records the 2026-10-22 run on ARO 4.21.22.
 
 ## Automatic Azure resource group discovery
 
@@ -92,3 +92,13 @@ python3 e2e/maas-quota.py
 The protocol probe makes billable calls for tool use and streaming with a request larger than 16 KiB. It also checks catalog discovery and missing/invalid-key rejection. The quota probe requires an OpenShift user token, creates a named temporary subscription and short-lived key, and revokes/deletes both in `finally`; it refuses to overwrite an existing validation subscription. Quota updates are asynchronous: this is a rate-limit test, not a guarantee against overshoot or a financial spending cap.
 
 OpenCode’s audit exercise has been removed from the participant journey on ARO and ROSA. Resource assertions in the validation scripts remain independent automated checks; historical reports describe the older flow.
+
+## Observability and scoped delivery
+
+See [the live observability and security validation](OBSERVABILITY-SECURITY-VALIDATION.md). From an authenticated bastion with monitoring access:
+
+```sh
+python3 e2e/check-observability.py
+```
+
+This read-only probe runs the actual nine dashboard expressions. Generate coding and speech activity first and allow scrape propagation; a quiet five-minute window can produce a NaN latency percentile.

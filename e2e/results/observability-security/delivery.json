@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-26",
+  "cluster": "ARO 4.21.22 mnzq5",
+  "pipeline": {
+    "name": "build-app-84mbn",
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-10-26T14:52:32Z",
+        "message": "Tasks Completed: 3 (Failed: 0, Cancelled 0), Skipped: 0",
+        "reason": "Succeeded",
+        "status": "True",
+        "type": "Succeeded"
+      }
+    ]
+  },
+  "application": {
+    "sync": {
+      "comparedTo": {
+        "destination": {
+          "namespace": "live-transcript-dev",
+          "server": "https://kubernetes.default.svc"
+        },
+        "source": {
+          "path": "deploy/base",
+          "repoURL": "https://gitpop.apps.sno.msl.cloud/0xbb05f318632e6a3234eed82b227e888d893b509a/live-transcript",
+          "targetRevision": "main"
+        }
+      },
+      "revision": "67463e22b04eb3df79445d0c3d348feabf440adf",
+      "status": "Synced"
+    },
+    "health": {
+      "lastTransitionTime": "2026-10-26T14:54:41Z",
+      "status": "Healthy"
+    }
+  },
+  "pods": [
+    {
+      "name": "build-app-84mbn-build-pod",
+      "namespace": "live-transcript-build",
+      "scc": "pipelines-scc",
+      "phase": "Succeeded",
+      "hostUsers": false,
+      "podSecurityContext": {
+        "fsGroup": 1000,
+        "runAsGroup": 1000,
+        "runAsUser": 0,
+        "seLinuxOptions": {
+          "level": "s0:c34,c24"
+        }
+      },
+      "containers": [
+        {
+          "name": "step-build-and-push",
+          "securityContext": {
+            "allowPrivilegeEscalation": false,
+            "capabilities": {
+              "add": [
+                "SETFCAP"
+              ],
+              "drop": [
+                "MKNOD"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "build-app-84mbn-clone-pod",
+      "namespace": "live-transcript-build",
+      "scc": "pipelines-scc",
+      "phase": "Succeeded",
+      "hostUsers": false,
+      "podSecurityContext": {
+        "fsGroup": 1000,
+        "runAsGroup": 1000,
+        "runAsUser": 0,
+        "seLinuxOptions": {
+          "level": "s0:c34,c24"
+        }
+      },
+      "containers": [
+        {
+          "name": "step-clone",
+          "securityContext": {
+            "allowPrivilegeEscalation": false,
+            "capabilities": {
+              "drop": [
+                "MKNOD"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "build-app-84mbn-validate-image-pod",
+      "namespace": "live-transcript-build",
+      "scc": "pipelines-scc",
+      "phase": "Succeeded",
+      "hostUsers": false,
+      "podSecurityContext": {
+        "fsGroup": 1000,
+        "runAsGroup": 1000,
+        "runAsUser": 0,
+        "seLinuxOptions": {
+          "level": "s0:c34,c24"
+        }
+      },
+      "containers": [
+        {
+          "name": "step-check-deployment-image",
+          "securityContext": {
+            "allowPrivilegeEscalation": false,
+            "capabilities": {
+              "drop": [
+                "MKNOD"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "live-transcript-9fd6c586-ws2sb",
+      "namespace": "live-transcript-dev",
+      "scc": "restricted-v2",
+      "phase": "Running",
+      "hostUsers": true,
+      "podSecurityContext": {
+        "fsGroup": 1001030000,
+        "runAsNonRoot": true,
+        "seLinuxOptions": {
+          "level": "s0:c32,c19"
+        },
+        "seccompProfile": {
+          "type": "RuntimeDefault"
+        }
+      },
+      "containers": [
+        {
+          "name": "live-transcript",
+          "securityContext": {
+            "allowPrivilegeEscalation": false,
+            "capabilities": {
+              "drop": [
+                "ALL"
+              ]
+            },
+            "runAsNonRoot": true,
+            "runAsUser": 1001030000
+          }
+        }
+      ]
+    }
+  ]
+}

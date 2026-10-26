@@ -12,7 +12,7 @@ The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Micr
 
 [IMPORTANT]
 ====
-This deployment uses Global Standard, pay-per-token pricing in East US 2. Reasoning tokens count as output. See xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1] for the dated price example and cleanup. An idle coding deployment has no token usage charge; the cluster and speech workers have separate infrastructure costs.
+This deployment uses Global Standard, pay-per-token pricing in East US 2. Reasoning tokens count as output. See xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1] for the dated price example. An idle coding deployment has no token usage charge; the cluster and speech workers have separate infrastructure costs.
 ====
 
 == What you are creating

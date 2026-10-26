@@ -32,6 +32,19 @@ The ARO transcription template is on its own branch: https://github.com/fjcloud/
 
 There is no `scripts/` directory and no Ansible. DeepSeek-V4 Pro follows `AGENTS.md`.
 
+== Prepare the developer's permissions
+
+From the bastion, prepare the application namespaces and inject a scoped CLI identity into Dev Spaces:
+
+[source,sh,role=execute]
+----
+python3 scripts/prepare-developer.py
+----
+
+The developer can build and deploy in the two application namespaces. They cannot create namespaces, change SCCs or create cluster-wide bindings. Image-pull permission is prepared here, not by the model. The Pipelines operator supplies its standard, non-privileged build service account permissions.
+
+The injected developer token is valid for 24 hours. Run this step before opening Dev Spaces; restart an existing workspace to receive the scoped kubeconfig.
+
 == Step 1: Read AGENTS.md
 
 Clone only if you want it on disk. On a shared workshop cluster you can also open the file on GitHub. Either way, *read it* — it is short.
@@ -45,9 +58,9 @@ cat "$HOME/aro-transcription-template/AGENTS.md"
 
 Focus on these sections:
 
-* *Files YOU must generate* — `main.go`, `go.mod`, `Dockerfile` with an exact two-stage template
-* *Files already in the repository* — do not rewrite `deploy/`, `pipeline/`, `gitops/`, or `devfile.yaml`
-* *Three deploy phases* — ephemeral Git → Tekton image validation/build → Argo CD Application; the Deployment image is preconfigured
+* *Generate* — `main.go`, `go.mod`, `Dockerfile` with an exact two-stage template
+* *Existing scaffold* — do not rewrite `deploy/`, `pipeline/`, `gitops/`, or `devfile.yaml`
+* *Deploy* — ephemeral Git → Tekton image validation/build → Argo CD Application; the Deployment image is preconfigured
 * *Namespaces* — `$\{APP_NAME}-build` and `$\{APP_NAME}-dev` only. Never namespace `default` for the app, Argo CD, or the Application.
 
 [cols="1,2,2", options="header"]

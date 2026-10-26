@@ -1,0 +1,14 @@
+{
+  "language": "en",
+  "modelRequests": 2,
+  "latencyMs": [
+    294,
+    147
+  ],
+  "firstTextMs": 5805,
+  "textWhileRecording": "Hello, this workshop uses OpenShift AI for speech transcripts.",
+  "finalTranscript": "Hello, this workshop uses OpenShift AI for speech transcripts. Thank you.",
+  "microphoneReleased": true,
+  "outageHandled": true,
+  "permissionDeniedHandled": true
+}

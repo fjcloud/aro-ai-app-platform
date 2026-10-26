@@ -139,6 +139,10 @@ def developer():
     cs = container.get('securityContext', {})
     require(cs.get('allowPrivilegeEscalation') is False and 'ALL' in cs.get('capabilities', {}).get('drop', []), 'Container drops all capabilities and privilege escalation')
     pods = json.loads(oc('get', 'pods', '-n', ns, '-l', 'app.kubernetes.io/name=' + app, '-o', 'json'))['items']
+    require(bool(pods) and all(p['metadata'].get('annotations', {}).get('openshift.io/scc') == 'restricted-v2' for p in pods), 'Application admitted under restricted-v2 SCC')
+    build_pods = json.loads(oc('get', 'pods', '-n', app + '-build', '-l', 'tekton.dev/pipelineRun=' + latest['metadata']['name'], '-o', 'json'))['items']
+    require(bool(build_pods) and all(p['spec'].get('hostUsers') is False for p in build_pods), 'Build tasks isolated in Linux user namespaces')
+    require(all(not c.get('securityContext', {}).get('privileged', False) and c.get('securityContext', {}).get('allowPrivilegeEscalation') is False for p in build_pods for c in p['spec'].get('containers', []) + p['spec'].get('initContainers', [])), 'No privileged build container or privilege escalation')
     require(any(c.get('ready') and '@sha256:' in c.get('imageID', '') for p in pods for c in p.get('status', {}).get('containerStatuses', [])), 'Running application pulled a built image digest')
     workspace_ns, workspace_pod = os.environ.get('E2E_NS'), os.environ.get('DEV_POD')
     if workspace_ns or workspace_pod:

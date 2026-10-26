@@ -15,6 +15,7 @@ metadata:
 spec:
   workspaces:
     - name: output
+      mountPath: /source
       description: The git repo will be cloned onto the volume backing this Workspace.
   params:
     - name: URL
@@ -48,7 +49,7 @@ spec:
   steps:
     - name: clone
       image: alpine/git:latest
-      workingDir: $(workspaces.output.path)
+      workingDir: /
       script: |
         #!/bin/sh
         set -eu
@@ -96,7 +97,7 @@ spec:
     - name: TLSVERIFY
       description: Verify TLS on the registry endpoint.
       type: string
-      default: "false"
+      default: "true"
     - name: FORMAT
       description: The format of the built container (oci or docker).
       type: string
@@ -115,6 +116,7 @@ spec:
       default: ""
   workspaces:
     - name: source
+      mountPath: /source
   results:
     - name: IMAGE_DIGEST
       description: Digest of the image built.
@@ -122,14 +124,23 @@ spec:
       description: Image repository where the built image was pushed.
   steps:
     - name: build-and-push
-      image: quay.io/buildah/stable:latest
-      workingDir: $(workspaces.source.path)
+      image: registry.redhat.io/rhel9/buildah@sha256:ce2db38cddeedde4489473a689981c532dff4e2e63971d20bb7b3ceca996c18d
+      workingDir: /
       securityContext:
-        privileged: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          add: [SETFCAP]
       script: |
         #!/bin/bash
         set -eu
-        buildah --storage-driver=$(params.STORAGE_DRIVER) bud \
+        # Enter the mounted workspace after CRI-O has established its user namespace.
+        cd "$(workspaces.source.path)"
+        # Buildah's chroot copier cannot traverse the idmapped PVC directly.
+        context=$(mktemp -d /tmp/workshop-build.XXXXXX)
+        trap 'rm -rf "$context"' EXIT
+        cp -R . "$context/source"
+        cd "$context/source"
+        buildah --storage-driver=$(params.STORAGE_DRIVER) bud --isolation=chroot \
           $(params.BUILD_EXTRA_ARGS) \
           --format=$(params.FORMAT) \
           --tls-verify=$(params.TLSVERIFY) \
@@ -147,9 +158,3 @@ spec:
 
         cat /tmp/image-digest | tee $(results.IMAGE_DIGEST.path)
         echo -n "$(params.IMAGE)" | tee $(results.IMAGE_URL.path)
-      volumeMounts:
-        - name: varlibcontainers
-          mountPath: /var/lib/containers
-  volumes:
-    - name: varlibcontainers
-      emptyDir: {}

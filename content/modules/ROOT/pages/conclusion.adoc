@@ -9,11 +9,9 @@ The Go application captured microphone audio in the browser, sent short WAV clip
 
 This is *near-real-time transcription*: results arrive after each short clip. Whisper is not a native continuous streaming model. Test accents, background noise, long sentences and slow networks before using this pattern beyond a workshop.
 
-== Costs and cleanup
+== Costs and environment lifetime
 
-Foundry charges for coding tokens. The T4 VM, ARO worker licence and disks are billed while provisioned, even when nobody speaks. Deleting or stopping the Whisper pod alone does not remove those costs.
-
-Follow Lab 3.1 for scoped cleanup. Never delete the shared RHDP cluster. On a multi-user workshop, only the facilitator removes the shared inference service, model cache and GPU worker after all participants finish.
+Usage metrics explain activity. VM and disk charges continue while resources remain provisioned. The assigned RHDP environment stays available until its scheduled expiration; export code you want to keep before then.
 
 == Next steps
 

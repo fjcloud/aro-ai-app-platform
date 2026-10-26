@@ -1,0 +1,40 @@
+{
+  "identity": "system:serviceaccount:live-transcript-dev:workshop-developer",
+  "checks": [
+    {
+      "action": "create deployments -n live-transcript-dev",
+      "allowed": true,
+      "expected": true
+    },
+    {
+      "action": "create pipelineruns -n live-transcript-build",
+      "allowed": true,
+      "expected": true
+    },
+    {
+      "action": "create namespaces",
+      "allowed": false,
+      "expected": false
+    },
+    {
+      "action": "create clusterrolebindings",
+      "allowed": false,
+      "expected": false
+    },
+    {
+      "action": "create rolebindings -n live-transcript-build",
+      "allowed": false,
+      "expected": false
+    },
+    {
+      "action": "use scc/privileged -n live-transcript-build",
+      "allowed": false,
+      "expected": false
+    },
+    {
+      "action": "use scc/anyuid -n live-transcript-build",
+      "allowed": false,
+      "expected": false
+    }
+  ]
+}

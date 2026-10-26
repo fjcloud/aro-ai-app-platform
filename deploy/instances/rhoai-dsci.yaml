@@ -7,6 +7,11 @@ spec:
   monitoring:
     managementState: Managed
     namespace: redhat-ods-monitoring
+    metrics:
+      replicas: 1
+      storage:
+        size: 5Gi
+        retention: 7d
   trustedCABundle:
     customCABundle: ""
     managementState: Managed

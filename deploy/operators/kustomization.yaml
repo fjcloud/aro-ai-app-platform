@@ -33,3 +33,6 @@ resources:
   - rhcl-namespace.yaml
   - rhcl-operatorgroup.yaml
   - rhcl-subscription.yaml
+  # Native OpenShift AI observability dashboards and metrics storage
+  - coo.yaml
+  - opentelemetry.yaml

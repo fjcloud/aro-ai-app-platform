@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: workshop-whisper
+  namespace: speech-serving
+  labels:
+    monitoring.opendatahub.io/scrape: "true"
+spec:
+  selector:
+    matchLabels:
+      serving.kserve.io/inferenceservice: whisper
+      component: predictor
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

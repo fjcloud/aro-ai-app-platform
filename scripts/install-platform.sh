@@ -20,8 +20,10 @@ until oc get service/authorino-authorino-authorization -n kuadrant-system >/dev/
   sleep 5
 done
 bash deploy/instances/configure-platform.sh
+oc wait dsci/default-dsci --for=condition=Ready --timeout=1200s
 oc wait dsc/default-dsc --for=condition=Ready --timeout=1200s
 oc wait maastenantconfig/default-tenant -n models-as-a-service --for=condition=Ready --timeout=600s
+bash deploy/observability/configure.sh
 oc rollout status deployment/payload-processing -n openshift-ingress --timeout=600s
 oc rollout status deployment/payload-pre-processing -n openshift-ingress --timeout=600s
 oc wait gateway/maas-default-gateway -n openshift-ingress --for=condition=Programmed --timeout=600s

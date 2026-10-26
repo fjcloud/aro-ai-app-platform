@@ -1,0 +1,23 @@
+PASS: Application available
+PASS: Personal Argo CD Application Synced / Healthy
+PASS: Real Tekton PipelineRuns exist
+PASS: Latest Tekton build Succeeded
+PASS: HTTPS edge Route redirects HTTP
+PASS: Public HTTPS health endpoint
+PASS: Deployment uses the app image from its build namespace
+PASS: Mutable latest tag is always pulled
+PASS: Successful Tekton target matches the deployed image
+PASS: Resource requests and limits match AGENTS.md
+PASS: Liveness and readiness probes use /healthz:8080
+PASS: Deployment uses portable restricted pod security
+PASS: Container drops all capabilities and privilege escalation
+PASS: Application admitted under restricted-v2 SCC
+PASS: Build tasks isolated in Linux user namespaces
+PASS: No privileged build container or privilege escalation
+PASS: Running application pulled a built image digest
+PASS: Both E2E_NS and DEV_POD supplied
+PASS: Generated source files exist and Go build succeeds in the real workspace
+PASS: Workspace commit, pushed main and Argo CD revision match
+PASS: Application source committed with no unstaged changes
+Application: https://live-transcript-live-transcript-dev.apps.asrfb99m.eastus.aroapp.io
+Git revision: 67463e22b04eb3df79445d0c3d348feabf440adf
