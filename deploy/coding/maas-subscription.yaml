@@ -1,0 +1,20 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSSubscription
+metadata:
+  name: deepseekv4pro-workshop
+  namespace: models-as-a-service
+  annotations:
+    openshift.io/display-name: DeepSeek-V4 Pro workshop subscription
+    openshift.io/description: Generous token quota for the workshop; tighten this for production showback
+spec:
+  priority: 10
+  owner:
+    groups:
+      - name: system:authenticated
+    users: []
+  modelRefs:
+    - name: deepseekv4pro
+      namespace: llm-serving
+      tokenRateLimits:
+        - limit: 5000000
+          window: 24h

@@ -9,7 +9,7 @@ Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platf
 . The launcher retrieves the assigned Showroom URL. Shared links contain only the guide and workshop ID; each participant signs in separately.
 . Follow Act 0 to log in to the existing cluster, clone the repository, and run `make onboard`.
 
-Platform labs require cluster-admin access and an Azure identity with permission to create Foundry resources in the exact assigned resource group. DeepSeek on Foundry powers OpenCode. RedHatAI Whisper Large v3 Turbo INT8 runs on one T4 through OpenShift AI and Red Hat AI Inference. The sample app transcribes browser microphone audio.
+Platform labs require cluster-admin access and an Azure identity with permission to create Foundry resources in the exact assigned resource group. OpenShift AI MaaS publishes DeepSeek on Foundry for OpenCode, with a separate MaaS key and token quota (external models: Technology Preview). RedHatAI Whisper Large v3 Turbo INT8 runs on one T4 through OpenShift AI and Red Hat AI Inference. The sample app transcribes browser microphone audio.
 
 `make onboard` detects the resource group containing the connected ARO resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
 
@@ -21,7 +21,7 @@ Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are 
 
 [source,text]
 ----
-Dev Spaces / OpenCode ──> DeepSeek on Foundry (coding)
+Dev Spaces / OpenCode ──> OpenShift AI MaaS ──> DeepSeek on Foundry (coding)
 Browser microphone ──> Go app ──> OpenShift AI / vLLM / Whisper (one T4)
                            ▲
                       Tekton + Argo CD

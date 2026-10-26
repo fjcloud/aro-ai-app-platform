@@ -5,9 +5,9 @@
 
 *Act 1 — Build the platform*
 
-* xref:200-platform/lab_1_gpu_nodepool.adoc[Lab 1.1 — Publish DeepSeek on Foundry]
-* xref:200-platform/lab_2_operators.adoc[Lab 1.2 — Install Platform Operators]
-* xref:200-platform/lab_3_openshift_ai_overview.adoc[Lab 1.3 — Hand DeepSeek to Dev Spaces]
+* xref:200-platform/lab_1_operators.adoc[Lab 1.1 — Install the Platform]
+* xref:200-platform/lab_2_foundry.adoc[Lab 1.2 — Publish DeepSeek on Foundry]
+* xref:200-platform/lab_3_openshift_ai_overview.adoc[Lab 1.3 — Publish DeepSeek through MaaS]
 * xref:200-platform/lab_4_whisper.adoc[Lab 1.4 — Serve Whisper on one T4]
 * xref:200-platform/lab_5_agents_md.adoc[Lab 1.5 — Hand the Keys]
 
@@ -15,7 +15,6 @@
 
 * xref:300-developer/lab_1_devspace_launch.adoc[Lab 2.1 — Launch Your Dev Space]
 * xref:300-developer/lab_3_opencode_dev.adoc[Lab 2.2 — Prompt to Deployment]
-* xref:300-developer/lab_5_validate.adoc[Lab 2.3 — Audit with OpenCode]
 
 *Act 3 — The bill*
 

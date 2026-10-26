@@ -9,6 +9,7 @@ metadata:
 spec:
   dashboardConfig:
     disableTracking: true
+    externalModels: true
     modelAsService: true
     genAiStudio: true
     vLLMDeploymentOnMaaS: true

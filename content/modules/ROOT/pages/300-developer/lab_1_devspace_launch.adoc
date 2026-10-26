@@ -1,6 +1,6 @@
 = Lab 2.1 — Launch Your Dev Space
 
-Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is the Foundry endpoint from this morning.
+Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is published through the OpenShift AI MaaS gateway from this morning.
 
 [NOTE]
 ====
@@ -15,7 +15,7 @@ OpenShift Dev Spaces provides *cloud-based developer workspaces* — VS Code-com
 
 * *Zero local setup:* the workspace comes pre-configured; just open a browser
 * *Consistent environment:* every developer gets the same tools, versions, and configuration
-* *Model access:* the workspace calls Foundry at `$OPENAI_BASE_URL` with the injected key — same chat-completions JSON, pay per token
+* *Model access:* the workspace calls MaaS at `$OPENAI_BASE_URL` with an injected MaaS key — same chat-completions JSON, pay per token
 * *Persistent storage:* your work survives closing the browser, but remains tied to the lifetime of this RHDP environment. Export anything you want to keep before it expires
 
 == Get the Dev Spaces URL
@@ -29,7 +29,7 @@ https://devspaces.apps.<cluster>/#https://github.com/fjcloud/go-app-template/tre
 
 [NOTE]
 ====
-The `#<template-url>` suffix tells Dev Spaces to clone the template and create a workspace from its `devfile.yaml` automatically. OpenCode is injected by the platform. The project `opencode.json` still names the old model until the step below. The workspace comes pre-loaded with `AGENTS.md`, `pipeline/`, `gitops/`, and `deploy/base/` — you only need to write the application code.
+The `#<template-url>` suffix tells Dev Spaces to clone the template and create a workspace from its `devfile.yaml` automatically. OpenCode is injected by the platform. The project `opencode.json` already pins DeepSeek through MaaS. The workspace comes pre-loaded with `AGENTS.md`, `pipeline/`, `gitops/`, and `deploy/base/` — you only need to write the application code.
 ====
 
 . Open that URL in your browser.
@@ -112,30 +112,32 @@ opencode --version && echo "GIT_SERVER=$GIT_SERVER"
 GIT_SERVER=https://git.<workshop-domain>
 ----
 
-. Point the project at the Foundry deployment. The template's `opencode.json` wins over the platform file. Copy the platform configuration and commit it so the personal repository keeps the correct model. This file contains environment references; it contains no key. From the workspace terminal:
+. Check the project model configuration against the platform. The template's `opencode.json` wins over the platform file; both should pin DeepSeek through MaaS. The following also updates older workspaces when needed. This file contains environment references; it contains no key. From the workspace terminal:
 +
 [source,sh,role=execute]
 ----
 cd "${PROJECT_SOURCE}"
 cp "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/opencode.json" opencode.json
-git add opencode.json
-git -c user.name="Workshop Developer" -c user.email="dev@workshop.local" \
-  commit -m "Use the workshop Foundry model"
+if ! git diff --quiet HEAD -- opencode.json; then
+  git add opencode.json
+  git -c user.name="Workshop Developer" -c user.email="dev@workshop.local" \
+    commit -m "Use DeepSeek through the workshop MaaS gateway"
+fi
 ----
 +
-. Ask DeepSeek for one sentence. `$OPENAI_BASE_URL` already ends in `/openai/v1`.
+. Ask DeepSeek for one sentence. `$OPENAI_BASE_URL` already ends in `/v1`.
 +
 [source,sh,role=execute]
 ----
 curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Content-Type: application/json" \
-  -H "api-key: $OPENAI_API_KEY" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}'
 ----
 +
 [TIP]
 ====
-`$OPENAI_API_KEY` and `$OPENAI_BASE_URL` come from Secret `ai-provider-openai-api-key`. The model id is the deployment name `deepseekv4pro`. A short reply costs a fraction of a cent. Reasoning tokens, when the response includes them, are billed as output.
+`$OPENAI_API_KEY` and `$OPENAI_BASE_URL` come from Secret `ai-provider-openai-api-key`. This is a MaaS key, not the Azure account key. The client model id is `deepseekv4pro`. A short reply costs a fraction of a cent. Reasoning tokens, when the response includes them, are billed as output.
 ====
 
 . Start OpenCode:
@@ -171,9 +173,6 @@ Expected content:
       "options": {
         "baseURL": "{env:OPENAI_BASE_URL}",
         "apiKey": "{env:OPENAI_API_KEY}",
-        "headers": {
-          "api-key": "{env:OPENAI_API_KEY}"
-        },
         "chunkTimeout": 120000,
         "timeout": 600000
       },
@@ -193,7 +192,7 @@ Expected content:
 }
 ----
 
-OpenCode still reads `AGENTS.md` from the project directory at the start of every session. These instructions guide generation; the audit in Lab 2.3 checks the deployed result.
+OpenCode still reads `AGENTS.md` from the project directory at the start of every session. These instructions guide generation. Tekton validates the image reference, and you check the deployed application in Lab 2.2.
 
 `limit.output` is 32 768. Keep prompts specific and review usage and pricing in Lab 3.1.
 

@@ -15,6 +15,13 @@ spec:
       managementState: Managed
     kserve:
       managementState: Managed
+      rawDeploymentServiceConfig: Headed
+      nim:
+        managementState: Removed
+    aipipelines:
+      managementState: Removed
+    trainer:
+      managementState: Removed
     kueue:
       managementState: Removed
     llamastackoperator:

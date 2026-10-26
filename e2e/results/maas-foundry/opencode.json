@@ -1,0 +1,18 @@
+{
+  "opencode_version": "1.18.14",
+  "template_revision": "ff276d5a8ac0138cc0d544f6eb38ccd7a12ae95f",
+  "workspace_namespace": "che-kube-admin-devspaces-pyg333",
+  "workspace_phase": "Running",
+  "model": "deepseek/deepseekv4pro",
+  "base_url": "https://maas.apps.asrfb99m.eastus.aroapp.io/v1",
+  "credential_kind": "MaaS key",
+  "plan_completed": true,
+  "manifest_read_tools_completed": 2,
+  "deployment_image": "image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript:latest",
+  "image_pull_policy": "Always",
+  "pipeline_order": [
+    "clone",
+    "validate-image",
+    "build"
+  ]
+}

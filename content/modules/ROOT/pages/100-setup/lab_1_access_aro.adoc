@@ -63,4 +63,4 @@ Keep the OpenShift browser credentials from the RHDP assignment for Act 2. The c
 * [x] Azure identity and assigned resource group available
 * [x] Workshop repository cloned
 
-Continue to *Lab 1.1 — Publish DeepSeek on Foundry*.
+Continue to *Lab 1.1 — Install the Platform*.

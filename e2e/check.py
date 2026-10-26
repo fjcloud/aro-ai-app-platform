@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only assertions for the Foundry-backed ARO workshop (one inference call)."""
+"""Read-only assertions for the MaaS-governed Foundry ARO workshop (one inference call)."""
 import base64
 import html
 import json
@@ -31,15 +31,15 @@ def completion():
     secret = resource('secret', 'ai-provider-openai-api-key', 'openshift-operators')['data']
     endpoint = base64.b64decode(secret['OPENAI_BASE_URL']).decode().rstrip('/')
     key = base64.b64decode(secret['OPENAI_API_KEY']).decode()
-    require(endpoint.startswith('https://') and endpoint.endswith('/openai/v1'), 'Workspace uses the Foundry HTTPS base URL')
+    require(endpoint == 'https://' + resource('gateway', 'maas-default-gateway', 'openshift-ingress')['spec']['listeners'][0]['hostname'] + '/v1', 'Workspace uses the MaaS HTTPS base URL')
     request = urllib.request.Request(endpoint + '/chat/completions', data=json.dumps({
         'model': 'deepseekv4pro', 'messages': [{'role': 'user', 'content': 'Reply with ARO_WORKSHOP_OK.'}],
         'max_completion_tokens': 256,
-    }).encode(), headers={'Content-Type': 'application/json', 'api-key': key})
+    }).encode(), headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key})
     with urllib.request.urlopen(request, timeout=180) as response:
         result = json.load(response)
         effective_tpm = response.headers.get('x-ratelimit-limit-tokens')
-    require(bool(result['choices'][0]['message'].get('content')), 'Foundry returned a real completion')
+    require(bool(result['choices'][0]['message'].get('content')), 'MaaS routed a real Foundry completion')
     usage = result.get('usage', {})
     require(usage.get('prompt_tokens', 0) > 0 and usage.get('completion_tokens', 0) > 0, 'Foundry returned measured token usage')
     print('Token usage:', json.dumps(usage))
@@ -53,7 +53,7 @@ def platform():
     workers = [n for n in json.loads(oc('get', 'nodes', '-o', 'json'))['items']
                if 'node-role.kubernetes.io/worker' in n['metadata'].get('labels', {})]
     require(bool(workers) and all(any(c['type'] == 'Ready' and c['status'] == 'True' for c in n['status']['conditions']) for n in workers), 'All workers are Ready')
-    for ns, name in [('openshift-operators', 'devspaces-operator'), ('openshift-gitops', 'openshift-gitops-server'), ('openshift-pipelines', 'tekton-pipelines-controller')]:
+    for ns, name in [('openshift-operators', 'devspaces-operator'), ('openshift-gitops', 'openshift-gitops-server'), ('openshift-pipelines', 'tekton-pipelines-controller'), ('redhat-ods-operator', 'rhods-operator'), ('kuadrant-system', 'kuadrant-operator-controller-manager'), ('cert-manager', 'cert-manager'), ('openshift-lws-operator', 'openshift-lws-operator'), ('openshift-nfd', 'nfd-controller-manager'), ('nvidia-gpu-operator', 'gpu-operator')]:
         d = resource('deployment', name, ns)
         require(any(c['type'] == 'Available' and c['status'] == 'True' for c in d.get('status', {}).get('conditions', [])), name + ' available')
     for name in ['workshop-git-clone', 'workshop-buildah']:
@@ -62,18 +62,30 @@ def platform():
     che = resource('checluster', 'devspaces', 'openshift-operators')
     require(che.get('status', {}).get('chePhase') == 'Active', 'Dev Spaces Active')
     cm = resource('configmap', 'opencode-workspace-config', 'openshift-operators')
-    require(json.loads(cm['data']['opencode.json'])['model'] == 'deepseek/deepseekv4pro', 'Platform pins the Foundry model')
+    require(json.loads(cm['data']['opencode.json'])['model'] == 'deepseek/deepseekv4pro', 'Platform pins the MaaS-published DeepSeek model')
+    for kind, name, ns in [('externalprovider.inference.opendatahub.io', 'foundry', 'llm-serving'),
+                            ('externalmodel.inference.opendatahub.io', 'deepseekv4pro', 'llm-serving'),
+                            ('maasmodelref', 'deepseekv4pro', 'llm-serving')]:
+        require(resource(kind, name, ns).get('status', {}).get('phase') == 'Ready', kind + ' Ready')
+    for kind, name in [('maasauthpolicy', 'deepseekv4pro-access'), ('maassubscription', 'deepseekv4pro-workshop')]:
+        require(resource(kind, name, 'models-as-a-service').get('status', {}).get('phase') == 'Active', kind + ' Active')
+    provider = resource('secret', 'foundry-provider-key', 'llm-serving')
+    workspace = resource('secret', 'ai-provider-openai-api-key', 'openshift-operators')
+    key = base64.b64decode(workspace['data']['OPENAI_API_KEY']).decode()
+    require(key.startswith('sk-oai-') and key != base64.b64decode(provider['data']['api-key']).decode(), 'Workspace has a separate MaaS key, not the Foundry key')
+    require(provider['metadata'].get('labels', {}).get('inference.llm-d.ai/ipp-managed') == 'true', 'Provider key is visible to the inference payload processor')
+    require('controller.devfile.io/mount-to-devworkspace' not in provider['metadata'].get('labels', {}), 'Provider key is not marked for workspace injection')
     completion()
     secret = resource('secret', 'ai-provider-openai-api-key', 'openshift-operators')['data']
     endpoint = base64.b64decode(secret['OPENAI_BASE_URL']).decode().rstrip('/')
     invalid = urllib.request.Request(endpoint + '/chat/completions', data=json.dumps({
         'model': 'deepseekv4pro', 'messages': [{'role': 'user', 'content': 'Hello'}], 'max_completion_tokens': 16,
-    }).encode(), headers={'Content-Type': 'application/json', 'api-key': 'invalid-workshop-key'})
+    }).encode(), headers={'Content-Type': 'application/json', 'Authorization': 'Bearer invalid-workshop-key'})
     try:
         with urllib.request.urlopen(invalid, timeout=30):
-            raise AssertionError('Foundry accepted an invalid API key')
+            raise AssertionError('MaaS accepted an invalid API key')
     except urllib.error.HTTPError as error:
-        require(error.code in (401, 403), 'Foundry rejects an invalid API key')
+        require(error.code in (401, 403), 'MaaS rejects an invalid API key')
 
 
 def speech():
@@ -150,7 +162,7 @@ if __name__ == '__main__':
         sys.exit('FAIL: ' + str(error))
     except urllib.error.HTTPError as error:
         if error.code == 429:
-            sys.exit('FAIL: Foundry HTTP 429. Check the effective tokens/minute limit, allow quota changes to propagate, then retry after the active coding turn.')
+            sys.exit('FAIL: HTTP 429. Check the MaaS subscription allowance and Foundry tokens/minute quota; allow Azure quota changes to propagate before retrying.')
         sys.exit('FAIL: HTTP ' + str(error.code) + '. Check model access or the public application endpoint.')
     except Exception as error:
         # HTTP bodies, subprocess output and Secret contents are deliberately omitted.

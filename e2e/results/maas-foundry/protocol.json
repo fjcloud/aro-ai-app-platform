@@ -1,0 +1,12 @@
+{
+  "catalog": "deepseekv4pro",
+  "missing_key": 401,
+  "invalid_key": 403,
+  "tool_call": "workshop_probe(ARO_MAAS_OK)",
+  "tool_usage": {"prompt_tokens": 299, "completion_tokens": 52, "total_tokens": 351, "audio_prompt_tokens": 0},
+  "request_bytes": 73987,
+  "streaming_chunks": 6,
+  "streaming_done": true,
+  "streaming_usage": {"prompt_tokens": 12308, "total_tokens": 12314, "completion_tokens": 6, "prompt_tokens_details": null, "reasoning_tokens": 0},
+  "streaming_seconds": 1.88
+}

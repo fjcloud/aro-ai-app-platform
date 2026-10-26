@@ -1,6 +1,7 @@
-= Lab 1.1 — Publish DeepSeek on Foundry
+= Lab 1.2 — Publish DeepSeek on Foundry
+:page-aliases: 200-platform/lab_1_gpu_nodepool.adoc
 
-Act 1 starts here. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. Whisper will run separately on one T4 in Lab 1.4; it is the application’s speech model, not OpenCode’s coding model.
+The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. Whisper will run separately on one T4 in Lab 1.4; it is the application’s speech model, not OpenCode’s coding model.
 
 [NOTE]
 ====
@@ -124,4 +125,4 @@ The answer is in `choices[0].message.content`. `state/foundry.env` has no key. L
 
 `state/foundry.env` exists, and the curl returned a sentence. ✓
 
-➡️ Move on to *Lab 1.2*. The endpoint is already live. Do not run `make gpu`.
+➡️ Move on to *Lab 1.3: Publish DeepSeek through MaaS*.

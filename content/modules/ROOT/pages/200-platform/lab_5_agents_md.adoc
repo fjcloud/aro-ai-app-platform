@@ -21,7 +21,7 @@ The ARO transcription template is on its own branch: https://github.com/fjcloud/
 | The project runbook for OpenCode. Generate `main.go` / `go.mod` / `Dockerfile`, then git, ephemeral Git, and `oc`.
 
 | `opencode.json`
-| The template still names the old model. Lab 2.1 overwrites it so the project pin is `deepseek/deepseekv4pro`. The key and base URL stay `$OPENAI_API_KEY` and `$OPENAI_BASE_URL`.
+| The template pins `deepseek/deepseekv4pro`. The key and base URL stay `$OPENAI_API_KEY` and `$OPENAI_BASE_URL`.
 
 | `devfile.yaml`
 | Dev Spaces workspace. Installs the ephemeral Git client.
@@ -69,9 +69,9 @@ Focus on these sections:
 
 image::cicd-gitops.png[Prompt to deployment, align="center"]
 
-== Step 2: Confirm OpenCode is wired to Foundry
+== Step 2: Confirm OpenCode is wired to MaaS
 
-OpenCode is injected from the AI tool registry you applied in Lab 1.3. The *binary* comes from the platform. The platform model pin is the ConfigMap. The *project* file in the template wins once the workspace opens, which is why Lab 2.1 rewrites it.
+OpenCode is injected from the AI tool registry you applied in Lab 1.1. The *binary* comes from the platform. The platform model pin is the ConfigMap. The project and platform files both pin DeepSeek through MaaS. Lab 2.1 checks they agree.
 
 [source,sh,role=execute]
 ----
@@ -79,7 +79,7 @@ oc get configmap opencode-workspace-config -n openshift-operators \
   -o jsonpath='{.data.opencode\.json}' | python3 -m json.tool
 ----
 
-You should see `baseURL` `{env:OPENAI_BASE_URL}`, an `api-key` header, provider name `DeepSeek-V4 Pro`, model id `deepseekv4pro`, and `"model": "deepseek/deepseekv4pro"`.
+You should see `baseURL` `{env:OPENAI_BASE_URL}`, Bearer authentication, provider name `DeepSeek-V4 Pro`, model id `deepseekv4pro`, and `"model": "deepseek/deepseekv4pro"`.
 
 == Step 3: Copy the developer launch URL
 
@@ -107,13 +107,13 @@ When a developer opens that URL, Dev Spaces clones the template, injects the Ope
 | Component | Status
 
 | Foundry deployment `deepseekv4pro`
-| ✅ Global Standard, pay per token
+| ✅ Global Standard, published through OpenShift AI MaaS
 
 | Dev Spaces
 | ✅ Launch URL ready to paste
 
-| Workspace secret
-| ✅ `OPENAI_BASE_URL` ends in `/openai/v1`
+| MaaS model and workspace secret
+| ✅ `OPENAI_BASE_URL` points to `https://maas.<apps-domain>/v1`
 
 | Whisper speech service
 | ✅ Ready on one T4; internal endpoint only

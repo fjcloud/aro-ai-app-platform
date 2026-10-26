@@ -2,7 +2,7 @@
 
 Welcome to the *AI-Powered Developer Platform on ARO* workshop.
 
-The story for today is a Monday at a company that uses a managed coding model and keeps speech inference on its own cluster. This morning the platform team publishes DeepSeek-V4 Pro as a managed Foundry endpoint. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships a browser transcription app from OpenShift Dev Spaces. You wear both hats, then you review token usage, infrastructure costs and cleanup.
+The story for today is a Monday at a company that uses a managed coding model and keeps speech inference on its own cluster. This morning the platform team installs the platform and publishes DeepSeek-V4 Pro on Foundry through OpenShift AI MaaS. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships a browser transcription app from OpenShift Dev Spaces. You wear both hats, then you review token usage, infrastructure costs and cleanup.
 
 
 == Who This Workshop Is For
@@ -12,10 +12,10 @@ The story for today is a Monday at a company that uses a managed coding model an
 | Persona | Role in This Workshop
 
 | *Platform Engineer* (morning)
-| Publishes DeepSeek-V4 Pro on Microsoft Foundry, serves Whisper on one T4 with OpenShift AI, and prepares Dev Spaces, delivery tools and `AGENTS.md`.
+| Publishes DeepSeek-V4 Pro on Microsoft Foundry through MaaS, serves Whisper on one T4 with OpenShift AI, and prepares Dev Spaces, delivery tools and `AGENTS.md`.
 
 | *Developer* (afternoon)
-| Launches OpenShift Dev Spaces, talks to OpenCode backed by that Foundry endpoint, ships a real app through Tekton and Argo CD, then asks the same model to audit the manifests.
+| Launches OpenShift Dev Spaces, talks to OpenCode backed by that MaaS endpoint, ships a real app through Tekton and Argo CD.
 |===
 
 == What You Will Build
@@ -26,7 +26,8 @@ DeepSeek writes the app; Whisper transcribes its audio. Coding prompts and sourc
 
 === Act 1 — Platform
 * *DeepSeek-V4 Pro* on Microsoft Foundry, Global Standard, pay per token
-* *OpenShift Dev Spaces* pointed at that endpoint with one injected key
+* *OpenShift AI Models-as-a-Service* governing the external coding endpoint with a separate API key and token quota
+* *OpenShift Dev Spaces* pointed at MaaS with one injected workshop key
 * *OpenShift AI + KServe + Red Hat AI Inference* serving RedHatAI Whisper Large v3 Turbo INT8 on one NVIDIA T4
 * *AGENTS.md* — project instructions for OpenCode
 * *OpenShift GitOps* (Argo CD) and *OpenShift Pipelines* (Tekton)
@@ -35,7 +36,6 @@ DeepSeek writes the app; Whisper transcribes its audio. Coding prompts and sourc
 * A personal Git repository on *ephemeral Git* (workshop-scoped, no GitHub account)
 * A *Live Transcript* Go app with browser microphone capture, generated live by OpenCode + DeepSeek-V4 Pro
 * Image build and GitOps deploy from git, ephemeral Git, and `oc` — no Ansible, no local Docker
-* Platform rules (limits, probes, SCC, TLS) audited by the same model
 
 === Act 3 — The bill
 * Input and output tokens from the afternoon, priced from the Foundry list rate
@@ -45,7 +45,7 @@ DeepSeek writes the app; Whisper transcribes its audio. Coding prompts and sourc
 
 After completing this workshop, you will understand:
 
-* How a Foundry Global Standard deployment publishes an OpenAI-compatible model for coding, alongside a separate T4 speech model
+* How MaaS publishes an external Foundry model with governed access, alongside a separate T4 speech model
 * How `AGENTS.md` gives the coding agent platform conventions, backed by deployment checks
 * How Dev Spaces + OpenCode is an AI-augmented inner loop with no laptop install
 * How Tekton and Argo CD form a GitOps path from a single repository
@@ -72,15 +72,15 @@ The platform uses cluster-wide resources and the app uses fixed namespace names.
 
 .5+| *1 — Build the platform*
 | 1.1
+| Install the Platform
+| 10 min active / 20–30 min installation
+
+| 1.2
 | Publish DeepSeek on Foundry
 | 15 min
 
-| 1.2
-| Install Platform Operators
-| 5 min active / ~20 min background
-
 | 1.3
-| Hand DeepSeek to Dev Spaces
+| Publish DeepSeek through MaaS
 | 15 min
 
 | 1.4
@@ -91,7 +91,7 @@ The platform uses cluster-wide resources and the app uses fixed namespace names.
 | Hand the Keys (`AGENTS.md` + Dev Spaces URL)
 | 10 min
 
-.3+| *2 — First day*
+.2+| *2 — First day*
 | 2.1
 | Launch Your Dev Space
 | 10 min
@@ -99,10 +99,6 @@ The platform uses cluster-wide resources and the app uses fixed namespace names.
 | 2.2
 | Prompt to Deployment (generate, ship, change)
 | 35 min
-
-| 2.3
-| Audit with OpenCode
-| 10 min
 
 | *3 — The bill*
 | 3.1

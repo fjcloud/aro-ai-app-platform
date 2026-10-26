@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # After DSC dashboard+ogx are Managed:
-# 1) pin UI pods onto the GPU node (workers are CPU-packed)
+# 1) allow UI pods to tolerate the GPU taint if needed
 # 2) enable MaaS / Gen AI studio flags on OdhDashboardConfig
 set -euo pipefail
 
@@ -59,4 +59,4 @@ done
 # deprecated keys and notebookNamespace immutability.
 oc patch odhdashboardconfig odh-dashboard-config -n "$NS" --type=merge --patch-file="${SCRIPT_DIR}/odh-dashboard-config.yaml"
 
-echo "Dashboard GPU-node tolerations and MaaS UI flags applied."
+echo "Dashboard optional GPU-node tolerations and MaaS UI flags applied."

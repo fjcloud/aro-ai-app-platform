@@ -1,0 +1,15 @@
+apiVersion: inference.opendatahub.io/v1alpha1
+kind: ExternalModel
+metadata:
+  name: deepseekv4pro
+  namespace: llm-serving
+  annotations:
+    openshift.io/display-name: DeepSeek-V4 Pro (Microsoft Foundry)
+spec:
+  externalProviderRefs:
+    - ref:
+        name: foundry
+      targetModel: deepseekv4pro
+      apiFormat: openai-chat
+      path: /openai/v1/chat/completions
+      weight: 100

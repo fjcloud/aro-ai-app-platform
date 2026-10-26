@@ -1,157 +1,99 @@
-= Lab 1.3 — Hand DeepSeek to Dev Spaces
+= Lab 1.3 — Publish DeepSeek through MaaS
 
-Operators are still installing. Wait until Dev Spaces, GitOps, and Pipelines are up, then store the Foundry endpoint where OpenCode will read it. Developers get one coding base URL and one key. The application uses a separate internal Whisper service, configured in Lab 1.4.
+Give developers the same access pattern whether a model runs on the cluster or at a cloud provider. Register DeepSeek on Foundry as an *external model* in OpenShift AI, then publish it through *Models-as-a-Service*: one HTTPS endpoint, a MaaS API key and a token quota.
 
 [NOTE]
 ====
-*Estimated time:* 15 minutes +
 *Persona:* Platform Engineer +
-*Needs:* `state/foundry.env` from Lab 1.1, in this repository
+*Time:* ~15 minutes +
+*Needs:* The platform from Lab 1.1 and `state/foundry.env` from Lab 1.2.
 ====
 
-== Why a managed endpoint
+[IMPORTANT]
+====
+https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/html/govern_llm_access_with_models-as-a-service/deploy-and-manage-models-as-a-service[External models for MaaS] is a *Technology Preview* in OpenShift AI 3.5. This workshop tests that feature; it does not imply a production support guarantee. Inference still runs on Microsoft Foundry: coding prompts and source context leave the cluster, and Azure token charges still apply.
+====
 
-The coding model runs on Foundry. The cluster hosts the editor, build and delivery tools, and the separate Whisper speech service. OpenCode sends coding prompts and source context to the managed endpoint.
+== The two credentials
 
-[cols="1,2", options="header"]
-|===
-| What the developer sees | What it is
-
-| `$OPENAI_BASE_URL`
-| `https://<account>.cognitiveservices.azure.com/openai/v1`
-
-| `$OPENAI_API_KEY`
-| The Foundry account key, injected into every Dev Spaces workspace
-
-| Model id
-| `deepseekv4pro` — the deployment name from Lab 1.1
-|===
-
-Same JSON as a cloud OpenAI chat call, different host:
-
-[source,sh]
+[source,text]
 ----
-curl "${OPENAI_BASE_URL}/chat/completions" \
-  -H "api-key: $OPENAI_API_KEY" \
+Dev Spaces / OpenCode
+  └─ HTTPS + MaaS key → OpenShift AI MaaS gateway
+                          └─ HTTPS + provider key → DeepSeek on Foundry
+----
+
+The Foundry account key stays in Secret `foundry-provider-key` in `llm-serving`. Workspaces receive only a separate MaaS key and the cluster gateway URL. MaaS authenticates the caller and injects the provider credential for the Azure request.
+
+For this single-participant cluster, the workshop grants `system:authenticated` access and injects one workshop key. A shared production platform would scope groups and subscriptions and issue individual keys.
+
+== Step 1: Register the Foundry provider
+
+Run from the workshop repository in the *bastion terminal*. Keep shell tracing (`set -x`) off.
+
+[source,sh,role=execute]
+----
+bash scripts/configure-coding-provider.sh
+oc get externalprovider.inference.opendatahub.io foundry -n llm-serving
+----
+
+The helper reads the existing Azure key without printing it, stores it in `llm-serving`, and creates an `ExternalProvider` with `provider: azure`, the account hostname and a reference to that Secret. It uses the endpoint saved in Lab 1.2; you do not copy a URL or key by hand.
+
+== Step 2: Publish the model, access policy and subscription
+
+[source,sh,role=execute]
+----
+oc apply -k deploy/coding
+oc wait externalmodel.inference.opendatahub.io/deepseekv4pro -n llm-serving \
+  --for=jsonpath='{.status.phase}'=Ready --timeout=300s
+oc wait maasmodelref/deepseekv4pro -n llm-serving \
+  --for=jsonpath='{.status.phase}'=Ready --timeout=300s
+oc get maasauthpolicy,maassubscription -n models-as-a-service
+----
+
+Inspect `deploy/coding/external-model.yaml`: the client model is `deepseekv4pro`, the upstream deployment has the same name, and the Azure request path is `/openai/v1/chat/completions`. `apiFormat: openai-chat` keeps the OpenAI Chat Completions contract used by OpenCode.
+
+`MaaSModelRef` publishes the external model. `MaaSAuthPolicy` grants access; `MaaSSubscription` sets a shared *5 million tokens per 24 hours* workshop allowance. The quota controls consumption, not Azure prices or infrastructure charges. It is separate from Foundry’s tokens-per-minute limit.
+
+== Step 3: Give Dev Spaces a MaaS key
+
+The bastion must use an OpenShift user token, as described in Act 0. A certificate-only `system:admin` login cannot supply the token for the MaaS key API.
+
+[source,sh,role=execute]
+----
+bash deploy/coding/mint-workshop-key.sh
+----
+
+This creates a key for subscription `deepseekv4pro-workshop`, valid for 24 hours, and stores it in the labelled Dev Spaces Secret `ai-provider-openai-api-key`. The key is not printed. Start workspaces after this step; restart existing workspaces to refresh their injected environment.
+
+== Step 4: Test the governed endpoint
+
+Load only the Dev Spaces credential into the shell, then call the gateway:
+
+[source,sh,role=execute]
+----
+OPENAI_BASE_URL=$(oc get secret ai-provider-openai-api-key -n openshift-operators \
+  -o jsonpath='{.data.OPENAI_BASE_URL}' | base64 -d)
+OPENAI_API_KEY=$(oc get secret ai-provider-openai-api-key -n openshift-operators \
+  -o jsonpath='{.data.OPENAI_API_KEY}' | base64 -d)
+
+curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"model": "deepseekv4pro", "messages": [{"role": "user", "content": "Hello"}]}'
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}'
+unset OPENAI_API_KEY
 ----
 
-== ✅ Checkpoint: Operators Ready
+The URL is `https://maas.<apps-domain>/v1`. Clients send a Bearer MaaS key; they never send the Foundry `api-key` header. An invalid MaaS key must be rejected before an Azure inference request is made.
 
-Lab 1.2 is still running in the background. Wait here before you create Dev Spaces. Re-apply the operator manifests if needed, wait for their Deployments, then install the Tekton `git-clone` and `buildah` tasks after their CRDs exist.
+== Inspect it in OpenShift AI
 
-[source,sh,role=execute]
-----
-oc apply -f deploy/operators/devspaces-subscription.yaml
-oc apply -f deploy/operators/gitops-namespace.yaml \
-  -f deploy/operators/gitops-operatorgroup.yaml \
-  -f deploy/operators/gitops-subscription.yaml
-oc apply -f deploy/operators/pipelines-subscription.yaml
+Open *Red Hat OpenShift AI* from the OpenShift application launcher:
 
-wait_deploy() {
-  local ns=$1 dep=$2
-  until oc get deploy/"$dep" -n "$ns" >/dev/null 2>&1; do sleep 5; done
-  oc wait deploy/"$dep" -n "$ns" --for=condition=Available --timeout=600s
-}
+. In *AI hub → Models → External models*, choose the `llm-serving` project and inspect DeepSeek and its provider.
+. In *Settings → MaaS governance*, inspect `deepseekv4pro-workshop` and its token allowance.
+. In *Gen AI studio → AI asset endpoints*, find the published model and its endpoint.
 
-wait_deploy openshift-operators devspaces-operator
-wait_deploy openshift-gitops openshift-gitops-server
-wait_deploy openshift-pipelines tekton-pipelines-controller
-oc apply -f deploy/operators/tekton-tasks.yaml
-----
+The same MaaS catalog and access pattern can publish local and external models. Whisper remains an internal application service, configured next; it is not the coding model.
 
-.Expected Output
-[source,text,options=nowrap]
-----
-deployment.apps/devspaces-operator condition met
-deployment.apps/openshift-gitops-server condition met
-deployment.apps/tekton-pipelines-controller condition met
-----
-
-== Step 1: Create Dev Spaces
-
-This creates the Che cluster, the OpenCode tool registry, and the workspace model pin. Whisper’s GPU and serving stack are configured separately in Lab 1.4.
-
-[source,sh,role=execute]
-----
-oc apply -f deploy/instances/checluster.yaml \
-  -f deploy/instances/ai-tool-registry.yaml \
-  -f deploy/instances/opencode-workspace-config.yaml \
-  -f deploy/instances/vscode-editor-configurations.yaml
-
-until oc get checluster/devspaces -n openshift-operators >/dev/null 2>&1; do sleep 5; done
-oc wait checluster/devspaces \
-  -n openshift-operators \
-  --for=jsonpath='{.status.chePhase}'=Active \
-  --timeout=900s
-----
-
-.Expected Output
-[source,text,options=nowrap]
-----
-checluster.org.eclipse.che/devspaces condition met
-----
-
-Dashboard: the `cheURL` printed in Lab 1.5.
-
-== Step 2: Store the Foundry key for every workspace
-
-Run this in the same repository as Lab 1.1. The key is written into Secret `ai-provider-openai-api-key` and is not printed.
-
-[source,sh,role=execute]
-----
-set -a
-source state/foundry.env
-set +a
-
-KEY=$(az rest --method post \
-  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
-  --query key1 -o tsv)
-
-oc create secret generic ai-provider-openai-api-key \
-  -n openshift-operators \
-  --from-literal=OPENAI_API_KEY="${KEY}" \
-  --from-literal=OPENAI_BASE_URL="${ENDPOINT}openai/v1" \
-  --dry-run=client -o yaml | oc apply -f -
-
-oc label secret ai-provider-openai-api-key -n openshift-operators \
-  app.kubernetes.io/part-of=che.eclipse.org \
-  app.kubernetes.io/component=workspaces-config \
-  controller.devfile.io/mount-to-devworkspace=true \
-  controller.devfile.io/watch-secret=true \
-  che.eclipse.org/ai-provider-id=opencodeai-opencode \
-  --overwrite
-oc annotate secret ai-provider-openai-api-key -n openshift-operators \
-  controller.devfile.io/mount-as=env \
-  controller.devfile.io/mount-on-start=true \
-  --overwrite
-
-unset KEY
-oc get secret ai-provider-openai-api-key -n openshift-operators \
-  -o jsonpath='{.data.OPENAI_BASE_URL}' | base64 -d; echo
-----
-
-The printed line is the base URL only. It ends in `/openai/v1`.
-
-== ✅ Checkpoint
-
-[source,sh,role=execute]
-----
-set -a
-source state/foundry.env
-set +a
-KEY=$(az rest --method post \
-  --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
-  --query key1 -o tsv)
-curl --fail-with-body -sS --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
-  -H "Content-Type: application/json" \
-  -H "api-key: ${KEY}" \
-  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' \
-  | python3 -c 'import sys,json; print(json.load(sys.stdin)["choices"][0]["message"]["content"])'
-unset KEY
-----
-
-You have a live DeepSeek deployment and a Dev Spaces secret that points at it. ✓
-
-➡️ Move to *Lab 1.4: Serve Whisper on one T4*.
+➡️ Move on to *Lab 1.4: Serve Whisper on one T4*.

@@ -186,4 +186,6 @@ Open the URL, record another sentence, stop, and copy the transcript. Paste it i
 | Pods pull `$\{APP_NAME}:latest`
 |===
 
-➡️ Move on to *Lab 2.3: Audit with OpenCode*.
+Act 2 is complete: you generated, built, deployed and updated your application.
+
+➡️ Move on to *Act 3: The bill*.

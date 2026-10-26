@@ -34,27 +34,25 @@ An idle Global Standard deployment has no token usage charge. Its account key re
 
 == Part 1: Read one usage object
 
-In the Dev Space terminal, `$OPENAI_BASE_URL` and `$OPENAI_API_KEY` are already set. In the platform shell, load them from Lab 1.1 first:
+In the Dev Spaces terminal, `$OPENAI_BASE_URL` and `$OPENAI_API_KEY` already point to MaaS. If you use the bastion terminal, load the injected MaaS credential first:
 
 [source,sh,role=execute]
 ----
 if [[ -z "${OPENAI_BASE_URL:-}" ]]; then
-  cd "$HOME/aro-ai-app-platform"
-  set -a
-  source state/foundry.env
-  set +a
-  export OPENAI_BASE_URL="${ENDPOINT}openai/v1"
-  export OPENAI_API_KEY=$(az rest --method post \
-    --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
-    --query key1 -o tsv)
+  OPENAI_BASE_URL=$(oc get secret ai-provider-openai-api-key -n openshift-operators \
+    -o jsonpath='{.data.OPENAI_BASE_URL}' | base64 -d)
+  OPENAI_API_KEY=$(oc get secret ai-provider-openai-api-key -n openshift-operators \
+    -o jsonpath='{.data.OPENAI_API_KEY}' | base64 -d)
 fi
 
 curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Content-Type: application/json" \
-  -H "api-key: $OPENAI_API_KEY" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' \
   | python3 -m json.tool
 ----
+
+MaaS reports the same upstream usage while enforcing the workshop subscription allowance. In OpenShift AI, inspect *Settings → MaaS governance → deepseekv4pro-workshop* to distinguish that allowance from Azure billing.
 
 Find `usage`. A typical short reply looks like this:
 
@@ -97,7 +95,7 @@ Use recorded OpenCode usage if available. Otherwise use these illustrative, unca
 | 20 000 in, 2 000 out
 | about $0.04
 
-| A full generate-and-audit afternoon, about 30 turns
+| A full coding afternoon, about 30 turns
 | 600 000 in, 60 000 out
 | about $1.25
 |===
@@ -106,7 +104,7 @@ Whisper’s T4 worker, the additional CPU worker (if added), and storage are not
 
 == Part 3: Facilitator cleanup — coding deployment
 
-After *all participants* finish using OpenCode, the facilitator runs this in the *bastion terminal*, in the workshop repository. On a single-user assignment, you perform this step yourself. It deletes only the coding deployment and its injection Secret; it leaves the Foundry account and its keys in place. Do not remove resources used by another workshop.
+After *all participants* finish using OpenCode, the facilitator runs this in the *bastion terminal*, in the workshop repository. On a single-user assignment, you perform this step yourself. It revokes the injected MaaS key, removes the external-model publication and provider Secret, and deletes the Azure coding deployment. It leaves the Foundry account and its keys in place. Do not remove resources used by another workshop.
 
 [source,sh,role=execute]
 ----
@@ -114,6 +112,19 @@ cd "$HOME/aro-ai-app-platform"
 set -a
 source state/foundry.env
 set +a
+
+MAAS_HOST=$(oc get gateway maas-default-gateway -n openshift-ingress \
+  -o jsonpath='{.spec.listeners[0].hostname}')
+KEY_ID=$(oc get secret ai-provider-openai-api-key -n openshift-operators \
+  -o jsonpath='{.metadata.annotations.workshop\.fjcloud\.io/maas-key-id}')
+if [[ -n "$KEY_ID" ]]; then
+  curl --fail-with-body -sS --max-time 60 -X DELETE \
+    "https://${MAAS_HOST}/maas-api/v1/api-keys/${KEY_ID}" \
+    -H "Authorization: Bearer $(oc whoami -t)"
+fi
+oc delete externalprovider.inference.opendatahub.io foundry -n llm-serving --ignore-not-found
+oc delete secret foundry-provider-key -n llm-serving --ignore-not-found
+oc delete -k deploy/coding --ignore-not-found
 
 az rest --method delete \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}"
@@ -141,7 +152,7 @@ Wait for the labelled workers to disappear and check the Azure resource group. T
 
 * You can distinguish coding token charges from GPU, CPU and disk charges.
 * You priced a response from its `usage`, or labelled the worked example as an estimate.
-* After everyone finishes, the facilitator confirms the coding deployment and labelled speech workers are removed, and checks disk reclamation in Azure. Existing workspaces can retain injected credentials until stopped; do not reuse this demo key for another environment.
+* After everyone finishes, the facilitator confirms the coding deployment and labelled speech workers are removed, and checks disk reclamation in Azure. Existing workspaces can retain injected credentials until stopped. The revoked MaaS key cannot be reused; any additional keys expire within 24 hours or can be revoked in the MaaS dashboard.
 
 The Go app’s `/healthz` can stay healthy after model cleanup, but transcription then fails because Whisper is gone. Test the app *before* cleanup. Never delete the assigned RHDP cluster or its original CPU workers.
 

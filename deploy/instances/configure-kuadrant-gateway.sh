@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Kuadrant registers Istio reconcilers only if EnvoyFilter CRDs exist when the
-# operator *process* starts. On OpenShift 4.22 the Gateway API implementation
+# operator *process* starts. On OpenShift 4.21+ the Gateway API implementation
 # (GatewayClass openshift-default → istiod) creates those CRDs after
 # deploy/instances — the RHCL operator from Lab 1.2 is already running.
 # Recycle the operator pod so AuthPolicy is not stuck MissingDependency.

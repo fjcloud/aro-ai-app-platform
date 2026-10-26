@@ -265,27 +265,32 @@ class Board:
 
 
 def architecture() -> None:
-    b = Board(1280, 850)
+    b = Board(1280, 900)
     b.frame()
     b.title("Two model paths on ARO")
-    b.band((36, 110, 1244, 360))
-    b.text((56, 125), "Coding — prompts and source context", b.display(SECTION), fill=RED)
-    b.card((56, 185, 550, 330), "Dev Spaces + OpenCode", "AGENTS.md guides generation")
-    b.card((730, 185, 1224, 330), "DeepSeek / Foundry", "Managed coding endpoint · token charges")
-    b.arrow((550, 255), (730, 255))
-    b.caption_stack(640, 208, ["HTTPS"])
-    b.band((36, 390, 1244, 700))
-    b.text((56, 405), "Application — microphone audio", b.display(SECTION), fill=RED)
-    boxes = b.columns(3, 475, 665, left=56, right=1224, gap=36)
+    b.band((36, 110, 1244, 410))
+    b.text((56, 125), "Coding — governed access to an external model", b.display(SECTION), fill=RED)
+    boxes = b.columns(3, 185, 385, left=56, right=1224, gap=36)
+    for box, (title, sub) in zip(boxes, [
+        ("Dev Spaces + OpenCode", "MaaS key · AGENTS.md"),
+        ("OpenShift AI MaaS", "API keys · token quota"),
+        ("DeepSeek / Foundry", "External endpoint · Azure key"),
+    ]):
+        b.card(box, title, sub, title_size=28, body_size=20)
+    for left, right in zip(boxes, boxes[1:]):
+        b.arrow((left[2], 280), (right[0], 280), head=12)
+    b.band((36, 440, 1244, 755))
+    b.text((56, 455), "Application — microphone audio stays on ARO", b.display(SECTION), fill=RED)
+    boxes = b.columns(3, 520, 725, left=56, right=1224, gap=36)
     for box, (title, sub) in zip(boxes, [
         ("Browser microphone", "Independent short WAV clips"),
         ("Live Transcript", "Go backend · Tekton + Argo CD"),
         ("Whisper INT8", "OpenShift AI + Red Hat vLLM · one T4"),
     ]):
         b.card(box, title, sub)
-    b.arrow((boxes[0][2], 565), (boxes[1][0], 565), head=12)
-    b.arrow((boxes[1][2], 565), (boxes[2][0], 565), head=12)
-    b.footer("DeepSeek writes code. Whisper transcribes audio inside the cluster.")
+    for left, right in zip(boxes, boxes[1:]):
+        b.arrow((left[2], 615), (right[0], 615), head=12)
+    b.footer("Coding goes to Foundry through MaaS. Speech stays inside the cluster.")
     b.save(OUT_DIR / "architecture-overview.png")
 
 
@@ -356,7 +361,7 @@ def cicd() -> None:
     chip_w = 240
     call = (mid_x - chip_w / 2, 118, mid_x + chip_w / 2, 200)
     b.rounded(call, radius=8, fill=WHITE, outline=LINE, width=1.5)
-    b.text((mid_x, 140), "DeepSeek / Foundry", b.display(24), fill=BLACK, anchor="mt")
+    b.text((mid_x, 140), "DeepSeek via MaaS", b.display(24), fill=BLACK, anchor="mt")
     b.dashed((mid_x, y0), (mid_x, call[3]), fill=GRAY, width=2)
     b.arrow((mid_x, y0), (mid_x, call[3] + 1), fill=GRAY, width=2, head=10)
 

@@ -1,6 +1,6 @@
 = Lab 1.4 — Serve Whisper on one T4
 
-Keep DeepSeek on Foundry for OpenCode. Add a separate speech model for the application: *RedHatAI Whisper Large v3 Turbo INT8*, served by *Red Hat AI Inference 3.5* on *OpenShift AI 3.5 / KServe*, using one NVIDIA T4.
+Keep DeepSeek on Foundry, accessed through MaaS, for OpenCode. Add a separate speech model for the application: *RedHatAI Whisper Large v3 Turbo INT8*, served by *Red Hat AI Inference 3.5* on *OpenShift AI 3.5 / KServe*, using one NVIDIA T4.
 
 [NOTE]
 ====
@@ -48,38 +48,6 @@ az vm list-skus --location "$REGION" --subscription "$SUBSCRIPTION" \
 
 The SKU lookup can take a few minutes. A new D8 CPU worker needs 8 free DSv3 vCPUs; a new T4 worker needs 8 free NCasT4_v3 vCPUs. Creating both needs 16 free regional vCPUs. The chosen GPU zone must be listed and unrestricted; quota does not guarantee available VM capacity.
 
-== Add one CPU worker when needed
-
-Three small D4 workers can run out of schedulable CPU with OpenShift AI, Dev Spaces and Tekton. If more headroom is needed, add one `Standard_D8s_v3` worker. Choose a zone containing an original CPU MachineSet. An existing Dev Spaces PVC requires CPU capacity in its own zone; adapt `CPU_ZONE=3` to the PV table above. Skip this step if the cluster already has enough capacity.
-
-[source,sh,role=execute]
-----
-CPU_ZONE=3
-CPU_TEMPLATE=$(oc get machinesets -n openshift-machine-api -o json |
-  jq -er --arg zone "$CPU_ZONE" '
-    [.items[] | select(.spec.template.spec.providerSpec.value.zone == $zone)
-     | select(.spec.template.spec.providerSpec.value.vmSize | startswith("Standard_D"))]
-    | sort_by(.metadata.name) | .[0].metadata.name // error("No CPU template in this zone")
-  ')
-CPU_POOL="${INFRA}-speech-cpu-${REGION}${CPU_ZONE}"
-
-oc get machineset "$CPU_TEMPLATE" -n openshift-machine-api -o json | \
-  jq --arg name "$CPU_POOL" '
-    del(.status)
-    | .metadata = {name: $name, namespace: "openshift-machine-api",
-        labels: {"workshop.fjcloud.io/speech-capacity": "true"}}
-    | .spec.replicas = 1
-    | .spec.selector.matchLabels["machine.openshift.io/cluster-api-machineset"] = $name
-    | .spec.template.metadata.labels["machine.openshift.io/cluster-api-machineset"] = $name
-    | .spec.template.spec.providerSpec.value.vmSize = "Standard_D8s_v3"
-  ' | oc create -f -
-
-oc wait machineset/"$CPU_POOL" -n openshift-machine-api \
-  --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
-----
-
-The new MachineSet inherits the cluster’s image, subnet, disks and bootstrap configuration. The original pools are unchanged. `replicas = 1` creates one additional worker, with its own hourly cost. Repeating `oc create` reports *AlreadyExists* for the same pool.
-
 == Step 1: Add one T4 worker
 
 Use `Standard_NC8as_T4_v3`: one 16 GB T4, 8 vCPUs and 56 GiB RAM. Set `GPU_ZONE` to an available zone from the Azure output above that also has an original CPU MachineSet. The GPU zone may differ from the Dev Spaces PVC zone.
@@ -116,31 +84,14 @@ oc get nodes -l workshop.fjcloud.io/gpu=t4
 
 The taint reserves the worker for workloads that explicitly tolerate `nvidia.com/gpu=present:NoSchedule`. Node readiness confirms provisioning; the NVIDIA operator in Step 2 makes the GPU available to pods. Do not substitute a four-T4 `NC64` size: requesting one GPU in a pod still incurs the cost of the entire VM.
 
-== Step 2: Install the speech operators
+== Step 2: Check GPU discovery and the driver
+
+All operators and their instances were installed in Lab 1.1. The NVIDIA operator now configures the new T4 node.
+
+Inspect GPU discovery and the driver:
 
 [source,sh,role=execute]
 ----
-oc apply -f deploy/operators/cert-manager-namespace.yaml \
-  -f deploy/operators/cert-manager-operatorgroup.yaml \
-  -f deploy/operators/cert-manager-subscription.yaml
-oc apply -f deploy/operators/rhoai-namespace.yaml \
-  -f deploy/operators/rhoai-operatorgroup.yaml \
-  -f deploy/operators/rhoai-subscription.yaml
-oc apply -f deploy/operators/nfd-namespace.yaml \
-  -f deploy/operators/nfd-operatorgroup.yaml \
-  -f deploy/operators/nfd-subscription.yaml
-oc apply -f deploy/operators/nvidia-namespace.yaml \
-  -f deploy/operators/nvidia-operatorgroup.yaml \
-  -f deploy/operators/nvidia-subscription.yaml
-oc get subscription -A
-----
-
-Wait for these operators to show *Succeeded* under *Ecosystem → Installed Operators*. Then configure GPU discovery and the driver:
-
-[source,sh,role=execute]
-----
-oc apply -f deploy/instances/nfd-instance.yaml
-oc apply -f deploy/instances/nvidia-clusterpolicy.yaml
 oc get clusterpolicy gpu-cluster-policy
 oc get nodes -l workshop.fjcloud.io/gpu=t4 \
   -o 'custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu'
@@ -148,19 +99,17 @@ oc get nodes -l workshop.fjcloud.io/gpu=t4 \
 
 Continue when `GPU` is `1`. A Ready node alone does not prove that its GPU driver is ready.
 
-== Step 3: Enable OpenShift AI model serving
+== Step 3: Deploy the speech model
 
 [source,sh,role=execute]
 ----
-oc apply -f deploy/instances/rhoai-dsci.yaml
-oc apply -f deploy/speech/rhoai-dsc.yaml
 oc wait dsc/default-dsc --for=condition=Ready --timeout=900s
 oc apply -k deploy/speech
 oc wait inferenceservice/whisper -n speech-serving \
   --for=condition=Ready --timeout=1800s
 ----
 
-This enables the dashboard and KServe. It does not deploy the historical Qwen/MaaS stack. Do not apply `deploy/instances` or `deploy/inference` as a whole.
+The platform DataScienceCluster from Lab 1.1 already enables KServe and MaaS. Keep that configuration: do not apply the old speech-only `deploy/speech/rhoai-dsc.yaml`, which disables MaaS. The historical Qwen manifests in `deploy/inference` are not used.
 
 [source,sh,role=execute]
 ----

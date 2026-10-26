@@ -1,0 +1,9 @@
+{
+  "text": " Hello, this workshop uses OpenShift AI for speech transcription.",
+  "usage": {
+    "type": "duration",
+    "seconds": 5
+  },
+  "client": "real Dev Spaces workspace",
+  "endpoint": "internal Whisper KServe service"
+}

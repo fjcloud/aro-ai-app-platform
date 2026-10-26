@@ -2,10 +2,10 @@
 
 You used two models for two different jobs:
 
-* *DeepSeek on Foundry* powered OpenCode in Dev Spaces.
+* *DeepSeek on Foundry*, published through OpenShift AI MaaS, powered OpenCode in Dev Spaces.
 * *Whisper on one T4* transcribed the application’s audio through OpenShift AI, KServe and Red Hat AI Inference.
 
-The Go application captured microphone audio in the browser, sent short WAV clips through its backend, and displayed the transcript. Tekton built the image; your project’s Argo CD deployed it. The model service stayed inside the cluster.
+The Go application captured microphone audio in the browser, sent short WAV clips through its backend, and displayed the transcript. Tekton built the image; your project’s Argo CD deployed it. Whisper stayed inside the cluster. Coding requests passed through MaaS to Foundry; workspaces received a MaaS key instead of the Azure account key.
 
 This is *near-real-time transcription*: results arrive after each short clip. Whisper is not a native continuous streaming model. Test accents, background noise, long sentences and slow networks before using this pattern beyond a workshop.
 

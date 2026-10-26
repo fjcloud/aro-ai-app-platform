@@ -1,0 +1,16 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSAuthPolicy
+metadata:
+  name: deepseekv4pro-access
+  namespace: models-as-a-service
+  annotations:
+    openshift.io/display-name: DeepSeek-V4 Pro workshop access
+    openshift.io/description: All authenticated users can call DeepSeek-V4 Pro through MaaS
+spec:
+  modelRefs:
+    - name: deepseekv4pro
+      namespace: llm-serving
+  subjects:
+    groups:
+      - name: system:authenticated
+    users: []

@@ -1,6 +1,6 @@
 # ARO workshop validation
 
-Follow Acts 0–3 on the assigned ARO environment, including the real Dev Spaces browser session, OpenCode plan/build/change/audit prompts, Tekton builds, and personal Argo CD. These checks verify the resulting resources; they do not replace the participant exercises.
+Follow Acts 0–3 on the assigned ARO environment, including the real Dev Spaces browser session, OpenCode plan/build/change prompts, Tekton builds, and personal Argo CD. These checks verify the resulting resources; they do not replace the participant exercises.
 
 Run from the bastion with `oc` authenticated to the assigned cluster:
 
@@ -12,9 +12,9 @@ bash e2e/usage-run.sh
 
 | Check | Evidence |
 |---|---|
-| Platform | Ready workers, cluster-admin, Dev Spaces / GitOps / Pipelines, workshop Tasks, Foundry configuration, real completion |
-| Developer | Latest Tekton build Succeeded, personal Application Synced / Healthy, public HTTPS app and health endpoint, transcript copy/export, resource / probe / security / TLS audit |
-| Usage | Real Foundry response with input and output token counts, before the Act 3 deployment deletion |
+| Platform | Ready workers, cluster-admin, Dev Spaces / GitOps / Pipelines, workshop Tasks, MaaS external provider/model/catalog, separate workspace key, real Foundry completion |
+| Developer | Latest Tekton build Succeeded, personal Application Synced / Healthy, public HTTPS app and health endpoint, transcript copy/export, independent resource / probe / security / TLS checks |
+| Usage | Real Foundry response through MaaS with input and output token counts, before the Act 3 deployment deletion |
 
 The scripts use Python 3 and `oc`. They print no credentials, create no cluster resources, and do not mint or rotate keys. Platform and usage checks each make one billable model call. `APP_NAME` defaults to `live-transcript`; `EXPECT_UPDATED_APP=true` checks the Copy transcript exercise.
 
@@ -22,7 +22,7 @@ To also verify the generated source, local Go build and pushed Git revision in t
 
 For browser checks, launch Chromium with `--use-mock-keychain`. Verify catalog login in the published Cloud Terminal, the embedded WeTTY shell, OpenShift login, the Dev Spaces factory and editor, the public app, and the personal Argo CD console.
 
-At the end, follow Lab 3.1 to delete only the Foundry deployment created for the workshop. RHDP owns the assigned cluster and its lifetime. The older cleanup scripts predate the Foundry flow and are not part of these validation commands.
+At the end, follow Lab 3.1 to revoke the injected MaaS key, remove the external-model publication and delete the workshop Foundry deployment. RHDP owns the assigned cluster and its lifetime. The older cleanup scripts predate the Foundry flow and are not part of these validation commands.
 
 [Full live validation and final environment state](VALIDATION.md) records the 2026-10-22 run on ARO 4.21.22.
 
@@ -78,3 +78,17 @@ Single-GPU model trials, including Bonsai 2 and cyankiwi models, are recorded in
 ## Deployment image regression
 
 See [image contract validation](IMAGE-CONTRACT-VALIDATION.md) for the placeholder regression, failing/passing Tekton cases, and the successful build and application rollout on `natfzu`.
+
+## External Foundry model through MaaS
+
+See [the live validation on mnzq5](MAAS-FOUNDRY-VALIDATION.md). All operators are now installed in Lab 1.1. Lab 1.2 creates Foundry; Lab 1.3 registers the external provider/model and injects a separate MaaS key. `deploy/coding` is the active coding path; `deploy/inference` contains the historical local Qwen experiment.
+
+```sh
+python3 -m unittest discover -s e2e -p 'test_*.py'
+python3 e2e/maas-protocol.py
+python3 e2e/maas-quota.py
+```
+
+The protocol probe makes billable calls for tool use and streaming with a request larger than 16 KiB. It also checks catalog discovery and missing/invalid-key rejection. The quota probe requires an OpenShift user token, creates a named temporary subscription and short-lived key, and revokes/deletes both in `finally`; it refuses to overwrite an existing validation subscription. Quota updates are asynchronous: this is a rate-limit test, not a guarantee against overshoot or a financial spending cap.
+
+OpenCode’s audit exercise has been removed from the participant journey on ARO and ROSA. Resource assertions in the validation scripts remain independent automated checks; historical reports describe the older flow.

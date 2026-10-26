@@ -3,10 +3,8 @@
 # ConfigMap-mount files under that path: kubelet creates the parents as root:root
 # and the workspace user gets EACCES. XDG_* below keeps config/state on the home PVC.
 #
-# OpenCode calls the Foundry deployment deepseekv4pro. Lab 1.3 writes Secret
-# ai-provider-openai-api-key (OPENAI_API_KEY + OPENAI_BASE_URL). The base URL
-# is https://<account>.cognitiveservices.azure.com/openai/v1. The api-key
-# header is what that endpoint accepts.
+# OpenCode calls DeepSeek through MaaS. Only the gateway URL and a MaaS key
+# enter workspaces; the Foundry provider key stays in llm-serving.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -50,9 +48,6 @@ data:
           "options": {
             "baseURL": "{env:OPENAI_BASE_URL}",
             "apiKey": "{env:OPENAI_API_KEY}",
-            "headers": {
-              "api-key": "{env:OPENAI_API_KEY}"
-            },
             "chunkTimeout": 120000,
             "timeout": 600000
           },
@@ -80,9 +75,6 @@ data:
           "options": {
             "baseURL": "{env:OPENAI_BASE_URL}",
             "apiKey": "{env:OPENAI_API_KEY}",
-            "headers": {
-              "api-key": "{env:OPENAI_API_KEY}"
-            },
             "chunkTimeout": 120000,
             "timeout": 600000
           },
