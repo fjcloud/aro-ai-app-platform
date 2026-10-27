@@ -1,0 +1,103 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: d3-native
+  namespace: decision-serving
+  labels:
+    opendatahub.io/dashboard: 'true'
+  annotations:
+    openshift.io/display-name: "Decision 3.0 native \xB7 T4 FP16"
+spec:
+  multiModel: false
+  supportedModelFormats:
+  - name: decision3
+    autoSelect: true
+  containers:
+  - command:
+    - python3
+    - -m
+    - vllm_srun.cli
+    - serve
+    - vllm-sr/d3-mini
+    - --device
+    - cuda:0
+    - --dtype
+    - float16
+    - --cache-dir
+    - /cache/hub
+    - --offline
+    - --threads
+    - '4'
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8080'
+    - --max-num-seqs
+    - '1'
+    - --max-num-batched-tokens
+    - '4096'
+    - --media-workers
+    - '0'
+    - --result-cache-entries
+    - '0'
+    - --load-attempts
+    - '1'
+    env:
+    - name: HOME
+      value: /tmp
+    - name: HF_HOME
+      value: /cache/hf
+    - name: HF_HUB_CACHE
+      value: /cache/hub
+    - name: XDG_CACHE_HOME
+      value: /cache/xdg
+    - name: HF_HUB_OFFLINE
+      value: '1'
+    - name: OMP_NUM_THREADS
+      value: '4'
+    - name: TRITON_CACHE_DIR
+      value: /cache/triton
+    image: image-registry.openshift-image-registry.svc:5000/live-transcript-build/decision-runtime:latest
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health/live
+        port: 8080
+        scheme: HTTP
+      periodSeconds: 30
+      successThreshold: 1
+      timeoutSeconds: 5
+    name: kserve-container
+    ports:
+    - containerPort: 8080
+      name: http
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health
+        port: 8080
+        scheme: HTTP
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 3
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    startupProbe:
+      failureThreshold: 90
+      httpGet:
+        path: /health/live
+        port: 8080
+        scheme: HTTP
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
