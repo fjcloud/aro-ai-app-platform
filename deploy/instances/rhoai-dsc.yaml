@@ -26,6 +26,8 @@ spec:
       managementState: Removed
     llamastackoperator:
       managementState: Removed
+    mlflowoperator:
+      managementState: Managed
     ogx:
       managementState: Managed
     ray:

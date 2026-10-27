@@ -1,0 +1,20 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: MaaSSubscription
+metadata:
+  name: deepseekv4pro-cluster-voice
+  namespace: models-as-a-service
+  annotations:
+    openshift.io/display-name: Cluster Voice runtime
+    openshift.io/description: Separate runtime key and token budget from the OpenCode workspace
+spec:
+  priority: 20
+  owner:
+    groups:
+      - name: system:authenticated
+    users: []
+  modelRefs:
+    - name: deepseekv4pro
+      namespace: llm-serving
+      tokenRateLimits:
+        - limit: 1000000
+          window: 24h

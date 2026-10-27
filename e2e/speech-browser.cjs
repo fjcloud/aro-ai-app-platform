@@ -15,7 +15,7 @@ const assert = require('node:assert/strict');
   const browser = await chromium.launch({headless: true, args: [...args, '--use-fake-ui-for-media-stream']});
   const result = {language, modelRequests: 0, latencyMs: []};
   try {
-    const context = await browser.newContext({permissions: ['microphone', 'clipboard-read', 'clipboard-write'], viewport: {width: 1280, height: 900}});
+    const context = await browser.newContext({storageState: process.env.BROWSER_STATE || undefined, permissions: ['microphone', 'clipboard-read', 'clipboard-write'], viewport: {width: 1280, height: 900}});
     await context.addInitScript(() => {
       const get = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
       navigator.mediaDevices.getUserMedia = async constraints => {
@@ -63,12 +63,6 @@ const assert = require('node:assert/strict');
     let text = '';for await (const chunk of stream) text += chunk.toString();
     assert.match(text, expected);
     result.finalTranscript = text.trim();
-    if (process.env.EXPECT_UPDATED_APP === 'true') {
-      await page.getByRole('button', {name: 'Copy transcript', exact: true}).click();
-      const copied = await page.evaluate(() => navigator.clipboard.readText());
-      assert.match(copied, expected);
-      result.clipboardCopied = true;
-    }
     if (process.env.SPEECH_SCREENSHOT) await page.screenshot({path: process.env.SPEECH_SCREENSHOT, fullPage: true});
     await page.getByRole('button', {name: 'Clear', exact: true}).click();
     await expect(page.getByLabel('Transcript', {exact: true})).toBeEmpty();
@@ -85,7 +79,7 @@ const assert = require('node:assert/strict');
   } finally {await browser.close();}
   const denied = await chromium.launch({headless: true, args: [...args, '--use-fake-ui-for-media-stream']});
   try {
-    const context = await denied.newContext({permissions: ['microphone']});
+    const context = await denied.newContext({storageState: process.env.BROWSER_STATE || undefined, permissions: ['microphone']});
     // Enforce a real browser denial through Permissions Policy; no OS prompt.
     await context.route(url, async route => {
       const response = await route.fetch();

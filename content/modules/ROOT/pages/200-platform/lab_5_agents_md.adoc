@@ -111,9 +111,9 @@ echo "  $DEVSPACES_URL/#$TEMPLATE_URL?ai-provider=opencodeai/opencode"
 echo "============================================"
 ----
 
-When a developer opens that URL, Dev Spaces clones the template, injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. Lab 2.1 points the project at DeepSeek-V4 Pro. `AGENTS.md` is the runbook, including the browser audio and Whisper API contract.
+When a developer opens that URL, Dev Spaces clones the template, injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. Lab 2.1 points the project at DeepSeek-V4 Pro. `AGENTS.md` is the runbook, including the browser audio, runtime agent, metrics tools and Whisper API contract.
 
-== Act 1 complete
+== Developer handoff ready
 
 [cols="1,2", options="header"]
 |===
@@ -132,7 +132,7 @@ When a developer opens that URL, Dev Spaces clones the template, injects the Ope
 | ✅ Ready on one T4; internal endpoint only
 
 | Go app template
-| ✅ Transcription branch and speech contract in `AGENTS.md`
+| ✅ ARO branch and Cluster Voice contract in `AGENTS.md`
 |===
 
-Switch persona — move on to *Act 2: first day* (Lab 2.1).
+Before switching persona, prepare runtime monitoring and tracing in *Lab 1.6: Give the Cluster a Voice*.

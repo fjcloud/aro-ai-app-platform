@@ -9,7 +9,7 @@ Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platf
 . The launcher retrieves the assigned Showroom URL. Shared links contain only the guide and workshop ID; each participant signs in separately.
 . Follow Act 0 to log in to the existing cluster, clone the repository, and run `make onboard`.
 
-Platform labs require cluster-admin access and an Azure identity with permission to create Foundry resources in the exact assigned resource group. OpenShift AI MaaS publishes DeepSeek on Foundry for OpenCode, with a separate MaaS key and token quota (external models: Technology Preview). RedHatAI Whisper Large v3 Turbo INT8 runs on one T4 through OpenShift AI and Red Hat AI Inference. The sample app transcribes browser microphone audio.
+Platform labs require cluster-admin access and an Azure identity with permission to create Foundry resources in the exact assigned resource group. OpenShift AI MaaS publishes DeepSeek on Foundry for OpenCode, with a separate MaaS key and token quota (external models: Technology Preview). RedHatAI Whisper Large v3 Turbo INT8 runs on one T4 through OpenShift AI and Red Hat AI Inference. The same sample app becomes *Cluster Voice*: speak or type a question, then let a read-only agent inspect internal monitoring metrics and answer with evidence. The Playground tests its MCP tools; MLflow traces its model and tool calls.
 
 `make onboard` detects the resource group containing the connected ARO resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
 
@@ -22,9 +22,15 @@ Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are 
 [source,text]
 ----
 Dev Spaces / OpenCode ──> OpenShift AI MaaS ──> DeepSeek on Foundry (coding)
-Browser microphone ──> Go app ──> OpenShift AI / vLLM / Whisper (one T4)
-                           ▲
-                      Tekton + Argo CD
+Browser microphone ──> Whisper (one T4) ──> editable question
+Browser text ──────────────────────────────────┘
+                                              ▼
+Go runtime agent <──> MaaS / DeepSeek
+       │      └─────> read-only metrics tools / Thanos
+       │                         ▲
+       └──> MLflow traces    Playground / MCP
+
+Git ──> Tekton ──> Argo CD ──> same Go application
 ----
 
 Use the `aro-transcription` branch of https://github.com/fjcloud/go-app-template/tree/aro-transcription[the app template]. ROSA keeps its existing template. A working reference app is in `examples/live-transcript`; speech manifests are in `deploy/speech`.

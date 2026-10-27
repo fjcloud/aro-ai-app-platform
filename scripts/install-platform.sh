@@ -22,6 +22,11 @@ done
 bash deploy/instances/configure-platform.sh
 oc wait dsci/default-dsci --for=condition=Ready --timeout=1200s
 oc wait dsc/default-dsc --for=condition=Ready --timeout=1200s
+oc wait crd/mlflows.mlflow.opendatahub.io --for=condition=Established --timeout=300s
+# Keep existing storage settings if the facilitator already has an MLflow instance.
+if ! oc get mlflow/mlflow >/dev/null 2>&1; then
+  oc apply -f deploy/agentops/mlflow.yaml
+fi
 oc wait maastenantconfig/default-tenant -n models-as-a-service --for=condition=Ready --timeout=600s
 bash deploy/observability/configure.sh
 oc rollout status deployment/payload-processing -n openshift-ingress --timeout=600s

@@ -1,7 +1,7 @@
 = Lab 1.1 — Install the Platform
 :page-aliases: 200-platform/lab_2_operators.adoc
 
-Prepare the complete platform before adding a model. Install OpenShift AI, Dev Spaces, GitOps, Pipelines, Connectivity Link and the GPU operators together. Then enable their instances: the IDE, KServe, MaaS and its HTTPS gateway. Whisper will use the same OpenShift AI installation in Lab 1.4.
+Prepare the complete platform before adding a model. Install OpenShift AI, Dev Spaces, GitOps, Pipelines, Connectivity Link and the GPU operators together. Then enable their instances: the IDE, KServe, MaaS, MLflow and the HTTPS gateway. Whisper will use the same OpenShift AI installation in Lab 1.4.
 
 [NOTE]
 ====
@@ -70,6 +70,8 @@ The script runs these phases in order and stops on failure:
 . Start the workshop PostgreSQL database, then apply `deploy/instances` to enable the IDE, KServe, MaaS, GPU discovery and driver management.
 . Bind the MaaS gateway to this cluster’s domain and ingress certificate; configure Authorino TLS and the OpenShift AI dashboard.
 . Enable MaaS telemetry and the OpenShift AI metrics stack (one 5 GiB metrics volume, seven-day retention), then wait for the gateway to be Programmed and Dev Spaces to be Active.
+
+The MLflow operator is enabled in this same platform step. A small SQLite/PVC tracking instance stores workshop traces; Lab 1.6 prepares the application experiment and permissions.
 
 The included PostgreSQL uses ephemeral storage for this disposable workshop. Use a persistent, backed-up database and independent credentials for production. Do not restart its storage during the workshop: MaaS API keys are stored there.
 

@@ -1,11 +1,12 @@
 const $ = id => document.getElementById(id);
 let stream, context, source, capture, recording = false, starting = false;
-let quietSamples = 0;
+let quietSamples = 0, asking = false, history = [], speechTrace = '', speechSpan = '';
 let frames = [], samples = 0, queue = [], sending = false, failed = false;
 let activeLanguage = 'fr', rate = 16000, generation = 0;
 
 function controls() {
-  $('start').disabled = recording || starting || sending || queue.length > 0;
+  $('start').disabled = asking || recording || starting || sending || queue.length > 0;
+  $('ask').disabled = $('new-conversation').disabled = $('question').disabled = $('start').disabled;
   $('stop').disabled = !recording;
   $('language').disabled = $('clear').disabled = $('start').disabled;
 }
@@ -31,6 +32,7 @@ function append(text) {
   if (!text) return;
   const node=document.createElement('span');node.textContent=($('transcript').textContent?' ':'')+text;
   $('transcript').append(node);
+  $('question').value = ($('question').value + ' ' + text).trim().slice(0,1000);
 }
 
 async function sendQueue() {
@@ -43,6 +45,7 @@ async function sendQueue() {
       const result=await response.json();
       if(!response.ok) throw Error(result.error || 'Transcription failed');
       append(result.text);
+      speechTrace=result.trace_id || '';speechSpan=result.span_id || '';
       $('status').textContent=`${recording?'Listening':'Finishing'} · last clip processed in ${(result.latency_ms/1000).toFixed(1)} s`;
     }
   } catch(error) {
@@ -104,9 +107,31 @@ $('start').onclick=async()=>{
   } finally {starting=false;controls();}
 };
 $('stop').onclick=()=>void stop();
-$('clear').onclick=()=>{$('transcript').replaceChildren();$('error').textContent='';};
+$('clear').onclick=()=>{$('transcript').replaceChildren();$('question').value='';speechTrace='';speechSpan='';$('error').textContent='';};
 $('download').onclick=()=>{
   const url=URL.createObjectURL(new Blob([$('transcript').textContent+'\n'],{type:'text/plain;charset=utf-8'}));
   const a=document.createElement('a');a.href=url;a.download='transcript.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 window.addEventListener('pagehide',()=>{stream?.getTracks().forEach(t=>t.stop());void context?.close();});
+
+$('new-conversation').onclick=()=>{
+  history=[];speechTrace='';speechSpan='';$('conversation').replaceChildren();$('transcript').replaceChildren();$('question').value='';$('error').textContent='';
+};
+$('question-form').onsubmit=async event=>{
+  event.preventDefault();
+  const question=$('question').value.trim();
+  if(!question || asking || recording || starting || sending || queue.length) return;
+  asking=true;controls();$('error').textContent='';$('status').textContent='Consulting monitoring tools…';
+  try {
+    const response=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,history,speech_trace:speechTrace,speech_span:speechSpan}),signal:AbortSignal.timeout(105000)});
+    const result=await response.json();if(!response.ok) throw Error(result.error || 'The agent request failed');
+    const article=document.createElement('article'), title=document.createElement('h2'), answer=document.createElement('p');
+    title.textContent=question;answer.textContent=result.answer;article.append(title,answer);
+    const details=document.createElement('details'), summary=document.createElement('summary'), evidence=document.createElement('pre');
+    summary.textContent=`Monitoring evidence (${result.evidence.length} queries)`;evidence.textContent=JSON.stringify(result.evidence,null,2);details.append(summary,evidence);article.append(details);
+    const trace=document.createElement('p');trace.className='trace';trace.textContent=`Trace: ${result.trace_id} · Prompt: ${result.prompt_version}`;article.append(trace);
+    $('conversation').append(article);history.push({role:'user',content:question},{role:'assistant',content:result.answer.slice(0,1000)});history=history.slice(-8);while(new TextEncoder().encode(JSON.stringify(history)).length>16000) history.splice(0,2);
+    $('transcript').replaceChildren();$('question').value='';speechTrace='';speechSpan='';$('status').textContent='Answer ready. Your microphone is off.';
+  }catch(error){$('error').textContent=error.message || 'The cluster agent is unavailable';$('status').textContent='Question failed. Your microphone is off.';}
+  finally {asking=false;controls();}
+};

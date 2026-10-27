@@ -14,8 +14,13 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
 )
 
 //go:embed web/*
@@ -24,10 +29,13 @@ var assets embed.FS
 const maxAudio = 2 << 20
 
 type server struct {
-	endpoint string
-	token    string
-	client   *http.Client
-	slots    chan struct{}
+	endpoint  string
+	token     string
+	client    *http.Client
+	slots     chan struct{}
+	agent     *agentClient
+	metrics   *metricsClient
+	toolSlots chan struct{}
 }
 
 func newServer(endpoint, token string) (*server, error) {
@@ -35,15 +43,17 @@ func newServer(endpoint, token string) (*server, error) {
 	if err != nil || u.Host == "" || (u.Scheme != "http" && u.Scheme != "https") || u.User != nil || u.RawQuery != "" || u.Fragment != "" {
 		return nil, errors.New("WHISPER_URL must be an HTTP(S) URL without credentials, query or fragment")
 	}
-	return &server{strings.TrimRight(endpoint, "/"), token, &http.Client{Timeout: 45 * time.Second, CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}, make(chan struct{}, 2)}, nil
+	return &server{endpoint: strings.TrimRight(endpoint, "/"), token: token, client: &http.Client{Timeout: 45 * time.Second, CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}, slots: make(chan struct{}, 2), toolSlots: make(chan struct{}, 2)}, nil
 }
 
 func (s *server) routes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) { reply(w, 200, map[string]string{"status": "ok"}) })
 	mux.HandleFunc("POST /api/transcribe", s.transcribe)
+	mux.HandleFunc("POST /api/chat", s.chat)
+	mux.Handle("/mcp", s.mcpHandler())
 	web, _ := fs.Sub(assets, "web")
-	mux.Handle("GET /", http.FileServer(http.FS(web)))
+	mux.Handle("/", http.FileServer(http.FS(web)))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "no-referrer")
@@ -97,7 +107,23 @@ func validWAV(data []byte) bool {
 	return format && audio
 }
 
+type statusWriter struct {
+	http.ResponseWriter
+	code int
+}
+
+func (w *statusWriter) WriteHeader(code int) { w.code = code; w.ResponseWriter.WriteHeader(code) }
 func (s *server) transcribe(w http.ResponseWriter, r *http.Request) {
+	recorder := &statusWriter{ResponseWriter: w, code: 200}
+	w = recorder
+	ctx, span := otel.Tracer("cluster-voice").Start(r.Context(), "speech.transcribe")
+	defer span.End()
+	r = r.WithContext(ctx)
+	defer func() {
+		if r.Context().Err() != nil || recorder.code >= 400 {
+			span.SetStatus(codes.Error, "speech request cancelled")
+		}
+	}()
 	// Browser requests stay on this origin. Reject cross-origin form submissions.
 	if origin := r.Header.Get("Origin"); origin != "" {
 		u, err := url.Parse(origin)
@@ -180,7 +206,7 @@ func (s *server) transcribe(w http.ResponseWriter, r *http.Request) {
 		fail(w, 502, "Speech service returned an invalid response")
 		return
 	}
-	reply(w, 200, map[string]any{"text": strings.TrimSpace(result.Text), "latency_ms": time.Since(started).Milliseconds()})
+	reply(w, 200, map[string]any{"text": strings.TrimSpace(result.Text), "latency_ms": time.Since(started).Milliseconds(), "trace_id": span.SpanContext().TraceID().String(), "span_id": span.SpanContext().SpanID().String()})
 }
 
 func main() {
@@ -192,7 +218,52 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	server := &http.Server{Addr: ":8080", Handler: app.routes(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 50 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
-	log.Print("Live Transcript listening on :8080")
-	log.Fatal(server.ListenAndServe())
+	shutdown, err := initTracing(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	if raw := os.Getenv("AGENT_BASE_URL"); raw != "" {
+		endpoint, err := checkedURL(raw)
+		if err != nil {
+			log.Fatal("Invalid AGENT_BASE_URL")
+		}
+		client, err := serviceClient(os.Getenv("SERVICE_CA_FILE"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		app.agent = &agentClient{endpoint: endpoint, model: envDefault("AGENT_MODEL", "deepseekv4pro"), keyFile: envDefault("AGENT_KEY_FILE", "/etc/agent/OPENAI_API_KEY"), client: client}
+	}
+	if raw := os.Getenv("PROMETHEUS_URL"); raw != "" {
+		endpoint, err := checkedURL(raw)
+		if err != nil {
+			log.Fatal("Invalid PROMETHEUS_URL")
+		}
+		client, err := serviceClient(os.Getenv("SERVICE_CA_FILE"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		app.metrics = &metricsClient{endpoint: endpoint, tokenFile: envDefault("SERVICE_ACCOUNT_TOKEN_FILE", "/var/run/secrets/kubernetes.io/serviceaccount/token"), client: client}
+	}
+	server := &http.Server{Addr: envDefault("LISTEN_ADDR", ":8080"), Handler: app.routes(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 110 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
+	log.Print("Cluster Voice listening")
+	signals, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	serveErrors := make(chan error, 1)
+	go func() { serveErrors <- server.ListenAndServe() }()
+	select {
+	case <-signals.Done():
+		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		if err := server.Shutdown(ctx); err != nil {
+			_ = server.Close()
+		}
+		cancel()
+	case err := <-serveErrors:
+		if err != nil {
+			log.Print("HTTP server stopped")
+		}
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	_ = shutdown(ctx)
 }

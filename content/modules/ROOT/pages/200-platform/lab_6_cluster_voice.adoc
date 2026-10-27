@@ -1,0 +1,99 @@
+= Lab 1.6 — Give the Cluster a Voice
+
+Whisper provides the ears. DeepSeek provides the conversation. A small read-only metrics connector lets the same Go application answer questions about the cluster, using measurements rather than guesses.
+
+[NOTE]
+====
+*Persona:* Platform Engineer +
+*Time:* 10–15 minutes once MLflow is ready +
+*Outcome:* Runtime identity, model key, tracking experiment and Playground connector prepared before the developer starts.
+====
+
+== One application, two model paths
+
+[source,text]
+----
+Microphone → Whisper on T4 → editable question ─┐
+Typed question ────────────────────────────────┤
+                                              ▼
+                                      Go cluster agent
+                                      ↕             ↕
+                               DeepSeek / MaaS   Thanos metrics
+                                      │          (read only)
+                                      └─────┬───────┘
+                                            ▼
+                                  Answer + evidence
+
+Playground → MCP /mcp → same metrics tools
+Go agent   → OpenTelemetry → MLflow traces
+Git        → Tekton → existing Argo CD → same application
+----
+
+The technical name stays `live-transcript`, including its namespaces and registry image. The product name becomes *Cluster Voice*. OpenCode remains the coding assistant in Dev Spaces; the application agent runs in the Go backend.
+
+Audio stays on the cluster. Questions and selected monitoring results go through MaaS to Foundry. Cluster-wide node, pod and alert names can appear in those results: use this pattern only where that data flow is acceptable.
+
+== Check MLflow
+
+Lab 1.1 enables the MLflow operator with the rest of OpenShift AI and creates a small SQLite/PVC instance for this disposable lab. From the *bastion terminal*:
+
+[source,sh,role=execute]
+----
+oc get mlflow mlflow
+oc get pods -n redhat-ods-applications
+oc get mlflow mlflow -o jsonpath='{.status.url}{"\n"}'
+----
+
+Wait for the MLflow instance to be ready and publish its HTTPS URL. If setup stopped before creating the instance, rerun `bash scripts/install-platform.sh`. Do not replace an existing tracking instance's storage settings.
+
+This workshop stores trace metadata in the database. It does not enable artifact serving or deploy a production HA database/object store.
+
+== Prepare runtime access
+
+Lab 1.5 already created the application namespaces. Run this separate platform step:
+
+[source,sh,role=execute]
+----
+python3 scripts/prepare-cluster-voice.py
+----
+
+The helper reads the tracking URL from `MLflow.status.url`. If the facilitator provided a different HTTPS tracking endpoint, supply it with `--mlflow-url`.
+
+It prepares:
+
+* `cluster-voice`, a dedicated application ServiceAccount, with metrics API access in `openshift-monitoring` and MLflow integration in `live-transcript-dev`.
+* An OpenShift OAuth proxy: participants must be able to read the app Service to open the app or use its MCP tools. It never forwards their bearer token to the Go backend.
+* A separate runtime MaaS key, bound to `deepseekv4pro-cluster-voice` with a one-million-token/24h budget. OpenCode keeps its existing coding key and subscription.
+* A namespace-scoped MLflow experiment and the `OpenShift-Health` MCP catalog entry for the Playground.
+
+No monitoring key, model key or Azure credential is sent to the browser. The application reads its rotating service-account token for monitoring and trace export. The runtime MaaS key expires after 24 hours; rerun this step and restart the app if the lab continues beyond that.
+
+=== Check the prepared objects
+
+[source,sh,role=execute]
+----
+oc get serviceaccount cluster-voice -n live-transcript-dev
+oc get configmap cluster-voice-config -n live-transcript-dev
+oc get secret cluster-voice-model cluster-voice-oauth -n live-transcript-dev
+oc get imagestreamtag cluster-voice-oauth:current -n live-transcript-dev
+oc auth can-i get prometheuses.monitoring.coreos.com/k8s --subresource=api \
+  --as=system:serviceaccount:live-transcript-dev:cluster-voice \
+  -n openshift-monitoring
+----
+
+The last command should return `yes`. The identity has no cluster administration or workload-editing grant. The coding agent must keep the prepared OAuth sidecar, loopback listener and runtime volumes intact. It must never add SCC grants or execute cluster modifications to answer a question.
+
+The MCP entry will become reachable after Act 2 deploys the app. Test it alongside the application in Lab 3.2.
+
+== What can participants ask?
+
+* “Are my nodes ready? Are any cluster operators degraded?”
+* “What is the CPU utilization over the last hour?”
+* “Which containers restarted recently?”
+* “Is Whisper being scraped, and how much T4 memory is it using?”
+
+The server owns a small metric catalog. It accepts metric IDs and bounded time windows, not arbitrary PromQL supplied by the LLM. Adding another metric is a normal code change through Git, Tekton and Argo CD.
+
+Missing series, failed queries and stale samples must remain visible. The agent explains observations; it does not certify that every part of the cluster is healthy or perform repairs.
+
+➡️ Move on to *Act 2: first day*.

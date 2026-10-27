@@ -1,15 +1,22 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Live Transcript</title><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Cluster Voice</title><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
 <body><main>
-<p class="eyebrow">RED HAT OPENSHIFT AI · SPEECH TO TEXT</p>
-<h1>Your voice, in writing.</h1>
-<p>Speak into your microphone. Your words appear a few seconds later.</p>
+<p class="eyebrow">RED HAT OPENSHIFT AI · CLUSTER VOICE</p>
+<h1>Talk to your cluster.</h1>
+<p>Ask about OpenShift health, CPU, memory, alerts or Whisper. Answers use read-only monitoring tools.</p>
 <section class="controls" aria-label="Recording controls">
 <label for="language">Spoken language</label><select id="language"><option value="fr">French</option><option value="en">English</option><option value="">Detect automatically</option></select>
 <button id="start">Start microphone</button><button id="stop" disabled>Stop</button><button id="clear">Clear</button><button id="download">Download transcript</button>
 </section>
 <p id="status" role="status">Ready. Your microphone is off.</p>
 <article id="transcript" aria-label="Transcript" aria-live="polite" aria-atomic="false"></article>
+<form id="question-form">
+<label for="question">Your question — check the transcription or type here</label>
+<textarea id="question" rows="3" maxlength="1000" placeholder="Comment vont les nœuds ? Quelle est leur utilisation CPU ?" required></textarea>
+<button id="ask" type="submit">Ask the cluster</button>
+<button id="new-conversation" type="button">New conversation</button>
+</form>
 <p id="error" role="alert"></p>
-<footer>Audio is processed by Whisper on this workshop’s OpenShift cluster. The app does not save recordings. Transcription may contain mistakes.</footer>
+<section id="conversation" aria-label="Conversation" aria-live="polite"></section>
+<footer>Whisper transcribes audio on this cluster. DeepSeek through OpenShift AI MaaS reads the question and selected monitoring results. Audio is kept in memory only. Operational answers include evidence; missing data does not mean healthy. Trace metadata contains timings, tools and metric IDs, without question text, audio or credentials.</footer>
 </main></body></html>

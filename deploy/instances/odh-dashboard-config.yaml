@@ -12,5 +12,9 @@ spec:
     externalModels: true
     modelAsService: true
     genAiStudio: true
+    aiAssetCustomEndpoints: true
     vLLMDeploymentOnMaaS: true
     observabilityDashboard: true
+  genAiStudioConfig:
+    aiAssetCustomEndpoints:
+      externalProviders: false
