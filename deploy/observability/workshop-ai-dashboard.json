@@ -26,7 +26,7 @@
     {
       "id": 1,
       "type": "graph",
-      "title": "Coding tokens by subscription",
+      "title": "Model tokens by subscription",
       "datasource": "$datasource",
       "gridPos": {
         "h": 7,
@@ -36,7 +36,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (model, subscription) (authorized_hits{model=\"deepseekv4pro\",subscription=\"deepseekv4pro-workshop\"})",
+          "expr": "sum by (model, subscription) (authorized_hits{model=\"deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|cluster-voice)\"})",
           "refId": "A",
           "legendFormat": "{{model}} {{subscription}}"
         }
@@ -65,7 +65,7 @@
     {
       "id": 2,
       "type": "graph",
-      "title": "Coding requests accepted by quota checks",
+      "title": "Model requests accepted by quota checks",
       "datasource": "$datasource",
       "gridPos": {
         "h": 7,
@@ -75,7 +75,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (subscription) (authorized_calls{limitador_namespace=\"llm-serving/deepseekv4pro\",subscription=\"deepseekv4pro-workshop\"})",
+          "expr": "sum by (subscription) (authorized_calls{limitador_namespace=\"llm-serving/deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|cluster-voice)\"})",
           "refId": "A",
           "legendFormat": "{{subscription}}"
         }

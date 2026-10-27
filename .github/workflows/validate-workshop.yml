@@ -1,0 +1,23 @@
+name: validate workshop
+on:
+  pull_request:
+  push:
+    branches: [feature/cluster-voice-agentops]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: examples/live-transcript/go.mod
+          cache-dependency-path: examples/live-transcript/go.sum
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: make test
+      - run: go vet ./...
+        working-directory: examples/live-transcript
+      - run: make docs

@@ -15,7 +15,7 @@ You have two model paths. Observe them separately, then relate activity to cost:
 |===
 | View | What it answers
 | OpenShift console → *Observe → Dashboards → Workshop AI — ARO*
-| How many coding tokens and requests passed through MaaS? Were requests rate-limited? How is Whisper performing?
+| How many coding and runtime tokens and requests passed through MaaS? Were requests rate-limited? How is Whisper performing?
 | OpenShift AI → *Observe & monitor → Dashboard*
 | Native platform health and the available model dashboards. For this workshop’s external coding endpoint and speech model, use *Workshop AI — ARO* for the verified usage and inference graphs.
 | OpenShift AI → *Settings → MaaS governance*
@@ -44,21 +44,21 @@ python3 -c 'import json; print(json.load(open("/tmp/workshop-coding-response.jso
 
 Record the input and output tokens and the request duration. The duration includes network, gateway and provider processing; it is not time-to-first-token.
 
-Next, open *Live Transcript*, select English or French, and speak for 10–15 seconds. Confirm text appears before Stop, then stop the microphone. This creates speech requests in `speech-serving`, independently of the coding request.
+Next, open *Cluster Voice*, select English or French, and speak for 10–15 seconds. Confirm text appears before Stop, then stop the microphone. This creates speech requests in `speech-serving`, independently of the coding request. Submit a cluster-health question to create runtime agent traffic too.
 
 Wait 2–3 minutes for configuration propagation and scraping on a fresh lab. Use the *last hour* in dashboards. A quiet GPU or zero request rate is valid when no request is running. A latency percentile needs recent completions; other empty graphs need a collection or time-range check.
 
-== Step 2: Read coding consumption and quota
+== Step 2: Read coding and runtime consumption and quota
 
 Open the OpenShift console in *Administrator* → *Observe → Dashboards* → *Workshop AI — ARO*.
 
-* *Coding tokens by subscription*: input plus output tokens reported through MaaS, labelled `deepseekv4pro-workshop` / `deepseekv4pro`.
-* *Coding requests accepted by quota checks*: requests allowed by the quota policy. This is not a count of successful completions: an upstream request can still fail.
+* *Model tokens by subscription*: input plus output tokens reported through MaaS, labelled by model and subscription. `deepseekv4pro-workshop` is coding; `deepseekv4pro-cluster-voice` is the runtime agent.
+* *Model requests accepted by quota checks*: requests allowed by the quota policy. This is not a count of successful completions: an upstream request can still fail.
 * *Quota rejections (HTTP 429)*: attempts rejected by the model’s MaaS quota checks. Zero means no rejection has been recorded; also check scrape health.
 
 The workshop injects one shared coding key. Its metrics represent aggregate workshop usage, not individual participant attribution. Individual showback requires individual identities/keys and the corresponding telemetry dimensions. User/group labels are disabled in this lab.
 
-In OpenShift AI, open *Settings → MaaS governance → deepseekv4pro-workshop*. The allowance is *5 million tokens per 24 hours*. This is separate from Foundry’s tokens-per-minute quota. A MaaS allowance is not a financial spending cap; enforcement is asynchronous and in-flight calls can overshoot.
+In OpenShift AI, open *Settings → MaaS governance → deepseekv4pro-workshop*. The coding allowance is *5 million tokens per 24 hours*. The separate runtime subscription permits *one million tokens per 24 hours*. This is separate from Foundry’s tokens-per-minute quota. A MaaS allowance is not a financial spending cap; enforcement is asynchronous and in-flight calls can overshoot.
 
 The facilitator can demonstrate a 429 without reducing the real workshop allowance:
 
@@ -79,7 +79,7 @@ In the same *Workshop AI — ARO* dashboard:
 * *Whisper queued requests* indicates pressure on the single model replica.
 * *T4 utilization* and *T4 memory used* belong to Whisper. Model memory can remain allocated while utilization is zero; short clips can finish between GPU scrapes.
 
-Compare the graphs with your two actions: the coding request increments MaaS usage; microphone transcription increments Whisper requests. T4 memory is not DeepSeek’s model memory.
+Compare the graphs with your two actions: coding and runtime questions increment their respective MaaS subscriptions; microphone transcription increments Whisper requests. T4 memory is not DeepSeek’s model memory.
 
 == Step 4: Check a metric directly
 
@@ -147,4 +147,4 @@ The other cost is provisioned infrastructure: the T4 VM, CPU workers, ARO worker
 
 The assigned RHDP environment stays available until its scheduled expiration. Export code you want to keep before then.
 
-➡️ Move on to *Conclusion & Next Steps*.
+➡️ Move on to *Lab 3.2: AgentOps — Tools, Traces and Evidence*.

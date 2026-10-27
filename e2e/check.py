@@ -116,14 +116,21 @@ def developer():
     latest = max(runs, key=lambda r: r['metadata']['creationTimestamp'])
     require(any(c['type'] == 'Succeeded' and c['status'] == 'True' for c in latest.get('status', {}).get('conditions', [])), 'Latest Tekton build Succeeded')
     route = resource('route', app, ns)
-    require(route['spec'].get('tls', {}).get('termination') == 'edge' and route['spec']['tls'].get('insecureEdgeTerminationPolicy') == 'Redirect', 'HTTPS edge Route redirects HTTP')
+    require(route['spec'].get('tls', {}).get('termination') == 'reencrypt' and route['spec']['tls'].get('insecureEdgeTerminationPolicy') == 'Redirect', 'HTTPS reencrypt Route redirects HTTP')
     url = 'https://' + route['spec']['host']
     with urllib.request.urlopen(url + '/healthz', timeout=30) as response:
         require(json.load(response) == {'status': 'ok'}, 'Public HTTPS health endpoint')
-    with urllib.request.urlopen(url, timeout=30) as response:
+    token = oc('whoami', '-t')
+    require(bool(token), 'OpenShift user token available for authenticated app check')
+    request = urllib.request.Request(url, headers={'Authorization':'Bearer ' + token})
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, request, fp, code, msg, headers, newurl):
+            return None
+    with urllib.request.build_opener(NoRedirect).open(request, timeout=30) as response:
         page = response.read().decode('utf-8')
+    require('Talk to your cluster.' in page, 'Authenticated Cluster Voice UI')
     if os.environ.get('EXPECT_UPDATED_APP') == 'true':
-        require('Copy transcript' in html.unescape(page), 'Shipped update copies the transcript')
+        require('CPU over 1h' in html.unescape(page), 'Shipped update includes the CPU shortcut')
     spec = deployment['spec']['template']['spec']
     container = spec['containers'][0]
     expected_image = f'image-registry.openshift-image-registry.svc:5000/{app}-build/{app}:latest'
@@ -132,8 +139,11 @@ def developer():
     requested_image = next((p['value'] for p in latest['spec'].get('params', []) if p['name'] == 'image'), expected_image)
     require(requested_image == container['image'], 'Successful Tekton target matches the deployed image')
     resources = container.get('resources', {})
-    require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '200m', 'memory': '128Mi'}, 'Resource requests and limits match AGENTS.md')
-    require(all(container.get(probe, {}).get('httpGet', {}).get('path') == '/healthz' and container[probe]['httpGet'].get('port') == 8080 for probe in ['livenessProbe', 'readinessProbe']), 'Liveness and readiness probes use /healthz:8080')
+    require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '500m', 'memory': '256Mi'}, 'Resource requests and limits match AGENTS.md')
+    require(all(container.get(probe, {}).get('httpGet', {}).get('path') == '/healthz' and container[probe]['httpGet'].get('port') == 8443 and container[probe]['httpGet'].get('scheme') == 'HTTPS' for probe in ['livenessProbe', 'readinessProbe']), 'Liveness and readiness probes use HTTPS /healthz:8443')
+    require(spec.get('serviceAccountName') == 'cluster-voice', 'Dedicated runtime identity')
+    require(any(e.get('name')=='LISTEN_ADDR' and e.get('value')=='127.0.0.1:8080' for e in container.get('env',[])), 'Go backend listens behind OAuth only')
+    require(any(c['name']=='oauth-proxy' for c in spec['containers']), 'OpenShift OAuth proxy present')
     security = spec.get('securityContext', {})
     require(security.get('runAsNonRoot') is True and security.get('seccompProfile', {}).get('type') == 'RuntimeDefault' and 'runAsUser' not in security, 'Deployment uses portable restricted pod security')
     cs = container.get('securityContext', {})
@@ -148,12 +158,13 @@ def developer():
     if workspace_ns or workspace_pod:
         require(bool(workspace_ns and workspace_pod), 'Both E2E_NS and DEV_POD supplied')
         prefix = ['exec', workspace_pod, '-n', workspace_ns, '-c', os.environ.get('DEV_CONTAINER', 'dev'), '--', 'bash', '-c']
+        require(not oc(*prefix, 'cd "$PROJECT_SOURCE" && git status --porcelain'), 'Workspace is clean: all application changes match the committed delivery')
         oc(*prefix, 'cd "$PROJECT_SOURCE" && test -f main.go && test -f go.mod && test -f Dockerfile && CGO_ENABLED=0 go build -buildvcs=false -o /dev/null .')
         print('PASS: Generated source files exist and Go build succeeds in the real workspace')
         head = oc(*prefix, 'cd "$PROJECT_SOURCE" && git rev-parse HEAD')
         remote = oc(*prefix, 'cd "$PROJECT_SOURCE" && git ls-remote origin refs/heads/main').split()[0]
         require(head == remote == application['status']['sync'].get('revision'), 'Workspace commit, pushed main and Argo CD revision match')
-        oc(*prefix, 'cd "$PROJECT_SOURCE" && git diff --exit-code && git cat-file -e HEAD:main.go')
+        oc(*prefix, 'cd "$PROJECT_SOURCE" && git cat-file -e HEAD:main.go')
         print('PASS: Application source committed with no unstaged changes')
     print('Application:', url)
     print('Git revision:', application['status']['sync'].get('revision', 'unknown'))

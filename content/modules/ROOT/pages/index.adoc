@@ -2,7 +2,7 @@
 
 Welcome to the *AI-Powered Developer Platform on ARO* workshop.
 
-The story for today is a Monday at a company that uses a managed coding model and keeps speech inference on its own cluster. This morning the platform team installs the platform and publishes DeepSeek-V4 Pro on Foundry through OpenShift AI MaaS. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships a browser transcription app from OpenShift Dev Spaces. You wear both hats, then you review token usage, infrastructure costs.
+The story for today is a Monday at a company that uses a managed coding model and keeps speech inference on its own cluster. This morning the platform team installs the platform and publishes DeepSeek-V4 Pro on Foundry through OpenShift AI MaaS. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships Cluster Voice: speak to OpenShift and receive health answers grounded in internal monitoring metrics. You wear both hats, then test the tools in the Playground and inspect metrics, MLflow traces and costs.
 
 
 == Who This Workshop Is For
@@ -20,9 +20,19 @@ The story for today is a Monday at a company that uses a managed coding model an
 
 == What You Will Build
 
-image::architecture-overview.png[Separate coding and speech model paths on ARO, align="center"]
+[source,text]
+----
+Voice → Whisper → question → Go agent ↔ DeepSeek / MaaS
+                               ↕
+                        Thanos metrics (read only)
+                               ↓
+                        Answer + evidence
 
-DeepSeek writes the app; Whisper transcribes its audio. Coding prompts and source context leave the cluster for Foundry. Browser audio goes through the Go backend to the internal Whisper service.
+Playground → MCP → same tools     Go agent → MLflow traces
+Git → Tekton → Argo CD → same application
+----
+
+DeepSeek powers both coding and the runtime agent, using separate MaaS keys and quotas. Whisper transcribes audio internally. Coding context, runtime questions and selected monitoring results go to Foundry; raw microphone audio stays on the cluster.
 
 === Act 1 — Platform
 * *DeepSeek-V4 Pro* on Microsoft Foundry, Global Standard, pay per token
@@ -34,12 +44,13 @@ DeepSeek writes the app; Whisper transcribes its audio. Coding prompts and sourc
 
 === Act 2 — Developer
 * A personal Git repository on *ephemeral Git* (workshop-scoped, no GitHub account)
-* A *Live Transcript* Go app with browser microphone capture, generated live by OpenCode + DeepSeek-V4 Pro
+* A *Cluster Voice* Go app: microphone or text → runtime agent → read-only monitoring tools → answer with evidence, adapted with OpenCode from the reference implementation
 * Image build and GitOps deploy from git, ephemeral Git, and `oc` — no Ansible, no local Docker
 
-=== Act 3 — The bill
+=== Act 3 — Observe and evaluate
 * Input and output tokens from the afternoon, priced from the Foundry list rate
-* Coding tokens and quotas through MaaS, speech latency and T4 activity, and their different cost models
+* Coding and runtime tokens and quotas through MaaS, speech latency and T4 activity
+* The same tools in the Gen AI Playground, MLflow model/tool traces, and grounded-answer checks
 
 == Learning Outcomes
 
@@ -49,7 +60,8 @@ After completing this workshop, you will understand:
 * How `AGENTS.md` gives the coding agent platform conventions, backed by deployment checks
 * How Dev Spaces + OpenCode is an AI-augmented inner loop with no laptop install
 * How Tekton and Argo CD form a GitOps path from a single repository
-* How managed coding tokens and provisioned speech infrastructure have different cost models
+* How managed model tokens and provisioned speech infrastructure have different cost models
+* How a read-only connector grounds an agent in real metrics, with MCP testing and MLflow tracing
 
 == How to follow the labs
 
@@ -70,7 +82,7 @@ The platform uses cluster-wide resources and the app uses fixed namespace names.
 | Connect to the existing RHDP cluster and log in with `oc`
 | 10 min
 
-.5+| *1 — Build the platform*
+.6+| *1 — Build the platform*
 | 1.1
 | Install the Platform
 | 10 min active / 20–30 min installation
@@ -91,6 +103,10 @@ The platform uses cluster-wide resources and the app uses fixed namespace names.
 | Hand the Keys (`AGENTS.md` + Dev Spaces URL)
 | 10 min
 
+| 1.6
+| Give the Cluster a Voice
+| 15 min
+
 .2+| *2 — First day*
 | 2.1
 | Launch Your Dev Space
@@ -100,10 +116,14 @@ The platform uses cluster-wide resources and the app uses fixed namespace names.
 | Prompt to Deployment (generate, ship, change)
 | 35 min
 
-| *3 — The bill*
+.2+| *3 — Observe and evaluate*
 | 3.1
 | Usage, Performance and Cost
 | 15 min
+
+| 3.2
+| AgentOps: Tools, Traces and Evidence
+| 25 min
 
 | *—*
 | —
