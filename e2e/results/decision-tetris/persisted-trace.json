@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "experiment": "decision-tetris",
+  "trace_id": "tr-eb2a889e0780b4a9bd8b06a3eb558fed",
+  "spans": [
+    "tetris.turn",
+    "decision.choose"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "deployment": "Final OpenShift AI custom InferenceService",
+  "first_decision_ms": 541,
+  "checks": [
+    "real model move",
+    "probability bars",
+    "autoplay",
+    "pause and cancellation",
+    "manual placement",
+    "no fallback on injected HTTP 502",
+    "reset",
+    "mobile layout",
+    "no browser errors"
+  ],
+  "browser_keychain": "mock"
+}

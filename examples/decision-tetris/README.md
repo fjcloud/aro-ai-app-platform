@@ -83,3 +83,28 @@ APP_URL=https://your-app-route BROWSER_STATE=/private/login-state.json \
 
 The browser test uses `--use-mock-keychain` and the real local model. Its injected
 HTTP error checks are explicitly separate from the real inference turns.
+
+## Model versus heuristic
+
+Tetris is a visual integration demo, not evidence that a decision model improves
+on a numerical policy. Both players receive exact outcome features; the fixed
+heuristic can exploit them without inference or a GPU. The model's probabilities
+are model outputs, not measured probabilities of surviving the game.
+
+Run a paired comparison against the deployed app with an authenticated `oc` session:
+
+```sh
+python3 e2e/decision-tetris-compare.py --url https://your-app-route \
+  --output /tmp/tetris-comparison.json
+```
+
+The same three seven-bag seeds are replayed for both players, up to 200 pieces each.
+The script checks their common piece sequence and records every turn, lines, score,
+top-out and decision/HTTP latency. It stops on errors instead of replacing model
+decisions. This small test measures this prototype, not general decision ability.
+See [live validation](../../e2e/DECISION-TETRIS-VALIDATION.md) for the recorded results.
+
+Semantic routing, support-request classification and choices governed by changing
+natural-language instructions are more relevant candidates for this model's
+choice/yes-no/score interface. Each still needs a task-specific comparison with
+simple rules and labelled examples; superiority is not assumed.
