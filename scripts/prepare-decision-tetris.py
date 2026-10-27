@@ -139,7 +139,7 @@ def prepare_app(experiment_name='decision-tetris'):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--reuse-runtime', action='store_true', help='reuse the already built runtime image')
-    parser.add_argument('--game', choices=['decision-tetris', 'orbit-checkpoint'], default='decision-tetris',
+    parser.add_argument('--game', choices=['decision-tetris', 'orbit-checkpoint', 'sky-control'], default='decision-tetris',
                         help='application MLflow experiment to prepare')
     args = parser.parse_args()
     oc('get', 'namespace', APP)
