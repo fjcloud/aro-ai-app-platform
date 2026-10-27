@@ -66,8 +66,8 @@ spec:
           --depth "$(params.DEPTH)" origin "$(params.REVISION)"
         git checkout --detach FETCH_HEAD
         COMMIT=$(git rev-parse HEAD)
-        echo -n "${COMMIT}" > $(results.commit.path)
-        echo -n "$(params.URL)" > $(results.url.path)
+        printf '%s' "${COMMIT}" > "$(results.commit.path)"
+        printf '%s' "$(params.URL)" > "$(results.url.path)"
         echo "Cloned $(params.URL) @ ${COMMIT}"
 ---
 apiVersion: tekton.dev/v1

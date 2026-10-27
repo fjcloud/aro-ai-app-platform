@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: d3-mini
+  namespace: decision-serving
+spec:
+  selector:
+    serving.kserve.io/inferenceservice: d3-mini
+    component: predictor
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080

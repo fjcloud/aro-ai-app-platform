@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: d3-mini-ingress
+  namespace: decision-serving
+spec:
+  podSelector:
+    matchLabels:
+      serving.kserve.io/inferenceservice: d3-mini
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: live-transcript-dev
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: live-transcript
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: decision-serving
+    ports:
+    - protocol: TCP
+      port: 8080

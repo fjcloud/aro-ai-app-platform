@@ -6,7 +6,7 @@ metadata:
   labels:
     opendatahub.io/dashboard: 'true'
   annotations:
-    openshift.io/display-name: "Decision 3.0 native \xB7 T4 FP16"
+    openshift.io/display-name: Decision 3.0 native · T4 FP16
 spec:
   multiModel: false
   supportedModelFormats:
