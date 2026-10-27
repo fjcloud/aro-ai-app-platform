@@ -29,13 +29,14 @@ var assets embed.FS
 const maxAudio = 2 << 20
 
 type server struct {
-	endpoint  string
-	token     string
-	client    *http.Client
-	slots     chan struct{}
-	agent     *agentClient
-	metrics   *metricsClient
-	toolSlots chan struct{}
+	endpoint   string
+	token      string
+	client     *http.Client
+	slots      chan struct{}
+	agent      *agentClient
+	metrics    *metricsClient
+	toolSlots  chan struct{}
+	publicHost string
 }
 
 func newServer(endpoint, token string) (*server, error) {
@@ -244,6 +245,7 @@ func main() {
 		}
 		app.metrics = &metricsClient{endpoint: endpoint, tokenFile: envDefault("SERVICE_ACCOUNT_TOKEN_FILE", "/var/run/secrets/kubernetes.io/serviceaccount/token"), client: client}
 	}
+	app.publicHost = os.Getenv("MCP_PUBLIC_HOST")
 	server := &http.Server{Addr: envDefault("LISTEN_ADDR", ":8080"), Handler: app.routes(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 110 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
 	log.Print("Cluster Voice listening")
 	signals, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

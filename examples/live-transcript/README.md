@@ -34,6 +34,7 @@ Running `go run .` with no agent configuration retains the microphone UI; questi
 | `AGENT_KEY_FILE` | Mounted runtime MaaS key; default `/etc/agent/OPENAI_API_KEY`; read for each call |
 | `PROMETHEUS_URL` | Internal Thanos URL; no browser access or public monitoring endpoint needed |
 | `SERVICE_ACCOUNT_TOKEN_FILE` | Rotating projected service-account token |
+| `MCP_PUBLIC_HOST` | Exact public app hostname allowed through the loopback OAuth proxy; empty preserves the SDK’s local-development DNS protection |
 | `SERVICE_CA_FILE` | OpenShift service CA bundle; certificates are always verified |
 | `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` | MLflow `/v1/traces`; absent means local trace IDs without export |
 | `MLFLOW_EXPERIMENT_ID`, `MLFLOW_WORKSPACE` | Tracking experiment and project namespace |
@@ -54,6 +55,6 @@ Each answer displays the actual query, unit, query time and Prometheus sample ti
 
 Each question produces an `AGENT` root span with `LLM` and `TOOL` children. Transcription is a separate trace; the question links to the last audio clip's real trace/span IDs. This makes the two stages navigable without holding a trace open while a user edits their question. Earlier clips keep their own traces.
 
-Traces contain prompt version `cluster-health-v1`, model ID, token usage, tool names, metric IDs, status and timing. Audio, question/answer text, query result labels and credentials are not recorded. Authentication is refreshed for every MLflow export. Trace delivery is best effort and does not turn a monitoring failure into success; check the MLflow UI during the live acceptance test. The SQLite/PVC tracking configuration is for this disposable workshop, without artifact serving.
+Traces contain prompt version `cluster-health-v2`, model ID, token usage, tool names, metric IDs, status and timing. Audio, question/answer text, query result labels and credentials are not recorded. Authentication is refreshed for every MLflow export. Trace delivery is best effort and does not turn a monitoring failure into success; check the MLflow UI during the live acceptance test. The SQLite/PVC tracking configuration is for this disposable workshop, with the operator-required filesystem artifact proxy.
 
 The Gen AI Playground and MaaS external model path are Technology Preview in OpenShift AI 3.5. MCP tool compatibility, OpenShift authentication, MLflow export, GPU inference and actual DeepSeek behavior require the live acceptance checks in Lab 3.2; local tests alone are insufficient.

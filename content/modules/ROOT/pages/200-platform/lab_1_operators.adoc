@@ -71,7 +71,7 @@ The script runs these phases in order and stops on failure:
 . Bind the MaaS gateway to this cluster’s domain and ingress certificate; configure Authorino TLS and the OpenShift AI dashboard.
 . Enable MaaS telemetry and the OpenShift AI metrics stack (one 5 GiB metrics volume, seven-day retention), then wait for the gateway to be Programmed and Dev Spaces to be Active.
 
-The MLflow operator is enabled in this same platform step. A small SQLite/PVC tracking instance stores workshop traces; Lab 1.6 prepares the application experiment and permissions.
+The MLflow operator is enabled in this same platform step. TrustyAI is also managed: the 3.5 Playground backend discovers the NeMo Guardrails API even when no guardrail instance is deployed. A small SQLite/PVC tracking instance stores workshop traces; Lab 1.6 prepares the application experiment and permissions.
 
 The included PostgreSQL uses ephemeral storage for this disposable workshop. Use a persistent, backed-up database and independent credentials for production. Do not restart its storage during the workshop: MaaS API keys are stored there.
 

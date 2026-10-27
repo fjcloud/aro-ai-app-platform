@@ -46,7 +46,7 @@ oc get mlflow mlflow -o jsonpath='{.status.url}{"\n"}'
 
 Wait for the MLflow instance to be ready and publish its HTTPS URL. If setup stopped before creating the instance, rerun `bash scripts/install-platform.sh`. Do not replace an existing tracking instance's storage settings.
 
-This workshop stores trace metadata in the database. It does not enable artifact serving or deploy a production HA database/object store.
+This workshop stores trace metadata in the database. The native operator requires artifact serving for a filesystem destination, so the lab enables that proxy on the same PVC. The exercise uses traces only. This is disposable lab storage, not a production HA database/object store.
 
 == Prepare runtime access
 

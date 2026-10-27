@@ -46,6 +46,9 @@ def request_json(url, token, data=None, workspace=None):
         opener = urllib.request.build_opener(NoRedirect, urllib.request.HTTPSHandler(context=ssl.create_default_context()))
         with opener.open(request, timeout=45) as response:
             return json.loads(response.read(256 * 1024))
+    except urllib.error.HTTPError as error:
+        from urllib.parse import urlsplit
+        raise RuntimeError('Authenticated API HTTP ' + str(error.code) + ' at ' + urlsplit(url).path) from None
     except Exception:
         raise RuntimeError('Authenticated API request failed; check login, endpoint readiness and quota') from None
 
@@ -76,7 +79,16 @@ def prepare(mlflow_uri=None):
     oc('label', 'namespace', namespace, 'opendatahub.io/dashboard=true', '--overwrite')
     # This role grants only metrics API access, rather than general monitoring UI access.
     get('role', 'cluster-monitoring-metrics-api', 'openshift-monitoring')
-    get('clusterrole', 'mlflow-integration')
+    integration_role = None
+    for candidate in ('mlflow-operator-mlflow-integration', 'mlflow-integration'):
+        try:
+            get('clusterrole', candidate)
+            integration_role = candidate
+            break
+        except RuntimeError:
+            continue
+    if not integration_role:
+        raise RuntimeError('MLflow integration role is unavailable; check the native operator')
     subject = {'kind': 'ServiceAccount', 'name': 'cluster-voice', 'namespace': namespace}
     sa = metadata('cluster-voice', namespace)
     sa['annotations'] = {
@@ -88,7 +100,16 @@ def prepare(mlflow_uri=None):
                   'cluster-monitoring-metrics-api', subject, role_kind='Role'))
     # OAuth proxy delegates bearer authentication for MCP, never passes tokens upstream.
     apply(binding('cluster-voice-auth-' + namespace, None, 'system:auth-delegator', subject, cluster=True))
-    apply(binding('cluster-voice-mlflow', namespace, 'mlflow-integration', subject))
+    apply(binding('cluster-voice-mlflow', namespace, integration_role, subject))
+    # Playground tokens authorize only this connector's Service, not namespace editing.
+    viewer = {'kind': 'ServiceAccount', 'name': 'cluster-voice-playground', 'namespace': namespace}
+    apply({'apiVersion': 'v1', 'kind': 'ServiceAccount',
+           'metadata': metadata(viewer['name'], namespace)})
+    apply({'apiVersion': 'rbac.authorization.k8s.io/v1', 'kind': 'Role',
+           'metadata': metadata('cluster-voice-playground', namespace),
+           'rules': [{'apiGroups': [''], 'resources': ['services'],
+                      'resourceNames': ['live-transcript'], 'verbs': ['get']}]})
+    apply(binding('cluster-voice-playground', namespace, 'cluster-voice-playground', viewer, role_kind='Role'))
     apply(binding('cluster-voice-image-puller', 'live-transcript-build', 'system:image-puller', subject))
     apply(binding('cluster-voice-proxy-puller', namespace, 'system:image-puller', subject))
     apply({'apiVersion': 'v1', 'kind': 'ConfigMap',
@@ -115,10 +136,9 @@ def prepare(mlflow_uri=None):
         raise RuntimeError('Log in with an OpenShift user token to mint the runtime MaaS key')
     domain = oc('get', 'ingress.config.openshift.io', 'cluster', '-o', 'jsonpath={.spec.domain}')
     maas = 'https://maas.' + domain
-    oc('patch', 'odhdashboardconfig', 'odh-dashboard-config', '-n', 'redhat-ods-applications',
-       '--type=merge', '-p', json.dumps({'spec': {'dashboardConfig': {'aiAssetCustomEndpoints': True},
-           'genAiStudioConfig': {'aiAssetCustomEndpoints': {'clusterDomains': [domain]}}}}))
     oc('apply', '-f', str(ROOT / 'deploy/agentops/runtime-subscription.yaml'))
+    oc('wait', 'maassubscription/deepseekv4pro-cluster-voice', '-n', 'models-as-a-service',
+       '--for=condition=Ready', '--timeout=180s')
     key = request_json(maas + '/maas-api/v1/api-keys', user_token,
                        {'name': 'cluster-voice-runtime', 'description': 'Cluster Voice runtime only',
                         'subscription': 'deepseekv4pro-cluster-voice', 'expiresIn': '24h'})
@@ -133,6 +153,7 @@ def prepare(mlflow_uri=None):
     experiment = ensure_experiment(mlflow_uri, token, namespace)
     apply({'apiVersion': 'v1', 'kind': 'ConfigMap', 'metadata': metadata('cluster-voice-config', namespace),
            'data': {'AGENT_BASE_URL': maas + '/v1', 'AGENT_MODEL': 'deepseekv4pro',
+                    'MCP_PUBLIC_HOST': 'live-transcript-' + namespace + '.' + domain,
                     'PROMETHEUS_URL': 'https://thanos-querier.openshift-monitoring.svc:9091',
                     'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT': mlflow_uri + '/v1/traces',
                     'MLFLOW_EXPERIMENT_ID': experiment, 'MLFLOW_WORKSPACE': namespace}})

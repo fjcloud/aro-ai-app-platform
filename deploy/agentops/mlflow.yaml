@@ -1,5 +1,6 @@
 # Workshop-only SQLite/PVC deployment, not a production HA configuration.
-# No artifact serving: this exercise stores trace metadata in the database.
+# The operator requires artifact serving with a file:// destination.
+# The exercise uses traces; this PVC setup is disposable, not production storage.
 apiVersion: mlflow.opendatahub.io/v1
 kind: MLflow
 metadata:
@@ -13,4 +14,4 @@ spec:
         storage: 10Gi
   backendStoreUri: sqlite:////mlflow/mlflow.db
   artifactsDestination: file:///mlflow/artifacts
-  serveArtifacts: false
+  serveArtifacts: true

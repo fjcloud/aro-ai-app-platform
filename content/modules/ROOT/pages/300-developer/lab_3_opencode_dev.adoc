@@ -72,6 +72,8 @@ Implement the plan and deploy it using AGENTS.md.
 Keep the preconfigured internal-registry image in the Deployment. Wait for Tekton to succeed and the image tag to exist before creating the Argo CD Application. Wait for Synced / Healthy and the Deployment rollout, then print the app and Argo CD URLs.
 ----
 
+Before Tekton starts, `git status --porcelain` must be empty: the local source you tested must match the pushed commit, including any authorized facilitator-prepared changes.
+
 OpenCode writes the files, compiles, then ships from `AGENTS.md`. When it is done it should print the app route and the Argo CD console URL. The Argo CD `Application` must live in `$\{APP_NAME}-dev` (never `default`).
 
 [IMPORTANT]

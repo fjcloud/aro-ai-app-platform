@@ -327,3 +327,32 @@ func TestMetricsVerifyTLSAndRejectRedirects(t *testing.T) {
 		t.Fatal("redirect followed")
 	}
 }
+
+func TestMCPBehindLoopbackProxyUsesExactHostAndOrigin(t *testing.T) {
+	s, _ := newServer("http://speech.invalid/v1", "")
+	s.publicHost = "cluster-voice.apps.example.com"
+	upstream := httptest.NewServer(s.routes())
+	defer upstream.Close()
+	for _, tc := range []struct {
+		host, origin string
+		code         int
+	}{
+		{s.publicHost, "", 200}, {s.publicHost, "https://" + s.publicHost, 200},
+		{"attacker.example", "", 403}, {s.publicHost, "https://attacker.example", 403},
+	} {
+		request, _ := http.NewRequest("POST", upstream.URL+"/mcp", strings.NewReader(`{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"proxy-test","version":"1"}}}`))
+		request.Host = tc.host
+		request.Header.Set("Origin", tc.origin)
+		request.Header.Set("Content-Type", "application/json")
+		request.Header.Set("Accept", "application/json, text/event-stream")
+		response, err := upstream.Client().Do(request)
+		if err != nil {
+			t.Fatal(err)
+		}
+		io.Copy(io.Discard, response.Body)
+		response.Body.Close()
+		if response.StatusCode != tc.code {
+			t.Fatalf("host=%s origin=%s: status %d", tc.host, tc.origin, response.StatusCode)
+		}
+	}
+}

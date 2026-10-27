@@ -1,34 +1,55 @@
 # Cluster Voice validation — 2026-10-27
 
-**Status: implementation and local integration verified; live ARO acceptance pending.** The previous lab API no longer resolves. A replacement environment is being provisioned. No new model, GPU, native Playground or MLflow UI success is claimed in this record.
+**Status: passed on the live ARO lab `tfclk`.** The same `live-transcript` Go application now supports voice questions, read-only cluster metrics and MLflow traces. Its Git → Tekton → personal Argo CD delivery path remains intact.
 
-Changes are isolated in `feature/cluster-voice-agentops` in the workshop and app-template repositories. The published workshop and the existing template branch remain unchanged until coordinated validation/merge.
+## Environment and delivery
 
-## Passed locally
+- ARO 4.21.22; OpenShift AI 3.5.2; MLflow 3.14.0; Dev Spaces 3.31.0; Pipelines 1.24.2; GitOps 1.22.2.
+- One `Standard_NC8as_T4_v3` worker, one physical Tesla T4. RedHatAI Whisper INT8 serves speech through an internal OpenShift AI endpoint. Observed GPU memory: 7.949 GiB.
+- DeepSeek-V4 Pro on Azure AI Foundry is exposed through OpenShift AI MaaS. Coding and runtime have separate subscriptions and keys. The deployed provider accepts required tool choice with `reasoning_effort=none`.
+- OpenCode 1.18.14 ran in the actual Dev Space through MaaS and implemented the CPU-over-one-hour shortcut exercise.
+- Final personal app revision: `2782b6b7f001c2db6be9f1c10ba3fc7cb1464de8`. The workspace was clean and matched remote Git and Argo CD.
+- PipelineRun `build-app-cz87n`: Succeeded. Application: Synced / Healthy. Running app image: `sha256:d5c33d2d17416983550c686f21a1533fe593f4168627ac807600ee26cde0897c`.
+- Both app containers Ready. Runtime SCC: `restricted-v2`. Builds use `pipelines-scc` and Linux user namespaces (`hostUsers: false`), without privileged containers.
 
-- 28 Python workshop helper tests, including runtime identity, monitoring Role binding, separate MaaS key, workspace experiment and non-destructive MCP catalog registration.
-- 13 Go test functions with race detection; `go vet ./...` passes. Controlled HTTP servers exercise Whisper framing, upload limits, MaaS tool loops, history validation, tool-call budget, catalog-only PromQL, bounded trends, missing/partial data, TLS verification, redirect rejection and token rotation.
-- A real MCP SDK client discovers and calls the reference server's tools over Streamable HTTP; extra tool arguments are rejected.
-- Real OTLP protobuf requests reach a local test receiver with the workspace/experiment headers and refreshed bearer authentication. This validates exporter protocol, not ingestion by the native Red Hat MLflow deployment.
-- Chromium browser integration uses `--use-mock-keychain` and a synthetic spoken fixture. The real Go app captures microphone clips, displays editable text, waits for explicit submission, executes an agent/tool round trip, renders evidence and a trace ID, accepts a typed follow-up, handles an upstream outage and releases microphone tracks. Upstream Whisper, MaaS and Thanos are simulated. Last run: 2 speech requests, 5 model requests, 2 monitoring queries.
-- 16 ARO template checks pass, including the app-image guard with the OAuth sidecar, restricted-v2, loopback listener, secret mounts and HTTPS probes.
-- Antora guide builds; 13 instruction pages, 43 shell blocks and 367 local rendered links validate.
+## Live acceptance
 
-## Live acceptance still required
+| Check | Observed result |
+| --- | --- |
+| Platform | Operators and workers ready; real Foundry completion through MaaS; invalid key rejected; coding/provider keys separate; effective provider capacity 500,000 TPM |
+| Speech | RedHatAI model ready on exactly one T4; no public speech Route; network isolation and real transcription pass |
+| Delivery | Actual Dev Space identity and scoped permissions, clean pushed source, successful Tekton build, matching Argo revision and running image, OAuth, probes and restricted admission pass |
+| Runtime agent | Real node-readiness, CPU one-hour trend and GPU-memory questions produce monitoring evidence with units and timestamps |
+| Browser voice | English and French microphone capture → real Whisper → explicit question submission → real MaaS tool calling → cluster evidence pass |
+| Access control | Unauthenticated app/chat access denied; authorized OpenShift login works; MCP uses a dedicated Service-reader token; that identity cannot read Secrets or create pods |
+| Native Playground | Existing MaaS catalog model, runtime subscription and OpenShift-Health connector work together; three tools discovered; actual `query_metric` CPU trend result shown |
+| Native MLflow | Application launcher opens MLflow; workspace/experiment overview displays trace/token metrics; persisted Go trace contains AGENT, LLM and TOOL spans and a link to the speech trace |
+| Observability | All nine dashboard expressions return series, including separate coding/runtime usage, Whisper latency and GPU memory |
+| Behavioral evaluation | A request to delete pods is refused; an unsupported metric is identified without inventing its value. Actual lab alerts are reported rather than hidden behind a blanket healthy answer |
 
-1. Run platform setup on the new lab, including native MLflow, then developer and Cluster Voice preparation. Confirm the cluster's OAuth proxy ImageStream digest imports successfully and the actual MLflow endpoint/experiment APIs match this release.
-2. Build the same personal app repository with Tekton and deliver the matching Git revision through personal Argo CD. Check restricted-v2 admission, image digests and both container readiness states.
-3. Verify unauthenticated users cannot read the app's health questions or MCP results; log in through OpenShift and verify an allowed participant can use both.
-4. Run `python3 e2e/check-cluster-voice.py` for real MaaS tool calling and internal monitoring evidence. Check DeepSeek's `reasoning_effort=none` plus required first tool choice through the deployed external provider.
-5. Run browser microphone checks against the deployed app using private authenticated browser state. Compare returned evidence with Observe → Metrics at the same query time.
-6. Find the displayed trace ID in the native MLflow experiment and inspect model/tool children and the linked audio clip. No raw audio, prompts or credentials should appear.
-7. In the native Gen AI Playground, configure DeepSeek via MaaS, authorize the OpenShift-Health MCP connector and observe a real query_metric call. Verify custom endpoint and token handling on this installed OpenShift AI version.
-8. Evaluate the Lab 3.2 failure/missing/stale-data and mutation-refusal cases. Local protocol fixtures do not assess real LLM behavior.
+The final French voice test used prompt `cluster-health-v2`: first transcript in 4.309 seconds, two Whisper clip responses in 340 ms and 188 ms. The English test returned its first text in 3.303 seconds. These are single-run observations with synthetic microphone fixtures, not performance guarantees. Permission denial, upstream speech failure and microphone release also passed.
 
-## Implementation references
+The French voice trace `98dadf6f639b73f9b5f03c9a01208d69` is stored in MLflow as `tr-98dadf6f639b73f9b5f03c9a01208d69`. The native browser check reads its actual stored spans: `cluster.question`, `llm.chat`, `tool.cluster_health`, `llm.chat`, plus the linked speech trace. Trace payloads omit audio, question/answer text, tool results and credentials. Model token usage and the prompt version are retained.
 
-- OpenShift 4.21 monitoring access is enforced against `prometheuses/api` on `openshift-monitoring/k8s`. `cluster-monitoring-metrics-api` is a **Role** in that namespace: [release-4.21 monitoring operator role](https://github.com/openshift/cluster-monitoring-operator/blob/release-4.21/assets/cluster-monitoring-operator/cluster-monitoring-api-role.yaml), [Thanos authorization](https://github.com/openshift/cluster-monitoring-operator/blob/release-4.21/assets/thanos-querier/kube-rbac-proxy-web-secret.yaml).
-- The Playground supports MCP tools and custom endpoints as Technology Preview: [Red Hat prerequisites and MCP configuration](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/html/experimenting_with_models_in_the_gen_ai_playground/playground-prerequisites_rhoai-user).
-- Native MLflow has namespace-scoped integration roles; the small SQLite/PVC configuration is a workshop deployment: [Red Hat MLflow setup](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/html/working_with_mlflow/installing-mlflow_mlflow).
-- Go traces use MLflow's OTLP endpoint and experiment/workspace headers: [MLflow OpenTelemetry integration](https://mlflow.org/docs/latest/genai/tracing/app-instrumentation/opentelemetry/).
-- DeepSeek V4 thinking mode rejects required tool choice; the app explicitly requests non-thinking mode: [DeepSeek API](https://api-docs.deepseek.com/api/create-chat-completion/). Foundry compatibility remains a live gate.
+## Corrections validated on this lab
+
+- Wait for the Authorino Deployment on fresh installations before setting its TLS environment.
+- Use the native MLflow integration-role name, wait for the runtime MaaS subscription, and enable artifact serving as required by the operator's `file://` configuration.
+- Enable the TrustyAI component so the installed native Playground backend can discover its guardrail CRDs. No guardrail inference instance or extra GPU is created.
+- Reuse the existing MaaS model in the Playground; no custom endpoint or provider key copy is needed.
+- Give the Playground a dedicated short-lived identity restricted to reading the app Service.
+- Replace the MCP SDK's localhost-only check behind the loopback OAuth proxy with exact public Host and Origin checks. Requests with an unrelated Host or Origin are rejected.
+- Require a clean, committed and pushed app source before Tekton, and verify its revision through Argo CD. Historical trend samples are distinguished from stale current data.
+
+## Local regression checks
+
+31 Python workshop tests, 14 Go test functions with race detection, `go vet ./...`, and 16 ARO template checks pass. Controlled HTTP tests cover bounded agent/tool loops, metrics failures, missing data, TLS verification, token rotation, OTLP export and MCP Host/Origin handling. A separate Chromium/Go integration test uses simulated upstreams; it is distinct from the live checks above. Every Chromium launch uses `--use-mock-keychain`.
+
+Antora builds successfully; static validation covers 13 instruction pages, 43 shell blocks, 17 generated HTML files and 367 local rendered references.
+
+## Limits
+
+- Short speech clips provide near-real-time transcription, not native Whisper WebSocket streaming.
+- Playground/external MaaS functionality is Technology Preview in this OpenShift AI release. Its MCP call was verified in the native UI; its internal backend traces are not claimed to be exported to the app's MLflow experiment.
+- The single-replica SQLite/PVC MLflow deployment is for this disposable workshop, not production HA. MLflow's “No cost data available” / `$0.00` display does not establish inference cost; inspect MaaS usage and Foundry billing separately.
+- The model can phrase an answer imperfectly. Returned measurements, timestamps, errors and gaps remain the authoritative evidence. Local failure/stale-data fixtures and the two live behavioral cases do not establish correctness for every possible prompt.

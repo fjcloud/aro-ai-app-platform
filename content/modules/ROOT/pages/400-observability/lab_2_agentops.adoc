@@ -31,15 +31,17 @@ From the OpenShift console, open *Observe → Metrics* and run one expression fr
 
 == Inspect the MLflow trace
 
-Open MLflow from the OpenShift AI application menu and select workspace `live-transcript-dev`, experiment `cluster-voice`. Find the trace ID displayed below your answer.
+Open MLflow from the OpenShift AI application menu and select workspace `live-transcript-dev`, experiment `cluster-voice`. Find the `tr-…` MLflow trace ID displayed below your answer.
 
 The question trace contains:
 
-* `cluster.question`: the whole agent turn and prompt version `cluster-health-v1`.
+* `cluster.question`: the whole agent turn and prompt version `cluster-health-v2`.
 * `llm.chat`: each MaaS request, model ID, duration and reported input/output token counts.
 * `tool.cluster_health` or `tool.query_metric`: the tool duration, selected metric and status.
 
 Transcription has its own `speech.transcribe` trace. The agent trace links to the last audio clip, so the user can take time to review their question without keeping an inference span open. Earlier clips retain separate trace IDs. Traces intentionally omit audio, question/answer text, query results and credentials.
+
+MLflow may show `$0.00` alongside *No cost data available* when model pricing is not configured. This does not mean inference is free; use the MaaS usage and Foundry billing checks in Lab 3.1.
 
 Compare the timings. A slow answer can come from the LLM, a monitoring query, or several tool rounds. Whisper latency is a separate stage. If the expected trace is absent, investigate the MLflow endpoint, workspace permissions and exporter configuration; the answer being visible does not prove export succeeded.
 
@@ -48,20 +50,20 @@ Compare the timings. A slow answer can come from the LLM, a monitoring query, or
 The Gen AI Playground and external MaaS models are *Technology Preview* in OpenShift AI 3.5. This exercise is separate from the production support status of MLflow. The connector uses MCP Streamable HTTP.
 
 . Open *Gen AI studio → Playground* in OpenShift AI and select project `live-transcript-dev`.
-. Add a custom OpenAI-compatible endpoint for DeepSeek: use the same MaaS `/v1` base URL and model `deepseekv4pro`, enable tool calling, and use a dedicated MaaS key. Never enter an Azure account key. Lab 1.6 enables custom endpoints and recognizes this cluster’s ingress domain as internal; it does not enable arbitrary external providers. Create the Playground key from MaaS API key management under the runtime subscription.
-. Create the Playground and open the *MCP* settings tab. Select *OpenShift-Health*.
+. In *AI asset endpoints → Models*, select *DeepSeek-V4 Pro*, click *Add to playground* and create the Playground. The model already comes from MaaS; no custom endpoint or copied provider key is needed. In the model settings, select the *Cluster Voice runtime* subscription so its usage is separate from coding.
+. Open the Playground's *MCP* settings tab. Select *OpenShift-Health*.
 . Authorize its MCP connection with a short-lived OpenShift token supplied by the facilitator below. Do not reuse the MaaS key as the MCP token.
 . Open *View tools*. Expect `list_metrics`, `cluster_health` and `query_metric`.
-. Ask: “Use query_metric to show cpu_percent over 1h. Cite the returned timestamp and unit.” Inspect the actual tool result.
+. Ask: “Use query_metric to summarize CPU usage over 1h by node. Include percent units and the latest sample time; keep raw samples in the tool result.” Inspect the actual tool result.
 
-The app's developer identity can read its application Service. From the *bastion terminal*, the facilitator can issue a short-lived token for this test:
+The platform prepares a dedicated Playground identity that can read only this application's Service. From the *bastion terminal*, the facilitator can issue a short-lived token for this test:
 
 [source,sh,role=execute]
 ----
-oc create token workshop-developer -n live-transcript-dev --duration=15m
+oc create token cluster-voice-playground -n live-transcript-dev --duration=15m
 ----
 
-Paste it only into the MCP authorization dialog; do not commit it, include it in screenshots or send it as a prompt. It expires after 15 minutes. The OAuth proxy validates the token and its app access before allowing MCP calls. Use a narrower participant role for a shared deployment beyond this assigned workshop.
+Paste it only into the MCP authorization dialog; do not commit it, include it in screenshots or send it as a prompt. It expires after 15 minutes. The OAuth proxy validates the token and its app access before allowing MCP calls. This identity cannot read Secrets, create pods or edit workloads.
 
 The Playground does not replace the microphone app: it tests the connector and prompt independently of audio capture. An answer without a tool result is not a successful MCP test.
 

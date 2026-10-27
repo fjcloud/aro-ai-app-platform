@@ -15,20 +15,22 @@ spec.loader.exec_module(module)
 
 
 class ClusterVoicePreparation(unittest.TestCase):
-    def run_prepare(self, existing_catalog=False):
+    def run_prepare(self, existing_catalog=False, native_role=True):
         manifests, calls = [], []
         def oc(*args):
             calls.append(args)
             if args[:2] == ('get','mlflow'):
                 return json.dumps({'status': {'url':'https://ai.lab.example/mlflow'}})
             if args[:2] == ('get','namespace') or args[:2] in (('get','clusterrole'),('get','role')):
+                if args[:3] == ('get','clusterrole','mlflow-operator-mlflow-integration') and not native_role:
+                    raise RuntimeError('Role not found')
                 return '{}'
             if args[:3] == ('adm','release','info'):
                 return 'quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:'+'a'*64
             if args[:2] == ('whoami','-t'):return 'private-user-token'
             if args[:2] == ('get','ingress.config.openshift.io'):return 'apps.lab.example'
             if args[:2] == ('create','token'):return 'private-runtime-token'
-            if args[0] in ('apply','patch','label','import-image'):return ''
+            if args[0] in ('apply','patch','label','import-image','wait'):return ''
             raise AssertionError(args)
         def run(args, **kwargs):
             if args[1:3] == ['get','secret']:return SimpleNamespace(returncode=1)
@@ -38,6 +40,7 @@ class ClusterVoicePreparation(unittest.TestCase):
             raise AssertionError(args)
         def request(url, token, data=None, workspace=None):
             if 'api-keys' in url:
+                self.assertTrue(any(c[:2]==('wait','maassubscription/deepseekv4pro-cluster-voice') for c in calls))
                 self.assertEqual(data['subscription'],'deepseekv4pro-cluster-voice')
                 self.assertEqual(token,'private-user-token')
                 return {'key':'sk-oai-private-runtime-key','id':'key-id'}
@@ -80,3 +83,17 @@ class ClusterVoicePreparation(unittest.TestCase):
         for url in ('http://bad.example','https://user:password@bad.example','https://bad.example?key=secret'):
             with patch.object(module,'oc') as oc,self.assertRaises(RuntimeError):module.prepare(url)
             oc.assert_not_called()
+
+    def test_native_and_standalone_mlflow_role_names(self):
+        for native in (True,False):
+            with self.subTest(native=native):
+                manifests,_,_=self.run_prepare(native_role=native)
+                binding=next(m for m in manifests if m['metadata']['name']=='cluster-voice-mlflow')
+                self.assertEqual(binding['roleRef']['name'], 'mlflow-operator-mlflow-integration' if native else 'mlflow-integration')
+
+    def test_playground_identity_cannot_edit_namespace_or_read_secrets(self):
+        manifests,_,_=self.run_prepare()
+        role=next(m for m in manifests if m['kind']=='Role' and m['metadata']['name']=='cluster-voice-playground')
+        self.assertEqual(role['rules'],[{'apiGroups':[''],'resources':['services'],'resourceNames':['live-transcript'],'verbs':['get']}])
+        binding=next(m for m in manifests if m['kind']=='RoleBinding' and m['metadata']['name']=='cluster-voice-playground')
+        self.assertEqual(binding['subjects'][0]['name'],'cluster-voice-playground')

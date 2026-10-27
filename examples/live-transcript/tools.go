@@ -127,8 +127,18 @@ func (s *server) mcpHandler() http.Handler {
 				return &mcp.CallToolResult{IsError: failed, Content: []mcp.Content{&mcp.TextContent{Text: string(b)}}}, nil
 			})
 	}
-	handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return srv }, &mcp.StreamableHTTPOptions{Stateless: true, JSONResponse: true})
+	handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return srv }, &mcp.StreamableHTTPOptions{Stateless: true, JSONResponse: true, DisableLocalhostProtection: s.publicHost != ""})
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// The OAuth sidecar connects over loopback while preserving the public Host.
+		// Replace the SDK's localhost-only guard with exact Host/Origin checks.
+		if s.publicHost != "" {
+			allowed := strings.EqualFold(r.Host, s.publicHost) || strings.EqualFold(r.Host, s.publicHost+":443")
+			origin := r.Header.Get("Origin")
+			if !allowed || (origin != "" && origin != "https://"+s.publicHost && origin != "https://"+s.publicHost+":443") {
+				http.Error(w, "Unrecognized MCP host or origin", http.StatusForbidden)
+				return
+			}
+		}
 		r.Body = http.MaxBytesReader(w, r.Body, 16384)
 		handler.ServeHTTP(w, r)
 	})

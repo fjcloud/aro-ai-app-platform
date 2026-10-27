@@ -63,6 +63,18 @@ const assert = require('node:assert/strict');
     let text = '';for await (const chunk of stream) text += chunk.toString();
     assert.match(text, expected);
     result.finalTranscript = text.trim();
+    if (process.env.ASK_CLUSTER === 'true') {
+      await page.getByRole('button', {name:'Ask the cluster', exact:true}).click();
+      await expect(page.locator('#conversation article')).toHaveCount(1, {timeout:110000});
+      await page.locator('#conversation summary').click();
+      const evidence = JSON.parse(await page.locator('#conversation pre').innerText());
+      assert.ok(evidence.some(e=>e.metric==='nodes_ready' && e.status==='ok'), 'Voice question must retrieve live node-readiness evidence');
+      const trace = await page.locator('#conversation .trace').innerText();
+      result.agentTraceId = trace.match(/Trace: ([a-f0-9]{32})/)[1];
+      result.agentMetrics = evidence.map(e=>e.metric);
+      result.voiceToMetricsPassed = true;
+      await expect(page.getByRole('button', {name:'Ask the cluster',exact:true})).toBeEnabled();
+    }
     if (process.env.SPEECH_SCREENSHOT) await page.screenshot({path: process.env.SPEECH_SCREENSHOT, fullPage: true});
     await page.getByRole('button', {name: 'Clear', exact: true}).click();
     await expect(page.getByLabel('Transcript', {exact: true})).toBeEmpty();

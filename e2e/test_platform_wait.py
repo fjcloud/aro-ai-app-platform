@@ -40,3 +40,27 @@ class PlatformWait(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class AuthorinoBootstrap(unittest.TestCase):
+    def test_service_can_exist_before_deployment(self):
+        with tempfile.TemporaryDirectory() as directory:
+            tmp=Path(directory);log=tmp/'calls.jsonl';counter=tmp/'counter'
+            cli=tmp/'oc';cli.write_text('''#!/usr/bin/env python3
+import json,os,pathlib,sys
+args=[a for a in sys.argv[1:] if not a.startswith('--request-timeout=')]
+with open(os.environ['CALL_LOG'],'a') as f:f.write(json.dumps(args)+'\\n')
+if args[:2]==['get','deployment/authorino']:
+ p=pathlib.Path(os.environ['COUNTER']);n=int(p.read_text())+1 if p.exists() else 1;p.write_text(str(n));sys.exit(0 if n>=2 else 1)
+if not pathlib.Path(os.environ['COUNTER']).exists() or int(pathlib.Path(os.environ['COUNTER']).read_text())<2:sys.exit('Configured before Deployment existed')
+''');cli.chmod(0o755)
+            sleep=tmp/'sleep';sleep.write_text('#!/bin/sh\nexit 0\n');sleep.chmod(0o755)
+            env=dict(os.environ,PATH=str(tmp)+os.pathsep+os.environ['PATH'],CALL_LOG=str(log),COUNTER=str(counter))
+            result=subprocess.run(['bash',str(ROOT/'deploy/instances/configure-authorino-tls.sh')],env=env,text=True,capture_output=True,timeout=10)
+            self.assertEqual(result.returncode,0,result.stderr)
+            calls=[json.loads(x) for x in log.read_text().splitlines()]
+            self.assertEqual(calls[:2],[['get','deployment/authorino','-n','kuadrant-system']]*2)
+            self.assertTrue(any('set' in c and 'env' in c for c in calls))
+
+
+if __name__ == '__main__':
+    unittest.main()

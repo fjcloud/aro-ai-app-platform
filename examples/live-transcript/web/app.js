@@ -129,7 +129,7 @@ $('question-form').onsubmit=async event=>{
     title.textContent=question;answer.textContent=result.answer;article.append(title,answer);
     const details=document.createElement('details'), summary=document.createElement('summary'), evidence=document.createElement('pre');
     summary.textContent=`Monitoring evidence (${result.evidence.length} queries)`;evidence.textContent=JSON.stringify(result.evidence,null,2);details.append(summary,evidence);article.append(details);
-    const trace=document.createElement('p');trace.className='trace';trace.textContent=`Trace: ${result.trace_id} · Prompt: ${result.prompt_version}`;article.append(trace);
+    const trace=document.createElement('p');trace.className='trace';trace.textContent=`Trace: ${result.trace_id} · MLflow: tr-${result.trace_id} · Prompt: ${result.prompt_version}`;article.append(trace);
     $('conversation').append(article);history.push({role:'user',content:question},{role:'assistant',content:result.answer.slice(0,1000)});history=history.slice(-8);while(new TextEncoder().encode(JSON.stringify(history)).length>16000) history.splice(0,2);
     $('transcript').replaceChildren();$('question').value='';speechTrace='';speechSpan='';$('status').textContent='Answer ready. Your microphone is off.';
   }catch(error){$('error').textContent=error.message || 'The cluster agent is unavailable';$('status').textContent='Question failed. Your microphone is off.';}

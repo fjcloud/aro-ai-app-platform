@@ -158,12 +158,13 @@ def developer():
     if workspace_ns or workspace_pod:
         require(bool(workspace_ns and workspace_pod), 'Both E2E_NS and DEV_POD supplied')
         prefix = ['exec', workspace_pod, '-n', workspace_ns, '-c', os.environ.get('DEV_CONTAINER', 'dev'), '--', 'bash', '-c']
+        require(not oc(*prefix, 'cd "$PROJECT_SOURCE" && git status --porcelain'), 'Workspace is clean: all application changes match the committed delivery')
         oc(*prefix, 'cd "$PROJECT_SOURCE" && test -f main.go && test -f go.mod && test -f Dockerfile && CGO_ENABLED=0 go build -buildvcs=false -o /dev/null .')
         print('PASS: Generated source files exist and Go build succeeds in the real workspace')
         head = oc(*prefix, 'cd "$PROJECT_SOURCE" && git rev-parse HEAD')
         remote = oc(*prefix, 'cd "$PROJECT_SOURCE" && git ls-remote origin refs/heads/main').split()[0]
         require(head == remote == application['status']['sync'].get('revision'), 'Workspace commit, pushed main and Argo CD revision match')
-        oc(*prefix, 'cd "$PROJECT_SOURCE" && git diff --exit-code && git cat-file -e HEAD:main.go')
+        oc(*prefix, 'cd "$PROJECT_SOURCE" && git cat-file -e HEAD:main.go')
         print('PASS: Application source committed with no unstaged changes')
     print('Application:', url)
     print('Git revision:', application['status']['sync'].get('revision', 'unknown'))
