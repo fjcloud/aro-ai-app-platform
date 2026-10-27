@@ -173,11 +173,20 @@ def main():
     # This assigned workshop has one GPU. Keep the speech model and its cache, stopped.
     if oc('get', 'inferenceservice', 'whisper', '-n', 'speech-serving', '--ignore-not-found', '-o', 'name'):
         oc('annotate', 'inferenceservice', 'whisper', '-n', 'speech-serving', 'serving.kserve.io/stop=true', '--overwrite')
-    oc('apply', '--server-side', '-k', str(ROOT / 'deploy/decision'))
-    # Freeze the custom runtime to the image actually built, not a mutable tag.
+    # Pin before applying: a later JSON patch would own the atomic containers
+    # field and conflict with the next server-side apply of the mutable tag.
+    # Client-side rendering keeps this helper stdlib-only.
     digest = get('imagestreamtag', 'decision-runtime:latest', BUILD)['image']['metadata']['name']
-    oc('patch', 'servingruntime', 'd3-native', '-n', NS, '--type=json', '-p', json.dumps([
-        {'op': 'replace', 'path': '/spec/containers/0/image', 'value': IMAGE.rsplit(':', 1)[0] + '@' + digest}]))
+    rendered = oc('create', '--dry-run=client', '-k', str(ROOT / 'deploy/decision'), '-o', 'json')
+    # oc emits concatenated JSON objects for a multi-resource Kustomization.
+    decoder = json.JSONDecoder()
+    while rendered:
+        resource, end = decoder.raw_decode(rendered)
+        for obj in resource.get('items', [resource]):
+            if obj['kind'] == 'ServingRuntime':
+                obj['spec']['containers'][0]['image'] = IMAGE.rsplit(':', 1)[0] + '@' + digest
+            apply(obj)
+        rendered = rendered[end:].lstrip()
     prepare_app(args.game)
     oc('wait', 'inferenceservice/d3-mini', '-n', NS, '--for=condition=Ready', '--timeout=900s')
     print('d3-mini is ready on the local T4. Copy the ' + args.game + ' reference into the personal app, then build and ship it.')
