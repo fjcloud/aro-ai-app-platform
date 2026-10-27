@@ -17,7 +17,7 @@ const assert=require('node:assert/strict');
   }
   await expect(page.getByRole('heading',{name:'Decision Tetris.',exact:true})).toBeVisible({timeout:30000});
   await expect(page.locator('#status')).toHaveText('Paused');
-  await page.locator('#seed').fill('42');await page.locator('#reset').click();
+  await page.locator('#seed').fill('42');await page.locator('#reset').click();await expect(page.locator('#step')).toBeEnabled();
   await page.locator('#step').click();await expect(page.locator('#turn')).toHaveText('1',{timeout:45000});
   await expect(page.locator('#choice')).toContainText('d3-mini chose');
   await expect(page.locator('.prob-row')).toHaveCount(5);await expect(page.locator('#tokens')).toContainText('0 generated tokens');
@@ -32,7 +32,7 @@ const assert=require('node:assert/strict');
   await page.route('**/api/game/step',route=>route.fulfill({status:502,contentType:'application/json',body:JSON.stringify({error:'Injected local model outage'})}));
   await page.locator('#run').click();await expect(page.locator('#error')).toHaveText('Injected local model outage');
   assert.equal(await page.locator('#turn').innerText(),beforeFailure,'A failed model call must not apply a fallback move');
-  await page.unroute('**/api/game/step');await page.locator('#reset').click();await expect(page.locator('#turn')).toHaveText('0');
+  await page.unroute('**/api/game/step');await page.locator('#reset').click();await expect(page.locator('#step')).toBeEnabled();await expect(page.locator('#turn')).toHaveText('0');
   await page.locator('#step').click();await expect(page.locator('#turn')).toHaveText('1',{timeout:45000});
   await page.screenshot({path:process.env.SCREENSHOT||'/private/tmp/cloud-terminal-tetris-live.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Mobile layout overflows');
