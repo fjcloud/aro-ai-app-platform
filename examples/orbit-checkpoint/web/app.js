@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id);
-let state,busy=false,automatic=false,timer,controller,previousPhase=-1;
+let state,busy=false,automatic=false,documentReady=false,timer,controller,previousPhase=-1;
 const label=a=>({clear:'Clear',inspect:'Inspect',reject:'Reject'}[a]||'Observer');
 const percent=(n,d)=>d?`${Math.round(n/d*100)}%`:'—';
 async function api(path,body,signal){const r=await fetch(path,{method:body===undefined?'GET':'POST',headers:body===undefined?{}:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal});const data=await r.json();if(!r.ok)throw Error(data.error||`Request failed (${r.status})`);return data;}
@@ -13,17 +13,17 @@ function render(){
  $('ai-score').textContent=percent(s.model_correct,resolved);$('ai-detail').textContent=resolved?`${s.model_correct} of ${resolved} inspections correct`:'No inspections yet';
  $('points').textContent=s.score.toLocaleString();$('streak').textContent=s.streak?`${s.streak} correct in a row`:'Build a streak';
  $('round').replaceChildren(document.createTextNode(String(Math.min(s.round+1,s.total)).padStart(2,'0')),Object.assign(document.createElement('span'),{textContent:` / ${s.total}`}));
- $('status').textContent=busy?'AI reading documents…':s.over?'Shift complete':automatic?'AI on duty':result?'Inspection complete':'Awaiting your stamp';
+ $('status').textContent=busy?'AI reading documents…':s.over?'Shift complete':!documentReady?'Loading documents…':automatic?'AI on duty':result?'Inspection complete':'Awaiting your stamp';
  $('directive-name').textContent=s.directive.name;$('directive-text').textContent=s.directive.text;$('phase').textContent=`${Math.min(Math.floor(s.round/4)+1,3).toString().padStart(2,'0')} / 03`;
  const phase=Math.floor(s.round/4);if(previousPhase!==-1&&phase!==previousPhase&&!s.over){const panel=document.querySelector('.directive');panel.classList.remove('changed');void panel.offsetWidth;panel.classList.add('changed');}previousPhase=phase;
  $('orders').textContent=s.standing_orders;
- const image=$('document');if(!s.over&&image.getAttribute('src')!==s.document){image.src=s.document;image.alt=`Passport and cargo permit for courier ${s.round+1}`;}
- image.hidden=s.over;$('loading').hidden=!s.over;$('loading').textContent='GATE CLOSED / SHIFT COMPLETE';
+ const image=$('document');if(!s.over&&image.getAttribute('src')!==s.document){documentReady=false;const requested=s.document;image.onload=()=>{if(state.document===requested&&image.complete&&image.naturalWidth){documentReady=true;render();}};image.onerror=()=>{$('error').textContent='The document image could not load. Reload to try again.';$('error').hidden=false;};image.src=s.document;image.alt=`Passport and cargo permit for courier ${s.round+1}`;}
+ image.hidden=s.over||!documentReady;$('loading').hidden=!s.over&&documentReady;$('loading').textContent=s.over?'GATE CLOSED / SHIFT COMPLETE':'Loading passport and permit…';
  $('document-wrap').classList.toggle('thinking',busy);$('desk-label').textContent=s.over?'SHIFT ARCHIVED':`COURIER ${String(s.round+1).padStart(2,'0')} / DOCUMENTS ON DESK`;
- $('zoom').disabled=s.over||busy;$('reset').disabled=busy||automatic;$('seed').disabled=busy||automatic;
+ $('zoom').disabled=s.over||busy||!documentReady;$('reset').disabled=busy||automatic;$('seed').disabled=busy||automatic;
  $('verdict-controls').hidden=!!result||s.over;$('result').hidden=!result;$('summary').hidden=!s.over;
- document.querySelectorAll('[data-action]').forEach(b=>b.disabled=busy||automatic||!!result||s.over);
- $('ai-one').disabled=busy||automatic||!!result||s.over;$('run').disabled=s.over||(busy&&!automatic);$('run').textContent=automatic?'Ⅱ Pause AI shift':'▶ Watch AI shift';
+ document.querySelectorAll('[data-action]').forEach(b=>b.disabled=busy||automatic||!!result||s.over||!documentReady);
+ $('ai-one').disabled=busy||automatic||!!result||s.over||!documentReady;$('run').disabled=s.over||(busy&&!automatic);$('run').textContent=automatic?'Ⅱ Pause AI shift':'▶ Watch AI shift';
  $('stamp').hidden=!result;$('stamp').className=`stamp ${result?.expected||''}`;if(result)$('stamp').textContent=label(result.expected).toUpperCase();
  if(result){
   const d=result.decision;$('human-verdict').textContent=label(result.human);$('human-verdict').className=result.human?(result.human_correct?'clear':'reject'):'';
@@ -48,12 +48,12 @@ async function perform(path,body){
 }
 async function decide(action){return perform('/api/shift/decide',{id:state.id,round:state.round,action});}
 async function next(){return perform('/api/shift/next',{id:state.id,round:state.round});}
-async function tick(){if(!automatic||busy)return;if(state.over){stop();return;}const ok=state.result?await next():await decide('watch');if(ok&&automatic){if(state.over)stop();else timer=setTimeout(tick,state.result?1800:120);}}
+async function tick(){if(!automatic||busy)return;if(!documentReady&&!state.over){timer=setTimeout(tick,100);return;}if(state.over){stop();return;}const ok=state.result?await next():await decide('watch');if(ok&&automatic){if(state.over)stop();else timer=setTimeout(tick,state.result?1800:120);}}
 document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>decide(b.dataset.action)));
 $('ai-one').addEventListener('click',()=>decide('watch'));$('next').addEventListener('click',next);
 $('run').addEventListener('click',()=>{if(automatic)stop();else{automatic=true;render();tick();}});
 $('reset').addEventListener('click',async()=>{const seed=Number($('seed').value);if(!Number.isSafeInteger(seed)||seed<0||seed>2147483647){$('error').textContent='Choose a whole-number seed from 0 to 2147483647.';$('error').hidden=false;return;}previousPhase=-1;await perform('/api/shift/new',{seed});});
 $('zoom').addEventListener('click',()=>{if(automatic)stop();$('zoom-image').src=state.document;$('zoom-dialog').showModal();});$('close-zoom').addEventListener('click',()=>$('zoom-dialog').close());
-document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||busy||automatic||!state||state.over||state.result||$('zoom-dialog').open||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;const action={c:'clear',i:'inspect',r:'reject'}[e.key.toLowerCase()];if(action){e.preventDefault();decide(action);}});
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||busy||automatic||!state||!documentReady||state.over||state.result||$('zoom-dialog').open||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;const action={c:'clear',i:'inspect',r:'reject'}[e.key.toLowerCase()];if(action){e.preventDefault();decide(action);}});
 window.addEventListener('pagehide',stop);
 (async()=>{try{state=await api('/api/shift');$('seed').value=state.seed;render();}catch(e){$('error').textContent=e.message;$('error').hidden=false;$('loading').textContent='Connection unavailable. Reload to try again.';}})();

@@ -18,7 +18,10 @@ const fs=require('node:fs');
   await expect(page.getByRole('heading',{name:'Orbit Checkpoint.',exact:true})).toBeVisible({timeout:30000});
   async function waitForDecision(){await expect(page.locator('#result:not([hidden]), #error:not([hidden])')).toBeVisible({timeout:90000});if(await page.locator('#error').isVisible())throw Error(await page.locator('#error').innerText());}
   await expect(page.locator('#clear')).toBeEnabled();
-  await page.locator('#seed').fill('42');await page.locator('#reset').click();await expect(page.locator('#clear')).toBeEnabled();
+  let releaseImage;const imageGate=new Promise(resolve=>{releaseImage=resolve;});
+  await page.route('**/api/document?*',async route=>{await imageGate;await route.continue();});
+  await page.locator('#seed').fill('42');await page.locator('#reset').click();await expect(page.locator('#clear')).toBeDisabled();await expect(page.locator('#document')).not.toBeVisible();
+  releaseImage();await expect(page.locator('#clear')).toBeEnabled();await page.unroute('**/api/document?*');
   await expect(page.locator('#directive-name')).toHaveText('Medical fast lane');
   await expect.poll(()=>page.locator('#document').evaluate(e=>e.complete&&e.naturalWidth)).toBe(1000);
   const initial=await page.evaluate(async()=>await(await fetch('/api/shift')).json());
@@ -52,7 +55,7 @@ const fs=require('node:fs');
   await page.locator('#reset').click();await expect(page.locator('#clear')).toBeEnabled();await expect(page.locator('#log-count')).toHaveText('0 inspections');
   await page.locator('#zoom').click();await expect(page.locator('#zoom-dialog')).toBeVisible();await expect.poll(()=>page.locator('.zoom-scroll').evaluate(e=>e.scrollWidth>e.clientWidth),{timeout:5000,message:'Full-size mobile document cannot be inspected'}).toBe(true);await page.locator('#close-zoom').click();
   assert.deepEqual(errors,[]);
-  const report={passed:true,scope:'Real browser, Go game and local d3-mini visual inference; separately injected HTTP outage',firstInference:firstLatency,fullShift:{couriers:end.history.length,modelCorrect:end.model_correct,humanPlayed:end.human_played,humanCorrect:end.human_correct},checks:['image evidence without extracted fields','document zoom','human correct and incorrect stamps','typed model probabilities','duplicate rejection','no fallback on error','autoplay','changing directives','pause and cancellation','12-courier completion','reset','mobile layout and full-size zoom','no browser errors']};
+  const report={passed:true,scope:'Real browser, Go game and local d3-mini visual inference; separately injected HTTP outage',firstInference:firstLatency,fullShift:{couriers:end.history.length,modelCorrect:end.model_correct,humanPlayed:end.human_played,humanCorrect:end.human_correct},checks:['stamps wait for current image','image evidence without extracted fields','document zoom','human correct and incorrect stamps','typed model probabilities','duplicate rejection','no fallback on error','autoplay','changing directives','pause and cancellation','12-courier completion','reset','mobile layout and full-size zoom','no browser errors']};
   if(process.env.RESULT_FILE)fs.writeFileSync(process.env.RESULT_FILE,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e.message);process.exitCode=1;});
