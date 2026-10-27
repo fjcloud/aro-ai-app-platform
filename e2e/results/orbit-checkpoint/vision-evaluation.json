@@ -1,0 +1,374 @@
+{
+  "accuracy": 1,
+  "cases": [
+    {
+      "seed": 42,
+      "round": 1,
+      "directive": "Medical fast lane",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 1572,
+      "input_tokens": 995
+    },
+    {
+      "seed": 42,
+      "round": 2,
+      "directive": "Medical fast lane",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 994,
+      "input_tokens": 995
+    },
+    {
+      "seed": 42,
+      "round": 3,
+      "directive": "Medical fast lane",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 850,
+      "input_tokens": 995
+    },
+    {
+      "seed": 42,
+      "round": 4,
+      "directive": "Medical fast lane",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 906,
+      "input_tokens": 995
+    },
+    {
+      "seed": 42,
+      "round": 5,
+      "directive": "Relic quarantine",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 905,
+      "input_tokens": 995
+    },
+    {
+      "seed": 42,
+      "round": 6,
+      "directive": "Relic quarantine",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 847,
+      "input_tokens": 995
+    },
+    {
+      "seed": 42,
+      "round": 7,
+      "directive": "Relic quarantine",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 853,
+      "input_tokens": 995
+    },
+    {
+      "seed": 42,
+      "round": 8,
+      "directive": "Relic quarantine",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 850,
+      "input_tokens": 995
+    },
+    {
+      "seed": 42,
+      "round": 9,
+      "directive": "Diplomatic corridor",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 1100,
+      "input_tokens": 994
+    },
+    {
+      "seed": 42,
+      "round": 10,
+      "directive": "Diplomatic corridor",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 852,
+      "input_tokens": 994
+    },
+    {
+      "seed": 42,
+      "round": 11,
+      "directive": "Diplomatic corridor",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 848,
+      "input_tokens": 994
+    },
+    {
+      "seed": 42,
+      "round": 12,
+      "directive": "Diplomatic corridor",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 852,
+      "input_tokens": 994
+    },
+    {
+      "seed": 7,
+      "round": 1,
+      "directive": "Medical fast lane",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 852,
+      "input_tokens": 995
+    },
+    {
+      "seed": 7,
+      "round": 2,
+      "directive": "Medical fast lane",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 856,
+      "input_tokens": 995
+    },
+    {
+      "seed": 7,
+      "round": 3,
+      "directive": "Medical fast lane",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 853,
+      "input_tokens": 995
+    },
+    {
+      "seed": 7,
+      "round": 4,
+      "directive": "Medical fast lane",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 854,
+      "input_tokens": 995
+    },
+    {
+      "seed": 7,
+      "round": 5,
+      "directive": "Relic quarantine",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 839,
+      "input_tokens": 995
+    },
+    {
+      "seed": 7,
+      "round": 6,
+      "directive": "Relic quarantine",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 854,
+      "input_tokens": 995
+    },
+    {
+      "seed": 7,
+      "round": 7,
+      "directive": "Relic quarantine",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 943,
+      "input_tokens": 995
+    },
+    {
+      "seed": 7,
+      "round": 8,
+      "directive": "Relic quarantine",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 907,
+      "input_tokens": 995
+    },
+    {
+      "seed": 7,
+      "round": 9,
+      "directive": "Diplomatic corridor",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 856,
+      "input_tokens": 994
+    },
+    {
+      "seed": 7,
+      "round": 10,
+      "directive": "Diplomatic corridor",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 869,
+      "input_tokens": 994
+    },
+    {
+      "seed": 7,
+      "round": 11,
+      "directive": "Diplomatic corridor",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 862,
+      "input_tokens": 994
+    },
+    {
+      "seed": 7,
+      "round": 12,
+      "directive": "Diplomatic corridor",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 854,
+      "input_tokens": 994
+    },
+    {
+      "seed": 2026,
+      "round": 1,
+      "directive": "Medical fast lane",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 855,
+      "input_tokens": 995
+    },
+    {
+      "seed": 2026,
+      "round": 2,
+      "directive": "Medical fast lane",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 855,
+      "input_tokens": 995
+    },
+    {
+      "seed": 2026,
+      "round": 3,
+      "directive": "Medical fast lane",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 865,
+      "input_tokens": 995
+    },
+    {
+      "seed": 2026,
+      "round": 4,
+      "directive": "Medical fast lane",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 868,
+      "input_tokens": 995
+    },
+    {
+      "seed": 2026,
+      "round": 5,
+      "directive": "Relic quarantine",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 885,
+      "input_tokens": 995
+    },
+    {
+      "seed": 2026,
+      "round": 6,
+      "directive": "Relic quarantine",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 863,
+      "input_tokens": 995
+    },
+    {
+      "seed": 2026,
+      "round": 7,
+      "directive": "Relic quarantine",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 891,
+      "input_tokens": 995
+    },
+    {
+      "seed": 2026,
+      "round": 8,
+      "directive": "Relic quarantine",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 863,
+      "input_tokens": 995
+    },
+    {
+      "seed": 2026,
+      "round": 9,
+      "directive": "Diplomatic corridor",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 862,
+      "input_tokens": 994
+    },
+    {
+      "seed": 2026,
+      "round": 10,
+      "directive": "Diplomatic corridor",
+      "expected": "inspect",
+      "choice": "inspect",
+      "correct": true,
+      "latency_ms": 861,
+      "input_tokens": 994
+    },
+    {
+      "seed": 2026,
+      "round": 11,
+      "directive": "Diplomatic corridor",
+      "expected": "reject",
+      "choice": "reject",
+      "correct": true,
+      "latency_ms": 859,
+      "input_tokens": 994
+    },
+    {
+      "seed": 2026,
+      "round": 12,
+      "directive": "Diplomatic corridor",
+      "expected": "clear",
+      "choice": "clear",
+      "correct": true,
+      "latency_ms": 984,
+      "input_tokens": 994
+    }
+  ],
+  "correct": 36,
+  "limitations": [
+    "Synthetic documents only; not a general OCR or reasoning benchmark.",
+    "FP16 on the lab T4; published BF16 benchmark parity is unverified.",
+    "No extracted fields or answer key were sent to the model."
+  ],
+  "model": "vllm-sr/d3-mini",
+  "task": "Read synthetic passport/permit images and apply ordered natural-language directives",
+  "total": 36
+}

@@ -2,7 +2,7 @@ name: validate workshop
 on:
   pull_request:
   push:
-    branches: [feature/cluster-voice-agentops, feature/decision-tetris]
+    branches: [feature/cluster-voice-agentops, feature/decision-tetris, feature/orbit-checkpoint]
 permissions:
   contents: read
 jobs:
@@ -22,4 +22,6 @@ jobs:
         working-directory: examples/live-transcript
       - run: go vet ./...
         working-directory: examples/decision-tetris
+      - run: go vet ./...
+        working-directory: examples/orbit-checkpoint
       - run: make docs

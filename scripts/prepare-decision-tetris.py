@@ -97,7 +97,7 @@ def build_runtime():
         oc('delete', 'secret', secret, '-n', BUILD, '--ignore-not-found')
 
 
-def prepare_app():
+def prepare_app(experiment_name='decision-tetris'):
     def binding(name, namespace, role):
         obj = {'apiVersion': 'rbac.authorization.k8s.io/v1', 'kind': 'RoleBinding' if namespace else 'ClusterRoleBinding',
                'metadata': {'name': name}, 'roleRef': {'apiGroup': 'rbac.authorization.k8s.io', 'kind': 'ClusterRole', 'name': role},
@@ -125,11 +125,11 @@ def prepare_app():
         with urllib.request.urlopen(req, timeout=30) as response:
             return json.load(response)
     try:
-        experiment = request('/api/2.0/mlflow/experiments/get-by-name?experiment_name=decision-tetris')['experiment']['experiment_id']
+        experiment = request('/api/2.0/mlflow/experiments/get-by-name?experiment_name=' + experiment_name)['experiment']['experiment_id']
     except urllib.error.HTTPError as err:
         if err.code != 404:
             raise RuntimeError('MLflow experiment lookup failed: HTTP ' + str(err.code)) from None
-        experiment = request('/api/2.0/mlflow/experiments/create', {'name': 'decision-tetris'})['experiment_id']
+        experiment = request('/api/2.0/mlflow/experiments/create', {'name': experiment_name})['experiment_id']
     apply({'apiVersion': 'v1', 'kind': 'ConfigMap', 'metadata': {'name': 'decision-tetris-config', 'namespace': APP},
            'data': {'DECISION_URL': 'http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone',
                     'DECISION_MODEL': 'vllm-sr/d3-mini', 'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT': uri + '/v1/traces',
@@ -139,6 +139,8 @@ def prepare_app():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--reuse-runtime', action='store_true', help='reuse the already built runtime image')
+    parser.add_argument('--game', choices=['decision-tetris', 'orbit-checkpoint'], default='decision-tetris',
+                        help='application MLflow experiment to prepare')
     args = parser.parse_args()
     oc('get', 'namespace', APP)
     oc('get', 'task', 'workshop-buildah', '-n', 'openshift-pipelines')
@@ -176,9 +178,9 @@ def main():
     digest = get('imagestreamtag', 'decision-runtime:latest', BUILD)['image']['metadata']['name']
     oc('patch', 'servingruntime', 'd3-native', '-n', NS, '--type=json', '-p', json.dumps([
         {'op': 'replace', 'path': '/spec/containers/0/image', 'value': IMAGE.rsplit(':', 1)[0] + '@' + digest}]))
-    prepare_app()
+    prepare_app(args.game)
     oc('wait', 'inferenceservice/d3-mini', '-n', NS, '--for=condition=Ready', '--timeout=900s')
-    print('d3-mini is ready on the local T4. Copy the decision-tetris reference into the personal app, then build and ship it.')
+    print('d3-mini is ready on the local T4. Copy the ' + args.game + ' reference into the personal app, then build and ship it.')
 
 
 if __name__ == '__main__':
