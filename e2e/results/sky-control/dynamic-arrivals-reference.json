@@ -1,0 +1,13 @@
+{
+  "scope": "Deterministic reference, not the model, one additional physics validation",
+  "seed": 43,
+  "aircraft": 4,
+  "arrivals_per_minute": 0.2,
+  "sim_seconds": 3600,
+  "landed": 9,
+  "departed": 2,
+  "crashes": 0,
+  "safety_stops": 0,
+  "backlog": 0,
+  "stopped": ""
+}

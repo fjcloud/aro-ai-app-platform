@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "experiment": "sky-control",
+  "trace_id": "tr-2177bd25c48f6b629b274d702b2118d6",
+  "spans": [
+    "atc.cycle",
+    "decision.choose"
+  ],
+  "outcome": "late",
+  "metrics": {
+    "atc.aircraft": 26,
+    "atc.sim_speed": 60.0,
+    "atc.outcome": "late",
+    "atc.choice": "land_SKY001_09L",
+    "atc.total_ms": 3391,
+    "atc.queue_ms": 0,
+    "atc.budget_ms": 750
+  },
+  "input_tokens": 4617,
+  "output_tokens": 0
+}
