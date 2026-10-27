@@ -257,16 +257,19 @@ func (s *server) decide(w http.ResponseWriter, r *http.Request) {
 		fail(w, 409, "Shift state changed; reload before deciding")
 		return
 	}
-	select {
-	case s.slots <- struct{}{}:
-		defer func() { <-s.slots }()
-	default:
-		fail(w, 429, "The local GPU is busy; try again shortly")
-		return
-	}
 	ctx, span := otel.Tracer("orbit-checkpoint").Start(r.Context(), "checkpoint.inspect")
 	defer span.End()
-	span.SetAttributes(attribute.String("mlflow.spanType", "AGENT"), attribute.Int("checkpoint.round", g.shift.Round+1), attribute.String("checkpoint.directive", g.shift.directive().Name))
+	span.SetAttributes(attribute.String("mlflow.spanType", "AGENT"), attribute.Int("checkpoint.round", g.shift.Round+1), attribute.String("checkpoint.directive", g.shift.directive().Name), attribute.String("checkpoint.shift_id", g.id))
+	queued := time.Now()
+	if err := acquireGPU(ctx, s.slots); err != nil {
+		span.SetStatus(codes.Error, "GPU wait interrupted or full")
+		if ctx.Err() == nil {
+			fail(w, 429, "The local GPU queue is busy; try again shortly")
+		}
+		return
+	}
+	defer func() { <-s.slots }()
+	span.SetAttributes(attribute.Int64("checkpoint.gpu_queue_ms", time.Since(queued).Milliseconds()))
 	s.calls.Add(1)
 	out, err := s.model.choose(ctx, s.renderDocument(g.shift.Cases[g.shift.Round]), g.shift.directive())
 	if err != nil {
@@ -289,6 +292,21 @@ func (s *server) decide(w http.ResponseWriter, r *http.Request) {
 	}
 	span.SetAttributes(attribute.String("checkpoint.model_verdict", out.Choice), attribute.String("checkpoint.expected", resolved.Expected), attribute.Bool("checkpoint.model_correct", resolved.ModelCorrect), attribute.String("checkpoint.human_verdict", human), attribute.Bool("checkpoint.human_correct", resolved.HumanCorrect))
 	reply(w, 200, s.snapshot(g))
+}
+
+// At most one inference executes. Other sessions may wait briefly; request
+// cancellation or the bounded deadline never commits a synthetic verdict.
+func acquireGPU(ctx context.Context, slots chan struct{}) error {
+	timer := time.NewTimer(8 * time.Second)
+	defer timer.Stop()
+	select {
+	case slots <- struct{}{}:
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-timer.C:
+		return errors.New("GPU queue wait exceeded")
+	}
 }
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "evaluate" {

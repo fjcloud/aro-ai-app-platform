@@ -2,8 +2,10 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"image/png"
 	"net/http"
 	"net/http/cookiejar"
@@ -47,6 +49,40 @@ func TestRulesPriorityAndExceptions(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestGPUWaitCancellationAndRelease(t *testing.T) {
+	slots := make(chan struct{}, 1)
+	slots <- struct{}{}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if err := acquireGPU(ctx, slots); !errors.Is(err, context.Canceled) {
+		t.Fatalf("cancelled queued request: %v", err)
+	}
+	if len(slots) != 1 {
+		t.Fatal("cancelled request changed the active slot")
+	}
+	started, done := make(chan struct{}), make(chan error, 1)
+	go func() { close(started); done <- acquireGPU(context.Background(), slots) }()
+	<-started
+	select {
+	case err := <-done:
+		t.Fatalf("occupied GPU did not wait: %v", err)
+	case <-time.After(30 * time.Millisecond):
+	}
+	<-slots
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-time.After(3 * time.Second):
+		t.Fatal("queued request did not acquire the freed GPU")
+	}
+	if len(slots) != 1 {
+		t.Fatal("acquired request lost its slot")
+	}
+	<-slots
 }
 
 func TestDeckImagesAndScores(t *testing.T) {
