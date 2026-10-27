@@ -6,7 +6,8 @@ const fs=require('node:fs');
  const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});
  try{
   const context=await browser.newContext(process.env.BROWSER_STATE?{storageState:process.env.BROWSER_STATE}:{});
-  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const page=await context.newPage(),errors=[];page.on('pageerror',e=>{errors.push(e.message);console.error('Browser error:',e.message);});
+  if(process.env.DEBUG_GAME)page.on('response',async r=>{if(r.url().includes('/api/shift/')){let d;try{d=await r.json();}catch{}console.log(JSON.stringify({path:new URL(r.url()).pathname,status:r.status(),round:d?.round,result:!!d?.result,error:d?.error}));}});
   await page.goto(process.env.APP_URL||'http://127.0.0.1:18084',{waitUntil:'domcontentloaded'});
   for(let i=0;i<20;i++){
    if(await page.getByRole('heading',{name:'Orbit Checkpoint.',exact:true}).count())break;
@@ -15,6 +16,7 @@ const fs=require('node:fs');
    await page.waitForTimeout(500);
   }
   await expect(page.getByRole('heading',{name:'Orbit Checkpoint.',exact:true})).toBeVisible({timeout:30000});
+  async function waitForDecision(){await expect(page.locator('#result:not([hidden]), #error:not([hidden])')).toBeVisible({timeout:90000});if(await page.locator('#error').isVisible())throw Error(await page.locator('#error').innerText());}
   await expect(page.locator('#clear')).toBeEnabled();
   await page.locator('#seed').fill('42');await page.locator('#reset').click();await expect(page.locator('#clear')).toBeEnabled();
   await expect(page.locator('#directive-name')).toHaveText('Medical fast lane');
@@ -22,14 +24,14 @@ const fs=require('node:fs');
   const initial=await page.evaluate(async()=>await(await fetch('/api/shift')).json());
   assert.equal(initial.result,null);assert.ok(!('cases' in initial));assert.ok(!JSON.stringify(initial).includes('ZURI VOSS'));
   await page.locator('#zoom').click();await expect(page.locator('#zoom-dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.locator('#zoom-dialog')).not.toBeVisible();
-  await page.locator('#clear').click();await expect(page.locator('#result')).toBeVisible({timeout:90000});
+  await page.locator('#clear').click();await waitForDecision();
   await expect(page.locator('#human-mark')).toHaveText('✓ Correct stamp');await expect(page.locator('#ai-mark')).toHaveText('✓ Correct stamp');
   await expect(page.locator('#expected')).toHaveText('Clear');await expect(page.locator('.prob-row')).toHaveCount(3);
   await expect(page.locator('#model-detail')).toContainText('0 generated tokens');
   const firstLatency=await page.locator('#latency').innerText();
   await page.screenshot({path:process.env.SCREENSHOT||'/private/tmp/cloud-terminal-orbit-local.png',fullPage:true});
   await page.locator('#next').click();await expect(page.locator('#clear')).toBeEnabled();
-  await page.locator('#clear').click();await expect(page.locator('#result')).toBeVisible({timeout:90000});
+  await page.locator('#clear').click();await waitForDecision();
   await expect(page.locator('#human-mark')).toHaveText('✕ Incorrect stamp');await expect(page.locator('#expected')).toHaveText('Reject');
   // Duplicate submission must be rejected without another decision.
   assert.equal(await page.evaluate(async()=>{const s=await(await fetch('/api/shift')).json();return(await fetch('/api/shift/decide',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:s.id,round:s.round,action:'clear'})})).status;}),409);

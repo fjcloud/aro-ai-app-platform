@@ -9,8 +9,10 @@ import (
 	"net/http/cookiejar"
 	"net/http/httptest"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"testing"
+	"time"
 )
 
 func TestRulesPriorityAndExceptions(t *testing.T) {
@@ -117,7 +119,7 @@ func TestHTTPImageProtocolSessionsAndAtomicFailure(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	s := &server{sessions: map[string]*session{}, model: c, slots: make(chan struct{}, 1)}
+	s := &server{sessions: map[string]*session{}, model: c, renderDocument: paper, slots: make(chan struct{}, 1)}
 	app := httptest.NewServer(s.routes())
 	defer app.Close()
 	jar, _ := cookiejar.New(nil)
@@ -205,5 +207,55 @@ func TestHTTPImageProtocolSessionsAndAtomicFailure(t *testing.T) {
 	}
 	if _, e := newDecisionClient("https://hosted.invalid/v1/systemone", "d3-mini", ""); e == nil {
 		t.Fatal("hosted inference accepted")
+	}
+}
+
+func TestDocumentRenderingDoesNotBlockShiftMutation(t *testing.T) {
+	entered, release := make(chan struct{}), make(chan struct{})
+	var once sync.Once
+	c, err := newDecisionClient("http://127.0.0.1:1/v1/systemone", "d3-mini", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	s := &server{sessions: map[string]*session{}, model: c, slots: make(chan struct{}, 1),
+		renderDocument: func(d dossier) []byte { close(entered); <-release; return paper(d) }}
+	app := httptest.NewServer(s.routes())
+	defer app.Close()
+	defer once.Do(func() { close(release) })
+	jar, _ := cookiejar.New(nil)
+	client := &http.Client{Jar: jar, Timeout: 5 * time.Second}
+	r, err := client.Get(app.URL + "/api/shift")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var v view
+	json.NewDecoder(r.Body).Decode(&v)
+	r.Body.Close()
+	done := make(chan error, 1)
+	go func() {
+		r, err := client.Get(app.URL + v.Document)
+		if err == nil {
+			r.Body.Close()
+		}
+		done <- err
+	}()
+	select {
+	case <-entered:
+	case <-time.After(3 * time.Second):
+		t.Fatal("document renderer never started")
+	}
+	// A deliberately slow image render must not make the server report that an
+	// inspection is running or prevent the user starting another shift.
+	r, err = client.Post(app.URL+"/api/shift/new", "application/json", strings.NewReader(`{"seed":7}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	r.Body.Close()
+	if r.StatusCode != 200 {
+		t.Fatalf("image generation blocked a valid shift mutation: HTTP %d", r.StatusCode)
+	}
+	once.Do(func() { close(release) })
+	if err := <-done; err != nil {
+		t.Fatal(err)
 	}
 }

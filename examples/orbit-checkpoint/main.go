@@ -38,6 +38,7 @@ type server struct {
 	mu                       sync.Mutex
 	sessions                 map[string]*session
 	model                    *decisionClient
+	renderDocument           func(dossier) []byte
 	slots                    chan struct{}
 	calls, failures, correct atomic.Int64
 }
@@ -170,13 +171,17 @@ func (s *server) routes() http.Handler {
 			return
 		}
 		g.mu.Lock()
-		defer g.mu.Unlock()
 		if g.shift.over() || r.URL.Query().Get("id") != g.id || r.URL.Query().Get("round") != strconv.Itoa(g.shift.Round) {
+			g.mu.Unlock()
 			fail(w, 409, "Document is no longer current")
 			return
 		}
+		// Rendering a PNG is read-only CPU work. Keep a value snapshot and release
+		// the session lock so a document fetch cannot reject the player's stamp.
+		document := g.shift.Cases[g.shift.Round]
+		g.mu.Unlock()
 		w.Header().Set("Content-Type", "image/png")
-		w.Write(paper(g.shift.Cases[g.shift.Round]))
+		w.Write(s.renderDocument(document))
 	})
 	mux.HandleFunc("POST /api/shift/decide", s.decide)
 	mux.HandleFunc("POST /api/shift/next", func(w http.ResponseWriter, r *http.Request) {
@@ -263,7 +268,7 @@ func (s *server) decide(w http.ResponseWriter, r *http.Request) {
 	defer span.End()
 	span.SetAttributes(attribute.String("mlflow.spanType", "AGENT"), attribute.Int("checkpoint.round", g.shift.Round+1), attribute.String("checkpoint.directive", g.shift.directive().Name))
 	s.calls.Add(1)
-	out, err := s.model.choose(ctx, paper(g.shift.Cases[g.shift.Round]), g.shift.directive())
+	out, err := s.model.choose(ctx, s.renderDocument(g.shift.Cases[g.shift.Round]), g.shift.directive())
 	if err != nil {
 		s.failures.Add(1)
 		span.SetStatus(codes.Error, "local visual inference failed")
@@ -305,7 +310,7 @@ func main() {
 		defer cancel()
 		shutdown(ctx)
 	}()
-	s := &server{sessions: map[string]*session{}, model: model, slots: make(chan struct{}, 1)}
+	s := &server{sessions: map[string]*session{}, model: model, renderDocument: paper, slots: make(chan struct{}, 1)}
 	h := &http.Server{Addr: env("LISTEN_ADDR", ":8080"), Handler: s.routes(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 85 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

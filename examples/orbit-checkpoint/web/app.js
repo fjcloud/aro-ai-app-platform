@@ -53,7 +53,7 @@ document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click'
 $('ai-one').addEventListener('click',()=>decide('watch'));$('next').addEventListener('click',next);
 $('run').addEventListener('click',()=>{if(automatic)stop();else{automatic=true;render();tick();}});
 $('reset').addEventListener('click',async()=>{const seed=Number($('seed').value);if(!Number.isSafeInteger(seed)||seed<0||seed>2147483647){$('error').textContent='Choose a whole-number seed from 0 to 2147483647.';$('error').hidden=false;return;}previousPhase=-1;await perform('/api/shift/new',{seed});});
-$('zoom').addEventListener('click',()=>{$('zoom-image').src=state.document;$('zoom-dialog').showModal();});$('close-zoom').addEventListener('click',()=>$('zoom-dialog').close());
+$('zoom').addEventListener('click',()=>{if(automatic)stop();$('zoom-image').src=state.document;$('zoom-dialog').showModal();});$('close-zoom').addEventListener('click',()=>$('zoom-dialog').close());
 document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||busy||automatic||!state||state.over||state.result||$('zoom-dialog').open||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;const action={c:'clear',i:'inspect',r:'reject'}[e.key.toLowerCase()];if(action){e.preventDefault();decide(action);}});
 window.addEventListener('pagehide',stop);
 (async()=>{try{state=await api('/api/shift');$('seed').value=state.seed;render();}catch(e){$('error').textContent=e.message;$('error').hidden=false;$('loading').textContent='Connection unavailable. Reload to try again.';}})();
