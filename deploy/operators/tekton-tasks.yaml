@@ -58,15 +58,13 @@ spec:
           find "${CHECKOUT_DIR}" -mindepth 1 -delete 2>/dev/null || true
         fi
         mkdir -p "${CHECKOUT_DIR}"
-        git -c http.sslVerify=$(params.SSL_VERIFY) clone \
-          --depth $(params.DEPTH) \
-          --branch $(params.REVISION) \
-          $(params.URL) "${CHECKOUT_DIR}" || \
-        git -c http.sslVerify=$(params.SSL_VERIFY) clone \
-          --depth $(params.DEPTH) \
-          $(params.URL) "${CHECKOUT_DIR}"
         cd "${CHECKOUT_DIR}"
-        git checkout $(params.REVISION) 2>/dev/null || true
+        git init -q
+        git remote add origin "$(params.URL)"
+        # Fetch the requested branch, tag or SHA; never fall back to the default branch.
+        git -c http.sslVerify=$(params.SSL_VERIFY) fetch \
+          --depth "$(params.DEPTH)" origin "$(params.REVISION)"
+        git checkout --detach FETCH_HEAD
         COMMIT=$(git rev-parse HEAD)
         echo -n "${COMMIT}" > $(results.commit.path)
         echo -n "$(params.URL)" > $(results.url.path)
