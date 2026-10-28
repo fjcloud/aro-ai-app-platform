@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "scope": "Final deployed image: current English feed, native Responses investigation, actual tool results and stable cross-query source references",
+  "articles": 3,
+  "mandate_version": 5,
+  "trace_id": "ab45e119e14b240b490fc8ebbe43350d",
+  "tools": [
+    "read_article",
+    "search_news",
+    "search_news",
+    "search_news",
+    "ecb_fx"
+  ],
+  "source_references": 16,
+  "browser_errors": [],
+  "keychain": "mock"
+}

@@ -1,9 +1,9 @@
 {
   "passed": true,
   "app_url": "https://live-transcript-live-transcript-dev.apps.hr579m9v.eastus.aroapp.io",
-  "revision": "0bfe5fb5973ccccf063b95f17d2cb60476f5091b",
-  "image": "image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript@sha256:648d4e32c09b402127d762928d616b2fea6c44d50f35697ef9c47ee017dc9c90",
-  "pipeline": "build-briefing-app-xggr6",
+  "revision": "ed433126d7a5af08e5eae2b3fce09fc65f457a42",
+  "image": "image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript@sha256:6d5dac50f1a8ae77ed8a4fdca4b16a7964280cbb46d64a11b1e75635d0582e0a",
+  "pipeline": "build-briefing-app-87724",
   "pipeline_succeeded": true,
   "argo_sync": "Synced",
   "argo_health": "Healthy",

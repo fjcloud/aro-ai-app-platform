@@ -66,11 +66,12 @@ Evidence: [browser](results/briefing-desk/browser.json),
 [research](results/briefing-desk/research.png),
 [deployment](results/briefing-desk/deployment.json),
 [persistence](results/briefing-desk/persistence.json),
-[persisted trace](results/briefing-desk/persisted-trace.json), and
+[persisted trace](results/briefing-desk/persisted-trace.json),
+[final image smoke](results/briefing-desk/final-smoke.json), and
 [MLflow UI](results/briefing-desk/mlflow-ui.json).
 
 A final regression fix keeps source IDs unique across repeated searches within
-one investigation. Its test proves a later query cannot reassign an earlier ID.
+one investigation. Its regression test and a fresh investigation on the final image prove that a later query cannot reassign an earlier ID. The live run used three searches and retained 16 stable references. A final idle restart preserved all three ready articles and their notes byte-for-byte at the structured-data hash level.
 
 ## Practical limits
 
