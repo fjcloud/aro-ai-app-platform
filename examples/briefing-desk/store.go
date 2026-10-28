@@ -135,7 +135,12 @@ func (s *store) list() ([]document, []profile) {
 		}
 		docs = append(docs, v)
 	}
-	sort.Slice(docs, func(i, j int) bool { return docs[i].Created > docs[j].Created })
+	sort.Slice(docs, func(i, j int) bool {
+		if docs[i].Created == docs[j].Created {
+			return docs[i].ID > docs[j].ID
+		}
+		return docs[i].Created > docs[j].Created
+	})
 	return docs, append([]profile{}, s.profiles...)
 }
 func (s *store) update(id string, change func(*document)) error {
