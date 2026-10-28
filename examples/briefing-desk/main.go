@@ -426,7 +426,7 @@ func main() {
 	if e != nil {
 		log.Fatal(e)
 	}
-	a, e := newAgent(env("AGENT_URL", "http://lsd-genai-playground-service.live-transcript-dev.svc.cluster.local:8321/v1"), env("AGENT_MODEL", "maas-vllm-inference-1/deepseekv4pro"), env("AGENT_KEY_FILE", "/etc/model/api-key"), env("MCP_URL", "http://live-transcript.live-transcript-dev.svc.cluster.local:8090/mcp"))
+	a, e := newAgent(env("AGENT_URL", "http://lsd-genai-playground-service.live-transcript-dev.svc.cluster.local:8321/v1"), env("AGENT_MODEL", "maas-vllm-inference-1/deepseekv4pro"), env("AGENT_KEY_FILE", "/etc/model/api-key"))
 	if e != nil {
 		log.Fatal(e)
 	}
@@ -445,19 +445,11 @@ func main() {
 	}()
 	s := &server{store: st, agent: a, model: model, ctx: ctx, imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
 	public := &http.Server{Addr: env("LISTEN_ADDR", ":8080"), Handler: s.routes(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
-	internal := &http.Server{Addr: env("MCP_LISTEN_ADDR", ":8090"), Handler: a.mcpHandler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16384}
-	go func() {
-		if e := internal.ListenAndServe(); e != nil && !errors.Is(e, http.ErrServerClosed) {
-			log.Print("Internal research tools listener failed")
-			stop()
-		}
-	}()
 	go func() {
 		<-ctx.Done()
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		public.Shutdown(ctx)
-		internal.Shutdown(ctx)
 	}()
 	log.Print("Signal Desk listening on ", public.Addr)
 	if e := public.ListenAndServe(); e != nil && !errors.Is(e, http.ErrServerClosed) {

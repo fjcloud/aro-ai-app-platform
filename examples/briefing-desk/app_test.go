@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -76,40 +77,6 @@ func TestPersistentStateAndStaleMandate(t *testing.T) {
 		t.Fatal("store returned mutable aliases")
 	}
 }
-func TestMCPJobAuthAndScope(t *testing.T) {
-	a, _ := newAgent("http://localhost:1234/v1", "native", "missing", "http://tools.example.com:8090/mcp")
-	h := a.mcpHandler()
-	request := func(token, host, origin string) int {
-		r := httptest.NewRequest("POST", "http://"+host+"/mcp", strings.NewReader(`{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1"}}}`))
-		r.Header.Set("Content-Type", "application/json")
-		r.Header.Set("Accept", "application/json, text/event-stream")
-		r.Header.Set("X-Signal-Job", "job")
-		r.Header.Set("Authorization", "Bearer "+token)
-		r.Header.Set("Origin", origin)
-		w := httptest.NewRecorder()
-		h.ServeHTTP(w, r)
-		return w.Code
-	}
-	j := a.job(context.Background(), "summarize", "", "https://example.com/article", nil)
-	a.mu.Lock()
-	a.jobs["job"] = j
-	a.mu.Unlock()
-	if request("bad", "tools.example.com:8090", "") != 401 {
-		t.Fatal("unauthorized job accepted")
-	}
-	if request(j.token, "evil.example.com:8090", "") != 403 || request(j.token, "tools.example.com:8090", "https://evil.example.com") != 403 {
-		t.Fatal("host/origin bypass")
-	}
-	if c := request(j.token, "tools.example.com:8090", ""); c != 200 {
-		t.Fatalf("valid MCP initialization failed %d", c)
-	}
-	if _, _, e := a.runTool(context.Background(), j, "sec_filings", json.RawMessage(`{"ticker":"NVDA"}`)); e == nil {
-		t.Fatal("summarizer escaped job scope")
-	}
-	if _, _, e := a.runTool(context.Background(), j, "read_article", json.RawMessage(`{"url":"https://other.example.com/"}`)); e == nil {
-		t.Fatal("model invented allowed URL")
-	}
-}
 func TestNativeResponsesCredentialsAndNoFabricatedToolSuccess(t *testing.T) {
 	keyFile := filepath.Join(t.TempDir(), "key")
 	os.WriteFile(keyFile, []byte("private-test-key"), 0600)
@@ -120,8 +87,8 @@ func TestNativeResponsesCredentialsAndNoFabricatedToolSuccess(t *testing.T) {
 		var body map[string]any
 		json.NewDecoder(r.Body).Decode(&body)
 		tool := body["tools"].([]any)[0].(map[string]any)
-		if tool["authorization"] == nil || tool["headers"].(map[string]any)["Authorization"] != nil {
-			t.Error("MCP credentials must use native authorization, not headers")
+		if tool["type"] != "function" || tool["name"] != "read_article" {
+			t.Error("Expected native Responses function tool")
 		}
 		if body["store"] != false || strings.Contains(fmt.Sprint(body["input"]), "private-test-key") {
 			t.Error("credential retention risk")
@@ -129,7 +96,7 @@ func TestNativeResponsesCredentialsAndNoFabricatedToolSuccess(t *testing.T) {
 		reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]any{"type": "message", "content": []any{map[string]string{"type": "output_text", "text": `{"title":"Fake summary","tldr":"This summary was never supported by a tool.","points":["a","b"],"overview":"An invented source description."}`}}}}})
 	}))
 	defer native.Close()
-	a, _ := newAgent(native.URL+"/v1", "native", keyFile, "http://tools.example.com:8090/mcp")
+	a, _ := newAgent(native.URL+"/v1", "native", keyFile)
 	_, _, e := a.summarize(context.Background(), "https://example.com/", nil)
 	if e == nil || !strings.Contains(e.Error(), "successfully read") {
 		t.Fatal("accepted summary without actual tool read", e)
@@ -161,7 +128,7 @@ func testServer(t *testing.T) *server {
 	if e != nil {
 		t.Fatal(e)
 	}
-	a, _ := newAgent("http://localhost:1234/v1", "native", "missing", "http://tools.example.com:8090/mcp")
+	a, _ := newAgent("http://localhost:1234/v1", "native", "missing")
 	c, _ := newDecisionClient("http://localhost:1235", "local", "")
 	return &server{store: st, agent: a, model: c, ctx: context.Background(), imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
 }
@@ -191,5 +158,66 @@ func TestHTTPFinancialGateAndCSRF(t *testing.T) {
 	h.ServeHTTP(w, r)
 	if w.Code != 409 {
 		t.Fatal("exported missing research")
+	}
+}
+
+type roundTripFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
+func TestNativeToolLoopRetrievesRealResults(t *testing.T) {
+	keyFile := filepath.Join(t.TempDir(), "key")
+	os.WriteFile(keyFile, []byte("private-key"), 0600)
+	turns := 0
+	native := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		turns++
+		var body struct {
+			Input []json.RawMessage `json:"input"`
+		}
+		json.NewDecoder(r.Body).Decode(&body)
+		if turns == 1 {
+			reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]string{"type": "function_call", "name": "get_headlines", "call_id": "call1", "arguments": "{}"}}})
+			return
+		}
+		if len(body.Input) != 3 || !strings.Contains(string(body.Input[2]), "A real source headline") || !strings.Contains(string(body.Input[2]), "E1") {
+			t.Error("Native agent did not receive actual tool evidence")
+		}
+		reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]any{"type": "message", "content": []any{map[string]string{"type": "output_text", "text": `{"headline_ids":["H1"]}`}}}}})
+	}))
+	defer native.Close()
+	a, _ := newAgent(native.URL+"/v1", "native", keyFile)
+	a.fetch = &fetcher{&http.Client{Transport: roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(`<rss><channel><item><title>A real source headline</title><link>https://example.com/story</link><pubDate>today</pubDate><description>Source excerpt</description></item></channel></rss>`)), Header: http.Header{"Content-Type": []string{"text/xml"}}, Request: r}, nil
+	})}}
+	events := []event{}
+	items, e := a.collect(context.Background(), "business", func(e event) { events = append(events, e) })
+	if e != nil || len(items) != 1 || turns != 2 || len(events) < 3 {
+		t.Fatalf("Tool loop failed: %v %v", items, e)
+	}
+	j := a.job(context.Background(), "summarize", "", "https://example.com/article", nil)
+	if _, _, e := a.runTool(context.Background(), j, "sec_filings", json.RawMessage(`{"ticker":"NVDA"}`)); e == nil {
+		t.Fatal("Tool escaped stage scope")
+	}
+	if _, _, e := a.runTool(context.Background(), j, "read_article", json.RawMessage(`{"source_id":"invented"}`)); e == nil {
+		t.Fatal("Agent invented an allowed URL")
+	}
+	if _, _, e := a.runTool(context.Background(), j, "read_article", json.RawMessage(`{"source_id":"original","shell":"evil"}`)); e == nil {
+		t.Fatal("Unexpected tool argument accepted")
+	}
+}
+
+func TestStructuredProviderEnvelope(t *testing.T) {
+	for _, v := range []string{`{"ok":true}`, "Here is the result:\n```json\n{\"ok\":true}\n```"} {
+		var out struct {
+			OK bool `json:"ok"`
+		}
+		if e := decodeStructured(v, &out); e != nil || !out.OK {
+			t.Fatal("Valid structured envelope rejected", e)
+		}
+	}
+	for _, v := range []string{"No result", "```json\n{}\n```\n```json\n{}\n```", "{} trailing text"} {
+		var out any
+		if decodeStructured(v, &out) == nil {
+			t.Fatal("Accepted invalid or ambiguous result")
+		}
 	}
 }

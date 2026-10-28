@@ -9,7 +9,7 @@ flowchart LR
   Agent --> Summary[English summary]
   Summary --> T4[d3-mini · T4]
   T4 --> Feed[Financial relevance feed]
-  Feed -->|Investigate| Research[Native agent + read-only MCP tools]
+  Feed -->|Investigate| Research[Native Responses + read-only tools]
   Research --> Note[Evidence + research draft + Markdown]
 ```
 
@@ -19,10 +19,12 @@ The facilitator runs `python3 scripts/prepare-briefing-desk.py`, then copies thi
 reference and the `feature/briefing-desk` template into the personal app repository.
 Retain the technical name `live-transcript` and its exact internal-registry image.
 
-The template adds a persistent `/data` volume and a namespace-internal MCP port.
-The public route stays behind OAuth; only the existing native agent can reach
-MCP, which also requires an expiring per-job capability. No extra GPU, SCC or
-monitoring permission is needed. The MaaS runtime key expires after 24 hours;
+The template adds a persistent `/data` volume. The public route stays behind
+OAuth, with no additional exposed port. The native OpenShift AI Responses API
+returns typed function calls; the Go backend executes the scoped read-only
+tools and sends their actual results back to that same service. Each run is
+bounded to six calls and seven turns. No extra GPU, SCC or monitoring permission
+is needed. The MaaS runtime key expires after 24 hours;
 rerun preparation and restart the app to renew it.
 
 BBC World, BBC Business and France 24 supply current RSS headlines. The agent
@@ -48,6 +50,6 @@ Download an article, a research note or the financially relevant briefing as
 Markdown. No orders or client messages are sent.
 
 Local validation: `go test -race ./...` and `go vet ./...`.
-Runtime settings: DATA_DIR, AGENT_URL, AGENT_MODEL, AGENT_KEY_FILE, MCP_URL,
+Runtime settings: DATA_DIR, AGENT_URL, AGENT_MODEL, AGENT_KEY_FILE,
 DECISION_URL, DECISION_MODEL, and the existing MLflow OTLP settings.
 No credentials belong in Git, browser responses or logs.

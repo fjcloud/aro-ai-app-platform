@@ -27,6 +27,7 @@ type feed struct {
 var feeds = []feed{{"world", "BBC World", "https://feeds.bbci.co.uk/news/world/rss.xml"}, {"business", "BBC Business", "https://feeds.bbci.co.uk/news/business/rss.xml"}, {"france24", "France 24", "https://www.france24.com/en/rss"}}
 
 type headline struct {
+	ID        string `json:"id"`
 	Title     string `json:"title"`
 	URL       string `json:"url"`
 	Published string `json:"published"`
@@ -211,7 +212,7 @@ func (f *fetcher) headlines(ctx context.Context, feedID string) ([]headline, str
 			continue
 		}
 		_, excerpt := plainHTML([]byte(v.Description))
-		out = append(out, headline{v.Title, v.Link, v.Date, excerpt})
+		out = append(out, headline{Title: v.Title, URL: v.Link, Published: v.Date, Excerpt: excerpt})
 		if len(out) == 12 {
 			break
 		}
