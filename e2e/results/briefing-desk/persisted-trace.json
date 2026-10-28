@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "trace_id": "tr-bb5c6ddfb03da7f901f03f48cebefc3c",
+  "workspace": "live-transcript-dev",
+  "experiment_id": "5",
+  "span_names": [
+    "news.investigate",
+    "agent.investigate",
+    "tool.read_article",
+    "tool.search_news",
+    "tool.search_news",
+    "tool.ecb_fx",
+    "tool.ecb_fx"
+  ],
+  "credential_scan": "No provider credentials in exported app trace",
+  "scope": "Backend agent orchestration, native Responses duration and actual tool spans; native provider internals are not asserted"
+}

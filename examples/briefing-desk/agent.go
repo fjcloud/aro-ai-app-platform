@@ -270,7 +270,7 @@ func (a *agent) runTool(ctx context.Context, j *agentJob, name string, args json
 					}
 				}
 				if match && len(out) < 12 {
-					h.ID = fmt.Sprintf("N%d", len(out)+1)
+					h.ID = fmt.Sprintf("N%d", len(j.refs))
 					j.refs[h.ID] = h.URL
 					out = append(out, h)
 				}

@@ -45,8 +45,32 @@ Markdown export, filters, mobile layout, mandate invalidation and stale-result
 rejection. The source data was not mocked. The research agent used article reads,
 current-feed searches and ECB FX reference data.
 
-The final deployed-browser run and persisted MLflow/storage evidence are recorded
-in `results/briefing-desk/` when validation completes.
+The deployed-browser run also passed behind OpenShift OAuth. Three articles were
+saved and classified. One initial summary failed the shape validator; the public
+retry action successfully recovered it. The test then refreshed all classifications
+and left a current research draft for the selected mandate. A provider formatting
+failure remains an explicit, retryable error rather than an invented summary.
+
+Native MLflow contains the persisted `news.investigate` → `agent.investigate` →
+actual tool spans in experiment `briefing-desk`, workspace `live-transcript-dev`.
+Its UI loads the experiment and latency/token-usage panels. This asserts backend
+orchestration/tool spans, not unverified internal traces from the native provider.
+
+The same summaries, mandate versions and research payloads survived an image
+rollout with identical hashes. Tekton succeeded with `hostUsers: false`; Argo CD
+was Synced/Healthy at the built commit, the running digest matched the internal
+registry, the app used `restricted-v2`, and its public Service exposed only OAuth.
+
+Evidence: [browser](results/briefing-desk/browser.json),
+[feed](results/briefing-desk/deployed-feed.png),
+[research](results/briefing-desk/research.png),
+[deployment](results/briefing-desk/deployment.json),
+[persistence](results/briefing-desk/persistence.json),
+[persisted trace](results/briefing-desk/persisted-trace.json), and
+[MLflow UI](results/briefing-desk/mlflow-ui.json).
+
+A final regression fix keeps source IDs unique across repeated searches within
+one investigation. Its test proves a later query cannot reassign an earlier ID.
 
 ## Practical limits
 

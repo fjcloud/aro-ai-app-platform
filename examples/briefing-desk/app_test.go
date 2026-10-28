@@ -221,3 +221,23 @@ func TestStructuredProviderEnvelope(t *testing.T) {
 		}
 	}
 }
+
+func TestSourceReferencesSurviveRepeatedSearches(t *testing.T) {
+	a, _ := newAgent("http://localhost:1234/v1", "native", "missing")
+	calls := 0
+	a.fetch = &fetcher{&http.Client{Transport: roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		calls++
+		body := fmt.Sprintf(`<rss><channel><item><title>Relevant economy news</title><link>https://example.com/story-%d</link></item></channel></rss>`, calls)
+		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(body)), Header: http.Header{}, Request: r}, nil
+	})}}
+	j := a.job(context.Background(), "investigate", "", "https://example.com/original", nil)
+	a.runTool(context.Background(), j, "search_news", json.RawMessage(`{"query":"economy"}`))
+	first := j.refs["N1"]
+	if first == "" {
+		t.Fatal("Missing first source reference")
+	}
+	a.runTool(context.Background(), j, "search_news", json.RawMessage(`{"query":"economy"}`))
+	if j.refs["N1"] != first || len(j.refs) != 7 {
+		t.Fatal("A later search reassigned an existing source ID")
+	}
+}

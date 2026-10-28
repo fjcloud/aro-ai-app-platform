@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "app_url": "https://live-transcript-live-transcript-dev.apps.hr579m9v.eastus.aroapp.io",
+  "revision": "0bfe5fb5973ccccf063b95f17d2cb60476f5091b",
+  "image": "image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript@sha256:648d4e32c09b402127d762928d616b2fea6c44d50f35697ef9c47ee017dc9c90",
+  "pipeline": "build-briefing-app-xggr6",
+  "pipeline_succeeded": true,
+  "argo_sync": "Synced",
+  "argo_health": "Healthy",
+  "scc": "restricted-v2",
+  "pipeline_hostUsers": false,
+  "storage": {
+    "name": "briefing-desk-data",
+    "phase": "Bound",
+    "size": "2Gi"
+  },
+  "public_service_ports": [
+    {
+      "name": "https",
+      "port": 8443,
+      "protocol": "TCP",
+      "targetPort": "oauth"
+    }
+  ]
+}
