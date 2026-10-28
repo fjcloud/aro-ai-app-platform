@@ -75,7 +75,7 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 				call("read_article", `{"source_id":"original"}`)
 				return
 			}
-			finish(summary{Title: source.Title, TLDR: "Fixture summary: " + source.Title + ". A synthetic source used to validate the complete application workflow.", Points: []string{"This is a fixture model response.", "Live inference is not asserted."}, Overview: "A fixture source summary with enough detail to validate the app protocol and the local browser workflow."})
+			finish(summary{Title: source.Title, TLDR: "Fixture summary: " + source.Title + ". A synthetic source used to validate the complete application workflow.", Points: []string{"This is a fixture model response.", "Live inference is not asserted."}, Overview: "A fixture source summary with enough detail to validate the app protocol and the local browser workflow.", MarketContext: "Fixture financial context: validate this hypothesis during research."})
 		default:
 			switch count {
 			case 0:

@@ -185,10 +185,12 @@ func (s *server) scanFeed(feedID, profileID string) {
 				e = err
 				break
 			}
-			if !created {
+			if !created && d.Status != "failed" && !(d.Status == "ready" && d.Summary.MarketContext == "") {
 				continue
 			}
 			s.store.update(d.ID, func(d *document) {
+				d.Status = "queued"
+				d.Error = ""
 				d.Source.Published = h.Published
 				d.Source.RSSExcerpt = h.Title + "\n" + h.Excerpt
 				d.Source.FeedURL = h.FeedURL

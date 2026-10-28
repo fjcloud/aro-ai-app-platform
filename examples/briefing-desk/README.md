@@ -2,11 +2,17 @@
 
 An English market terminal: **fetch → summarize → BUY / SHORT / NO SIGNAL → investigate**.
 
-- Techmeme RSS supplies headlines and original publisher links. Inaccessible pages
+- Fetch imports the latest **12 Techmeme stories**, including neutral news; the
+  agent no longer discards nine stories before ranking. RSS supplies original
+  publisher links. Inaccessible pages
   use an explicitly labeled RSS excerpt; they are never presented as full articles.
-- OpenShift AI summarizes and investigates. The existing d3-mini on a T4 ranks
-  the directional thesis. NO SIGNAL is a valid outcome and blocks investigation.
-- Research maps a thesis to QQQ, SPY, SMH or XLK: ETF proxies for their stated
+- The research LLM summarizes, adds a clearly labeled financial hypothesis and
+  investigates. d3-mini ranks concrete **company or sector catalysts** as
+  preliminary BUY / SHORT research leads. It does not require proof that an entire
+  index will move. Ordinary product news, benchmarks or ambiguous direction can
+  remain NO SIGNAL, which blocks investigation.
+- Research then verifies whether a lead maps to QQQ, SPY, SMH or XLK and may reject
+  it as NO SIGNAL: these are ETF proxies for their stated
   indices. Timestamped Yahoo Finance chart metadata supplies reference prices.
 - Targets, stops and horizon are hypothetical model assumptions. Edit notional,
   target and stop to calculate conditional gross P&L. Markdown uses the same
@@ -67,7 +73,7 @@ LISTEN_ADDR=127.0.0.1:18092 DATA_DIR=/private/tmp/signal-desk-local-data \
 DEV_ASSETS=1 go run .
 ```
 
-Open http://127.0.0.1:18092 and select **FETCH TECHMEME**. These are live sources
+Open http://127.0.0.1:18092 and select **FETCH 12 STORIES**. These are live sources
 and model calls. Only BUY / SHORT stories can launch an investigation. Keys stay
 in private files outside Git and are never sent to article sites or the browser.
 

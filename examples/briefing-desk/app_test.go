@@ -56,7 +56,7 @@ func TestPersistentStateAndStaleMandate(t *testing.T) {
 	s.update(d.ID, func(d *document) {
 		d.Status = "ready"
 		d.Summary = sum
-		d.Classes["tech"] = classification{Status: "done", ProfileVersion: 1, SummaryHash: sum.hash(), Priority: "buy"}
+		d.Classes["tech"] = classification{Status: "done", ProfileVersion: defaults()[0].Version, SummaryHash: sum.hash(), Priority: "buy"}
 		d.Research["tech"] = research{Status: "running"}
 	})
 	p, _ := s.profile("tech")
@@ -138,7 +138,7 @@ func TestHTTPFinancialGateAndCSRF(t *testing.T) {
 	s.store.update(d.ID, func(d *document) {
 		d.Status = "ready"
 		d.Summary = summary{Title: "Article"}
-		d.Classes["tech"] = classification{Status: "done", Priority: "no_signal", ProfileVersion: 1, SummaryHash: d.Summary.hash()}
+		d.Classes["tech"] = classification{Status: "done", Priority: "no_signal", ProfileVersion: defaults()[0].Version, SummaryHash: d.Summary.hash()}
 	})
 	h := s.routes()
 	for _, tc := range []struct {
@@ -239,5 +239,68 @@ func TestSourceReferencesSurviveRepeatedSearches(t *testing.T) {
 	a.runTool(context.Background(), j, "search_news", json.RawMessage(`{"query":"economy"}`))
 	if j.refs["N1"] != first || len(j.refs) != 3 {
 		t.Fatal("A later search reassigned an existing source ID")
+	}
+}
+
+func TestCollectionKeepsAllTwelveStories(t *testing.T) {
+	key := filepath.Join(t.TempDir(), "key")
+	os.WriteFile(key, []byte("fixture-key"), 0600)
+	calls := 0
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		if calls == 1 {
+			reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]string{"type": "function_call", "name": "get_headlines", "call_id": "all_news", "arguments": "{}"}}})
+			return
+		}
+		ids := []string{}
+		for i := 1; i <= 12; i++ {
+			ids = append(ids, fmt.Sprintf("H%d", i))
+		}
+		body, _ := json.Marshal(map[string]any{"headline_ids": ids})
+		reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]any{"type": "message", "content": []any{map[string]string{"type": "output_text", "text": string(body)}}}}})
+	}))
+	defer upstream.Close()
+	a, _ := newAgent(upstream.URL, "fixture", key)
+	a.fetch.client.Transport = roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		var rss strings.Builder
+		rss.WriteString("<rss><channel>")
+		for i := 1; i <= 12; i++ {
+			fmt.Fprintf(&rss, "<item><title>Story %d</title><link>https://example.com/news/%d</link><description>Fixture source</description></item>", i, i)
+		}
+		rss.WriteString("</channel></rss>")
+		return &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": {"text/xml"}}, Body: io.NopCloser(strings.NewReader(rss.String())), Request: r}, nil
+	})
+	items, e := a.collect(context.Background(), "techmeme", nil)
+	if e != nil || len(items) != 12 {
+		t.Fatal("Feed silently discarded stories", len(items), e)
+	}
+	for i, item := range items {
+		if item.ID != fmt.Sprintf("H%d", i+1) {
+			t.Fatal("Feed order changed")
+		}
+	}
+}
+
+func TestMandateMigrationPreservesEditedProfiles(t *testing.T) {
+	for _, edited := range []bool{false, true} {
+		dir := t.TempDir()
+		previous := profile{ID: "tech", Name: "Technology index signals", Criteria: legacyIndexMandate, Version: 1}
+		if edited {
+			previous.Criteria += " My custom restriction."
+		}
+		if e := atomicJSON(filepath.Join(dir, "profiles.json"), []profile{previous}); e != nil {
+			t.Fatal(e)
+		}
+		st, e := openStore(dir)
+		if e != nil {
+			t.Fatal(e)
+		}
+		current, _ := st.profile("tech")
+		if edited && current != previous {
+			t.Fatal("User mandate was overwritten")
+		}
+		if !edited && current.Version != 2 {
+			t.Fatal("Legacy default was not upgraded")
+		}
 	}
 }

@@ -33,8 +33,10 @@ type profile struct {
 	Version  int    `json:"version"`
 }
 
+const legacyIndexMandate = "Evaluate technology news for a short-horizon, hypothetical directional exposure to Nasdaq-100, the S&P 500 or a technology/semiconductor index. BUY means a supported bullish catalyst; SHORT means a supported bearish catalyst. NO SIGNAL means mixed, immaterial, already ambiguous or insufficiently evidenced news. A headline is not proof of a market move. Do not infer a trade for a specific person."
+
 func defaults() []profile {
-	return []profile{{"tech", "Technology index signals", "Evaluate technology news for a short-horizon, hypothetical directional exposure to Nasdaq-100, the S&P 500 or a technology/semiconductor index. BUY means a supported bullish catalyst; SHORT means a supported bearish catalyst. NO SIGNAL means mixed, immaterial, already ambiguous or insufficiently evidenced news. A headline is not proof of a market move. Do not infer a trade for a specific person.", 1}}
+	return []profile{{"tech", "Technology research signals", "Triage technology news for financial research. BUY means a concrete bullish company or sector catalyst worth investigating; SHORT means a concrete bearish catalyst worth investigating. Do not require a story to move an entire index before researching it. Earnings, revenue, profitability, demand, spending, regulation and material disruptions can qualify. NO SIGNAL means no credible financial mechanism, unclear direction or insufficient evidence; ordinary product launches and private funding alone do not establish a trade. These are preliminary research leads, not orders or price forecasts. Investigation must separately verify tradable index/ETF exposure and may reject the thesis. Do not invent index membership or infer a trade for a specific person.", 2}}
 }
 
 type source struct {
@@ -51,10 +53,11 @@ type source struct {
 	FeedURL    string `json:"feed_url,omitempty"`
 }
 type summary struct {
-	Title    string   `json:"title"`
-	TLDR     string   `json:"tldr"`
-	Points   []string `json:"points"`
-	Overview string   `json:"overview"`
+	Title         string   `json:"title"`
+	TLDR          string   `json:"tldr"`
+	Points        []string `json:"points"`
+	Overview      string   `json:"overview"`
+	MarketContext string   `json:"market_context,omitempty"`
 }
 
 func (s summary) hash() string {
@@ -189,7 +192,11 @@ func documentMarkdown(d document) string {
 	for _, p := range d.Summary.Points {
 		fmt.Fprintf(&b, "- %s\n", markdownText(p))
 	}
-	fmt.Fprintf(&b, "\n## Summary\n\n%s\n\n## Source\n\n[Original article](%s)\n\nRetrieved: %s\n", markdownText(d.Summary.Overview), linkURL(d.Source.FinalURL), d.Source.Fetched)
+	fmt.Fprintf(&b, "\n## Summary\n\n%s\n", markdownText(d.Summary.Overview))
+	if d.Summary.MarketContext != "" {
+		fmt.Fprintf(&b, "\n## Market read — hypothesis\n\n%s\n", markdownText(d.Summary.MarketContext))
+	}
+	fmt.Fprintf(&b, "\n## Source\n\n[Original article](%s)\n\nRetrieved: %s\n", linkURL(d.Source.FinalURL), d.Source.Fetched)
 	if d.Source.Published != "" {
 		fmt.Fprintf(&b, "\nPublication metadata: %s\n", markdownText(d.Source.Published))
 	}

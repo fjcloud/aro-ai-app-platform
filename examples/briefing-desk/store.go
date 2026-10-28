@@ -53,7 +53,10 @@ func openStore(dir string) (*store, error) {
 		return nil, e
 	}
 	hasTech := false
-	for _, p := range s.profiles {
+	for i, p := range s.profiles {
+		if p.ID == "tech" && p.Version == 1 && p.Criteria == legacyIndexMandate {
+			s.profiles[i] = defaults()[0]
+		}
 		hasTech = hasTech || p.ID == "tech"
 	}
 	if !hasTech {

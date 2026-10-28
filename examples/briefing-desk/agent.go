@@ -397,11 +397,11 @@ func (a *agent) collect(ctx context.Context, feedID string, emit func(event)) ([
 	var out struct {
 		IDs []string `json:"headline_ids"`
 	}
-	e := a.respond(ctx, j, `Call get_headlines to retrieve the selected feed. Choose up to three distinct Techmeme stories with concrete details relevant to technology indices, such as AI infrastructure, semiconductor demand, earnings, regulation or security incidents. Preserve uncertainty; do not manufacture market significance. Return {"headline_ids":["H1","H3","H5"]} using only actual IDs from the tool; these examples are not a selection. Never copy or invent URLs.`, &out)
+	e := a.respond(ctx, j, `Call get_headlines to retrieve the selected feed. Include EVERY retrieved headline in the feed order, up to 12 distinct stories. Do not pre-filter for financial interest: each story is summarized and classified separately afterwards. Return JSON {"headline_ids":[all actual IDs returned by get_headlines, in order]}. Never omit a retrieved story, invent an ID or copy URLs.`, &out)
 	if e != nil {
 		return nil, e
 	}
-	if len(j.headlines) == 0 || len(out.IDs) == 0 || len(out.IDs) > 3 {
+	if len(j.headlines) == 0 || len(out.IDs) != len(j.headlines) || len(out.IDs) > 12 {
 		return nil, errors.New("Agent did not select valid retrieved headlines")
 	}
 	result := []headline{}
@@ -429,7 +429,7 @@ func (a *agent) summarize(ctx context.Context, raw string, emit func(event), fal
 	}
 	var out summary
 	input, _ := json.Marshal(map[string]string{"source_id": "original"})
-	e := a.respond(ctx, j, `Call read_article with these exact arguments: `+string(input)+`. Summarize only the retrieved text, in English. Keep the title under 120 characters and the tldr under 45 words. If coverage is rss_excerpt, explicitly say the summary is based on the Techmeme excerpt; do not imply the full publisher article was read. Return JSON {"title":"English headline","tldr":"one or two sentences","points":["2 to 5 factual key points"],"overview":"one short paragraph"}. No new facts or links. If text is incomplete, qualify the summary.`, &out)
+	e := a.respond(ctx, j, `Call read_article with these exact arguments: `+string(input)+`. Summarize only the retrieved text, in English. Keep the title under 120 characters and the tldr under 45 words. If coverage is rss_excerpt, explicitly say the summary is based on the Techmeme excerpt; do not imply the full publisher article was read. Return JSON {"title":"English headline","tldr":"one or two sentences","points":["2 to 5 factual key points"],"overview":"one short paragraph","market_context":"One or two sentences explaining a possible company/sector financial mechanism, or why there is no clear one. Explicitly a hypothesis, not an established market move. Do not invent ticker/index membership, prices or revenue effects."}. No new source facts or links. If text is incomplete, qualify the summary.`, &out)
 	if e != nil {
 		return source{}, out, e
 	}
@@ -439,6 +439,9 @@ func (a *agent) summarize(ctx context.Context, raw string, emit func(event), fal
 	}
 	if len(out.Title) < 3 || len(out.Title) > 240 || len(out.TLDR) < 15 || len(out.TLDR) > 1200 || len(out.Points) < 2 || len(out.Points) > 5 || len(out.Overview) < 20 || len(out.Overview) > 3000 {
 		return src, out, errors.New("Agent summary did not match the expected format")
+	}
+	if len(out.MarketContext) > 1500 {
+		return src, out, errors.New("Market context exceeds the text budget")
 	}
 	for _, p := range out.Points {
 		if len(p) > 1000 {

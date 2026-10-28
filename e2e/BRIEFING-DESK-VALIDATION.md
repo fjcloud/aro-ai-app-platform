@@ -45,9 +45,14 @@ parity or financial-performance validation.
   Standard, deployment `deepseekv4pro`, provisioned on the principal Azure account
   using `az`. Its key was obtained through the CLI and stays in a private file.
 - [Azure live browser run](results/techmeme-terminal/azure-live.json) and
-  [screen](results/techmeme-terminal/azure-live.png): a new, empty feed through
-  actual DeepSeek summaries and Metal classifications. All three stories returned
-  NO SIGNAL and remained gated. Techmeme's headline link is preferred over author
+  [screen](results/techmeme-terminal/azure-live.png): all **12** retrieved stories,
+  actual DeepSeek summaries/financial context and Metal classifications. The latest
+  run returned **2 BUY / 10 NO SIGNAL** and completed investigation through the UI
+  on a real BUY classification. BUY/SHORT are preliminary company/sector research
+  leads; investigation separately checks ETF exposure and may reject them. The
+  former default required an index-wide catalyst and discarded nine news items;
+  default mandate version 2 fixes that triage scope while preserving custom
+  mandates. Techmeme's headline link is preferred over author
   attribution links, including X profile links.
 - [Azure research probe](results/techmeme-terminal/azure-research.json): real
   article/excerpt reading, Techmeme search and market snapshot, followed by a

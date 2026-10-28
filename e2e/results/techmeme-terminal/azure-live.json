@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "at": "2026-10-28T13:18:44.569Z",
+  "at": "2026-10-28T13:35:16.982Z",
   "scope": "Actual local Go app, public Techmeme data, hosted research LLM and local d3-mini Metal; no inference fixtures",
   "backend": "azure",
   "agent": "deepseekv4pro",
@@ -10,34 +10,107 @@
   "upstream_accelerator_validated": false,
   "articles": [
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand",
-      "title": "Moore Threads Q3 Revenue Surges 1,774% to ~$240M on AI Demand",
+      "url": "https://www.reuters.com/technology/hacker-trying-breach-us-federal-election-commission-system-email-shows-2026-10-27/",
+      "title": "Hacker Attack Forces FEC to Take Filing System Offline, Blocking Report Submissions",
       "coverage": "rss_excerpt",
       "signal": "no_signal",
-      "input_tokens": 637,
-      "latency_ms": 2706
+      "input_tokens": 725,
+      "latency_ms": 3157
+    },
+    {
+      "url": "https://www.ft.com/content/d92ede23-75c3-4549-bec2-7fa4be979786",
+      "title": "Slough becomes Europe's biggest data center hub with 40+ sites",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 726,
+      "latency_ms": 3188
+    },
+    {
+      "url": "https://www.sfchronicle.com/bayarea/article/open-ai-engineer-indicted-for-bugging-headquarters-22497813.php",
+      "title": "OpenAI Engineer Indicted for Allegedly Bugging Conference Room with Toilet-Paper-Wrapped Device",
+      "coverage": "publisher_readable_text",
+      "signal": "no_signal",
+      "input_tokens": 818,
+      "latency_ms": 3533
+    },
+    {
+      "url": "https://www.ft.com/content/24a35e41-2641-4cec-97f5-a974412f9952",
+      "title": "Anthropic's seven co-founders remain tight-knit and influential; Daniela Amodei seen as balance to Dario",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 751,
+      "latency_ms": 3218
+    },
+    {
+      "url": "https://www.engadget.com/2299227/meta-tamagotchi-like-ai-digital-pet-app-waddle-world/",
+      "title": "Meta’s Waddle World Is a Tamagotchi-Style AI Pet App, Now Testing in the Philippines",
+      "coverage": "publisher_readable_text",
+      "signal": "no_signal",
+      "input_tokens": 804,
+      "latency_ms": 3465
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/amazon-unveils-new-echo-show-16-alexa-speakers-smart-clock-and-photo-frame",
+      "title": "Amazon Launches $500 Echo Show 16, $200 Echo Time Alarm, and Alexa Photo Frame",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 724,
+      "latency_ms": 3183
+    },
+    {
+      "url": "https://www.wsj.com/business/retail/etsy-sales-rise-as-the-number-of-active-buyers-increases-01c646c9?st=eiH3p6&reflink=desktopwebshare_permalink",
+      "title": "Etsy Q3 Revenue Beats Estimates, Net Income Surges on Depop Sale",
+      "coverage": "rss_excerpt",
+      "signal": "buy",
+      "input_tokens": 760,
+      "latency_ms": 3215
+    },
+    {
+      "url": "https://www.coindesk.com/tech/2026/10/28/google-to-preview-crypto-custody-security-system-as-ai-threats-grow",
+      "title": "Google previews MPC crypto custody service as private-key thefts mount",
+      "coverage": "publisher_readable_text",
+      "signal": "no_signal",
+      "input_tokens": 928,
+      "latency_ms": 4021
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/samsung-unveils-galaxy-buds-on-clip-on-earbuds-for-229",
+      "title": "Samsung Announces $229 Galaxy Buds On, Its First Open-Fit Cuff Earbuds",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 752,
+      "latency_ms": 3336
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand",
+      "title": "Moore Threads Q3 Revenue Surges 1,774% to ~$240M",
+      "coverage": "rss_excerpt",
+      "signal": "buy",
+      "input_tokens": 730,
+      "latency_ms": 3191
     },
     {
       "url": "https://www.bloomberg.com/news/articles/2026-10-28/ai-cybersecurity-startup-upwind-raises-at-3-8-billion-value",
-      "title": "Upwind Security Raises $400M at $3.8B Valuation",
+      "title": "AI Cybersecurity Startup Upwind Hits $3.8B Valuation After $400M Raise",
       "coverage": "rss_excerpt",
       "signal": "no_signal",
-      "input_tokens": 581,
-      "latency_ms": 2620
+      "input_tokens": 778,
+      "latency_ms": 3436
     },
     {
       "url": "https://x.com/artificialanlys/status/2115265133467635877",
-      "title": "Artificial Analysis Intelligence Index v5: Claude Opus 5.5 Leads, Open-Weights Gap Widens",
+      "title": "Artificial Analysis Intelligence Index v5: Private Benchmarks, Claude Opus 5.5 Leads, Open-Weight Gap Widens",
       "coverage": "publisher_readable_text",
       "signal": "no_signal",
-      "input_tokens": 814,
-      "latency_ms": 3580
+      "input_tokens": 895,
+      "latency_ms": 3843
     }
   ],
-  "investigation": "Not triggered: no directional signal in the real sample",
+  "investigation": "Completed on a real directional classification",
   "checks": [
     "English UI",
-    "live article summaries",
+    "full 12-story batch",
+    "live article summaries and financial context",
     "actual Metal classifications",
     "NO SIGNAL gate",
     "mobile layout",

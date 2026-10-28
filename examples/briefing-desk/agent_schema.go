@@ -19,9 +19,9 @@ func researchFinalFormat(j *agentJob) map[string]any {
 		for _, h := range j.headlines {
 			ids = append(ids, h.ID)
 		}
-		shape = schema(map[string]any{"headline_ids": array(enum(ids), 1, 3)}, "headline_ids")
+		shape = schema(map[string]any{"headline_ids": array(enum(ids), len(ids), len(ids))}, "headline_ids")
 	case "summarize":
-		shape = schema(map[string]any{"title": text(3, 120), "tldr": text(15, 500), "points": array(text(1, 1000), 2, 5), "overview": text(20, 1200)}, "title", "tldr", "points", "overview")
+		shape = schema(map[string]any{"title": text(3, 120), "tldr": text(15, 500), "points": array(text(1, 1000), 2, 5), "overview": text(20, 1200), "market_context": text(20, 500)}, "title", "tldr", "points", "overview", "market_context")
 	default:
 		ids := []string{}
 		for _, ev := range j.evidence {
