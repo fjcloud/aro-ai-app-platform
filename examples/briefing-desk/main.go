@@ -31,6 +31,7 @@ type scanState struct {
 }
 type server struct {
 	preview                      bool
+	jobTimeout                   time.Duration
 	store                        *store
 	agent                        *agent
 	model                        *decisionClient
@@ -41,6 +42,12 @@ type server struct {
 	scan                         scanState
 }
 
+func (s *server) jobLimit() time.Duration {
+	if s.jobTimeout > 0 {
+		return s.jobTimeout
+	}
+	return 4 * time.Minute
+}
 func reply(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
@@ -71,7 +78,7 @@ func (s *server) record(docID string, e event) {
 }
 func (s *server) importArticle(docID, profileID string) {
 	defer func() { <-s.imports }()
-	ctx, cancel := context.WithTimeout(s.ctx, 4*time.Minute)
+	ctx, cancel := context.WithTimeout(s.ctx, s.jobLimit())
 	defer cancel()
 	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "news.import")
 	defer span.End()
@@ -121,7 +128,7 @@ func (s *server) classify(docID, profileID string) {
 	if !ok {
 		return
 	}
-	ctx, cancel := context.WithTimeout(s.ctx, 30*time.Second)
+	ctx, cancel := context.WithTimeout(s.ctx, s.model.client.Timeout+5*time.Second)
 	defer cancel()
 	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "news.triage")
 	defer span.End()
@@ -145,7 +152,7 @@ func (s *server) investigate(docID, profileID string) {
 	defer func() { <-s.researches }()
 	d, _ := s.store.get(docID)
 	p, _ := s.store.profile(profileID)
-	ctx, cancel := context.WithTimeout(s.ctx, 4*time.Minute)
+	ctx, cancel := context.WithTimeout(s.ctx, s.jobLimit())
 	defer cancel()
 	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "news.investigate")
 	defer span.End()
@@ -165,7 +172,7 @@ func (s *server) investigate(docID, profileID string) {
 	}
 }
 func (s *server) scanFeed(feedID, profileID string) {
-	ctx, cancel := context.WithTimeout(s.ctx, 4*time.Minute)
+	ctx, cancel := context.WithTimeout(s.ctx, s.jobLimit())
 	defer cancel()
 	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "news.scan")
 	defer span.End()
@@ -237,7 +244,7 @@ func (s *server) routes() http.Handler {
 		scan := s.scan
 		scan.Events = append([]event{}, scan.Events...)
 		s.mu.Unlock()
-		reply(w, 200, map[string]any{"documents": docs, "profiles": profiles, "feeds": feeds, "scan": scan, "classifier": s.model.model, "agent": s.agent.model, "preview": s.preview})
+		reply(w, 200, map[string]any{"documents": docs, "profiles": profiles, "feeds": feeds, "scan": scan, "classifier": s.model.model, "agent": s.agent.model, "preview": s.preview, "inference": map[string]string{"agent_backend": s.agent.backendName(), "agent_provider": s.agent.backendName(), "decision_device": env("DECISION_DEVICE", "")}})
 	})
 	mux.HandleFunc("GET /api/articles/{id}", func(w http.ResponseWriter, r *http.Request) {
 		d, ok := s.store.get(r.PathValue("id"))
@@ -494,6 +501,14 @@ func main() {
 	if e != nil {
 		log.Fatal(e)
 	}
+	if backend := env("AGENT_BACKEND", "rhoai"); backend == "groq" {
+		a, e = newGroqAgent(env("GROQ_MODEL", "qwen/qwen3.8-27b"), env("GROQ_KEY_FILE", ""))
+		if e != nil {
+			log.Fatal(e)
+		}
+	} else if backend != "rhoai" {
+		log.Fatal("Unsupported AGENT_BACKEND")
+	}
 	model, e := newDecisionClient(env("DECISION_URL", "http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone"), env("DECISION_MODEL", "vllm-sr/d3-mini"), "")
 	if e != nil {
 		log.Fatal(e)
@@ -507,7 +522,15 @@ func main() {
 		defer cancel()
 		shutdown(ctx)
 	}()
-	s := &server{preview: preview, store: st, agent: a, model: model, ctx: ctx, imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
+	jobTimeout := 4 * time.Minute
+	if raw := env("AGENT_JOB_TIMEOUT", ""); raw != "" {
+		v, e := time.ParseDuration(raw)
+		if e != nil || v < time.Second || v > 15*time.Minute {
+			log.Fatal("AGENT_JOB_TIMEOUT must be between 1s and 15m")
+		}
+		jobTimeout = v
+	}
+	s := &server{jobTimeout: jobTimeout, preview: preview, store: st, agent: a, model: model, ctx: ctx, imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
 	public := &http.Server{Addr: env("LISTEN_ADDR", ":8080"), Handler: s.routes(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
 	go func() {
 		<-ctx.Done()

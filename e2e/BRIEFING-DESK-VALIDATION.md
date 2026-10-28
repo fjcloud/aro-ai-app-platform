@@ -33,6 +33,40 @@ Evidence: [fixture workflow](results/techmeme-terminal/fixture-e2e.json),
 [preview checks](results/techmeme-terminal/preview.json), and
 [preview screen](results/techmeme-terminal/preview.png).
 
+## Live local models
+
+The development backend uses Groq `qwen/qwen3.8-27b` and the actual pinned
+`vllm-sr/d3-mini` on Apple Metal/MPS in FP16. CPU fallback is disabled. MPS is
+marked **unvalidated upstream**; these are local functional checks, not numerical
+parity or financial-performance validation.
+
+- [Metal probes](results/techmeme-terminal/local-metal.json): three explicitly
+  synthetic directional inputs, complete input coverage and actual model answers.
+- [Live browser run](results/techmeme-terminal/local-live.json) and
+  [screen](results/techmeme-terminal/local-live.png): public Techmeme stories,
+  Groq summaries and real local classifications, English/mobile UI, no fixture
+  providers. The sample initially returned NO SIGNAL for all three stories, so
+  the UI correctly refused investigation. Publisher paywalls were disclosed as
+  RSS excerpt coverage. The linked evidence records the latest run.
+- [Direct research probe](results/techmeme-terminal/local-research.json): Qwen
+  called `read_article`, `search_news` and `market_snapshot` on a real imported
+  article and returned a schema/evidence-validated report. This independent
+  backend check did **not** change a classification or bypass the app's NO SIGNAL
+  gate. A transient Groq cooldown was honored on the same model and account.
+- Regression tests cover Groq authentication, native tool continuation, final
+  JSON mode, provider/model mismatch, quota errors, cooldown cancellation and
+  credential redaction. The OpenShift AI transport remains the default.
+
+With the live local app and Metal server running, repeat the browser check using:
+
+```sh
+node e2e/briefing-desk-live-local.cjs
+```
+
+It fetches live news if the feed is empty and accepts the model's actual signals;
+it never requires a fabricated BUY/SHORT. Model setup and credential-file
+configuration are in [the app README](../examples/briefing-desk/README.md).
+
 ## Financial interpretation
 
 The app proposes generic research theses for ETF proxies, not directly tradable

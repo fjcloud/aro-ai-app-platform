@@ -43,7 +43,15 @@ func newDecisionClient(endpoint, model, keyFile string) (*decisionClient, error)
 	if u.Hostname() != "localhost" && u.Hostname() != "127.0.0.1" && !strings.HasSuffix(u.Hostname(), ".svc.cluster.local") && !strings.HasSuffix(u.Hostname(), ".svc") {
 		return nil, errors.New("DECISION_URL must point to the local model, not a hosted API")
 	}
-	return &decisionClient{endpoint, model, keyFile, &http.Client{Timeout: 12 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return errors.New("inference redirects refused") }}}, nil
+	timeout := 12 * time.Second
+	if raw := env("DECISION_TIMEOUT", ""); raw != "" {
+		value, e := time.ParseDuration(raw)
+		if e != nil || value < time.Second || value > 2*time.Minute {
+			return nil, errors.New("DECISION_TIMEOUT must be between 1s and 2m")
+		}
+		timeout = value
+	}
+	return &decisionClient{endpoint, model, keyFile, &http.Client{Timeout: timeout, CheckRedirect: func(*http.Request, []*http.Request) error { return errors.New("inference redirects refused") }}}, nil
 }
 func (d *decisionClient) classify(ctx context.Context, article summary, p profile) (decision, error) {
 	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "decision.classify")

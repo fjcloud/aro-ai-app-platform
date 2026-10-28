@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "scope": "Actual d3-mini on Apple Metal, FP16, synthetic directional input probes; not financial-performance validation",
+  "model": "vllm-sr/d3-mini",
+  "hf_revision": "a475367de0d8133a3c1a2a0dc12303d89cfa2ab4",
+  "model_sha256": "9ac186bb30b30c129d7aae03d73932600424963bd4644c2041a9d7120f029af5",
+  "parameters": 4539918336,
+  "accelerator": "mps",
+  "device": "mps",
+  "dtype": "float16",
+  "numerics": "approximate",
+  "upstream_accelerator_validated": false,
+  "cpu_fallback_enabled": false,
+  "cases": [
+    {
+      "expected": "buy",
+      "answer": {
+        "type": "choice",
+        "choice": "buy",
+        "probabilities": {
+          "buy": 0.9993464484417791,
+          "short": 7.857255073391513e-05,
+          "no_signal": 0.0005749790074870281
+        },
+        "confidence": 0.9990196726626687,
+        "input_coverage": "complete"
+      },
+      "seconds": 0.928,
+      "input_tokens": 160
+    },
+    {
+      "expected": "short",
+      "answer": {
+        "type": "choice",
+        "choice": "short",
+        "probabilities": {
+          "buy": 0.00021057795362752318,
+          "short": 0.9989760965988296,
+          "no_signal": 0.0008133254475429038
+        },
+        "confidence": 0.9984641448982442,
+        "input_coverage": "complete"
+      },
+      "seconds": 0.796,
+      "input_tokens": 158
+    },
+    {
+      "expected": "no_signal",
+      "answer": {
+        "type": "choice",
+        "choice": "no_signal",
+        "probabilities": {
+          "buy": 9.903614862537784e-05,
+          "short": 0.00012647591588397472,
+          "no_signal": 0.9997744879354906
+        },
+        "confidence": 0.9996617319032359,
+        "input_coverage": "complete"
+      },
+      "seconds": 0.788,
+      "input_tokens": 146
+    }
+  ]
+}
