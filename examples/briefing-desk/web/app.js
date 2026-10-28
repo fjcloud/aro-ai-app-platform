@@ -49,8 +49,8 @@ function render(){
  $('periods').textContent='News: '+game.week.news_start+' to '+game.week.news_end+' · paper entry: first US session from '+game.week.market_start+'.';
  $('memo-title').textContent=p.name;$('memo-preview').textContent=p.criteria;if(!dirty){$('fund-name').value=p.name;$('fund-memo').value=p.criteria;}
  $('memo-form').querySelector('button').disabled=data.preview||game.round.status!=='draft';
- $('fetch').disabled=data.preview||['loading','ranking'].includes(game.status);$('fetch').textContent=game.status==='loading'?'Loading archives…':game.status==='ranking'?'Ranking the week…':data.total?'Reload last week':'Load last week’s news';
- $('news-export').hidden=!data.total;$('news-export').href='/api/game/export';$('coverage').textContent=game.error||((game.manifest.unavailable_ids?.length||0)>0?game.manifest.unavailable_ids.length+' archive IDs were unavailable. Export includes the coverage details.':'');
+ $('fetch').disabled=data.preview||['loading','ranking'].includes(game.status);$('import-news').disabled=data.preview||game.round.status!=='draft'||['loading','ranking'].includes(game.status);$('fetch').textContent=game.status==='loading'?'Loading archives…':game.status==='ranking'?'Ranking the week…':data.total?'Reload last week':'Load last week’s news';
+ $('news-export').hidden=!data.total;$('news-export').href='/api/game/export';$('coverage').textContent=(game.error?.includes('HTTP 403')?'Live collection blocked (HTTP 403). Use Import news with an export for this week.':game.error)||((game.manifest.imported_at?'Manually imported archive · scores computed on the server. ':'')+((game.manifest.unavailable_ids?.length||0)>0?game.manifest.unavailable_ids.length+' archive IDs were unavailable. Export includes the coverage details.':''));
  $('progress').textContent=['loading','ranking'].includes(game.status)?game.message:data.ranked+' / '+data.total+' stories ranked for your memo · highest first';
  basketView();$('empty').hidden=data.total>0;
  if(document.activeElement?.classList.contains('stake-input'))return;
@@ -69,3 +69,6 @@ $('update').onclick=async()=>{try{await api('game/settle',{});await refresh();}c
 $('reset').onclick=async()=>{try{await api('game/reset',{});active='';await refresh();}catch(e){notice(e.message);}};
 $('more').onclick=()=>{limit+=30;key='';render();};
 async function tick(){if(busy)return;busy=true;try{await refresh();}catch{notice('Connection interrupted. Retrying…');}finally{busy=false;}};tick();setInterval(tick,3000);
+
+$('import-news').onclick=()=>$('news-file').click();
+$('news-file').onchange=async()=>{const file=$('news-file').files[0];if(!file)return;try{if(file.size>8*1024*1024)throw Error('Choose a JSON news export smaller than 8 MiB.');const body=JSON.parse(await file.text());await api('game/import',body);draft=[];saveDraft();key='';await refresh();notice('News imported. File scores were ignored; the decision model ranks the archived facts.');}catch(e){notice(e.message);}finally{$('news-file').value='';}};

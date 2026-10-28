@@ -4,6 +4,7 @@ A simple paper-investment game: **last week's news → your fund's ranking → i
 
 1. Edit the fund memo (semiconductors/components by default).
 2. Load the previous Monday–Sunday from Techmeme's archives. Export the complete collected corpus as JSON, including coverage gaps.
+   If Techmeme blocks cloud requests, use **Import news** with a same-week facilitator export. Imported dates/URLs are checked, uploaded scores are ignored, and the decision model scores the facts. The UI identifies manual provenance.
 3. Open a ranked story. DeepSeek compares archived news and proposes up to three long-only ETF index proxies: QQQ, SPY, SMH or XLK.
 4. Allocate the **$10,000 virtual budget**, then reveal the result. The entire portfolio is saved and frozen before market prices are requested.
 5. Compare entry at this week's first available US session open with the latest completed session close. While the week is running, results are explicitly provisional. Play again to start another round.
@@ -61,6 +62,13 @@ billing and quotas apply, with no automatic model fallback.
 
 For a disconnected preview, use `PREVIEW_MODE=1 DEV_ASSETS=1 go run .` with a
 separate data directory. Its scores and news are clearly labeled synthetic.
+
+To prepare that file from a network where Techmeme is available (no model or key needed):
+
+```sh
+set -o pipefail
+go run . export-news | jq . > techmeme-news.json
+```
 
 ## Validation
 

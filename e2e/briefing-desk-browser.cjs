@@ -13,6 +13,14 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
   await page.locator('#memo>summary').click();await page.locator('#fund-memo').fill(custom);await page.waitForTimeout(3100);await expect(page.locator('#fund-memo')).toHaveValue(custom);
   await page.locator('#memo-form button').click();await expect.poll(async()=>{const x=await state();return x.memo.criteria===custom&&x.ranked===21&&x.documents.every(d=>d.classifications.tech.opportunity_score===10);},{timeout:30000}).toBe(true);
   await page.locator('#memo>summary').click();await page.locator('#fund-memo').fill(original.criteria);await page.locator('#memo-form button').click();await expect.poll(async()=>{s=await state();return s.memo.criteria===original.criteria&&s.ranked===21&&s.documents.some(d=>d.classifications.tech.opportunity_score===90);},{timeout:30000}).toBe(true);
+  // The file contributes archived facts only; forged scores are ignored.
+  const uploaded=await(await page.request.get(process.env.APP_URL+'/api/game/export')).json();
+  uploaded.news[0].summary.tldr+=' Additional imported source fact.';
+  uploaded.news.forEach(d=>d.classifications.tech.opportunity_score=99);
+  await page.locator('#news-file').setInputFiles({name:'archived-news.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(uploaded))});
+  await expect.poll(async()=>{s=await state();return s.game.status==='ready'&&s.ranked===21&&Boolean(s.game.manifest.imported_at);},{timeout:30000}).toBe(true);
+  assert.ok(s.documents.every(d=>d.classifications.tech.opportunity_score!==99));
+  await expect(page.locator('#coverage')).toContainText('Manually imported archive');
   const choices=s.documents.filter(d=>d.classifications.tech.opportunity_score===90).slice(0,2);
   for(let i=0;i<choices.length;i++){
    const d=choices[i],row=page.locator('.story[data-id="'+d.id+'"]');await row.locator('.headline').click();await row.getByRole('button',{name:'Find index ideas',exact:true}).click();
@@ -28,6 +36,6 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
   await expect(page.locator('#wallet')).toHaveText('$10,050.00');await expect(page.locator('#profit')).toContainText('+$50.00');await expect(page.locator('#round-note')).toContainText('Week in progress');await expect(page.locator('#reveal')).toBeHidden();
   const again=await page.request.post(process.env.APP_URL+'/api/game/play',{data:{round_id:s.game.round.id,memo_version:s.memo.version,positions:[]}});assert.equal(again.status(),409);
   await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Mobile overflow');await page.setViewportSize({width:1440,height:1000});assert.deepEqual(errors,[]);
-  const dir=path.join(__dirname,'results/weekly-game');fs.mkdirSync(dir,{recursive:true});await page.screenshot({path:path.join(dir,'fixture.png'),fullPage:true});const report={passed:true,live_models:false,scope:'Explicit fixture providers through real Go handlers and browser',news:21,checks:['all seven archive days','memo edit re-scoring','historical index research','portfolio choices hidden from market results before commit','two investments','positive and negative index returns','budget and immutable round','no intraday/future valuation','week-in-progress label','full news export','mobile layout','mock-keychain','no JavaScript errors']};fs.writeFileSync(path.join(dir,'fixture.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
+  const dir=path.join(__dirname,'results/weekly-game');fs.mkdirSync(dir,{recursive:true});await page.screenshot({path:path.join(dir,'fixture.png'),fullPage:true});const report={passed:true,live_models:false,scope:'Explicit fixture providers through real Go handlers and browser',news:21,checks:['all seven archive days','manual file import with model results ignored','memo edit re-scoring','historical index research','portfolio choices hidden from market results before commit','two investments','positive and negative index returns','budget and immutable round','no intraday/future valuation','week-in-progress label','full news export','mobile layout','mock-keychain','no JavaScript errors']};fs.writeFileSync(path.join(dir,'fixture.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e.message);process.exitCode=1;});

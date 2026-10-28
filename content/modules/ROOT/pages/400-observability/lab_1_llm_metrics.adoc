@@ -65,10 +65,10 @@ This is cumulative token usage, not remaining balance or a provider invoice.
 
 [source,promql]
 ----
-histogram_quantile(0.95, sum by (le) (rate(vllm_srun_request_duration_seconds_bucket{namespace="decision-serving",endpoint="/v1/systemone"}[5m])))
+histogram_quantile(0.95, sum by (le) (rate(vllm_srun_request_duration_seconds_bucket{namespace="decision-serving",exported_endpoint="/v1/systemone"}[5m])))
 ----
 
-This is D3 request latency in seconds. The native runtime exports `vllm_srun_*`, not the `vllm:*` generation metrics of a vLLM Chat Completions server.
+This is D3 request latency in seconds. Prometheus uses `endpoint=http` for the scrape target, so the runtime’s original endpoint label is collected as `exported_endpoint`. The native runtime exports `vllm_srun_*`, not the `vllm:*` generation metrics of a vLLM Chat Completions server.
 
 [source,promql]
 ----

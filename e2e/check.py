@@ -128,7 +128,7 @@ def developer():
             return None
     with urllib.request.build_opener(NoRedirect).open(request, timeout=30) as response:
         page = response.read().decode('utf-8')
-    require('Talk to your cluster.' in page, 'Authenticated Cluster Voice UI')
+    require('A week of news. A paper investment.' in page, 'Authenticated Signal Desk UI')
     if os.environ.get('EXPECT_UPDATED_APP') == 'true':
         require('High relevance only' in html.unescape(page), 'Shipped update includes the relevance filter')
     spec = deployment['spec']['template']['spec']

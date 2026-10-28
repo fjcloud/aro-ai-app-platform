@@ -143,6 +143,17 @@ func (s *server) loadGameWeek() {
 		s.gameMu.Unlock()
 		return
 	}
+	s.rankGameManifest(ctx, manifest)
+}
+
+func (s *server) rankGameManifest(ctx context.Context, manifest archiveManifest) {
+	week := manifest.Week
+	coverage := "archived_excerpt"
+	if manifest.ImportedAt != "" {
+		coverage = "imported_archive"
+	}
+	var e error
+	note := func(text string) { s.gameMu.Lock(); s.game.Message = text; s.saveGame(); s.gameMu.Unlock() }
 	s.gameMu.Lock()
 	s.game.Manifest = manifest
 	s.game.Status = "ranking"
@@ -157,8 +168,12 @@ func (s *server) loadGameWeek() {
 				break
 			}
 		}
-		if d.ID == "" {
-			d = document{ID: id(), URL: story.URL, GameWeek: week.ID, Status: "ready", Created: stamp(), Classes: map[string]classification{}, Research: map[string]research{}, Source: source{URL: story.URL, FinalURL: story.URL, Title: story.Title, Text: story.Excerpt, Coverage: "archived_excerpt", Published: story.Day, ArchiveID: story.ArchiveID, ArchivedAt: story.AsOf, ArchiveURL: story.SnapshotURL, Fetched: stamp()}, Summary: summary{Title: story.Title, TLDR: story.Excerpt, Points: []string{story.Title, story.Excerpt}, Overview: story.Excerpt}}
+		if d.ID == "" || d.Summary.Title != story.Title || d.Summary.TLDR != story.Excerpt {
+			docID := d.ID
+			if docID == "" {
+				docID = id()
+			}
+			d = document{ID: docID, URL: story.URL, GameWeek: week.ID, Status: "ready", Created: stamp(), Classes: map[string]classification{}, Research: map[string]research{}, Source: source{URL: story.URL, FinalURL: story.URL, Title: story.Title, Text: story.Excerpt, Coverage: coverage, Published: story.Day, ArchiveID: story.ArchiveID, ArchivedAt: story.AsOf, ArchiveURL: story.SnapshotURL, Fetched: stamp()}, Summary: summary{Title: story.Title, TLDR: story.Excerpt, Points: []string{story.Title, story.Excerpt}, Overview: story.Excerpt}}
 			d.Markdown = documentMarkdown(d)
 			e = atomicJSON(filepath.Join(s.store.dir, "documents", d.ID+".json"), d)
 			if e == nil {
@@ -305,6 +320,7 @@ func (s *server) settleRound(roundID string) {
 	}
 }
 func (s *server) gameRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("POST /api/game/import", s.importGameWeek)
 	mux.HandleFunc("GET /api/game", func(w http.ResponseWriter, r *http.Request) {
 		s.gameMu.Lock()
 		var snapshot gameState
@@ -338,7 +354,7 @@ func (s *server) gameRoutes(mux *http.ServeMux) {
 		s.gameMu.Unlock()
 		docs := s.gameDocuments()
 		w.Header().Set("Content-Disposition", `attachment; filename="techmeme-`+manifest.Week.ID+`.json"`)
-		reply(w, 200, map[string]any{"coverage": manifest.Coverage, "week": manifest.Week, "unavailable_ids": manifest.Missing, "news": docs})
+		reply(w, 200, map[string]any{"coverage": manifest.Coverage, "week": manifest.Week, "unavailable_ids": manifest.Missing, "imported_at": manifest.ImportedAt, "news": docs})
 	})
 	mux.HandleFunc("POST /api/game/load", func(w http.ResponseWriter, r *http.Request) {
 		s.gameMu.Lock()

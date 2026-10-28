@@ -52,6 +52,7 @@ type archiveManifest struct {
 	SnapshotURLs []string        `json:"snapshot_urls"`
 	Missing      []string        `json:"unavailable_ids"`
 	Coverage     string          `json:"coverage"`
+	ImportedAt   string          `json:"imported_at,omitempty"`
 }
 
 var archiveIDPattern = regexp.MustCompile(`^(\d{6})p(\d+)$`)

@@ -567,6 +567,13 @@ func (s *server) routes() http.Handler {
 	})
 }
 func main() {
+	if len(os.Args) == 2 && os.Args[1] == "export-news" {
+		if e := exportNews(os.Stdout); e != nil {
+			log.Fatal(e)
+		}
+		return
+	}
+
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	preview := env("PREVIEW_MODE", "") == "1"

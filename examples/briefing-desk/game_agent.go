@@ -64,7 +64,11 @@ func (a *agent) runGameTool(j *agentJob, name, sourceID, query string) (any, str
 		if !ok || d.GameWeek != j.archiveWeek.ID || d.Source.ArchivedAt == "" || d.Source.ArchivedAt > j.archiveWeek.Cutoff {
 			return nil, "", errors.New("Only source IDs in the pre-cutoff archive can be read")
 		}
-		return map[string]any{"title": d.Summary.Title, "excerpt": d.Summary.TLDR, "published_day": d.Source.Published, "snapshot_as_of": d.Source.ArchivedAt, "source_url": d.URL, "coverage": "Archived Techmeme headline/excerpt only. Publisher page was not fetched."}, d.Source.ArchiveURL, nil
+		coverage := "Archived Techmeme headline/excerpt only. Publisher page was not fetched."
+		if d.Source.Coverage == "imported_archive" {
+			coverage = "Manually imported archived facts. Source dates and URLs are supplied by the import, not independently re-fetched."
+		}
+		return map[string]any{"title": d.Summary.Title, "excerpt": d.Summary.TLDR, "published_day": d.Source.Published, "snapshot_as_of": d.Source.ArchivedAt, "source_url": d.URL, "coverage": coverage}, d.Source.ArchiveURL, nil
 	case "search_archive":
 		if len(query) < 3 || len(query) > 120 {
 			return nil, "", errors.New("Use a short archive search query")

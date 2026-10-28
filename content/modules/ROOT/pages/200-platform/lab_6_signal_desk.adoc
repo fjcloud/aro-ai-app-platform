@@ -54,6 +54,7 @@ The fixed infrastructure name remains `live-transcript` for the prepared namespa
 Read `APP_CONTRACT.md` in the template. The backend owns four simple responsibilities:
 
 . Collect the prior Monday–Sunday Techmeme archive and retain coverage gaps.
+. Accept a same-week manual JSON export if live Techmeme collection is blocked; ignore its model outputs and disclose imported provenance.
 . Score the archived news against the fund memo with d3-mini.
 . Ask DeepSeek for hypothetical long-only index exposures using bounded archive tools.
 . Save and freeze the user's virtual portfolio, then calculate actual subsequent-week gross price returns.

@@ -16,6 +16,16 @@ Platform/usage/protocol probes make billable model calls. `APP_NAME` defaults to
 
 Validate the UI with a full archived-week import, real T4 scores, an actual native Responses tool loop, a virtual allocation and subsequent-week observed prices. Verify unavailable archive IDs, incomplete-week labels and errors. Confirm an MLflow research trace and the same archive tools in the native Playground. Public app access requires OpenShift OAuth; credentials remain private. Every Chromium launch includes `--use-mock-keychain`.
 
+For the real Route browser test, save a private OpenShift browser session and model metadata from the Lab 1.4 port-forward, then run:
+
+```sh
+APP_URL=https://your-app-route BROWSER_STATE=/private/path/login-state.json \
+D3_METADATA=/private/path/d3-models.json NEWS_IMPORT_FILE=/path/to/current-week-news.json \
+  node e2e/briefing-desk-aro.cjs
+```
+
+The test tries direct collection first. A blocked collection fails unless an explicit import file is supplied; the report records that recovery. It never invents news, scores or prices.
+
 Local regression checks:
 
 ```sh
