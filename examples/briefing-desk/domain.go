@@ -34,22 +34,21 @@ type profile struct {
 }
 
 func defaults() []profile {
-	return []profile{
-		{"macro", "Global macro", "Assess potential transmission to interest rates, inflation, currencies, sovereign risk and global growth. Separate concrete economic developments from unrelated human-interest stories. Flag uncertainty; a geopolitical headline alone is not proof of a market effect.", 1},
-		{"equities", "Technology equities", "Assess potential impact on listed technology companies, AI infrastructure, semiconductors, software revenues, costs, regulation and supply chains. Exclude unrelated sports, culture and general politics without a documented company or sector connection.", 1},
-		{"commodities", "Energy & commodities", "Assess potential effects on oil, gas, electricity, metals, agricultural commodities, shipping and industrial supply. Identify actual supply/demand or policy developments; do not infer price moves solely from a dramatic headline.", 1},
-	}
+	return []profile{{"tech", "Technology index signals", "Evaluate technology news for a short-horizon, hypothetical directional exposure to Nasdaq-100, the S&P 500 or a technology/semiconductor index. BUY means a supported bullish catalyst; SHORT means a supported bearish catalyst. NO SIGNAL means mixed, immaterial, already ambiguous or insufficiently evidenced news. A headline is not proof of a market move. Do not infer a trade for a specific person.", 1}}
 }
 
 type source struct {
-	URL       string `json:"url"`
-	FinalURL  string `json:"final_url"`
-	Host      string `json:"host"`
-	Title     string `json:"title"`
-	Text      string `json:"text,omitempty"`
-	Published string `json:"published,omitempty"`
-	Fetched   string `json:"fetched"`
-	Truncated bool   `json:"truncated"`
+	URL        string `json:"url"`
+	FinalURL   string `json:"final_url"`
+	Host       string `json:"host"`
+	Title      string `json:"title"`
+	Text       string `json:"text,omitempty"`
+	Published  string `json:"published,omitempty"`
+	Fetched    string `json:"fetched"`
+	Truncated  bool   `json:"truncated"`
+	Coverage   string `json:"coverage,omitempty"`
+	RSSExcerpt string `json:"rss_excerpt,omitempty"`
+	FeedURL    string `json:"feed_url,omitempty"`
 }
 type summary struct {
 	Title    string   `json:"title"`
@@ -111,11 +110,12 @@ type finding struct {
 	Sources []string `json:"sources"`
 }
 type report struct {
-	Headline   string    `json:"headline"`
-	Facts      []finding `json:"facts"`
-	Hypotheses []finding `json:"hypotheses"`
-	Unknowns   []string  `json:"unknowns"`
-	NextChecks []string  `json:"next_checks"`
+	Plan       *tradePlan `json:"plan,omitempty"`
+	Headline   string     `json:"headline"`
+	Facts      []finding  `json:"facts"`
+	Hypotheses []finding  `json:"hypotheses"`
+	Unknowns   []string   `json:"unknowns"`
+	NextChecks []string   `json:"next_checks"`
 }
 type research struct {
 	Status         string     `json:"status"`
@@ -129,13 +129,17 @@ type research struct {
 	At             string     `json:"at"`
 }
 
-func researchMarkdown(d document, p profile, r research) string {
+func researchMarkdown(d document, p profile, r research, amount ...float64) string {
+	notional := 10000.0
+	if len(amount) > 0 {
+		notional = amount[0]
+	}
 	var b strings.Builder
 	fmt.Fprintf(&b, "# %s\n\nResearch draft · %s · %s\n\nMandate: %s\n\n", markdownText(r.Report.Headline), stamp(), markdownText(p.Name), markdownText(p.Criteria))
 	for _, section := range []struct {
 		name  string
 		items []finding
-	}{{"Verified source facts", r.Report.Facts}, {"Possible financial transmission — hypotheses", r.Report.Hypotheses}} {
+	}{{"Source facts", r.Report.Facts}, {"Possible financial transmission — hypotheses", r.Report.Hypotheses}} {
 		fmt.Fprintf(&b, "## %s\n\n", section.name)
 		for _, f := range section.items {
 			fmt.Fprintf(&b, "- %s [%s]\n", markdownText(f.Text), strings.Join(f.Sources, ", "))
@@ -151,6 +155,20 @@ func researchMarkdown(d document, p profile, r research) string {
 			fmt.Fprintf(&b, "- %s\n", markdownText(v))
 		}
 		b.WriteString("\n")
+	}
+	if p := r.Report.Plan; p != nil {
+		fmt.Fprintf(&b, "## Index scenario\n\n%s · %s\n\n%s\n\n", markdownText(p.Symbol), strings.ToUpper(p.Direction), markdownText(p.Thesis))
+		if v, e := scenario(*p, notional); e == nil {
+			fmt.Fprintf(&b, "Reference entry: $%.2f as of %s. Hypothetical target: $%.2f; stop: $%.2f over %d sessions. For $%.2f notional, target-case gross P&L: $%.2f; stop-case gross P&L: $%.2f.\n\n", v.Entry, p.Quote.AsOf, v.Target, v.Stop, p.HorizonDays, notional, v.TargetPnL, v.StopPnL)
+		} else {
+			fmt.Fprintf(&b, "Pricing unavailable: %s\n\n", markdownText(func() string {
+				if p.PricingError != "" {
+					return p.PricingError
+				}
+				return e.Error()
+			}()))
+		}
+		fmt.Fprintf(&b, "%s\n\n", p.Assumption)
 	}
 	b.WriteString("## Evidence\n\n")
 	for _, e := range r.Evidence {
@@ -175,13 +193,16 @@ func documentMarkdown(d document) string {
 	if d.Source.Published != "" {
 		fmt.Fprintf(&b, "\nPublication metadata: %s\n", markdownText(d.Source.Published))
 	}
+	if d.Source.Coverage == "rss_excerpt" {
+		b.WriteString("\nCoverage: Techmeme RSS headline and excerpt only; publisher text was unavailable.\n")
+	}
 	if d.Source.Truncated {
 		b.WriteString("\nNote: the readable source text was limited to the configured extraction budget.\n")
 	}
 	return b.String()
 }
 
-var priorities = []string{"material", "monitor", "insufficient_context", "not_financial"}
+var priorities = []string{"buy", "short", "no_signal"}
 
 func rank(p string) int {
 	for i, v := range priorities {
@@ -199,7 +220,7 @@ func briefing(p profile, docs []document) string {
 	fmt.Fprintf(&b, "# Briefing for %s\n\nCompiled: %s\n\nFocus: %s\n\n", markdownText(p.Name), stamp(), markdownText(p.Criteria))
 	for _, d := range docs {
 		c, ok := d.Classes[p.ID]
-		if !ok || c.Status != "done" || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash() || (c.Priority != "material" && c.Priority != "monitor") {
+		if !ok || c.Status != "done" || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash() || (c.Priority != "buy" && c.Priority != "short") {
 			continue
 		}
 		fmt.Fprintf(&b, "## %s\n\n**%s**\n\n%s\n\n", markdownText(d.Summary.Title), strings.ToUpper(c.Priority), markdownText(d.Summary.TLDR))

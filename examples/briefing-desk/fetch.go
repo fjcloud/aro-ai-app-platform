@@ -24,7 +24,7 @@ type feed struct {
 	URL  string `json:"url"`
 }
 
-var feeds = []feed{{"world", "BBC World", "https://feeds.bbci.co.uk/news/world/rss.xml"}, {"business", "BBC Business", "https://feeds.bbci.co.uk/news/business/rss.xml"}, {"france24", "France 24", "https://www.france24.com/en/rss"}}
+var feeds = []feed{{"techmeme", "Techmeme", "https://www.techmeme.com/feed.xml"}}
 
 type headline struct {
 	ID        string `json:"id"`
@@ -32,6 +32,7 @@ type headline struct {
 	URL       string `json:"url"`
 	Published string `json:"published"`
 	Excerpt   string `json:"excerpt"`
+	FeedURL   string `json:"feed_url,omitempty"`
 }
 type fetcher struct{ client *http.Client }
 
@@ -208,11 +209,15 @@ func (f *fetcher) headlines(ctx context.Context, feedID string) ([]headline, str
 	}
 	out := []headline{}
 	for _, v := range rss.Channel.Items {
-		if _, e := publicURL(v.Link); e != nil {
+		link := v.Link
+		if feedID == "techmeme" {
+			link = publisherURL(v.Description, v.Link)
+		}
+		if _, e := publicURL(link); e != nil {
 			continue
 		}
 		_, excerpt := plainHTML([]byte(v.Description))
-		out = append(out, headline{Title: v.Title, URL: v.Link, Published: v.Date, Excerpt: excerpt})
+		out = append(out, headline{Title: v.Title, URL: link, Published: v.Date, Excerpt: excerpt, FeedURL: raw})
 		if len(out) == 12 {
 			break
 		}
@@ -221,6 +226,53 @@ func (f *fetcher) headlines(ctx context.Context, feedID string) ([]headline, str
 		return nil, raw, errors.New("News feed returned no articles")
 	}
 	return out, final, nil
+}
+
+// Techmeme permalinks contain fragments; the RSS description links to the publisher.
+func publisherURL(description, fallback string) string {
+	clean := func(raw string) string {
+		u, e := url.Parse(raw)
+		if e != nil {
+			return ""
+		}
+		u.Fragment = ""
+		if _, e = publicURL(u.String()); e != nil {
+			return ""
+		}
+		return u.String()
+	}
+	n, e := html.Parse(strings.NewReader(description))
+	if e != nil {
+		return clean(fallback)
+	}
+	result := ""
+	var walk func(*html.Node)
+	walk = func(n *html.Node) {
+		if result != "" {
+			return
+		}
+		if n.Type == html.ElementNode && n.Data == "a" {
+			for _, a := range n.Attr {
+				if a.Key == "href" {
+					u, e := url.Parse(a.Val)
+					if e == nil && u.Hostname() != "www.techmeme.com" && u.Hostname() != "techmeme.com" && u.Path != "" && u.Path != "/" {
+						result = clean(a.Val)
+						if result != "" {
+							return
+						}
+					}
+				}
+			}
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			walk(c)
+		}
+	}
+	walk(n)
+	if result != "" {
+		return result
+	}
+	return clean(fallback)
 }
 
 var companies = map[string]string{"NVDA": "0001045810", "AAPL": "0000320193", "MSFT": "0000789019", "AMZN": "0001018724", "GOOG": "0001652044", "TSLA": "0001318605", "XOM": "0000034088", "JPM": "0000019617"}

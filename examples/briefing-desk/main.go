@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"strconv"
 	"sync"
 	"syscall"
 	"time"
@@ -29,6 +30,7 @@ type scanState struct {
 	Events []event `json:"events"`
 }
 type server struct {
+	preview                      bool
 	store                        *store
 	agent                        *agent
 	model                        *decisionClient
@@ -83,7 +85,7 @@ func (s *server) importArticle(docID, profileID string) {
 		d.Error = ""
 		d.TraceID = span.SpanContext().TraceID().String()
 	})
-	src, sum, e := s.agent.summarize(ctx, d.URL, func(e event) { s.record(docID, e) })
+	src, sum, e := s.agent.summarize(ctx, d.URL, func(e event) { s.record(docID, e) }, d.Source)
 	if e != nil {
 		s.store.update(docID, func(d *document) { d.Status = "failed"; d.Error = e.Error() })
 		return
@@ -91,6 +93,8 @@ func (s *server) importArticle(docID, profileID string) {
 	if e = s.store.update(docID, func(d *document) {
 		d.Status = "ready"
 		src.Published = d.Source.Published
+		src.FeedURL = d.Source.FeedURL
+		src.RSSExcerpt = d.Source.RSSExcerpt
 		d.Source = src
 		d.Summary = sum
 		d.Markdown = documentMarkdown(*d)
@@ -177,7 +181,12 @@ func (s *server) scanFeed(feedID, profileID string) {
 			if !created {
 				continue
 			}
-			s.store.update(d.ID, func(d *document) { d.Source.Published = h.Published })
+			s.store.update(d.ID, func(d *document) {
+				d.Source.Published = h.Published
+				d.Source.RSSExcerpt = h.Title + "\n" + h.Excerpt
+				d.Source.FeedURL = h.FeedURL
+				d.Source.Title = h.Title
+			})
 			select {
 			case s.imports <- struct{}{}:
 				go s.importArticle(d.ID, profileID)
@@ -203,8 +212,18 @@ func (s *server) scanFeed(feedID, profileID string) {
 func (s *server) routes() http.Handler {
 	mux := http.NewServeMux()
 	files, _ := fs.Sub(assets, "web")
+	if env("DEV_ASSETS", "") == "1" {
+		files = os.DirFS("web")
+	}
 	mux.Handle("GET /", http.FileServer(http.FS(files)))
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) { reply(w, 200, map[string]string{"status": "ok"}) })
+	mux.HandleFunc("GET /api/market", func(w http.ResponseWriter, r *http.Request) {
+		if s.preview {
+			reply(w, 200, previewMarket())
+			return
+		}
+		reply(w, 200, s.agent.market.snapshot(r.Context()))
+	})
 	mux.HandleFunc("GET /api/state", func(w http.ResponseWriter, r *http.Request) {
 		docs, profiles := s.store.list()
 		for i := range docs {
@@ -218,7 +237,7 @@ func (s *server) routes() http.Handler {
 		scan := s.scan
 		scan.Events = append([]event{}, scan.Events...)
 		s.mu.Unlock()
-		reply(w, 200, map[string]any{"documents": docs, "profiles": profiles, "feeds": feeds, "scan": scan, "classifier": s.model.model, "agent": s.agent.model})
+		reply(w, 200, map[string]any{"documents": docs, "profiles": profiles, "feeds": feeds, "scan": scan, "classifier": s.model.model, "agent": s.agent.model, "preview": s.preview})
 	})
 	mux.HandleFunc("GET /api/articles/{id}", func(w http.ResponseWriter, r *http.Request) {
 		d, ok := s.store.get(r.PathValue("id"))
@@ -344,8 +363,8 @@ func (s *server) routes() http.Handler {
 			go s.classify(d.ID, p.ID)
 		case "investigate":
 			c := d.Classes[p.ID]
-			if c.Status != "done" || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash() || (c.Priority != "material" && c.Priority != "monitor") {
-				fail(w, 409, "Investigate requires a fresh classification with financial relevance")
+			if c.Status != "done" || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash() || (c.Priority != "buy" && c.Priority != "short") {
+				fail(w, 409, "Rank this article BUY or SHORT before investigating")
 				return
 			}
 			if d.Research[p.ID].Status == "running" {
@@ -390,7 +409,38 @@ func (s *server) routes() http.Handler {
 					fail(w, 409, "No current completed research draft for this mandate")
 					return
 				}
-				text = researchMarkdown(d, p, v)
+				notional := 10000.0
+				for _, field := range []struct {
+					name     string
+					min, max float64
+					dest     *float64
+				}{{"notional", 100, 1000000, &notional}} {
+					if raw := r.URL.Query().Get(field.name); raw != "" {
+						number, e := strconv.ParseFloat(raw, 64)
+						if e != nil || !finitePositive(number) || number < field.min || number > field.max {
+							fail(w, 400, "Invalid scenario input")
+							return
+						}
+						*field.dest = number
+					}
+				}
+				if v.Report.Plan != nil {
+					for _, field := range []struct {
+						name string
+						max  float64
+						dest *float64
+					}{{"target", 25, &v.Report.Plan.TargetMovePct}, {"stop", 15, &v.Report.Plan.StopMovePct}} {
+						if raw := r.URL.Query().Get(field.name); raw != "" {
+							number, e := strconv.ParseFloat(raw, 64)
+							if e != nil || !finitePositive(number) || number < .1 || number > field.max {
+								fail(w, 400, "Invalid scenario input")
+								return
+							}
+							*field.dest = number
+						}
+					}
+				}
+				text = researchMarkdown(d, p, v, notional)
 			} else {
 				text = d.Markdown
 			}
@@ -403,6 +453,10 @@ func (s *server) routes() http.Handler {
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; frame-ancestors 'self'; base-uri 'none'; object-src 'none'")
+		if r.Method == "POST" && s.preview {
+			fail(w, 409, "Preview fixtures have no live model execution. Connect OpenShift AI and disable PREVIEW_MODE.")
+			return
+		}
 		if r.Method == "POST" {
 			if o := r.Header.Get("Origin"); o != "" {
 				u, e := url.Parse(o)
@@ -422,9 +476,19 @@ func (s *server) routes() http.Handler {
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-	st, e := openStore(env("DATA_DIR", "./data"))
+	preview := env("PREVIEW_MODE", "") == "1"
+	dataDefault := "./data"
+	if preview {
+		dataDefault = "./preview-data"
+	}
+	st, e := openStore(env("DATA_DIR", dataDefault))
 	if e != nil {
 		log.Fatal(e)
+	}
+	if preview {
+		if e := seedPreview(st); e != nil {
+			log.Fatal(e)
+		}
 	}
 	a, e := newAgent(env("AGENT_URL", "http://lsd-genai-playground-service.live-transcript-dev.svc.cluster.local:8321/v1"), env("AGENT_MODEL", "maas-vllm-inference-1/deepseekv4pro"), env("AGENT_KEY_FILE", "/etc/model/api-key"))
 	if e != nil {
@@ -443,7 +507,7 @@ func main() {
 		defer cancel()
 		shutdown(ctx)
 	}()
-	s := &server{store: st, agent: a, model: model, ctx: ctx, imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
+	s := &server{preview: preview, store: st, agent: a, model: model, ctx: ctx, imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
 	public := &http.Server{Addr: env("LISTEN_ADDR", ":8080"), Handler: s.routes(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
 	go func() {
 		<-ctx.Done()

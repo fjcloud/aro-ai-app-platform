@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -29,3 +29,19 @@ jobs:
       - run: make docs
       - run: go vet ./...
         working-directory: examples/briefing-desk
+      - name: Install terminal browser dependencies
+        run: npm ci --no-fund
+        working-directory: e2e
+      - name: Install Chromium for terminal checks
+        run: npx playwright install --with-deps chromium
+        working-directory: e2e
+      - name: Validate terminal with explicit fixture providers
+        run: go test -race -count=1 -run TestTerminalBrowserFixtures -timeout 120s ./...
+        working-directory: examples/briefing-desk
+        env:
+          BROWSER_E2E: "1"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: techmeme-terminal-fixture-results
+          path: e2e/results/techmeme-terminal/

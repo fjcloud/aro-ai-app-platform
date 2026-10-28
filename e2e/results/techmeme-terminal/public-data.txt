@@ -1,0 +1,9 @@
+=== RUN   TestLivePublicData
+    market_test.go:115: Actual Techmeme articles: 12
+    market_test.go:121: QQQ timestamp 2026-10-27T20:00:00Z currency USD
+    market_test.go:121: SPY timestamp 2026-10-27T20:00:00Z currency USD
+    market_test.go:121: SMH timestamp 2026-10-27T20:00:00Z currency USD
+    market_test.go:121: XLK timestamp 2026-10-27T20:00:00Z currency USD
+--- PASS: TestLivePublicData (1.26s)
+PASS
+ok  	briefing-desk	1.989s

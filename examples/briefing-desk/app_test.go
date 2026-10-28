@@ -56,10 +56,10 @@ func TestPersistentStateAndStaleMandate(t *testing.T) {
 	s.update(d.ID, func(d *document) {
 		d.Status = "ready"
 		d.Summary = sum
-		d.Classes["macro"] = classification{Status: "done", ProfileVersion: 1, SummaryHash: sum.hash(), Priority: "material"}
-		d.Research["macro"] = research{Status: "running"}
+		d.Classes["tech"] = classification{Status: "done", ProfileVersion: 1, SummaryHash: sum.hash(), Priority: "buy"}
+		d.Research["tech"] = research{Status: "running"}
 	})
-	p, _ := s.profile("macro")
+	p, _ := s.profile("tech")
 	p.Criteria += " Additional requirements."
 	s.saveProfile(p)
 	s2, e := openStore(dir)
@@ -67,13 +67,13 @@ func TestPersistentStateAndStaleMandate(t *testing.T) {
 		t.Fatal(e)
 	}
 	docs, _ := s2.list()
-	if len(docs) != 1 || !docs[0].Classes["macro"].Stale || docs[0].Research["macro"].Status != "failed" {
+	if len(docs) != 1 || !docs[0].Classes["tech"].Stale || docs[0].Research["tech"].Status != "failed" {
 		t.Fatalf("invalid persisted state %+v", docs)
 	}
 	copy, _ := s2.get(d.ID)
-	copy.Classes["macro"] = classification{}
+	copy.Classes["tech"] = classification{}
 	again, _ := s2.get(d.ID)
-	if again.Classes["macro"].Status != "done" {
+	if again.Classes["tech"].Status != "done" {
 		t.Fatal("store returned mutable aliases")
 	}
 }
@@ -111,7 +111,7 @@ func TestClassifierRejectsIncompleteCoverage(t *testing.T) {
 				if !strings.Contains(fmt.Sprint(payload["state"]), "mandate") {
 					t.Error("mandate missing")
 				}
-				reply(w, 200, map[string]any{"answers": map[string]any{"relevance": map[string]any{"choice": "material", "confidence": .7, "input_coverage": coverage, "probabilities": map[string]float64{"material": .7, "monitor": .2, "not_financial": .05, "insufficient_context": .05}}}})
+				reply(w, 200, map[string]any{"answers": map[string]any{"signal": map[string]any{"choice": "buy", "confidence": .7, "input_coverage": coverage, "probabilities": map[string]float64{"buy": .7, "short": .2, "no_signal": .1}}}})
 			}))
 			defer up.Close()
 			c, _ := newDecisionClient(up.URL, "test", "")
@@ -138,14 +138,14 @@ func TestHTTPFinancialGateAndCSRF(t *testing.T) {
 	s.store.update(d.ID, func(d *document) {
 		d.Status = "ready"
 		d.Summary = summary{Title: "Article"}
-		d.Classes["macro"] = classification{Status: "done", Priority: "not_financial", ProfileVersion: 1, SummaryHash: d.Summary.hash()}
+		d.Classes["tech"] = classification{Status: "done", Priority: "no_signal", ProfileVersion: 1, SummaryHash: d.Summary.hash()}
 	})
 	h := s.routes()
 	for _, tc := range []struct {
 		origin string
 		status int
 	}{{"https://evil.example.com", 403}, {"", 409}} {
-		r := httptest.NewRequest("POST", "http://desk.example.com/api/articles/"+d.ID+"/investigate", strings.NewReader(`{"profile_id":"macro"}`))
+		r := httptest.NewRequest("POST", "http://desk.example.com/api/articles/"+d.ID+"/investigate", strings.NewReader(`{"profile_id":"tech"}`))
 		r.Header.Set("Origin", tc.origin)
 		w := httptest.NewRecorder()
 		h.ServeHTTP(w, r)
@@ -153,7 +153,7 @@ func TestHTTPFinancialGateAndCSRF(t *testing.T) {
 			t.Fatalf("got %d want %d", w.Code, tc.status)
 		}
 	}
-	r := httptest.NewRequest("GET", "http://desk.example.com/api/export/"+d.ID+"?type=research&profile=macro", nil)
+	r := httptest.NewRequest("GET", "http://desk.example.com/api/export/"+d.ID+"?type=research&profile=tech", nil)
 	w := httptest.NewRecorder()
 	h.ServeHTTP(w, r)
 	if w.Code != 409 {
@@ -189,7 +189,7 @@ func TestNativeToolLoopRetrievesRealResults(t *testing.T) {
 		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader(`<rss><channel><item><title>A real source headline</title><link>https://example.com/story</link><pubDate>today</pubDate><description>Source excerpt</description></item></channel></rss>`)), Header: http.Header{"Content-Type": []string{"text/xml"}}, Request: r}, nil
 	})}}
 	events := []event{}
-	items, e := a.collect(context.Background(), "business", func(e event) { events = append(events, e) })
+	items, e := a.collect(context.Background(), "techmeme", func(e event) { events = append(events, e) })
 	if e != nil || len(items) != 1 || turns != 2 || len(events) < 3 {
 		t.Fatalf("Tool loop failed: %v %v", items, e)
 	}
@@ -237,7 +237,7 @@ func TestSourceReferencesSurviveRepeatedSearches(t *testing.T) {
 		t.Fatal("Missing first source reference")
 	}
 	a.runTool(context.Background(), j, "search_news", json.RawMessage(`{"query":"economy"}`))
-	if j.refs["N1"] != first || len(j.refs) != 7 {
+	if j.refs["N1"] != first || len(j.refs) != 3 {
 		t.Fatal("A later search reassigned an existing source ID")
 	}
 }

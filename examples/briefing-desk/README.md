@@ -1,55 +1,58 @@
-# Signal Desk — ARO experiment
+# Signal Desk / Techmeme terminal
 
-An English hedge-fund news feed: native OpenShift AI agent retrieval and summaries,
-local d3-mini financial relevance on one T4, and on-demand agent investigations.
+An English market terminal: **fetch → summarize → BUY / SHORT / NO SIGNAL → investigate**.
 
-```mermaid
-flowchart LR
-  News[Public RSS / article URL] --> Agent[OpenShift AI agent]
-  Agent --> Summary[English summary]
-  Summary --> T4[d3-mini · T4]
-  T4 --> Feed[Financial relevance feed]
-  Feed -->|Investigate| Research[Native Responses + read-only tools]
-  Research --> Note[Evidence + research draft + Markdown]
+- Techmeme RSS supplies headlines and original publisher links. Inaccessible pages
+  use an explicitly labeled RSS excerpt; they are never presented as full articles.
+- OpenShift AI summarizes and investigates. The existing d3-mini on a T4 ranks
+  the directional thesis. NO SIGNAL is a valid outcome and blocks investigation.
+- Research maps a thesis to QQQ, SPY, SMH or XLK: ETF proxies for their stated
+  indices. Timestamped Yahoo Finance chart metadata supplies reference prices.
+- Targets, stops and horizon are hypothetical model assumptions. Edit notional,
+  target and stop to calculate conditional gross P&L. Markdown uses the same
+  edited inputs. This is not a calibrated expected-return estimate. The signal score does not
+  estimate the chance of hitting a target.
+
+## Local preview
+
+From this directory:
+
+```sh
+PREVIEW_MODE=1 DEV_ASSETS=1 go run .
 ```
 
-Use an already prepared ARO lab with the native agent, MaaS DeepSeek model,
-local d3-mini, OAuth proxy and Git → Tekton → Argo CD application workflow.
-The facilitator runs `python3 scripts/prepare-briefing-desk.py`, then copies this
-reference and the `feature/briefing-desk` template into the personal app repository.
-Retain the technical name `live-transcript` and its exact internal-registry image.
+Open http://localhost:8080. Preview uses a separate `preview-data/` directory and
+clearly labeled fictional headlines, model signals and prices. It cannot execute
+live model jobs. `DEV_ASSETS=1` reloads the local `web/` assets while editing.
+The production image embeds those assets.
 
-The template adds a persistent `/data` volume. The public route stays behind
-OAuth, with no additional exposed port. The native OpenShift AI Responses API
-returns typed function calls; the Go backend executes the scoped read-only
-tools and sends their actual results back to that same service. Each run is
-bounded to six calls and seven turns. No extra GPU, SCC or monitoring permission
-is needed. The MaaS runtime key expires after 24 hours;
-rerun preparation and restart the app to renew it.
+## Checks
 
-BBC World, BBC Business and France 24 supply current RSS headlines. The agent
-selects up to three and reads their public pages. Inaccessible or unreadable
-pages fail explicitly. It never substitutes an invented summary.
+```sh
+go test -race ./...
+go vet ./...
+LIVE_DATA_TESTS=1 go test -run TestLivePublicData -v -count=1
+```
 
-Fund mandates are editable. Financial triage yields Material, Monitor, Needs
-context or Not relevant. Only fresh positive results unlock Investigate.
-Mandate changes invalidate older classifications and research. Reclassify before
-investigating again. Confidence is the classifier output, not a calibrated market
-probability or a return forecast.
+The opt-in public-data check reads actual Techmeme RSS and four timestamped ETF
+quotes. For a full local browser workflow, run `make test-terminal` from the workshop root. That harness
+mocks inference, news and price responses and explicitly labels the resulting
+screen as validation fixtures. It exercises real Go HTTP handlers, agent tool
+continuation, persistence, classification validation, scenario math and the UI.
+Every Chromium launch uses `--use-mock-keychain`.
 
-Investigations must successfully read the original source and use at least one
-other tool. Tools search the latest 12 items in each RSS feed, retrieve SEC
-submission metadata for a documented set of US tickers, or read five ECB daily
-FX reference observations. This is bounded research, not exhaustive web search.
-Tools provide no execution prices. Reports separate source facts, conditional
-financial hypotheses, unknowns and next checks. Evidence IDs must refer to
-actual successful tool responses; factual interpretation still requires review.
+## OpenShift
 
-English summaries, mandates and research notes persist on the workshop PVC.
-Download an article, a research note or the financially relevant briefing as
-Markdown. No orders or client messages are sent.
+Use the existing live-transcript app, OAuth proxy, restricted-v2, single T4,
+native OpenShift AI Responses service and Git → Tekton → Argo CD delivery.
+The facilitator prepares the native service, MaaS key and persistent data using
+`scripts/prepare-briefing-desk.py` from the workshop root. The MaaS key lasts 24h.
 
-Local validation: `go test -race ./...` and `go vet ./...`.
-Runtime settings: DATA_DIR, AGENT_URL, AGENT_MODEL, AGENT_KEY_FILE,
-DECISION_URL, DECISION_MODEL, and the existing MLflow OTLP settings.
-No credentials belong in Git, browser responses or logs.
+Disable PREVIEW_MODE and configure AGENT_URL, AGENT_MODEL, AGENT_KEY_FILE,
+DECISION_URL, DECISION_MODEL and DATA_DIR. The existing MLflow settings trace
+backend orchestration, actual tool execution and local classification.
+
+Quotes are best-effort reference data with no guaranteed delay, not executable
+bid/ask prices. Missing, invalid or >72h-old quotes cannot price a scenario. Gross
+P&L omits transaction, borrowing, financing and slippage costs. No orders or client
+messages are sent. No model-generated entry price is accepted.

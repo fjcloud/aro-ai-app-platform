@@ -52,6 +52,13 @@ func openStore(dir string) (*store, error) {
 	} else if !os.IsNotExist(e) {
 		return nil, e
 	}
+	hasTech := false
+	for _, p := range s.profiles {
+		hasTech = hasTech || p.ID == "tech"
+	}
+	if !hasTech {
+		s.profiles = append(s.profiles, defaults()[0])
+	}
 	files, e := filepath.Glob(filepath.Join(dir, "documents", "*.json"))
 	if e != nil {
 		return nil, e

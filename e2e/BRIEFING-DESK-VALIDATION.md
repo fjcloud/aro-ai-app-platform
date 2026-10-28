@@ -1,89 +1,54 @@
-# Signal Desk validation
+# Signal Desk / Techmeme terminal validation
 
-Experiment: `feature/briefing-desk`, based on the archived Sky Control experiment.
-The published workshop and ROSA path remain unchanged.
+The current experiment is a compact English terminal: fetch Techmeme, summarize,
+rank BUY / SHORT / NO SIGNAL, then investigate an index-proxy thesis and a priced
+paper scenario. The previous general briefing UI and its live validation are
+historical; see commit `a74c28b` for that version.
 
-The English app keeps the technical name `live-transcript`. Public BBC/France 24
-RSS feeds supply news; AFP access is not required. The configured native OpenShift
-AI Responses service and its MaaS DeepSeek model handle retrieval, summarization
-and on-demand research. The existing local d3-mini on the single T4 classifies
-financial relevance against editable fund mandates.
+## Verified locally
 
-## Actual integration findings
+- Go race tests and vet pass. Existing workshop regression checks remain intact.
+- Actual public-data checks retrieve 12 Techmeme items and timestamped USD
+  reference quotes for QQQ, SPY, SMH and XLK. See
+  [network-check output](results/techmeme-terminal/public-data.txt).
+- Publisher URLs are extracted from RSS HTML. Techmeme fragment permalinks are
+  normalized. Unreadable publishers use a disclosed RSS excerpt rather than a
+  fabricated full-article summary.
+- Quote identity, currency, finite positive price and timestamp are validated.
+  Missing, future or stale references cannot produce priced scenarios. The model's
+  own quote fields are discarded and rebound to actual tool evidence.
+- Long and short target/stop arithmetic, invalid values, source-ID stability,
+  preview isolation, native Responses function continuation and model-input
+  coverage have meaningful regression tests.
+- `make test-terminal` installs its pinned browser dependencies and runs a complete
+  local HTTP + browser workflow. **Inference, news and quotes in this end-to-end
+  harness are explicit fixtures.** It covers three signal categories, investigation,
+  editable scenario math, matching Markdown export, neutral-signal gating, mobile
+  layout and JavaScript errors. Chromium always uses mock-keychain.
+- The separate local preview uses fictional data, labels it prominently and refuses
+  live model execution. It does not fabricate a working OpenShift AI connection.
 
-The installed native API requires MCP credentials in `authorization`, not a custom
-Authorization header. Its MCP path then stalled in this lab. The final reference
-uses the same native Responses API's standard function-call protocol: the backend
-executes only the declared read-only tools, passes actual results back to OpenShift
-AI, and shows each execution. It exposes no extra public or internal tool port.
+Evidence: [fixture workflow](results/techmeme-terminal/fixture-e2e.json),
+[fixture screen](results/techmeme-terminal/fixture-e2e.png),
+[preview checks](results/techmeme-terminal/preview.json), and
+[preview screen](results/techmeme-terminal/preview.png).
 
-The provider sometimes returns prose followed by a JSON code block. The adapter
-accepts one explicit JSON object/block, rejects ambiguous or invalid output, and
-then validates its contents. It does not manufacture a successful response.
+## Financial interpretation
 
-The model also changed characters when copying news URLs. Headline selection now
-uses opaque IDs resolved by the backend; article reads use `original` or a source
-ID returned by a search tool. The model cannot supply arbitrary URLs to its tools.
+The app proposes generic research theses for ETF proxies, not directly tradable
+indices. Entry is a dated provider reference, not an executable bid/ask. Target,
+stop and horizon are hypothetical assumptions. Conditional gross P&L is computed
+from those assumptions and the selected notional; it is not an estimated expected
+return or probability-weighted forecast. Costs are excluded and the stop-case loss
+is not a maximum-loss guarantee. The signal score is not a target-hit probability.
+There are no trading or client-messaging tools.
 
-## Automated checks
+## Live OpenShift validation pending
 
-- 33 workshop Python checks and all five Go modules pass with the race detector.
-- The new module passes Go vet; all 17 template security/image/storage checks pass.
-- Meaningful tests cover SSRF/reserved addresses, bounded source extraction,
-  Markdown escaping, persistence and restart recovery, stale fund mandates,
-  missing actual source reads, native function-call continuation, stage/source
-  scoping, unexpected tool arguments, complete classification coverage,
-  financial investigation gating, CSRF and structured response envelopes.
-- Chromium always uses `--use-mock-keychain`.
-
-## Live workflow
-
-A real browser test through a local frontend connected to the lab's native
-OpenShift AI service and T4 passed: current RSS selection, actual article reads,
-English summaries, financial triage, multi-tool investigation, evidence references,
-Markdown export, filters, mobile layout, mandate invalidation and stale-result
-rejection. The source data was not mocked. The research agent used article reads,
-current-feed searches and ECB FX reference data.
-
-The deployed-browser run also passed behind OpenShift OAuth. Three articles were
-saved and classified. One initial summary failed the shape validator; the public
-retry action successfully recovered it. The test then refreshed all classifications
-and left a current research draft for the selected mandate. A provider formatting
-failure remains an explicit, retryable error rather than an invented summary.
-
-Native MLflow contains the persisted `news.investigate` → `agent.investigate` →
-actual tool spans in experiment `briefing-desk`, workspace `live-transcript-dev`.
-Its UI loads the experiment and latency/token-usage panels. This asserts backend
-orchestration/tool spans, not unverified internal traces from the native provider.
-
-The same summaries, mandate versions and research payloads survived an image
-rollout with identical hashes. Tekton succeeded with `hostUsers: false`; Argo CD
-was Synced/Healthy at the built commit, the running digest matched the internal
-registry, the app used `restricted-v2`, and its public Service exposed only OAuth.
-
-Evidence: [browser](results/briefing-desk/browser.json),
-[feed](results/briefing-desk/deployed-feed.png),
-[research](results/briefing-desk/research.png),
-[deployment](results/briefing-desk/deployment.json),
-[persistence](results/briefing-desk/persistence.json),
-[persisted trace](results/briefing-desk/persisted-trace.json),
-[final image smoke](results/briefing-desk/final-smoke.json), and
-[MLflow UI](results/briefing-desk/mlflow-ui.json).
-
-A final regression fix keeps source IDs unique across repeated searches within
-one investigation. Its regression test and a fresh investigation on the final image prove that a later query cannot reassign an earlier ID. The live run used three searches and retained 16 stable references. A final idle restart preserved all three ready articles and their notes byte-for-byte at the structured-data hash level.
-
-## Practical limits
-
-News search covers the latest 12 items from each of three configured feeds, not
-the whole web. SEC tools return submission metadata for a documented list of US
-companies, not filing contents or prices. ECB data is dated reference FX data,
-not executable quotes. Source pages may be unavailable, incomplete or paywalled;
-failed retrieval remains an explicit error. Financial hypotheses and missing data
-are separate from source facts. Confidence is a model score, not a calibrated
-probability of a market move. Research drafts require human review.
-
-Articles, mandates and notes persist on a 2 Gi PVC. In-flight document jobs become
-retryable failures after a restart. The MaaS runtime key lasts 24 hours; rerun the
-facilitator preparation helper and restart the app to renew it. No extra GPU,
-privileged SCC or cluster-monitoring permission was added.
+The previous tfclk ARO instance no longer resolves. The user is recreating the
+cluster and requested local development meanwhile. This version has **not** been
+validated against the replacement native OpenShift AI service or T4 and is not
+claimed as deployed. When the new lab is ready, reconnect the prepared endpoints,
+renew the MaaS credential and rerun real inference, traces, image/revision and
+persistent-storage checks. Keep the existing restricted-v2, OAuth and Git → Tekton
+→ Argo CD contract.

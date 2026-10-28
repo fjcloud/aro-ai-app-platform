@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "scope": "LOCAL VALIDATION: model and data fixtures, no live inference",
+  "live_models": false,
+  "signals": [
+    "BUY",
+    "SHORT",
+    "NO SIGNAL"
+  ],
+  "checks": [
+    "English terminal UI",
+    "three signal categories",
+    "long and short scenario math",
+    "editable notional / target / stop",
+    "Markdown uses the displayed scenario",
+    "invalid inputs disable export",
+    "mobile layout",
+    "no JavaScript errors",
+    "mock-keychain",
+    "RSS / summary / decision protocols through fixture providers",
+    "native Responses function-call continuation through mocked inference",
+    "NO SIGNAL server-side investigation gate"
+  ]
+}

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -19,6 +20,7 @@ type agent struct {
 	base, model, keyFile string
 	client               *http.Client
 	fetch                *fetcher
+	market               *marketService
 }
 type agentJob struct {
 	stage, feedID string
@@ -28,6 +30,7 @@ type agentJob struct {
 	headlines     []headline
 	calls         int
 	emit          func(event)
+	fallback      source
 }
 
 func newAgent(base, model, keyFile string) (*agent, error) {
@@ -40,7 +43,8 @@ func newAgent(base, model, keyFile string) (*agent, error) {
 		return nil, e
 	}
 	c.Timeout = 90 * time.Second
-	return &agent{base: strings.TrimSuffix(base, "/"), model: model, keyFile: keyFile, client: c, fetch: newFetcher()}, nil
+	f := newFetcher()
+	return &agent{base: strings.TrimSuffix(base, "/"), model: model, keyFile: keyFile, client: c, fetch: f, market: &marketService{fetch: f}}, nil
 }
 func (a *agent) job(ctx context.Context, stage, feedID, raw string, emit func(event)) *agentJob {
 	j := &agentJob{stage: stage, feedID: feedID, refs: map[string]string{}, articles: map[string]source{}, emit: emit}
@@ -70,8 +74,9 @@ func toolSpecs() []toolSpec {
 	return []toolSpec{
 		{"get_headlines", "Retrieve current public RSS headlines selected by this scan, with actual URLs and excerpts.", schema(map[string]any{})},
 		{"read_article", "Read a retrieved source by its exact source_id. Use original for the user-supplied article, or an ID returned by search_news. URLs are resolved by the backend; never invent an ID.", schema(map[string]any{"source_id": stringProp("original or an ID returned by search_news")}, "source_id")},
-		{"search_news", "Search the latest 12 headlines in each of BBC World, BBC Business and France 24, matching any query word. Bounded current-feed search, not exhaustive or historical.", schema(map[string]any{"query": stringProp("Two to five relevant keywords")}, "query")},
+		{"search_news", "Search the latest 12 Techmeme headlines, matching any query word. Bounded current-feed search, not exhaustive or historical.", schema(map[string]any{"query": stringProp("Two to five relevant keywords")}, "query")},
 		{"sec_filings", "Retrieve latest SEC submission metadata for NVDA, AAPL, MSFT, AMZN, GOOG, TSLA, XOM or JPM; no filing contents or prices. Only use a supported company connection.", schema(map[string]any{"ticker": stringProp("Supported US ticker")}, "ticker")},
+		{"market_snapshot", "Get timestamped USD reference quotes for index proxies QQQ (Nasdaq-100), SPY (S&P 500), SMH (semiconductors), XLK (technology). ETFs are tradable proxies, not the indices themselves. Delay is unknown; failed/stale quotes cannot price a scenario.", schema(map[string]any{})},
 		{"ecb_fx", "Retrieve five daily ECB reference observations: currency per EUR, not live execution prices.", schema(map[string]any{"currency": stringProp("USD, GBP, JPY, CHF or CNY")}, "currency")},
 	}
 }
@@ -88,7 +93,7 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 		allowed = map[string]bool{"get_headlines": true}
 	}
 	if j.stage == "investigate" {
-		allowed = map[string]bool{"read_article": true, "search_news": true, "sec_filings": true, "ecb_fx": true}
+		allowed = map[string]bool{"read_article": true, "search_news": true, "market_snapshot": true, "sec_filings": true, "ecb_fx": true}
 	}
 	tools := []any{}
 	for _, d := range toolSpecs() {
@@ -225,7 +230,7 @@ func (a *agent) runTool(ctx context.Context, j *agentJob, name string, args json
 	if len(args) > 4096 || dec.Decode(&in) != nil || dec.Decode(new(any)) != io.EOF || string(args) == "null" {
 		return nil, "", errors.New("Invalid arguments")
 	}
-	allowed := j.stage == "investigate" && (name == "read_article" || name == "search_news" || name == "sec_filings" || name == "ecb_fx") || j.stage == "summarize" && name == "read_article" || j.stage == "collect" && name == "get_headlines"
+	allowed := j.stage == "investigate" && (name == "read_article" || name == "search_news" || name == "market_snapshot" || name == "sec_filings" || name == "ecb_fx") || j.stage == "summarize" && name == "read_article" || j.stage == "collect" && name == "get_headlines"
 	if !allowed {
 		return nil, "", errors.New("Tool is outside this job's scope")
 	}
@@ -246,6 +251,15 @@ func (a *agent) runTool(ctx context.Context, j *agentJob, name string, args json
 			return nil, "", errors.New("Use source_id original or an ID returned by a previous tool")
 		}
 		s, e := a.fetch.article(ctx, raw)
+		if e != nil && in.SourceID == "original" && len(j.fallback.RSSExcerpt) > 80 {
+			u, _ := url.Parse(raw)
+			s = source{URL: raw, FinalURL: raw, Host: u.Hostname(), Title: j.fallback.Title, Text: j.fallback.RSSExcerpt, Fetched: stamp(), Coverage: "rss_excerpt", FeedURL: j.fallback.FeedURL}
+			e = nil
+			j.note("coverage", "Publisher unavailable; reading the Techmeme RSS excerpt", 0)
+		}
+		if e == nil && s.Coverage == "" {
+			s.Coverage = "publisher_readable_text"
+		}
 		if e == nil {
 			j.articles[raw] = s
 		}
@@ -279,7 +293,9 @@ func (a *agent) runTool(ctx context.Context, j *agentJob, name string, args json
 		if succeeded == 0 {
 			return nil, "", errors.New("All current news feeds were unavailable")
 		}
-		return map[string]any{"headlines": out, "coverage": fmt.Sprintf("Latest 12 articles per feed, %d/3 feeds available. Not exhaustive.", succeeded)}, feeds[0].URL, nil
+		return map[string]any{"headlines": out, "coverage": fmt.Sprintf("Latest 12 Techmeme headlines, %d feed available. Not exhaustive.", succeeded)}, feeds[0].URL, nil
+	case "market_snapshot":
+		return a.market.snapshot(ctx), "https://finance.yahoo.com/", nil
 	case "sec_filings":
 		return a.fetch.filings(ctx, in.Ticker)
 	case "ecb_fx":
@@ -292,7 +308,7 @@ func (a *agent) collect(ctx context.Context, feedID string, emit func(event)) ([
 	var out struct {
 		IDs []string `json:"headline_ids"`
 	}
-	e := a.respond(ctx, j, `Call get_headlines to retrieve the selected feed. Choose up to three informative, distinct recent world-news headlines to summarize for a hedge-fund news desk, prioritizing economic or geopolitical developments with concrete details. Return {"headline_ids":["H1","H3","H5"]} using only actual IDs from the tool; these examples are not a selection. Never copy or invent URLs.`, &out)
+	e := a.respond(ctx, j, `Call get_headlines to retrieve the selected feed. Choose up to three distinct Techmeme stories with concrete details relevant to technology indices, such as AI infrastructure, semiconductor demand, earnings, regulation or security incidents. Preserve uncertainty; do not manufacture market significance. Return {"headline_ids":["H1","H3","H5"]} using only actual IDs from the tool; these examples are not a selection. Never copy or invent URLs.`, &out)
 	if e != nil {
 		return nil, e
 	}
@@ -317,11 +333,14 @@ func (a *agent) collect(ctx context.Context, feedID string, emit func(event)) ([
 	}
 	return result, nil
 }
-func (a *agent) summarize(ctx context.Context, raw string, emit func(event)) (source, summary, error) {
+func (a *agent) summarize(ctx context.Context, raw string, emit func(event), fallback ...source) (source, summary, error) {
 	j := a.job(ctx, "summarize", "", raw, emit)
+	if len(fallback) > 0 {
+		j.fallback = fallback[0]
+	}
 	var out summary
 	input, _ := json.Marshal(map[string]string{"source_id": "original"})
-	e := a.respond(ctx, j, `Call read_article with these exact arguments: `+string(input)+`. Summarize only the retrieved readable text, in English. Return JSON {"title":"English headline","tldr":"one or two sentences","points":["2 to 5 factual key points"],"overview":"one short paragraph"}. No new facts or links. If text is incomplete, qualify the summary.`, &out)
+	e := a.respond(ctx, j, `Call read_article with these exact arguments: `+string(input)+`. Summarize only the retrieved text, in English. Keep the title under 120 characters and the tldr under 45 words. If coverage is rss_excerpt, explicitly say the summary is based on the Techmeme excerpt; do not imply the full publisher article was read. Return JSON {"title":"English headline","tldr":"one or two sentences","points":["2 to 5 factual key points"],"overview":"one short paragraph"}. No new facts or links. If text is incomplete, qualify the summary.`, &out)
 	if e != nil {
 		return source{}, out, e
 	}
@@ -341,9 +360,9 @@ func (a *agent) summarize(ctx context.Context, raw string, emit func(event)) (so
 }
 func (a *agent) investigate(ctx context.Context, d document, p profile, emit func(event)) (research, error) {
 	j := a.job(ctx, "investigate", "", d.URL, emit)
-	state, _ := json.Marshal(map[string]any{"article": d.Summary, "url": d.URL, "mandate": p.Criteria, "current_date": stamp()})
+	state, _ := json.Marshal(map[string]any{"article": d.Summary, "url": d.URL, "mandate": p.Criteria, "current_date": stamp(), "preliminary_signal": d.Classes[p.ID].Priority})
 	out := research{ProfileVersion: p.Version, SummaryHash: d.Summary.hash(), At: stamp()}
-	e := a.respond(ctx, j, `Investigate this news for the fund mandate: `+string(state)+`. First call read_article with {"source_id":"original"} to check the original source, then use search_news for corroboration. Use ecb_fx or sec_filings only when relevant; do not force an unsupported company connection. Use at least TWO distinct tools. Limit yourself to 5 tool calls. No trade advice or invented prices. Return JSON {"headline":"English research headline","facts":[{"text":"fact supported by collected evidence","sources":["E1"]}],"hypotheses":[{"text":"conditional financial transmission / affected sectors, explicitly uncertain","sources":["E1"]}],"unknowns":["missing evidence or failed tool"],"next_checks":["specific follow-up"]}. Cite exact evidence IDs returned by tools. A headline search or filing list does not prove a price change or full-text corroboration.`, &out.Report)
+	e := a.respond(ctx, j, `Investigate this news for the fund mandate: `+string(state)+`. First call read_article with {"source_id":"original"} to check the original source, then use search_news for corroboration. Use ecb_fx or sec_filings only when relevant; do not force an unsupported company connection. Use at least TWO distinct tools. Limit yourself to 5 tool calls. Call market_snapshot before choosing an index proxy. Investigate a hypothetical BUY or SHORT thesis using QQQ, SPY, SMH or XLK, or reject it as no_signal if evidence does not support it. Do not invent entry prices, quotes or expected profits. Target_move_pct and stop_move_pct are explicitly hypothetical scenario assumptions, not forecast returns. Return JSON {"headline":"English research headline","facts":[{"text":"fact supported by collected evidence","sources":["E1"]}],"hypotheses":[{"text":"conditional financial transmission / affected sectors, explicitly uncertain","sources":["E1"]}],"unknowns":["missing evidence or failed tool"],"next_checks":["specific follow-up"],"plan":{"symbol":"QQQ","direction":"buy","thesis":"Why this index exposure fits, with uncertainty","target_move_pct":3,"stop_move_pct":1.5,"horizon_days":5,"sources":["E1","E3"]}}. Cite exact evidence IDs returned by tools. A headline search or filing list does not prove a price change or full-text corroboration.`, &out.Report)
 	out.Evidence = append([]evidence{}, j.evidence...)
 	if e != nil {
 		return out, e
@@ -369,6 +388,9 @@ func (a *agent) investigate(ctx context.Context, d document, p profile, emit fun
 				return out, errors.New("Research draft cited evidence that was not retrieved")
 			}
 		}
+	}
+	if err := bindPlan(out.Report.Plan, out.Evidence); err != nil {
+		return out, err
 	}
 	return out, nil
 }

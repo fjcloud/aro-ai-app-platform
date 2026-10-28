@@ -1,0 +1,4 @@
+.git
+/data
+/preview-data
+**/node_modules
