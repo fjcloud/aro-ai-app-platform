@@ -28,14 +28,11 @@ The production image embeds those assets.
 
 ## Live local development
 
-Use **Groq Qwen 3.8** for research and **d3-mini on Apple Metal** for ranking.
-The research model is hosted; only the classifier runs on this Mac. Keep a
-[Groq Free account](https://console.groq.com/keys): the account plan determines
-billing, and this application cannot verify that plan from an API key. The Free
-plan has [per-minute and daily quotas](https://console.groq.com/docs/rate-limits).
-Short `Retry-After` cooldowns are shown in the activity log and retried up to
-three times on the same model. Exhaustion fails visibly; there is no model or
-paid-plan fallback. Store the key in a private file outside the repository.
+Use **Azure DeepSeek-V4-Pro**, matching the workshop model and version
+(`2026-04-23`), for research and **d3-mini on Apple Metal** for ranking.
+The research model is hosted; only the classifier runs on this Mac. Azure credentials can be retrieved through the existing `az login` session;
+there is no API key to create manually. The Foundry deployment is Global Standard,
+paid per token. The application never switches providers automatically.
 
 On an Apple Silicon Mac (tested with 32 GB unified memory and Python 3.14):
 
@@ -50,12 +47,20 @@ uses FP16 and disables CPU fallback. `/v1/models` reports `device: mps` and
 `dtype: float16`. Upstream marks MPS as unvalidated; the local three-case
 functional check does not establish numerical parity or investment performance.
 
-In another terminal, save the Groq key to `/private/tmp/signal-desk-groq-key`,
-restrict it with `chmod 600`, then run:
+In another terminal, set `RESOURCEGROUP` and `FOUNDRY_NAME` to your existing
+Foundry account with deployment `deepseekv4pro`, then retrieve its endpoint/key:
 
 ```sh
-AGENT_BACKEND=groq GROQ_MODEL=qwen/qwen3.8-27b \
-GROQ_KEY_FILE=/private/tmp/signal-desk-groq-key \
+: "${RESOURCEGROUP:?Select the Foundry resource group}"
+: "${FOUNDRY_NAME:?Select the Foundry account}"
+AZURE_FOUNDRY_URL="$(az cognitiveservices account show -g "$RESOURCEGROUP" \
+  -n "$FOUNDRY_NAME" --query properties.endpoint -o tsv)"
+AZURE_FOUNDRY_URL="${AZURE_FOUNDRY_URL%/}/openai/v1"
+(umask 077; az cognitiveservices account keys list -g "$RESOURCEGROUP" \
+  -n "$FOUNDRY_NAME" --query key1 -o tsv > /private/tmp/signal-desk-azure-key)
+
+AGENT_BACKEND=azure AZURE_FOUNDRY_URL="$AZURE_FOUNDRY_URL" \
+AZURE_DEPLOYMENT=deepseekv4pro AZURE_KEY_FILE=/private/tmp/signal-desk-azure-key \
 DECISION_URL=http://127.0.0.1:18093/v1/systemone DECISION_DEVICE=mps \
 DECISION_TIMEOUT=120s AGENT_JOB_TIMEOUT=10m \
 LISTEN_ADDR=127.0.0.1:18092 DATA_DIR=/private/tmp/signal-desk-local-data \
@@ -63,7 +68,17 @@ DEV_ASSETS=1 go run .
 ```
 
 Open http://127.0.0.1:18092 and select **FETCH TECHMEME**. These are live sources
-and model calls. Only BUY / SHORT stories can launch an investigation.
+and model calls. Only BUY / SHORT stories can launch an investigation. Keys stay
+in private files outside Git and are never sent to article sites or the browser.
+
+### Optional Groq Free backend
+
+For a separate [Groq Free account](https://console.groq.com/keys), configure
+`AGENT_BACKEND=groq GROQ_MODEL=qwen/qwen3.8-27b` and `GROQ_KEY_FILE` instead of
+the Azure settings above. The account plan determines billing and cannot be
+verified from an API key. [Quotas](https://console.groq.com/docs/rate-limits) apply.
+Short provider cooldowns are visible in activity and retried at most three times
+on the same model. Daily exhaustion fails visibly; no paid upgrade is performed.
 
 ## Checks
 

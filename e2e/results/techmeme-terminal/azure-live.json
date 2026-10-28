@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "at": "2026-10-28T13:18:44.569Z",
+  "scope": "Actual local Go app, public Techmeme data, hosted research LLM and local d3-mini Metal; no inference fixtures",
+  "backend": "azure",
+  "agent": "deepseekv4pro",
+  "classifier": "vllm-sr/d3-mini",
+  "device": "mps",
+  "dtype": "float16",
+  "upstream_accelerator_validated": false,
+  "articles": [
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand",
+      "title": "Moore Threads Q3 Revenue Surges 1,774% to ~$240M on AI Demand",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 637,
+      "latency_ms": 2706
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/ai-cybersecurity-startup-upwind-raises-at-3-8-billion-value",
+      "title": "Upwind Security Raises $400M at $3.8B Valuation",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 581,
+      "latency_ms": 2620
+    },
+    {
+      "url": "https://x.com/artificialanlys/status/2115265133467635877",
+      "title": "Artificial Analysis Intelligence Index v5: Claude Opus 5.5 Leads, Open-Weights Gap Widens",
+      "coverage": "publisher_readable_text",
+      "signal": "no_signal",
+      "input_tokens": 814,
+      "latency_ms": 3580
+    }
+  ],
+  "investigation": "Not triggered: no directional signal in the real sample",
+  "checks": [
+    "English UI",
+    "live article summaries",
+    "actual Metal classifications",
+    "NO SIGNAL gate",
+    "mobile layout",
+    "no JavaScript errors",
+    "mock-keychain"
+  ]
+}

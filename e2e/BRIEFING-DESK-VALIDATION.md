@@ -35,14 +35,27 @@ Evidence: [fixture workflow](results/techmeme-terminal/fixture-e2e.json),
 
 ## Live local models
 
-The development backend uses Groq `qwen/qwen3.8-27b` and the actual pinned
-`vllm-sr/d3-mini` on Apple Metal/MPS in FP16. CPU fallback is disabled. MPS is
+The active development backend uses **Azure DeepSeek-V4-Pro**, version
+`2026-04-23`, matching the workshop, and the actual pinned `vllm-sr/d3-mini`
+on Apple Metal/MPS in FP16. CPU fallback is disabled. MPS is
 marked **unvalidated upstream**; these are local functional checks, not numerical
 parity or financial-performance validation.
 
+- [Azure deployment](results/techmeme-terminal/azure-deployment.json): Global
+  Standard, deployment `deepseekv4pro`, provisioned on the principal Azure account
+  using `az`. Its key was obtained through the CLI and stays in a private file.
+- [Azure live browser run](results/techmeme-terminal/azure-live.json) and
+  [screen](results/techmeme-terminal/azure-live.png): a new, empty feed through
+  actual DeepSeek summaries and Metal classifications. All three stories returned
+  NO SIGNAL and remained gated. Techmeme's headline link is preferred over author
+  attribution links, including X profile links.
+- [Azure research probe](results/techmeme-terminal/azure-research.json): real
+  article/excerpt reading, Techmeme search and market snapshot, followed by a
+  validated neutral report. Azure's Chat Completions endpoint explicitly disables
+  thinking; the adapter preserves the common source/tool/evidence validation.
 - [Metal probes](results/techmeme-terminal/local-metal.json): three explicitly
   synthetic directional inputs, complete input coverage and actual model answers.
-- [Live browser run](results/techmeme-terminal/local-live.json) and
+- Earlier optional Groq validation: [live browser run](results/techmeme-terminal/local-live.json) and
   [screen](results/techmeme-terminal/local-live.png): public Techmeme stories,
   Groq summaries and real local classifications, English/mobile UI, no fixture
   providers. The sample initially returned NO SIGNAL for all three stories, so
@@ -53,9 +66,10 @@ parity or financial-performance validation.
   article and returned a schema/evidence-validated report. This independent
   backend check did **not** change a classification or bypass the app's NO SIGNAL
   gate. A transient Groq cooldown was honored on the same model and account.
-- Regression tests cover Groq authentication, native tool continuation, final
+- Regression tests cover Azure/Groq authentication, tool continuation, final
   JSON mode, provider/model mismatch, quota errors, cooldown cancellation and
-  credential redaction. The OpenShift AI transport remains the default.
+  credential redaction, Azure truncation rejection and RSS attribution links.
+  The OpenShift AI transport remains the deployment default.
 
 With the live local app and Metal server running, repeat the browser check using:
 

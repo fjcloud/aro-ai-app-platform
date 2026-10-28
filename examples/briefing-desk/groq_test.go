@@ -109,7 +109,7 @@ func TestGroqCooldownKeepsModelAndHonorsCancellation(t *testing.T) {
 		up.Close()
 	}
 	for _, raw := range []string{"", "NaN", "+Inf", "86400", "-1"} {
-		if _, ok := groqRetryAfter(raw); ok {
+		if _, ok := inferenceRetryAfter(raw); ok {
 			t.Fatal("Invalid or daily quota cooldown accepted", raw)
 		}
 	}
@@ -132,19 +132,27 @@ func TestLiveGroqCollection(t *testing.T) {
 	t.Log("Actual verified Techmeme headlines selected:", len(items))
 }
 
-func TestLiveGroqResearch(t *testing.T) {
-	if os.Getenv("LIVE_GROQ_RESEARCH") != "1" {
+func TestLiveHostedResearch(t *testing.T) {
+	if os.Getenv("LIVE_RESEARCH") != "1" {
 		t.Skip("opt-in direct research probe; does not alter classifications or the app's NO SIGNAL gate")
 	}
-	b, e := os.ReadFile(os.Getenv("LIVE_GROQ_SOURCE_FILE"))
+	b, e := os.ReadFile(os.Getenv("LIVE_SOURCE_FILE"))
 	if e != nil {
-		t.Fatal("Set LIVE_GROQ_SOURCE_FILE to a locally saved, real article document")
+		t.Fatal("Set LIVE_SOURCE_FILE to a locally saved, real article document")
 	}
 	var d document
 	if json.Unmarshal(b, &d) != nil || d.Status != "ready" {
 		t.Fatal("Expected a successfully imported real article")
 	}
-	a, _ := newGroqAgent("qwen/qwen3.8-27b", env("GROQ_KEY_FILE", ""))
+	var a *agent
+	if env("AGENT_BACKEND", "groq") == "azure" {
+		a, e = newAzureAgent(env("AZURE_FOUNDRY_URL", ""), "deepseekv4pro", env("AZURE_KEY_FILE", ""))
+	} else {
+		a, e = newGroqAgent("qwen/qwen3.8-27b", env("GROQ_KEY_FILE", ""))
+	}
+	if e != nil {
+		t.Fatal(e)
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 8*time.Minute)
 	defer cancel()
 	r, e := a.investigate(ctx, d, defaults()[0], func(ev event) { t.Log(ev.Stage, ev.Message) })
@@ -156,7 +164,7 @@ func TestLiveGroqResearch(t *testing.T) {
 		tools = append(tools, ev.Tool)
 	}
 	t.Log("Direct research probe on actual news; app classification unchanged:", "tools", tools, "direction", r.Report.Plan.Direction)
-	if path := os.Getenv("LIVE_GROQ_REPORT_FILE"); path != "" {
+	if path := os.Getenv("LIVE_REPORT_FILE"); path != "" {
 		b, _ := json.MarshalIndent(map[string]any{"passed": true, "scope": "Direct research probe on a real imported article; app NO SIGNAL gate unchanged", "model": a.model, "source_url": d.URL, "tools": tools, "direction": r.Report.Plan.Direction, "pricing_error": r.Report.Plan.PricingError, "at": stamp()}, "", "  ")
 		if e := os.WriteFile(path, append(b, '\n'), 0600); e != nil {
 			t.Fatal(e)

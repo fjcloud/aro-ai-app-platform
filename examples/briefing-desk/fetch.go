@@ -246,12 +246,20 @@ func publisherURL(description, fallback string) string {
 		return clean(fallback)
 	}
 	result := ""
+	headlineOnly := true
 	var walk func(*html.Node)
 	walk = func(n *html.Node) {
 		if result != "" {
 			return
 		}
 		if n.Type == html.ElementNode && n.Data == "a" {
+			inHeadline := false
+			for parent := n.Parent; parent != nil; parent = parent.Parent {
+				inHeadline = inHeadline || parent.Data == "b" || parent.Data == "strong"
+			}
+			if headlineOnly && !inHeadline {
+				return
+			}
 			for _, a := range n.Attr {
 				if a.Key == "href" {
 					u, e := url.Parse(a.Val)
@@ -269,6 +277,10 @@ func publisherURL(description, fallback string) string {
 		}
 	}
 	walk(n)
+	if result == "" {
+		headlineOnly = false
+		walk(n)
+	}
 	if result != "" {
 		return result
 	}

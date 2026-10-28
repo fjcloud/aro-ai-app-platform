@@ -2,7 +2,7 @@ package main
 
 // Match the application's existing validators, without relying on prose prompts
 // to keep the provider's final response in the expected shape.
-func groqFinalFormat(j *agentJob) map[string]any {
+func researchFinalFormat(j *agentJob) map[string]any {
 	text := func(min, max int) map[string]any {
 		return map[string]any{"type": "string", "minLength": min, "maxLength": max}
 	}

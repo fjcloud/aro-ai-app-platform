@@ -1,0 +1,8 @@
+{
+  "capacity": 100,
+  "model": "DeepSeek-V4-Pro",
+  "name": "deepseekv4pro",
+  "sku": "GlobalStandard",
+  "state": "Succeeded",
+  "version": "2026-04-23"
+}

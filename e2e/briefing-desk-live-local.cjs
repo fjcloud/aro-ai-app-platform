@@ -12,7 +12,8 @@ const assert = require('node:assert/strict'), fs = require('node:fs'), path = re
     const state = () => page.evaluate(async () => await (await fetch('/api/state')).json());
     let s = await state();
     assert.equal(s.preview, false); assert.ok(!s.validation_fixture);
-    assert.equal(s.agent, 'qwen/qwen3.8-27b'); assert.equal(s.inference.agent_backend, 'groq');
+    assert.ok(['groq','azure'].includes(s.inference.agent_backend));
+    assert.equal(s.agent,s.inference.agent_backend==='azure'?'deepseekv4pro':'qwen/qwen3.8-27b');
     assert.equal(s.inference.decision_device, 'mps'); assert.equal(s.classifier, 'vllm-sr/d3-mini');
     const model = (await (await page.request.get('http://127.0.0.1:18093/v1/models')).json()).data[0];
     assert.equal(model.device, 'mps'); assert.equal(model.dtype, 'float16'); assert.equal(model.ready, true);
@@ -25,7 +26,7 @@ const assert = require('node:assert/strict'), fs = require('node:fs'), path = re
     }, {timeout:600000, intervals:[1000,3000,5000]}).toBe(true);
     await expect(page.locator('html')).toHaveAttribute('lang','en');
     await expect(page.locator('#preview')).toBeHidden();
-    await expect(page.locator('#connection')).toContainText('Groq cloud');
+    await expect(page.locator('#connection')).toContainText(s.inference.agent_backend==='azure'?'Azure Foundry cloud':'Groq cloud');
     await expect(page.locator('.story')).toHaveCount(s.documents.length);
     for (const d of s.documents) {
       assert.ok(d.summary.title && d.summary.tldr);
@@ -50,12 +51,13 @@ const assert = require('node:assert/strict'), fs = require('node:fs'), path = re
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
     await page.setViewportSize({width:1512,height:1050}); assert.deepEqual(errors,[]);
     const dir = path.join(__dirname,'results/techmeme-terminal'); fs.mkdirSync(dir,{recursive:true});
-    await page.screenshot({path:path.join(dir,'local-live.png'),fullPage:true});
-    const report = {passed:true,at:new Date().toISOString(),scope:'Actual local Go app, public Techmeme data, hosted Groq Qwen and local d3-mini Metal; no inference fixtures',
-      agent:s.agent,classifier:s.classifier,device:model.device,dtype:model.dtype,upstream_accelerator_validated:model.accelerator_validated,
+    const prefix=s.inference.agent_backend==='azure'?'azure-live':'local-live';
+    await page.screenshot({path:path.join(dir,prefix+'.png'),fullPage:true});
+    const report = {passed:true,at:new Date().toISOString(),scope:'Actual local Go app, public Techmeme data, hosted research LLM and local d3-mini Metal; no inference fixtures',
+      backend:s.inference.agent_backend,agent:s.agent,classifier:s.classifier,device:model.device,dtype:model.dtype,upstream_accelerator_validated:model.accelerator_validated,
       articles:s.documents.map(d=>({url:d.url,title:d.summary.title,coverage:d.source.coverage,signal:d.classifications.tech.priority,input_tokens:d.classifications.tech.input_tokens,latency_ms:d.classifications.tech.latency_ms})),
       investigation,checks:['English UI','live article summaries','actual Metal classifications','NO SIGNAL gate','mobile layout','no JavaScript errors','mock-keychain']};
-    fs.writeFileSync(path.join(dir,'local-live.json'),JSON.stringify(report,null,2)+'\n');
+    fs.writeFileSync(path.join(dir,prefix+'.json'),JSON.stringify(report,null,2)+'\n');
     console.log(JSON.stringify(report));
   } finally {await browser.close();}
 })().catch(e=>{console.error(e.message);process.exitCode=1;});

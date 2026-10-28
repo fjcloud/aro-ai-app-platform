@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-28T13:18:31Z",
+  "direction": "no_signal",
+  "model": "deepseekv4pro",
+  "passed": true,
+  "pricing_error": "Research did not confirm a directional index thesis",
+  "scope": "Direct research probe on a real imported article; app NO SIGNAL gate unchanged",
+  "source_url": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand",
+  "tools": [
+    "read_article",
+    "search_news",
+    "market_snapshot"
+  ]
+}

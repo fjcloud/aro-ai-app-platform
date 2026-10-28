@@ -18,6 +18,10 @@ func TestTechmemePublisherAndExcerpt(t *testing.T) {
 	if got != "https://publisher.example/story" {
 		t.Fatal("Publisher URL was not resolved safely", got)
 	}
+	got = publisherURL(`<a href="https://x.com/author">@author</a><span><b><a href="https://x.com/author/status/123">Actual news headline</a></b></span>`, "https://www.techmeme.com/1#item")
+	if got != "https://x.com/author/status/123" {
+		t.Fatal("RSS attribution profile was mistaken for the news source", got)
+	}
 	if got := publisherURL(`<a href="http://169.254.169.254/latest">bad</a>`, "https://www.techmeme.com/1#item"); got != "https://www.techmeme.com/1" {
 		t.Fatal("Unsafe publisher reference was accepted", got)
 	}

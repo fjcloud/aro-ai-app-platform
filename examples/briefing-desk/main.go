@@ -506,6 +506,11 @@ func main() {
 		if e != nil {
 			log.Fatal(e)
 		}
+	} else if backend == "azure" {
+		a, e = newAzureAgent(env("AZURE_FOUNDRY_URL", ""), env("AZURE_DEPLOYMENT", "deepseekv4pro"), env("AZURE_KEY_FILE", ""))
+		if e != nil {
+			log.Fatal(e)
+		}
 	} else if backend != "rhoai" {
 		log.Fatal("Unsupported AGENT_BACKEND")
 	}
