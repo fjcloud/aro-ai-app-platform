@@ -119,6 +119,10 @@ func TestNativeResponsesCredentialsAndNoFabricatedToolSuccess(t *testing.T) {
 		}
 		var body map[string]any
 		json.NewDecoder(r.Body).Decode(&body)
+		tool := body["tools"].([]any)[0].(map[string]any)
+		if tool["authorization"] == nil || tool["headers"].(map[string]any)["Authorization"] != nil {
+			t.Error("MCP credentials must use native authorization, not headers")
+		}
 		if body["store"] != false || strings.Contains(fmt.Sprint(body["input"]), "private-test-key") {
 			t.Error("credential retention risk")
 		}

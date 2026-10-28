@@ -90,6 +90,7 @@ func (s *server) importArticle(docID, profileID string) {
 	}
 	if e = s.store.update(docID, func(d *document) {
 		d.Status = "ready"
+		src.Published = d.Source.Published
 		d.Source = src
 		d.Summary = sum
 		d.Markdown = documentMarkdown(*d)
@@ -176,6 +177,7 @@ func (s *server) scanFeed(feedID, profileID string) {
 			if !created {
 				continue
 			}
+			s.store.update(d.ID, func(d *document) { d.Source.Published = h.Published })
 			select {
 			case s.imports <- struct{}{}:
 				go s.importArticle(d.ID, profileID)

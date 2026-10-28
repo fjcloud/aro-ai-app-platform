@@ -199,7 +199,7 @@ func briefing(p profile, docs []document) string {
 	fmt.Fprintf(&b, "# Briefing for %s\n\nCompiled: %s\n\nFocus: %s\n\n", markdownText(p.Name), stamp(), markdownText(p.Criteria))
 	for _, d := range docs {
 		c, ok := d.Classes[p.ID]
-		if !ok || c.Status != "done" || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash() || c.Priority == "not_financial" {
+		if !ok || c.Status != "done" || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash() || (c.Priority != "material" && c.Priority != "monitor") {
 			continue
 		}
 		fmt.Fprintf(&b, "## %s\n\n**%s**\n\n%s\n\n", markdownText(d.Summary.Title), strings.ToUpper(c.Priority), markdownText(d.Summary.TLDR))
