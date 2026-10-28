@@ -40,7 +40,8 @@ func seedPreview(st *store) error {
 			probs := map[string]float64{"buy": .15, "short": .15, "no_signal": .15}
 			probs[signal] = .7
 			probs[[]string{"short", "no_signal", "buy"}[i]] = .15
-			d.Classes["tech"] = classification{ProfileID: "tech", ProfileVersion: p.Version, SummaryHash: d.Summary.hash(), Status: "done", Priority: signal, Confidence: .7, Probabilities: probs}
+			score := []float64{90, 50, 10}[i]
+			d.Classes["tech"] = classification{Score: &score, MemoReason: "Synthetic example of relevance to the fund memo, not a financial forecast.", ReasonSources: []string{"P1"}, ProfileID: "tech", ProfileVersion: p.Version, SummaryHash: d.Summary.hash(), Status: "done", Priority: opportunityBand(score), Confidence: .7, Probabilities: probs}
 			d.Markdown = documentMarkdown(*d)
 			if signal != "no_signal" {
 				symbol := "SMH"

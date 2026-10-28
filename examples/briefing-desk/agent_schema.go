@@ -14,6 +14,8 @@ func researchFinalFormat(j *agentJob) map[string]any {
 	}
 	var shape map[string]any
 	switch j.stage {
+	case "memo_reason":
+		shape = schema(map[string]any{"reason": text(20, 700), "point_ids": array(map[string]any{"type": "string", "pattern": "^P[1-5]$"}, 1, 5)}, "reason", "point_ids")
 	case "collect":
 		ids := []string{}
 		for _, h := range j.headlines {

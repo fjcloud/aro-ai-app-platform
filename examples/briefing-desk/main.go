@@ -140,18 +140,65 @@ func (s *server) classify(docID, profileID string) {
 		c.Error = e.Error()
 	} else {
 		c.Status = "done"
-		c.Priority = out.Choice
+		c.Score = &out.Score
+		c.Priority = opportunityBand(out.Score)
 		c.Confidence = out.Confidence
 		c.Probabilities = out.Probabilities
 		c.LatencyMS = out.LatencyMS
 		c.InputTokens = out.InputTokens
+		// Persist the actual D3 score even if the explanatory LLM is unavailable.
+		s.store.update(docID, func(d *document) { d.Classes[p.ID] = c })
+		reason, err := s.agent.memoReason(ctx, d, p, out.Score)
+		if err != nil {
+			c.ReasonError = "Memo explanation is temporarily unavailable"
+		} else {
+			c.MemoReason = reason.Reason
+			c.ReasonSources = reason.PointIDs
+		}
 	}
 	s.store.update(docID, func(d *document) { d.Classes[p.ID] = c })
+}
+
+func (s *server) rescore(profileID string, version int) {
+	ctx, cancel := context.WithTimeout(s.ctx, s.jobLimit())
+	defer cancel()
+	docs, _ := s.store.list()
+	for _, d := range docs {
+		if d.Status != "ready" {
+			continue
+		}
+		select {
+		case s.classes <- struct{}{}:
+		case <-ctx.Done():
+			return
+		}
+		p, ok := s.store.profile(profileID)
+		d, exists := s.store.get(d.ID)
+		if !ok || p.Version != version {
+			<-s.classes
+			return
+		}
+		if !exists || d.Status != "ready" || currentScore(d, p) {
+			<-s.classes
+			continue
+		}
+		s.classify(d.ID, p.ID)
+	}
 }
 func (s *server) investigate(docID, profileID string) {
 	defer func() { <-s.researches }()
 	d, _ := s.store.get(docID)
 	p, _ := s.store.profile(profileID)
+	accepted := d.Research[profileID]
+	if accepted.ProfileVersion != p.Version || accepted.SummaryHash != d.Summary.hash() {
+		s.store.update(docID, func(d *document) {
+			r := d.Research[profileID]
+			r.Status = "failed"
+			r.Error = "The memo or source changed. Start a new investigation."
+			d.Research[profileID] = r
+		})
+		return
+	}
 	ctx, cancel := context.WithTimeout(s.ctx, s.jobLimit())
 	defer cancel()
 	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "news.investigate")
@@ -268,6 +315,22 @@ func (s *server) routes() http.Handler {
 			return
 		}
 		reply(w, 200, p)
+		go s.rescore(p.ID, p.Version)
+	})
+	mux.HandleFunc("POST /api/rescore", func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			ProfileID string `json:"profile_id"`
+		}
+		if !decode(w, r, &in) {
+			return
+		}
+		p, ok := s.store.profile(in.ProfileID)
+		if !ok {
+			fail(w, 404, "Fund memo not found")
+			return
+		}
+		go s.rescore(p.ID, p.Version)
+		reply(w, 202, map[string]string{"status": "queued"})
 	})
 	mux.HandleFunc("POST /api/scan", func(w http.ResponseWriter, r *http.Request) {
 		var in struct {
@@ -363,7 +426,7 @@ func (s *server) routes() http.Handler {
 			select {
 			case s.classes <- struct{}{}:
 			default:
-				fail(w, 429, "The T4 classifier is busy. Try again shortly.")
+				fail(w, 429, "Scoring is already in progress. Try again shortly.")
 				return
 			}
 			s.store.update(d.ID, func(d *document) {
@@ -371,9 +434,8 @@ func (s *server) routes() http.Handler {
 			})
 			go s.classify(d.ID, p.ID)
 		case "investigate":
-			c := d.Classes[p.ID]
-			if c.Status != "done" || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash() || (c.Priority != "buy" && c.Priority != "short") {
-				fail(w, 409, "Rank this article BUY or SHORT before investigating")
+			if !currentScore(d, p) {
+				fail(w, 409, "Score this article against the current fund memo before investigating")
 				return
 			}
 			if d.Research[p.ID].Status == "running" {

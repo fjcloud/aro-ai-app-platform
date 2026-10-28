@@ -35,8 +35,24 @@ type profile struct {
 
 const legacyIndexMandate = "Evaluate technology news for a short-horizon, hypothetical directional exposure to Nasdaq-100, the S&P 500 or a technology/semiconductor index. BUY means a supported bullish catalyst; SHORT means a supported bearish catalyst. NO SIGNAL means mixed, immaterial, already ambiguous or insufficiently evidenced news. A headline is not proof of a market move. Do not infer a trade for a specific person."
 
+const legacyResearchMandate = "Triage technology news for financial research. BUY means a concrete bullish company or sector catalyst worth investigating; SHORT means a concrete bearish catalyst worth investigating. Do not require a story to move an entire index before researching it. Earnings, revenue, profitability, demand, spending, regulation and material disruptions can qualify. NO SIGNAL means no credible financial mechanism, unclear direction or insufficient evidence; ordinary product launches and private funding alone do not establish a trade. These are preliminary research leads, not orders or price forecasts. Investigation must separately verify tradable index/ETF exposure and may reject the thesis. Do not invent index membership or infer a trade for a specific person."
+
 func defaults() []profile {
-	return []profile{{"tech", "Technology research signals", "Triage technology news for financial research. BUY means a concrete bullish company or sector catalyst worth investigating; SHORT means a concrete bearish catalyst worth investigating. Do not require a story to move an entire index before researching it. Earnings, revenue, profitability, demand, spending, regulation and material disruptions can qualify. NO SIGNAL means no credible financial mechanism, unclear direction or insufficient evidence; ordinary product launches and private funding alone do not establish a trade. These are preliminary research leads, not orders or price forecasts. Investigation must separately verify tradable index/ETF exposure and may reject the thesis. Do not invent index membership or infer a trade for a specific person.", 2}}
+	return []profile{{"tech", "Semiconductor fund", "We invest in semiconductors and electronic components across chip designers, foundries, fabrication equipment, memory, advanced packaging and supply chains. Prioritize material changes in chip demand, capacity, revenue, margins, capital spending, manufacturing technology, supply constraints and export restrictions. Both positive and negative developments can create research opportunities. AI or cloud news matters when a concrete connection to chip demand or suppliers is supported. Consumer apps, retail earnings, routine product launches and political stories have low priority without a documented semiconductor transmission. Score the value of researching the news for this mandate, not whether to buy or sell and not its expected return. Distinguish source evidence from speculation and flag limited excerpt coverage.", 3}}
+}
+
+func opportunityBand(score float64) string {
+	if score >= 70 {
+		return "high"
+	}
+	if score >= 35 {
+		return "watch"
+	}
+	return "low"
+}
+func currentScore(d document, p profile) bool {
+	c := d.Classes[p.ID]
+	return c.Status == "done" && c.Score != nil && c.ProfileVersion == p.Version && c.SummaryHash == d.Summary.hash()
 }
 
 type source struct {
@@ -73,6 +89,10 @@ type event struct {
 	DurationMS int64  `json:"duration_ms,omitempty"`
 }
 type classification struct {
+	Score          *float64           `json:"opportunity_score,omitempty"`
+	MemoReason     string             `json:"memo_reason,omitempty"`
+	ReasonSources  []string           `json:"reason_sources,omitempty"`
+	ReasonError    string             `json:"reason_error,omitempty"`
 	ProfileID      string             `json:"profile_id"`
 	ProfileVersion int                `json:"profile_version"`
 	SummaryHash    string             `json:"summary_hash"`
@@ -209,7 +229,7 @@ func documentMarkdown(d document) string {
 	return b.String()
 }
 
-var priorities = []string{"buy", "short", "no_signal"}
+var priorities = []string{"high", "watch", "low"}
 
 func rank(p string) int {
 	for i, v := range priorities {
@@ -221,16 +241,26 @@ func rank(p string) int {
 }
 func briefing(p profile, docs []document) string {
 	sort.Slice(docs, func(i, j int) bool {
-		return rank(docs[i].Classes[p.ID].Priority) < rank(docs[j].Classes[p.ID].Priority)
+		a, b := docs[i].Classes[p.ID].Score, docs[j].Classes[p.ID].Score
+		if a == nil {
+			return false
+		}
+		if b == nil {
+			return true
+		}
+		return *a > *b
 	})
 	var b strings.Builder
 	fmt.Fprintf(&b, "# Briefing for %s\n\nCompiled: %s\n\nFocus: %s\n\n", markdownText(p.Name), stamp(), markdownText(p.Criteria))
 	for _, d := range docs {
 		c, ok := d.Classes[p.ID]
-		if !ok || c.Status != "done" || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash() || (c.Priority != "buy" && c.Priority != "short") {
+		if !ok || !currentScore(d, p) {
 			continue
 		}
-		fmt.Fprintf(&b, "## %s\n\n**%s**\n\n%s\n\n", markdownText(d.Summary.Title), strings.ToUpper(c.Priority), markdownText(d.Summary.TLDR))
+		fmt.Fprintf(&b, "## %s\n\n**%s**\n\n%s\n\n", markdownText(d.Summary.Title), fmt.Sprintf("%.1f/100 · %s", *c.Score, strings.ToUpper(c.Priority)), markdownText(d.Summary.TLDR))
+		if c.MemoReason != "" {
+			fmt.Fprintf(&b, "Memo relevance: %s\n\n", markdownText(c.MemoReason))
+		}
 		for _, point := range d.Summary.Points {
 			fmt.Fprintf(&b, "- %s\n", markdownText(point))
 		}

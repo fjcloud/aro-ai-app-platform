@@ -108,14 +108,17 @@ func TestClassifierRejectsIncompleteCoverage(t *testing.T) {
 			up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				var payload map[string]any
 				json.NewDecoder(r.Body).Decode(&payload)
-				if !strings.Contains(fmt.Sprint(payload["state"]), "mandate") {
-					t.Error("mandate missing")
+				if !strings.Contains(fmt.Sprint(payload["state"]), "investment_memo") {
+					t.Error("Investment memo missing")
 				}
-				reply(w, 200, map[string]any{"answers": map[string]any{"signal": map[string]any{"choice": "buy", "confidence": .7, "input_coverage": coverage, "probabilities": map[string]float64{"buy": .7, "short": .2, "no_signal": .1}}}})
+				reply(w, 200, map[string]any{"answers": map[string]any{"opportunity": map[string]any{"type": "score", "score": 3.2, "confidence": .7, "input_coverage": coverage, "probabilities": map[string]float64{"0": .05, "1": .05, "2": .05, "3": .35, "4": .5}}}})
 			}))
 			defer up.Close()
 			c, _ := newDecisionClient(up.URL, "test", "")
-			_, e := c.classify(context.Background(), summary{Title: "Article"}, defaults()[0])
+			out, e := c.classify(context.Background(), summary{Title: "Article"}, defaults()[0])
+			if e == nil && out.Score != 80 {
+				t.Fatal("Opportunity score was confused with model confidence", out.Score)
+			}
 			if (e == nil) != (coverage == "complete") {
 				t.Fatal("coverage validation failed", e)
 			}
@@ -132,7 +135,7 @@ func testServer(t *testing.T) *server {
 	c, _ := newDecisionClient("http://localhost:1235", "local", "")
 	return &server{store: st, agent: a, model: c, ctx: context.Background(), imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
 }
-func TestHTTPFinancialGateAndCSRF(t *testing.T) {
+func TestHTTPRequiresCurrentMemoScoreAndCSRF(t *testing.T) {
 	s := testServer(t)
 	d, _, _ := s.store.add("https://example.com/article")
 	s.store.update(d.ID, func(d *document) {
@@ -299,7 +302,7 @@ func TestMandateMigrationPreservesEditedProfiles(t *testing.T) {
 		if edited && current != previous {
 			t.Fatal("User mandate was overwritten")
 		}
-		if !edited && current.Version != 2 {
+		if !edited && current.Version != defaults()[0].Version {
 			t.Fatal("Legacy default was not upgraded")
 		}
 	}

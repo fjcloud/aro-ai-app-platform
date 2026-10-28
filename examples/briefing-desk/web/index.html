@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Signal Desk | Techmeme terminal</title><link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script></head>
-<body>
-<header><a href="/" class="brand">SIGNAL<span>DESK</span></a><span class="header-label">TECHMEME / INDEX RESEARCH</span><span id="clock"></span></header>
-<div id="preview" hidden>LOCAL PREVIEW <span>Synthetic headlines, signals and prices. Live AI is disconnected.</span></div>
-<nav class="toolbar" aria-label="News controls"><button id="fetch" class="orange">FETCH 12 STORIES ↻</button><form id="import"><input id="url" aria-label="Article URL" type="url" placeholder="Paste article URL…" required><button>READ URL ↗</button></form><span id="pipeline">FETCH → SUMMARIZE → SIGNAL → INVESTIGATE</span></nav>
-<section id="market" aria-label="Index reference prices"></section>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Signal Desk</title><link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script></head>
+<body><main>
+<header><a href="/" class="brand">Signal<span>Desk</span></a><span>News that matters to your fund.</span></header>
+<div id="preview" hidden>Synthetic preview · live inference is disconnected.</div>
+<details id="memo"><summary><div><small>INVESTMENT MEMO</small><strong id="memo-title">Your fund</strong><p id="memo-preview"></p></div><span class="edit-label">Edit memo</span></summary>
+<form id="memo-form"><label for="fund-name">Fund name</label><input id="fund-name" maxlength="80" minlength="2" required><label for="fund-memo">What do you invest in? What developments matter?</label><textarea id="fund-memo" rows="5" minlength="20" maxlength="2000" required></textarea><button class="primary" type="submit">Save &amp; re-rank news</button></form></details>
+<section class="news-heading"><div><h1>News</h1><p id="progress">Ranked by relevance to your memo · score out of 100.</p></div><button id="fetch" class="primary">Refresh news</button></section>
 <div id="notice" role="status" aria-live="polite" hidden></div>
-<main>
-<section class="wire"><div class="section-head"><h1>NEWS WIRE <span id="count">0</span></h1><div class="filters" role="group" aria-label="Signal filter"><button data-filter="all" aria-pressed="true">ALL</button><button data-filter="buy" aria-pressed="false">BUY</button><button data-filter="short" aria-pressed="false">SHORT</button><button data-filter="no_signal" aria-pressed="false">NO SIGNAL</button></div></div><div id="scan-status" hidden></div><div class="table-scroll"><table><thead><tr><th>UTC</th><th>HEADLINE / SUMMARY</th><th title="Preliminary company/sector research lead; ETF exposure is verified during investigation">SIGNAL</th><th>SCORE</th><th></th></tr></thead><tbody id="rows"></tbody></table><div id="empty"><b>NO STORIES YET</b><p>Fetch Techmeme to read, summarize and rank the latest technology news.</p></div></div></section>
-<aside class="analysis"><div class="section-head"><h2>RESEARCH</h2><span>01 / SELECT A STORY</span></div><div id="detail"><div class="placeholder"><b>THE HEADLINE IS THE START.</b><p>Select a story. Investigate a BUY or SHORT signal to explore an index thesis and a priced paper scenario.</p></div></div></aside>
-</main>
-<footer><span id="connection">OpenShift AI / d3-mini · T4</span><span>REFERENCE QUOTES · CONDITIONAL P&L · NO ORDERS</span><a href="https://www.techmeme.com/" target="_blank" rel="noopener noreferrer">News via Techmeme ↗</a></footer>
-</body></html>
+<section id="stories" aria-label="News ranked by opportunity score"></section>
+<div id="empty" hidden>No stories yet. Refresh news to get started.</div>
+<details class="import-box"><summary>Add an article URL</summary><form id="import"><input id="url" type="url" aria-label="Article URL" placeholder="https://…" required><button type="submit">Add article</button></form></details>
+<footer>Scores measure research priority for your memo. Positive and negative developments can both score highly.</footer>
+</main></body></html>

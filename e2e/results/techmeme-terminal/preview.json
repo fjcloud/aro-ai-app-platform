@@ -1,23 +1,18 @@
 {
   "passed": true,
-  "scope": "Local preview: synthetic fixtures",
+  "scope": "Local synthetic fixture validation",
   "live_models": false,
-  "signals": [
-    "BUY",
-    "SHORT",
-    "NO SIGNAL"
-  ],
   "checks": [
-    "English terminal UI",
-    "three signal categories",
-    "long and short scenario math",
-    "editable notional / target / stop",
-    "Markdown uses the displayed scenario",
-    "invalid inputs disable export",
+    "simple memo and ranked news UI",
+    "opportunity scores are not confidence percentages",
+    "descending score order",
+    "memo draft survives refresh",
+    "memo changes re-score existing summaries",
+    "old memo research is hidden",
+    "any current scored story can be investigated",
+    "research Markdown export",
     "mobile layout",
-    "no JavaScript errors",
     "mock-keychain",
-    "synthetic-data marking",
-    "preview refuses live model execution"
+    "no JavaScript errors"
   ]
 }

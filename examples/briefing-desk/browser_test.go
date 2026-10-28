@@ -64,6 +64,8 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 			reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]any{"type": "message", "content": []any{map[string]string{"type": "output_text", "text": string(text)}}}}})
 		}
 		switch {
+		case strings.HasPrefix(first.Content, "Explain this memo opportunity score:"):
+			finish(memoRationale{Reason: "Fixture explanation links the source evidence to the fund memo.", PointIDs: []string{"P1"}})
 		case strings.HasPrefix(first.Content, "Call get_headlines"):
 			if count == 0 {
 				call("get_headlines", "{}")
@@ -89,8 +91,11 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 				return
 			}
 			direction := "buy"
-			if strings.Contains(first.Content, `"preliminary_signal":"short"`) {
+			if strings.Contains(source.Title, "bearish") {
 				direction = "short"
+			}
+			if strings.Contains(source.Title, "neutral") {
+				direction = "no_signal"
 			}
 			finish(report{Headline: "Fixture index research", Facts: []finding{{"This statement comes from the retrieved fixture source.", []string{"E1"}}}, Hypotheses: []finding{{"A conditional technology-index exposure could express this fictional catalyst.", []string{"E1", "E3"}}}, Unknowns: []string{"No actual market reaction was established."}, NextChecks: []string{"Reconnect live models for real research."}, Plan: &tradePlan{Symbol: "QQQ", Direction: direction, Thesis: "A fictional Nasdaq-100 exposure used to test the priced scenario and signal path.", TargetMovePct: 3, StopMovePct: 1.5, HorizonDays: 5, Sources: []string{"E1", "E2"}}})
 		}
@@ -102,19 +107,33 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 		}
 		json.NewDecoder(r.Body).Decode(&x)
 		var parsed struct {
-			Summary summary `json:"summary"`
+			Summary summary `json:"source_summary"`
+			Memo    string  `json:"investment_memo"`
 		}
 		json.Unmarshal([]byte(x.State), &parsed)
-		choice := "no_signal"
+		score := .4
 		if strings.Contains(parsed.Summary.Title, "bullish") {
-			choice = "buy"
+			score = 3.6
 		}
 		if strings.Contains(parsed.Summary.Title, "bearish") {
-			choice = "short"
+			score = 2
 		}
-		probs := map[string]float64{"buy": .1, "short": .1, "no_signal": .1}
-		probs[choice] = .8
-		reply(w, 200, map[string]any{"answers": map[string]any{"signal": map[string]any{"choice": choice, "confidence": .8, "input_coverage": "complete", "probabilities": probs}}, "usage": map[string]int{"input_tokens": 120}})
+		probs := map[string]float64{"0": 0, "1": 0, "2": 0, "3": 0, "4": 0}
+		if strings.Contains(parsed.Memo, "Retail-only fixture memo") {
+			score = .4
+		}
+		switch score {
+		case .4:
+			probs["0"] = .6
+			probs["1"] = .4
+		case 2:
+			probs["2"] = 1
+		default:
+			probs["3"] = .4
+			probs["4"] = .6
+		}
+		reply(w, 200, map[string]any{"answers": map[string]any{"opportunity": map[string]any{"type": "score", "score": score, "confidence": .8, "input_coverage": "complete", "probabilities": probs}}, "usage": map[string]int{"input_tokens": 120}})
+
 	}))
 	defer decision.Close()
 	fixtureFetch := &fetcher{&http.Client{Transport: roundTripFunc(func(r *http.Request) (*http.Response, error) {

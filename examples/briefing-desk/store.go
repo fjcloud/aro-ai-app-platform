@@ -54,7 +54,7 @@ func openStore(dir string) (*store, error) {
 	}
 	hasTech := false
 	for i, p := range s.profiles {
-		if p.ID == "tech" && p.Version == 1 && p.Criteria == legacyIndexMandate {
+		if p.ID == "tech" && ((p.Version == 1 && p.Criteria == legacyIndexMandate) || (p.Version == 2 && p.Criteria == legacyResearchMandate)) {
 			s.profiles[i] = defaults()[0]
 		}
 		hasTech = hasTech || p.ID == "tech"
@@ -138,7 +138,7 @@ func (s *store) list() ([]document, []profile) {
 		for key, c := range v.Classes {
 			for _, p := range s.profiles {
 				if p.ID == key {
-					c.Stale = c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash()
+					c.Stale = c.Score == nil || c.ProfileVersion != p.Version || c.SummaryHash != d.Summary.hash()
 				}
 			}
 			v.Classes[key] = c

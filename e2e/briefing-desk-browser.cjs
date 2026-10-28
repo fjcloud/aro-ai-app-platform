@@ -1,22 +1,54 @@
-// Local preview / fixture validation. This does not assert live model inference.
+// Local preview / fixture validation. Live provider checks are separate.
 const {chromium,expect}=require('@playwright/test');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-(async()=>{const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});try{
- const context=await browser.newContext({viewport:{width:1512,height:1050}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.APP_URL,{waitUntil:'domcontentloaded'});await expect(page.locator('html')).toHaveAttribute('lang','en');
- const state=()=>page.evaluate(async()=>await(await fetch('/api/state')).json());let s=await state();const scope=process.env.TEST_SCOPE||'Local preview: synthetic fixtures';
- if(!s.preview){assert.equal(s.validation_fixture,true,'This local test must identify its mocked inference/data');await page.locator('#fetch').click();await expect.poll(async()=>(await state()).documents.filter(d=>d.status==='ready'&&d.classifications.tech?.status==='done').length,{timeout:30000}).toBe(3);s=await state();}else{await expect(page.locator('#fetch')).toBeDisabled();const refused=await page.evaluate(async()=>{const r=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({feed_id:'techmeme',profile_id:'tech'})});return r.status;});assert.equal(refused,409);}
- assert.deepEqual(new Set(s.documents.map(d=>d.classifications.tech.priority)),new Set(['buy','short','no_signal']));await expect(page.locator('.story')).toHaveCount(3);await expect(page.locator('#preview')).toBeVisible();
- await page.locator('[data-filter=buy]').click();await expect(page.locator('.story')).toHaveCount(1);const buy=s.documents.find(d=>d.classifications.tech.priority==='buy');
- if(s.preview)await page.locator('.story').click();else{await page.locator('.story').getByRole('button',{name:'INVESTIGATE',exact:true}).click();await expect.poll(async()=>(await state()).documents.find(d=>d.id===buy.id).research?.tech?.status,{timeout:30000}).toBe('done');}
- await expect(page.locator('.paper')).toBeVisible();await expect(page.locator('.paper .tag')).toHaveText('BUY');
- await page.locator('[data-field=notional]').fill('20000');await page.locator('[data-field=target]').fill('4');await page.locator('[data-field=stop]').fill('2');await expect(page.locator('.price-grid')).toContainText('+$800.00 gross P&L');await expect(page.locator('.price-grid')).toContainText('−$400.00 gross P&L');
- const download=await page.locator('#research-export').getAttribute('href');assert.ok(download.includes('notional=20000')&&download.includes('target=4')&&download.includes('stop=2'));const text=await page.evaluate(async url=>await(await fetch(url)).text(),download);assert.ok(text.includes('20000.00 notional')&&text.includes('800.00')&&text.includes('-400.00'));
- await page.locator('[data-field=target]').fill('0');await expect(page.locator('#research-export')).not.toHaveAttribute('href');await page.locator('[data-field=target]').fill('3');await expect(page.locator('#research-export')).toHaveAttribute('href',/target=3/);
- await page.locator('[data-filter=short]').click();await expect(page.locator('.story')).toHaveCount(1);const short=s.documents.find(d=>d.classifications.tech.priority==='short');
- if(s.preview)await page.locator('.story').click();else{await page.locator('.story').getByRole('button',{name:'INVESTIGATE',exact:true}).click();await expect.poll(async()=>(await state()).documents.find(d=>d.id===short.id).research?.tech?.status,{timeout:30000}).toBe('done');}
- await expect(page.locator('.paper .tag')).toHaveText('SHORT');await expect(page.locator('.price-grid')).toContainText('$97.00');await expect(page.locator('.price-grid')).toContainText('$101.50');
- await page.locator('[data-filter=no_signal]').click();await expect(page.locator('.story')).toHaveCount(1);await expect(page.locator('.story')).not.toContainText('INVESTIGATE');
- if(!s.preview){const none=s.documents.find(d=>d.classifications.tech.priority==='no_signal');const code=await page.evaluate(async id=>{const r=await fetch('/api/articles/'+id+'/investigate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile_id:'tech'})});return r.status},none.id);assert.equal(code,409);}
- await page.locator('[data-filter=all]').click();await expect(page.locator('.story')).toHaveCount(3);await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Mobile layout overflows');await page.setViewportSize({width:1512,height:1050});await page.locator('.story[data-id="'+buy.id+'"]').click();await expect(page.locator('.paper .tag')).toHaveText('BUY');assert.deepEqual(errors,[]);
- const directory=path.resolve(__dirname,'results/techmeme-terminal');fs.mkdirSync(directory,{recursive:true});const prefix=s.preview?'preview':'fixture-e2e';await page.screenshot({path:path.join(directory,prefix+'.png'),fullPage:true});const report={passed:true,scope,live_models:false,signals:['BUY','SHORT','NO SIGNAL'],checks:['English terminal UI','three signal categories','long and short scenario math','editable notional / target / stop','Markdown uses the displayed scenario','invalid inputs disable export','mobile layout','no JavaScript errors','mock-keychain',...(s.preview?['synthetic-data marking','preview refuses live model execution']:['RSS / summary / decision protocols through fixture providers','native Responses function-call continuation through mocked inference','NO SIGNAL server-side investigation gate'])]};fs.writeFileSync(path.join(directory,prefix+'.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
- }finally{await browser.close();}})().catch(e=>{console.error(e.message);process.exitCode=1});
+(async()=>{
+ const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});
+ try{
+  const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(process.env.APP_URL,{waitUntil:'domcontentloaded'});
+  const state=()=>page.evaluate(async()=>await(await fetch('/api/state')).json());
+  const finished=async()=>{const s=await state(),p=s.profiles.find(p=>p.id==='tech');return s.documents.length===3&&s.documents.every(d=>d.classifications.tech?.status==='done'&&d.classifications.tech.profile_version===p.version&&Number.isFinite(d.classifications.tech.opportunity_score)&&d.classifications.tech.memo_reason);};
+  let s=await state();
+  if(!s.preview){assert.equal(s.validation_fixture,true);await page.locator('#fetch').click();await expect.poll(finished,{timeout:30000}).toBeTruthy();s=await state();}
+  else await expect(page.locator('#fetch')).toBeDisabled();
+  await expect(page.locator('html')).toHaveAttribute('lang','en');
+  await expect(page.locator('.story')).toHaveCount(3);await expect(page.locator('#preview')).toBeVisible();
+  await expect.poll(()=>page.locator('.opportunity strong').allTextContents()).toEqual(['90','50','10']);
+  await expect(page.locator('#market')).toHaveCount(0);await expect(page.locator('[data-filter]')).toHaveCount(0);
+  await page.locator('.story .headline').first().click();
+  await expect(page.locator('.story-detail')).toHaveCount(1);
+  if(!s.preview){
+   await page.locator('.story-detail').getByRole('button',{name:'Investigate',exact:true}).click();
+   const high=s.documents.find(d=>d.classifications.tech.opportunity_score===90);
+   await expect.poll(async()=>(await state()).documents.find(d=>d.id===high.id).research?.tech?.status,{timeout:30000}).toBe('done');
+  }
+  await expect(page.locator('.research-export')).toHaveCount(1);
+  const href=await page.locator('.research-export').getAttribute('href');
+  const note=await page.evaluate(async href=>await(await fetch(href)).text(),href);
+  assert.ok(note.includes('Mandate:')&&note.includes('Evidence'));
+  if(!s.preview){
+   // A low score is relevant information, not a prohibition on read-only research.
+   const low=s.documents.find(d=>d.classifications.tech.opportunity_score===10);
+   await page.locator('.story[data-id="'+low.id+'"]').locator('.headline').click();
+   await expect(page.locator('.story-detail').getByRole('button',{name:'Investigate',exact:true})).toBeEnabled();
+   const original=s.profiles.find(p=>p.id==='tech');
+   await page.locator('#memo>summary').click();
+   const custom='Retail-only fixture memo. Research consumer marketplaces and merchant revenues; semiconductor headlines have low relevance.';
+   await page.locator('#fund-memo').fill(custom);
+   // Wait for an actual periodic refresh: it must preserve the unsaved memo.
+   await page.waitForTimeout(2700);await expect(page.locator('#fund-memo')).toHaveValue(custom);
+   await page.locator('#fund-name').fill('Retail fixture fund');
+   await page.locator('#memo-form').getByRole('button').click();
+   await expect.poll(async()=>{const x=await state();return x.profiles[0].criteria===custom&&x.documents.every(d=>d.classifications.tech.profile_version===x.profiles[0].version&&d.classifications.tech.opportunity_score===10&&d.classifications.tech.memo_reason);},{timeout:30000}).toBe(true);
+   await expect(page.locator('.research-export')).toHaveCount(0);
+   await page.locator('#memo>summary').click();await page.locator('#fund-name').fill(original.name);await page.locator('#fund-memo').fill(original.criteria);await page.locator('#memo-form').getByRole('button').click();
+   await expect.poll(finished,{timeout:30000}).toBeTruthy();
+  }
+  await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Mobile layout overflows');await page.setViewportSize({width:1440,height:1000});assert.deepEqual(errors,[]);
+  const dir=path.join(__dirname,'results/techmeme-terminal');fs.mkdirSync(dir,{recursive:true});const prefix=s.preview?'preview':'fixture-e2e';
+  await page.screenshot({path:path.join(dir,prefix+'.png'),fullPage:true});
+  const report={passed:true,scope:process.env.TEST_SCOPE||'Local synthetic fixture validation',live_models:false,checks:['simple memo and ranked news UI','opportunity scores are not confidence percentages','descending score order','memo draft survives refresh','memo changes re-score existing summaries','old memo research is hidden','any current scored story can be investigated','research Markdown export','mobile layout','mock-keychain','no JavaScript errors']};
+  fs.writeFileSync(path.join(dir,prefix+'.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e.message);process.exitCode=1;});

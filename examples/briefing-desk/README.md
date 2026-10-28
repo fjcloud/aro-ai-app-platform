@@ -1,46 +1,32 @@
-# Signal Desk / Techmeme terminal
+# Signal Desk
 
-An English market terminal: **fetch → summarize → BUY / SHORT / NO SIGNAL → investigate**.
+News ranked for an investment memo. The default example is a semiconductor fund.
 
-- Fetch imports the latest **12 Techmeme stories**, including neutral news; the
-  agent no longer discards nine stories before ranking. RSS supplies original
-  publisher links. Inaccessible pages
-  use an explicitly labeled RSS excerpt; they are never presented as full articles.
-- The research LLM summarizes, adds a clearly labeled financial hypothesis and
-  investigates. d3-mini ranks concrete **company or sector catalysts** as
-  preliminary BUY / SHORT research leads. It does not require proof that an entire
-  index will move. Ordinary product news, benchmarks or ambiguous direction can
-  remain NO SIGNAL, which blocks investigation.
-- Research then verifies whether a lead maps to QQQ, SPY, SMH or XLK and may reject
-  it as NO SIGNAL: these are ETF proxies for their stated
-  indices. Timestamped Yahoo Finance chart metadata supplies reference prices.
-- Targets, stops and horizon are hypothetical model assumptions. Edit notional,
-  target and stop to calculate conditional gross P&L. Markdown uses the same
-  edited inputs. This is not a calibrated expected-return estimate. The signal score does not
-  estimate the chance of hitting a target.
+**Memo → Techmeme → summary → opportunity score /100 → investigate**
 
-## Local preview
+- Each fetch imports the latest 12 stories; saved stories remain in the feed.
+- d3-mini scores research relevance and materiality against the memo. Positive and
+  negative developments can both score highly. This is neither BUY/SELL nor a
+  confidence percentage or an expected return.
+- Azure DeepSeek explains each score using source key points. The score itself
+  comes from d3-mini's native five-level ordinal head: `100 × expected level / 4`.
+- Edit the memo to re-score existing summaries. Scores and research are tied to
+  the memo version and source-summary hash; outdated research is hidden.
+- Any current scored article can be investigated. Research checks sources and
+  financial implications; exported notes retain sourced ETF references and
+  explicitly hypothetical scenarios. No orders are sent.
 
-From this directory:
+The UI has a memo, a refresh button and a list sorted by score. Open a story for
+key points, investigation and Markdown export. Publisher paywalls use a disclosed
+Techmeme excerpt rather than a fabricated full-article summary.
 
-```sh
-PREVIEW_MODE=1 DEV_ASSETS=1 go run .
-```
+## Local development
 
-Open http://localhost:8080. Preview uses a separate `preview-data/` directory and
-clearly labeled fictional headlines, model signals and prices. It cannot execute
-live model jobs. `DEV_ASSETS=1` reloads the local `web/` assets while editing.
-The production image embeds those assets.
+The active setup uses Azure **DeepSeek-V4-Pro**, version `2026-04-23`, matching the
+workshop, and **d3-mini on Apple Metal**. The research LLM is hosted; the scoring
+model runs locally.
 
-## Live local development
-
-Use **Azure DeepSeek-V4-Pro**, matching the workshop model and version
-(`2026-04-23`), for research and **d3-mini on Apple Metal** for ranking.
-The research model is hosted; only the classifier runs on this Mac. Azure credentials can be retrieved through the existing `az login` session;
-there is no API key to create manually. The Foundry deployment is Global Standard,
-paid per token. The application never switches providers automatically.
-
-On an Apple Silicon Mac (tested with 32 GB unified memory and Python 3.14):
+Start the pinned model on an Apple Silicon Mac (tested with 32 GB and Python 3.14):
 
 ```sh
 python3 -m venv /private/tmp/signal-desk-d3-venv
@@ -48,13 +34,12 @@ python3 -m venv /private/tmp/signal-desk-d3-venv
 /private/tmp/signal-desk-d3-venv/bin/python serve-d3-metal.py
 ```
 
-The pinned model download is about 9 GB. The launcher binds to localhost:18093,
-uses FP16 and disables CPU fallback. `/v1/models` reports `device: mps` and
-`dtype: float16`. Upstream marks MPS as unvalidated; the local three-case
-functional check does not establish numerical parity or investment performance.
+The model download is about 9 GB. The launcher uses localhost:18093, FP16 and no
+CPU fallback. Upstream marks MPS as unvalidated; local checks do not establish
+numerical parity or financial-performance accuracy.
 
-In another terminal, set `RESOURCEGROUP` and `FOUNDRY_NAME` to your existing
-Foundry account with deployment `deepseekv4pro`, then retrieve its endpoint/key:
+With `az login` active, set `RESOURCEGROUP` and `FOUNDRY_NAME` to the account that
+hosts deployment `deepseekv4pro`. Retrieve its endpoint and private key file:
 
 ```sh
 : "${RESOURCEGROUP:?Select the Foundry resource group}"
@@ -73,46 +58,43 @@ LISTEN_ADDR=127.0.0.1:18092 DATA_DIR=/private/tmp/signal-desk-local-data \
 DEV_ASSETS=1 go run .
 ```
 
-Open http://127.0.0.1:18092 and select **FETCH 12 STORIES**. These are live sources
-and model calls. Only BUY / SHORT stories can launch an investigation. Keys stay
-in private files outside Git and are never sent to article sites or the browser.
+Open http://127.0.0.1:18092. Azure inference is paid per token. Keys stay outside
+Git and are never sent to the browser or article sites. Optional Groq Free uses
+`AGENT_BACKEND=groq GROQ_MODEL=qwen/qwen3.8-27b GROQ_KEY_FILE=...`; account-plan
+billing and quotas apply, with no automatic model fallback.
 
-### Optional Groq Free backend
+For a disconnected preview, use `PREVIEW_MODE=1 DEV_ASSETS=1 go run .` with a
+separate data directory. Its scores and news are clearly labeled synthetic.
 
-For a separate [Groq Free account](https://console.groq.com/keys), configure
-`AGENT_BACKEND=groq GROQ_MODEL=qwen/qwen3.8-27b` and `GROQ_KEY_FILE` instead of
-the Azure settings above. The account plan determines billing and cannot be
-verified from an API key. [Quotas](https://console.groq.com/docs/rate-limits) apply.
-Short provider cooldowns are visible in activity and retried at most three times
-on the same model. Daily exhaustion fails visibly; no paid upgrade is performed.
-
-## Checks
+## Validation
 
 ```sh
 go test -race ./...
 go vet ./...
-LIVE_DATA_TESTS=1 go test -run TestLivePublicData -v -count=1
 ```
 
-The opt-in public-data check reads actual Techmeme RSS and four timestamped ETF
-quotes. For a full local browser workflow, run `make test-terminal` from the workshop root. That harness
-mocks inference, news and price responses and explicitly labels the resulting
-screen as validation fixtures. It exercises real Go HTTP handlers, agent tool
-continuation, persistence, classification validation, scenario math and the UI.
-Every Chromium launch uses `--use-mock-keychain`.
+From the workshop root, `make test-terminal` runs the complete HTTP/browser flow
+with explicit fixtures: scoring, sorted cards, memo edits and automatic re-scoring,
+stale-research hiding, investigation, exports and mobile layout. Chromium uses
+`--use-mock-keychain`.
+
+With the live local services running:
+
+```sh
+node e2e/briefing-desk-live-local.cjs
+```
+
+For actual D3 memo sensitivity without changing app data:
+
+```sh
+LIVE_MEMO_MODEL=1 go test -run TestLiveMemoScoreSensitivity -v -count=1
+```
 
 ## OpenShift
 
-Use the existing live-transcript app, OAuth proxy, restricted-v2, single T4,
-native OpenShift AI Responses service and Git → Tekton → Argo CD delivery.
-The facilitator prepares the native service, MaaS key and persistent data using
-`scripts/prepare-briefing-desk.py` from the workshop root. The MaaS key lasts 24h.
-
-Disable PREVIEW_MODE and configure AGENT_URL, AGENT_MODEL, AGENT_KEY_FILE,
-DECISION_URL, DECISION_MODEL and DATA_DIR. The existing MLflow settings trace
-backend orchestration, actual tool execution and local classification.
-
-Quotes are best-effort reference data with no guaranteed delay, not executable
-bid/ask prices. Missing, invalid or >72h-old quotes cannot price a scenario. Gross
-P&L omits transaction, borrowing, financing and slippage costs. No orders or client
-messages are sent. No model-generated entry price is accepted.
+Keep the existing live-transcript app, OAuth, restricted-v2, single T4, native
+OpenShift AI Responses service and Git → Tekton → Argo CD delivery. Set
+`AGENT_BACKEND=rhoai` (the default), `AGENT_URL`, `AGENT_MODEL`, `AGENT_KEY_FILE`,
+`DECISION_URL`, `DECISION_MODEL` and `DATA_DIR`. The replacement ARO environment
+still needs live validation. `scripts/prepare-briefing-desk.py` prepares the native
+service and MaaS credential; the MaaS key lasts 24 hours.
