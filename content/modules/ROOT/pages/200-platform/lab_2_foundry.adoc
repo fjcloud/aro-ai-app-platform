@@ -1,7 +1,7 @@
 = Lab 1.2 — Publish DeepSeek on Foundry
 :page-aliases: 200-platform/lab_1_gpu_nodepool.adoc
 
-The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. Whisper will run separately on one T4 in Lab 1.4; it is the application’s speech model, not OpenCode’s coding model.
+The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. d3-mini will run separately on one T4 in Lab 1.4 to rank news; it is not OpenCode’s coding model.
 
 [NOTE]
 ====
@@ -12,7 +12,7 @@ The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Micr
 
 [IMPORTANT]
 ====
-This deployment uses Global Standard, pay-per-token pricing in East US 2. Reasoning tokens count as output. See xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1] for the dated price example. An idle coding deployment has no token usage charge; the cluster and speech workers have separate infrastructure costs.
+This deployment uses Global Standard, pay-per-token pricing in East US 2. Reasoning tokens count as output. See xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1] for the dated price example. An idle coding deployment has no token usage charge; the cluster and GPU workers have separate infrastructure costs.
 ====
 
 == What you are creating
@@ -69,7 +69,7 @@ wait_foundry() {
 
 az rest --method put \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}" \
-  --body "{\"location\":\"${LOCATION}\",\"kind\":\"AIServices\",\"sku\":{\"name\":\"S0\"},\"properties\":{\"customSubDomainName\":\"${FOUNDRY_NAME}\",\"publicNetworkAccess\":\"Enabled\"}}"
+  --body "{\"location\":\"${LOCATION}\",\"kind\":\"AIServices\",\"sku\":{\"name\":\"S0\"},\"properties\":{\"customSubDomainName\":\"${FOUNDRY_NAME}\",\"publicNetworkAccess\":\"Enabled\"}}" | jq .
 
 wait_foundry "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}"
 
@@ -84,7 +84,7 @@ The table should show format `DeepSeek`, version `2026-04-23`, SKU `GlobalStanda
 ----
 az rest --method put \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}" \
-  --body '{"sku":{"name":"GlobalStandard","capacity":500},"properties":{"model":{"format":"DeepSeek","name":"DeepSeek-V4-Pro","version":"2026-04-23"}}}'
+  --body '{"sku":{"name":"GlobalStandard","capacity":500},"properties":{"model":{"format":"DeepSeek","name":"DeepSeek-V4-Pro","version":"2026-04-23"}}}' | jq .
 
 wait_foundry "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}"
 ----
@@ -103,10 +103,11 @@ KEY=$(az rest --method post \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
   --query key1 -o tsv)
 
-curl --fail-with-body -sS --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
+curl --fail-with-body -sS --retry 5 --retry-all-errors --retry-delay 10 \
+  --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "api-key: ${KEY}" \
-  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":512}'
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":512,"reasoning_effort":"none"}' | jq .
 
 mkdir -p state
 cat > state/foundry.env << EOF
@@ -119,7 +120,7 @@ ENDPOINT=${ENDPOINT}
 EOF
 ----
 
-The answer is in `choices[0].message.content`. `state/foundry.env` has no key. Lab 1.3 reads the key again from Azure.
+A new account key can take a short time to propagate; the bounded retries cover that initial delay. Persistent HTTP 401 means you should check the account endpoint/key before continuing. The answer is in `choices[0].message.content`. `state/foundry.env` has no key. Lab 1.3 reads the key again from Azure.
 
 == ✅ Checkpoint
 

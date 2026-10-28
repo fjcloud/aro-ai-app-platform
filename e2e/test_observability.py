@@ -28,7 +28,7 @@ class ObservabilityCheck(unittest.TestCase):
         def response(request, **kwargs):
             query=module.urllib.parse.parse_qs(module.urllib.parse.urlparse(request.full_url).query)['query'][0]
             value='NaN' if query.startswith('histogram_quantile') else '1'
-            results = [{'metric':{'namespace':namespace},'value':[1,value]} for namespace in ('speech-serving','kuadrant-system')] if query.startswith('min by (namespace)') else [{'metric':{},'value':[1,value]}]
+            results = [{'metric':{'namespace':namespace},'value':[1,value]} for namespace in ('decision-serving','kuadrant-system')] if query.startswith('min by (namespace)') else [{'metric':{},'value':[1,value]}]
             return io.StringIO(json.dumps({'status':'success','data':{'result':results}}))
         output=io.StringIO()
         with patch.object(module,'oc',return_value='private-test-token'),patch.object(module.urllib.request,'urlopen',side_effect=response),contextlib.redirect_stdout(output):

@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: d3-mini
   namespace: decision-serving
+  labels:
+    app: d3-mini-metrics
 spec:
   selector:
     serving.kserve.io/inferenceservice: d3-mini

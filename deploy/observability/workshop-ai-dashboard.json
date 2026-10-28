@@ -36,7 +36,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (model, subscription) (authorized_hits{model=\"deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|cluster-voice)\"})",
+          "expr": "sum by (model, subscription) (authorized_hits{model=\"deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|signal-desk)\"})",
           "refId": "A",
           "legendFormat": "{{model}} {{subscription}}"
         }
@@ -75,7 +75,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (subscription) (authorized_calls{limitador_namespace=\"llm-serving/deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|cluster-voice)\"})",
+          "expr": "sum by (subscription) (authorized_calls{limitador_namespace=\"llm-serving/deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|signal-desk)\"})",
           "refId": "A",
           "legendFormat": "{{subscription}}"
         }
@@ -143,7 +143,7 @@
     {
       "id": 4,
       "type": "graph",
-      "title": "Whisper completed requests",
+      "title": "D3 completed scoring requests",
       "datasource": "$datasource",
       "gridPos": {
         "h": 7,
@@ -153,7 +153,7 @@
       },
       "targets": [
         {
-          "expr": "sum(vllm:request_success_total{namespace=\"speech-serving\",finished_reason=\"stop\"})",
+          "expr": "sum(vllm_srun_requests_total{namespace=\"decision-serving\",endpoint=\"/v1/systemone\",status=\"200\"})",
           "refId": "A",
           "legendFormat": "Whisper completed requests"
         }
@@ -182,7 +182,7 @@
     {
       "id": 5,
       "type": "graph",
-      "title": "Whisper inference latency p95",
+      "title": "D3 request latency p95",
       "datasource": "$datasource",
       "gridPos": {
         "h": 7,
@@ -192,7 +192,7 @@
       },
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(vllm:e2e_request_latency_seconds_bucket{namespace=\"speech-serving\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(vllm_srun_request_duration_seconds_bucket{namespace=\"decision-serving\",endpoint=\"/v1/systemone\"}[5m])))",
           "refId": "A",
           "legendFormat": "Whisper inference latency p95"
         }
@@ -221,7 +221,7 @@
     {
       "id": 6,
       "type": "graph",
-      "title": "Whisper queued requests",
+      "title": "D3 queued requests",
       "datasource": "$datasource",
       "gridPos": {
         "h": 7,
@@ -231,7 +231,7 @@
       },
       "targets": [
         {
-          "expr": "sum(vllm:num_requests_waiting{namespace=\"speech-serving\"})",
+          "expr": "sum(vllm_srun_queue_depth{namespace=\"decision-serving\"})",
           "refId": "A",
           "legendFormat": "Whisper queued requests"
         }
@@ -260,7 +260,7 @@
     {
       "id": 7,
       "type": "graph",
-      "title": "T4 utilization \u2014 speech only",
+      "title": "T4 utilization \u2014 D3 scoring",
       "datasource": "$datasource",
       "gridPos": {
         "h": 7,
@@ -270,7 +270,7 @@
       },
       "targets": [
         {
-          "expr": "DCGM_FI_DEV_GPU_UTIL{exported_namespace=\"speech-serving\"}",
+          "expr": "DCGM_FI_DEV_GPU_UTIL{exported_namespace=\"decision-serving\"}",
           "refId": "A",
           "legendFormat": "{{modelName}} GPU {{gpu}}"
         }
@@ -309,7 +309,7 @@
       },
       "targets": [
         {
-          "expr": "DCGM_FI_DEV_FB_USED{exported_namespace=\"speech-serving\"} / 1024",
+          "expr": "DCGM_FI_DEV_FB_USED{exported_namespace=\"decision-serving\"} / 1024",
           "refId": "A",
           "legendFormat": "{{modelName}} GPU {{gpu}}"
         }
@@ -348,7 +348,7 @@
       },
       "targets": [
         {
-          "expr": "min by (namespace) (up{namespace=~\"speech-serving|kuadrant-system\",job=~\"whisper-predictor|kuadrant-system/kuadrant-limitador-monitor\"})",
+          "expr": "min by (namespace) (up{namespace=~\"decision-serving|kuadrant-system\",job=~\"d3-mini|kuadrant-system/kuadrant-limitador-monitor\"})",
           "refId": "A",
           "legendFormat": "{{namespace}}"
         }

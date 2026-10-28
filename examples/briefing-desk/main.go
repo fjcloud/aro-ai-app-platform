@@ -285,6 +285,10 @@ func (s *server) scanFeed(feedID, profileID string) {
 func (s *server) routes() http.Handler {
 	mux := http.NewServeMux()
 	s.gameRoutes(mux)
+	mcp := s.mcpHandler()
+	for _, method := range []string{"GET", "POST", "DELETE"} {
+		mux.Handle(method+" /mcp", mcp)
+	}
 	files, _ := fs.Sub(assets, "web")
 	if env("DEV_ASSETS", "") == "1" {
 		files = os.DirFS("web")

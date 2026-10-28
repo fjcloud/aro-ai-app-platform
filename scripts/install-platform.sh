@@ -29,6 +29,8 @@ if ! oc get mlflow/mlflow >/dev/null 2>&1; then
 fi
 oc wait maastenantconfig/default-tenant -n models-as-a-service --for=condition=Ready --timeout=600s
 bash deploy/observability/configure.sh
+# Keep the mounted service CA after the final Kuadrant reconciliation.
+bash deploy/instances/configure-authorino-trust.sh
 oc rollout status deployment/payload-processing -n openshift-ingress --timeout=600s
 oc rollout status deployment/payload-pre-processing -n openshift-ingress --timeout=600s
 oc wait gateway/maas-default-gateway -n openshift-ingress --for=condition=Programmed --timeout=600s

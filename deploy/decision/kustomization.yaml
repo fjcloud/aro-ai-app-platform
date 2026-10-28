@@ -5,3 +5,4 @@ resources:
 - inferenceservice.yaml
 - service.yaml
 - networkpolicy.yaml
+- metrics.yaml

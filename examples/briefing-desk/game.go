@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"sort"
 	"time"
+
+	"go.opentelemetry.io/otel"
 )
 
 type gameIdea struct {
@@ -29,6 +31,7 @@ type gameProposal struct {
 	Ideas       []gameIdea `json:"ideas"`
 	Evidence    []evidence `json:"evidence,omitempty"`
 	Cutoff      string     `json:"cutoff"`
+	TraceID     string     `json:"trace_id,omitempty"`
 }
 type paperPosition struct {
 	ArticleID string            `json:"article_id"`
@@ -233,7 +236,10 @@ func (s *server) proposeGame(docID string) {
 	}
 	ctx, cancel := context.WithTimeout(s.ctx, s.jobLimit())
 	defer cancel()
+	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "game.research")
+	defer span.End()
 	proposal, e := s.agent.gameIdeas(ctx, d, p, s.gameDocuments(), s.game.Week)
+	proposal.TraceID = "tr-" + span.SpanContext().TraceID().String()
 	proposal.Status = "done"
 	if e != nil {
 		proposal.Status = "failed"
@@ -256,6 +262,8 @@ func (s *server) settleRound(roundID string) {
 	s.gameMu.Unlock()
 	ctx, cancel := context.WithTimeout(s.ctx, 45*time.Second)
 	defer cancel()
+	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "game.settle")
+	defer span.End()
 	data := map[string]historicalReturn{}
 	var failure error
 	for _, position := range round.Positions {

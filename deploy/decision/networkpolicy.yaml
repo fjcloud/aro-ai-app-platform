@@ -20,6 +20,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: decision-serving
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
     ports:
     - protocol: TCP
       port: 8080

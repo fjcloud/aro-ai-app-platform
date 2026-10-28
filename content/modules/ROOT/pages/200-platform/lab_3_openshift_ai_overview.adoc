@@ -80,7 +80,7 @@ OPENAI_API_KEY=$(oc get secret ai-provider-openai-api-key -n openshift-operators
 curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}'
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' | jq .
 unset OPENAI_API_KEY
 ----
 
@@ -94,6 +94,6 @@ Open *Red Hat OpenShift AI* from the OpenShift application launcher:
 . In *Settings → MaaS governance*, inspect `deepseekv4pro-workshop` and its token allowance.
 . In *Gen AI studio → AI asset endpoints*, find the published model and its endpoint.
 
-The same MaaS catalog and access pattern can publish local and external models. Whisper remains an internal application service, configured next; it is not the coding model.
+The same MaaS catalog and access pattern can publish local and external models. d3-mini remains an internal decision service, configured next; it is not the coding model.
 
-➡️ Move on to *Lab 1.4: Serve Whisper on one T4*.
+➡️ Move on to *Lab 1.4: Serve and Test the Decision Model*.

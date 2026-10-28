@@ -24,7 +24,7 @@ Use the URL you printed in Lab 1.5. It clones the Go app template (`go-app-templ
 
 [source,text,options=nowrap]
 ----
-https://devspaces.apps.<cluster>/#https://github.com/fjcloud/go-app-template/tree/aro-transcription?ai-provider=opencodeai/opencode
+https://devspaces.apps.<cluster>/#https://github.com/fjcloud/go-app-template/tree/feature/briefing-desk?ai-provider=opencodeai/opencode
 ----
 
 [NOTE]
@@ -132,7 +132,7 @@ fi
 curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}'
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' | jq .
 ----
 +
 [TIP]
@@ -203,7 +203,7 @@ OpenCode still reads `AGENTS.md` from the project directory at the start of ever
 cd ${PROJECT_SOURCE}
 opencode --version && \
 echo "GIT_SERVER=$GIT_SERVER" && \
-python3 -c 'import json; print(json.load(open("opencode.json"))["model"])'
+jq -r .model opencode.json
 ----
 
 .Expected Output

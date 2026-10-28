@@ -130,7 +130,7 @@ def developer():
         page = response.read().decode('utf-8')
     require('Talk to your cluster.' in page, 'Authenticated Cluster Voice UI')
     if os.environ.get('EXPECT_UPDATED_APP') == 'true':
-        require('CPU over 1h' in html.unescape(page), 'Shipped update includes the CPU shortcut')
+        require('High relevance only' in html.unescape(page), 'Shipped update includes the relevance filter')
     spec = deployment['spec']['template']['spec']
     container = spec['containers'][0]
     expected_image = f'image-registry.openshift-image-registry.svc:5000/{app}-build/{app}:latest'
@@ -139,9 +139,9 @@ def developer():
     requested_image = next((p['value'] for p in latest['spec'].get('params', []) if p['name'] == 'image'), expected_image)
     require(requested_image == container['image'], 'Successful Tekton target matches the deployed image')
     resources = container.get('resources', {})
-    require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '500m', 'memory': '256Mi'}, 'Resource requests and limits match AGENTS.md')
+    require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '500m', 'memory': '512Mi'}, 'Resource requests and limits match AGENTS.md')
     require(all(container.get(probe, {}).get('httpGet', {}).get('path') == '/healthz' and container[probe]['httpGet'].get('port') == 8443 and container[probe]['httpGet'].get('scheme') == 'HTTPS' for probe in ['livenessProbe', 'readinessProbe']), 'Liveness and readiness probes use HTTPS /healthz:8443')
-    require(spec.get('serviceAccountName') == 'cluster-voice', 'Dedicated runtime identity')
+    require(spec.get('serviceAccountName') == 'signal-desk', 'Dedicated runtime identity')
     require(any(e.get('name')=='LISTEN_ADDR' and e.get('value')=='127.0.0.1:8080' for e in container.get('env',[])), 'Go backend listens behind OAuth only')
     require(any(c['name']=='oauth-proxy' for c in spec['containers']), 'OpenShift OAuth proxy present')
     security = spec.get('securityContext', {})

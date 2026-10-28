@@ -57,7 +57,7 @@ restart the app after the successful image build and verify Argo's matching revi
 
 The community vLLM Semantic Router native runtime is pinned to
 `ff293191da0232b4e252bee2edd6ed825cacd45d`; it runs on the pinned Red Hat AI CUDA
-base image in `runtime/Dockerfile`. It does not execute Python code from the model
+base image in `../../deploy/decision/runtime/Dockerfile`. It does not execute Python code from the model
 repository. This is a custom community runtime, not a Red Hat-validated model/runtime
 combination or the stock vLLM OpenAI chat server.
 

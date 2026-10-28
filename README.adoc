@@ -9,7 +9,7 @@ Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platf
 . The launcher retrieves the assigned Showroom URL. Shared links contain only the guide and workshop ID; each participant signs in separately.
 . Follow Act 0 to log in to the existing cluster, clone the repository, and run `make onboard`.
 
-Platform labs require cluster-admin access and an Azure identity with permission to create Foundry resources in the exact assigned resource group. OpenShift AI MaaS publishes DeepSeek on Foundry for OpenCode, with a separate MaaS key and token quota (external models: Technology Preview). RedHatAI Whisper Large v3 Turbo INT8 runs on one T4 through OpenShift AI and Red Hat AI Inference. The same sample app becomes *Cluster Voice*: speak or type a question, then let a read-only agent inspect internal monitoring metrics and answer with evidence. The Playground tests its MCP tools; MLflow traces its model and tool calls.
+Platform labs prepare OpenShift AI, DeepSeek on Foundry through MaaS, and one T4 running the community d3-mini native decision runtime. Developers use OpenCode to build *Signal Desk*: rank last week's Techmeme news for a fund, research hypothetical index exposure and replay a $10,000 virtual portfolio against this week's observed prices. Playground MCP and MLflow make the agent's evidence and calls visible. The custom D3 runtime/model is not a supported Red Hat AI Inference configuration.
 
 `make onboard` detects the resource group containing the connected ARO resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
 
@@ -21,21 +21,17 @@ Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are 
 
 [source,text]
 ----
-Dev Spaces / OpenCode ──> OpenShift AI MaaS ──> DeepSeek on Foundry (coding)
-Browser microphone ──> Whisper (one T4) ──> editable question
-Browser text ──────────────────────────────────┘
-                                              ▼
-Go runtime agent <──> MaaS / DeepSeek
-       │      └─────> read-only metrics tools / Thanos
-       │                         ▲
-       └──> MLflow traces    Playground / MCP
-
-Git ──> Tekton ──> Argo CD ──> same Go application
+Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry
+Techmeme archives → Go app → d3-mini on one T4 → relevance /100
+                         → OpenShift AI Responses → DeepSeek + archive tools
+Virtual allocation → freeze → historical prices → paper result
+Playground → MCP archive tools        Agent → MLflow
+Git → Tekton → Argo CD → same app
 ----
 
-Use the `aro-transcription` branch of https://github.com/fjcloud/go-app-template/tree/aro-transcription[the app template]. ROSA keeps its existing template. A working reference app is in `examples/live-transcript`; speech manifests are in `deploy/speech`.
+Use the https://github.com/fjcloud/go-app-template/tree/feature/briefing-desk[Signal Desk template branch]. `AGENTS.md` defines delivery rules; `APP_CONTRACT.md` defines the application and fixed APIs. The working reference is `examples/briefing-desk`; model manifests are `deploy/decision`. Clone this workshop's `feature/briefing-desk` branch while the change is under review.
 
-Allow CPU headroom for OpenShift AI, Dev Spaces and Tekton, plus quota and capacity for one `Standard_NC8as_T4_v3` worker. Lab 1.4 shows Azure CLI quota checks and explicit `oc` MachineSet commands for one D8 CPU worker when needed and one T4 GPU worker. It uses no provisioning helper or Makefile target. Classic ARO worker pools are managed through the OpenShift Machine API. The application sends independent short WAV clips for near-real-time results; it does not use a native Whisper WebSocket stream.
+Allow CPU headroom plus one `Standard_NC8as_T4_v3` worker. The guide shows explicit Azure quota and OpenShift MachineSet commands, tests the decision model with `curl | jq`, then builds the app through the existing GitOps path. Archived excerpts, missing coverage and incomplete-week returns stay visible. No real orders are sent.
 
 == Maintain the workshop
 

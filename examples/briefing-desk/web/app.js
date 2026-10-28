@@ -40,6 +40,7 @@ function storyDetail(d){
    form.onsubmit=e=>{e.preventDefault();try{const idea=p.ideas.find(v=>v.id===form.querySelector('input[name=idea]:checked')?.value),value=Number(amount.value);if(!idea||!Number.isFinite(value)||value<100)throw Error('Choose an index and an amount of at least $100.');const other=draft.filter(v=>v.article_id!==d.id);if(other.reduce((n,p)=>n+p.amount,0)+value>data.game.round.budget)throw Error('This exceeds the $10,000 paper budget.');draft=[...other,{article_id:d.id,idea_id:idea.id,amount:value,symbol:idea.symbol,title:d.summary.title}];saveDraft();key='';render();notice('Investment added. Review your portfolio above when ready.');}catch(err){notice(err.message);}};
   }
   box.append(form);
+  if(p.trace_id)box.append(el('p','MLflow trace: '+p.trace_id,'status'));
  }
  return box;
 }

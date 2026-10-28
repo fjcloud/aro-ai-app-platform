@@ -1,22 +1,21 @@
 = Conclusion
 
-You used two models for two different jobs:
+You prepared two complementary model paths:
 
-* *DeepSeek on Foundry*, published through OpenShift AI MaaS, powered OpenCode in Dev Spaces and the application’s runtime agent, with separate keys and quotas.
-* *Whisper on one T4* transcribed the application’s audio through OpenShift AI, KServe and Red Hat AI Inference.
+* *DeepSeek on Foundry*, published through OpenShift AI MaaS, powered coding in Dev Spaces and runtime research with separate keys and quotas.
+* *d3-mini on one T4*, served through a custom native OpenShift AI/KServe runtime, ranked archived news against a fund memo. This community decision model/runtime is not a Red Hat supported inference configuration.
 
-The Go application captured microphone audio in the browser, sent short WAV clips through its backend, let you review the question, then queried internal monitoring tools to answer with evidence. Tekton built the image; your project’s Argo CD deployed it. Whisper stayed inside the cluster. Coding and runtime text requests passed through MaaS to Foundry; workspaces received a MaaS key instead of the Azure account key.
+Signal Desk connected archived news, memo-relative relevance, hypothetical index research and a virtual portfolio with observed historical prices. Tekton built the image and Argo CD delivered the matching Git revision. The Playground exercised bounded read-only tools; MLflow showed model and tool activity.
 
-This is *near-real-time transcription*: results arrive after each short clip. Whisper is not a native continuous streaming model. Test accents, background noise, long sentences and slow networks before using this pattern beyond a workshop.
+A relevance score is not a profit forecast. Results are provisional while the week is running, and historical model knowledge prevents claiming a blind backtest. No real order was sent.
 
 == Costs and environment lifetime
 
-Usage metrics explain activity. VM and disk charges continue while resources remain provisioned. The assigned RHDP environment stays available until its scheduled expiration; export code you want to keep before then.
+MaaS token usage and GPU utilization are different measurements. Foundry charges tokens; the T4 VM, CPU workers and disks remain provisioned while idle. The assigned RHDP environment expires on its schedule. Export code and news you want to keep before then.
 
-== Next steps
+== Explore further
 
-* Review the app’s OpenShift authorization and metric scope before widening access.
-* Measure transcription latency and accuracy with representative audio.
-* Add voice activity detection and overlapping windows for better sentence boundaries.
-* Extend the bounded metric catalog and evaluate the same questions before and after changes.
-* Use the Playground to test tools and MLflow to compare model/tool timings and failures.
+* Change the fund memo and compare rankings for the same archived corpus.
+* Compare agent hypotheses with realized outcomes, including losses and missing data.
+* Use MLflow to compare tool choices, latency and failures after a prompt change.
+* Extend the index catalog or historical source only with source validation and explicit accounting assumptions.

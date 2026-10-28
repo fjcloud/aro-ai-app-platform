@@ -2,7 +2,7 @@
 
 DeepSeek-V4 Pro is already answering. Prepare a *Dev Spaces launch URL* and the project runbook for the developer in Act 2.
 
-The ARO transcription template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-transcription[fjcloud/go-app-template].
+The Signal Desk template is on its own branch: https://github.com/fjcloud/go-app-template/tree/feature/briefing-desk[fjcloud/go-app-template].
 
 [NOTE]
 ====
@@ -30,20 +30,21 @@ The ARO transcription template is on its own branch: https://github.com/fjcloud/
 | Golden-path Kustomize. The Deployment already names the internal Tekton image. The pipeline validates that image before building; the model keeps the scaffold intact.
 |===
 
-There is no `scripts/` directory and no Ansible. DeepSeek-V4 Pro follows `AGENTS.md`.
+`APP_CONTRACT.md` defines the game, APIs and acceptance checks. `AGENTS.md` defines the coding and delivery rules. There is no app `scripts/` directory and no Ansible.
 
 == Prepare the developer's permissions
 
-From the bastion, prepare the application namespaces and inject a scoped CLI identity into Dev Spaces:
+Lab 1.4 prepared the namespaces and injected a scoped developer identity. Verify it from the bastion:
 
 [source,sh,role=execute]
 ----
-python3 scripts/prepare-developer.py
+oc auth can-i create pipelineruns -n live-transcript-build \
+  --as=system:serviceaccount:live-transcript-dev:workshop-developer
 ----
 
 The developer can build and deploy in the two application namespaces. They cannot create namespaces, change SCCs or create cluster-wide bindings. Image-pull permission is prepared here, not by the model. The Pipelines operator supplies its standard, non-privileged build service account permissions.
 
-The injected developer token is valid for 24 hours. Run this step before opening Dev Spaces; restart an existing workspace to receive the scoped kubeconfig.
+The injected developer token is valid for 24 hours. Preparation must run before opening Dev Spaces; restart an existing workspace to receive the scoped kubeconfig.
 
 == Step 1: Read AGENTS.md
 
@@ -51,9 +52,10 @@ Clone only if you want it on disk. On a shared workshop cluster you can also ope
 
 [source,sh,role=execute]
 ----
-git clone --depth 1 --branch aro-transcription https://github.com/fjcloud/go-app-template "$HOME/aro-transcription-template"
-wc -l "$HOME/aro-transcription-template/AGENTS.md"
-cat "$HOME/aro-transcription-template/AGENTS.md"
+git clone --depth 1 --branch feature/briefing-desk https://github.com/fjcloud/go-app-template "$HOME/signal-desk-template"
+wc -l "$HOME/signal-desk-template/AGENTS.md"
+cat "$HOME/signal-desk-template/AGENTS.md"
+cat "$HOME/signal-desk-template/APP_CONTRACT.md"
 ----
 
 Focus on these sections:
@@ -89,7 +91,7 @@ OpenCode is injected from the AI tool registry you applied in Lab 1.1. The *bina
 [source,sh,role=execute]
 ----
 oc get configmap opencode-workspace-config -n openshift-operators \
-  -o jsonpath='{.data.opencode\.json}' | python3 -m json.tool
+  -o jsonpath='{.data.opencode\.json}' | jq .
 ----
 
 You should see `baseURL` `{env:OPENAI_BASE_URL}`, Bearer authentication, provider name `DeepSeek-V4 Pro`, model id `deepseekv4pro`, and `"model": "deepseek/deepseekv4pro"`.
@@ -103,7 +105,7 @@ if [[ -z "$DEVSPACES_URL" ]]; then
   DEVSPACES_URL="https://$(oc get route devspaces -n openshift-operators \
     -o jsonpath='{.spec.host}')"
 fi
-TEMPLATE_URL="https://github.com/fjcloud/go-app-template/tree/aro-transcription"
+TEMPLATE_URL="https://github.com/fjcloud/go-app-template/tree/feature/briefing-desk"
 
 echo "============================================"
 echo " Participant workspace URL:"
@@ -111,7 +113,7 @@ echo "  $DEVSPACES_URL/#$TEMPLATE_URL?ai-provider=opencodeai/opencode"
 echo "============================================"
 ----
 
-When a developer opens that URL, Dev Spaces clones the template, injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. Lab 2.1 points the project at DeepSeek-V4 Pro. `AGENTS.md` is the runbook, including the browser audio, runtime agent, metrics tools and Whisper API contract.
+When a developer opens that URL, Dev Spaces clones the template, injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. Lab 2.1 points the project at DeepSeek-V4 Pro. `AGENTS.md` is the runbook, including the weekly news, D3 scoring, archived research and paper-investment contract.
 
 == Developer handoff ready
 
@@ -128,11 +130,11 @@ When a developer opens that URL, Dev Spaces clones the template, injects the Ope
 | MaaS model and workspace secret
 | ✅ `OPENAI_BASE_URL` points to `https://maas.<apps-domain>/v1`
 
-| Whisper speech service
+| d3-mini decision service
 | ✅ Ready on one T4; internal endpoint only
 
 | Go app template
-| ✅ ARO branch and Cluster Voice contract in `AGENTS.md`
+| ✅ Signal Desk branch and app contract in `AGENTS.md`
 |===
 
-Before switching persona, prepare runtime monitoring and tracing in *Lab 1.6: Give the Cluster a Voice*.
+Before switching persona, prepare the native Responses backend and tracing in *Lab 1.6: Prepare the Signal Desk Agent*.

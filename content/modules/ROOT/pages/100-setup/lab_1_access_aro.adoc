@@ -37,7 +37,7 @@ The permission check must return `yes` and the workers must be Ready. The platfo
 [source,sh,role=execute]
 ----
 cd "$HOME"
-git clone https://github.com/fjcloud/aro-ai-app-platform.git
+git clone --branch feature/briefing-desk https://github.com/fjcloud/aro-ai-app-platform.git
 cd aro-ai-app-platform
 make onboard
 ----
