@@ -56,6 +56,9 @@ func currentScore(d document, p profile) bool {
 }
 
 type source struct {
+	ArchiveID  string `json:"archive_id,omitempty"`
+	ArchivedAt string `json:"archived_at,omitempty"`
+	ArchiveURL string `json:"archive_url,omitempty"`
 	URL        string `json:"url"`
 	FinalURL   string `json:"final_url"`
 	Host       string `json:"host"`
@@ -108,6 +111,7 @@ type classification struct {
 	Stale          bool               `json:"stale"`
 }
 type document struct {
+	GameWeek string                    `json:"game_week,omitempty"`
 	ID       string                    `json:"id"`
 	URL      string                    `json:"url"`
 	Status   string                    `json:"status"`

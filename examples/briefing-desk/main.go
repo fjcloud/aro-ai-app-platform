@@ -30,6 +30,9 @@ type scanState struct {
 	Events []event `json:"events"`
 }
 type server struct {
+	clock                        func() time.Time
+	gameMu                       sync.Mutex
+	game                         gameState
 	preview                      bool
 	jobTimeout                   time.Duration
 	store                        *store
@@ -42,6 +45,12 @@ type server struct {
 	scan                         scanState
 }
 
+func (s *server) currentTime() time.Time {
+	if s.clock != nil {
+		return s.clock()
+	}
+	return time.Now()
+}
 func (s *server) jobLimit() time.Duration {
 	if s.jobTimeout > 0 {
 		return s.jobTimeout
@@ -134,7 +143,12 @@ func (s *server) classify(docID, profileID string) {
 	defer span.End()
 	c := classification{ProfileID: p.ID, ProfileVersion: p.Version, SummaryHash: d.Summary.hash(), Status: "running", At: stamp(), TraceID: span.SpanContext().TraceID().String()}
 	s.store.update(docID, func(d *document) { d.Classes[p.ID] = c })
-	out, e := s.model.classify(ctx, d.Summary, p)
+	facts := d.Summary
+	if d.GameWeek != "" {
+		facts.Points = nil
+		facts.Overview = ""
+	}
+	out, e := s.model.classify(ctx, facts, p)
 	if e != nil {
 		c.Status = "failed"
 		c.Error = e.Error()
@@ -148,6 +162,9 @@ func (s *server) classify(docID, profileID string) {
 		c.InputTokens = out.InputTokens
 		// Persist the actual D3 score even if the explanatory LLM is unavailable.
 		s.store.update(docID, func(d *document) { d.Classes[p.ID] = c })
+		if d.GameWeek != "" {
+			return
+		}
 		reason, err := s.agent.memoReason(ctx, d, p, out.Score)
 		if err != nil {
 			c.ReasonError = "Memo explanation is temporarily unavailable"
@@ -160,7 +177,7 @@ func (s *server) classify(docID, profileID string) {
 }
 
 func (s *server) rescore(profileID string, version int) {
-	ctx, cancel := context.WithTimeout(s.ctx, s.jobLimit())
+	ctx, cancel := context.WithTimeout(s.ctx, 45*time.Minute)
 	defer cancel()
 	docs, _ := s.store.list()
 	for _, d := range docs {
@@ -267,6 +284,7 @@ func (s *server) scanFeed(feedID, profileID string) {
 }
 func (s *server) routes() http.Handler {
 	mux := http.NewServeMux()
+	s.gameRoutes(mux)
 	files, _ := fs.Sub(assets, "web")
 	if env("DEV_ASSETS", "") == "1" {
 		files = os.DirFS("web")
@@ -600,6 +618,7 @@ func main() {
 		jobTimeout = v
 	}
 	s := &server{jobTimeout: jobTimeout, preview: preview, store: st, agent: a, model: model, ctx: ctx, imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
+	s.initGame()
 	public := &http.Server{Addr: env("LISTEN_ADDR", ":8080"), Handler: s.routes(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16384}
 	go func() {
 		<-ctx.Done()

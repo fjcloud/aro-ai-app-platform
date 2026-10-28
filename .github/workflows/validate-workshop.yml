@@ -43,5 +43,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: techmeme-terminal-fixture-results
-          path: e2e/results/techmeme-terminal/
+          name: weekly-game-fixture-results
+          path: e2e/results/weekly-game/

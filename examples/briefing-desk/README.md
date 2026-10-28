@@ -1,24 +1,20 @@
 # Signal Desk
 
-News ranked for an investment memo. The default example is a semiconductor fund.
+A simple paper-investment game: **last week's news → your fund's ranking → index ideas → invest → reveal this week's result**.
 
-**Memo → Techmeme → summary → opportunity score /100 → investigate**
+1. Edit the fund memo (semiconductors/components by default).
+2. Load the previous Monday–Sunday from Techmeme's archives. Export the complete collected corpus as JSON, including coverage gaps.
+3. Open a ranked story. DeepSeek compares archived news and proposes up to three long-only ETF index proxies: QQQ, SPY, SMH or XLK.
+4. Allocate the **$10,000 virtual budget**, then reveal the result. The entire portfolio is saved and frozen before market prices are requested.
+5. Compare entry at this week's first available US session open with the latest completed session close. While the week is running, results are explicitly provisional. Play again to start another round.
 
-- Each fetch imports the latest 12 stories; saved stories remain in the feed.
-- d3-mini scores research relevance and materiality against the memo. Positive and
-  negative developments can both score highly. This is neither BUY/SELL nor a
-  confidence percentage or an expected return.
-- Azure DeepSeek explains each score using source key points. The score itself
-  comes from d3-mini's native five-level ordinal head: `100 × expected level / 4`.
-- Edit the memo to re-score existing summaries. Scores and research are tied to
-  the memo version and source-summary hash; outdated research is hidden.
-- Any current scored article can be investigated. Research checks sources and
-  financial implications; exported notes retain sourced ETF references and
-  explicitly hypothetical scenarios. No orders are sent.
+The interface has one column: memo, paper fund and ranked news. Thirty stories are shown initially; Show more reveals the rest. No live orders are sent.
 
-The UI has a memo, a refresh button and a list sorted by score. Open a story for
-key points, investigation and Markdown export. Publisher paywalls use a disclosed
-Techmeme excerpt rather than a fabricated full-article summary.
+d3-mini supplies the actual memo relevance score: `100 × expected ordinal level / 4`. It is not confidence, market direction or predicted profit. Both favorable and adverse news can score highly. Memo edits re-score saved news and invalidate old ideas.
+
+News uses archived Techmeme headlines/excerpts, without fetching today's publisher pages. Imports use daily snapshots, backfill missing primary post IDs, deduplicate publisher URLs and disclose unavailable IDs. This does not include every related discussion link or guarantee full publisher-text coverage.
+
+Game research can only read/search that archived week and consult a fixed index catalog. It cannot call current web or price tools. This remains a historical educational replay: model training knowledge is not erased, so it is not a blind or calibrated backtest. Historical prices come from Yahoo Finance daily data. Returns are gross price-only, excluding dividends, fees and slippage; unavailable data is reported rather than invented.
 
 ## Local development
 
@@ -74,8 +70,8 @@ go vet ./...
 ```
 
 From the workshop root, `make test-terminal` runs the complete HTTP/browser flow
-with explicit fixtures: scoring, sorted cards, memo edits and automatic re-scoring,
-stale-research hiding, investigation, exports and mobile layout. Chromium uses
+with explicit fixtures: seven-day imports, memo re-scoring, bounded research,
+portfolio freezing, positive/negative returns, exports and mobile layout. Chromium uses
 `--use-mock-keychain`.
 
 With the live local services running:

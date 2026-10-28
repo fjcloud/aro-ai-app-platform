@@ -27,6 +27,8 @@ type agent struct {
 	readBudget           int
 }
 type agentJob struct {
+	archiveDocs   map[string]document
+	archiveWeek   replayWeek
 	stage, feedID string
 	refs          map[string]string
 	evidence      []evidence
@@ -114,6 +116,9 @@ func stringProp(description string) map[string]string {
 }
 func toolSpecs() []toolSpec {
 	return []toolSpec{
+		{"read_archive", "Read a source from the archived game week. Use original for the selected news or a source_id returned by search_archive. Never fetch live publisher pages.", schema(map[string]any{"source_id": stringProp("original or an archived source ID")}, "source_id")},
+		{"search_archive", "Search only the pre-cutoff headlines/excerpts in the loaded game week. No current news or prices.", schema(map[string]any{"query": stringProp("Two to five topic words")}, "query")},
+		{"index_universe", "Get the static list of ETF index proxies. No prices, returns or verified constituents.", schema(map[string]any{})},
 		{"get_headlines", "Retrieve current public RSS headlines selected by this scan, with actual URLs and excerpts.", schema(map[string]any{})},
 		{"read_article", "Read a retrieved source by its exact source_id. Use original for the user-supplied article, or an ID returned by search_news. URLs are resolved by the backend; never invent an ID.", schema(map[string]any{"source_id": stringProp("original or an ID returned by search_news")}, "source_id")},
 		{"search_news", "Search the latest 12 Techmeme headlines, matching any query word. Bounded current-feed search, not exhaustive or historical.", schema(map[string]any{"query": stringProp("Two to five relevant keywords")}, "query")},
@@ -136,6 +141,9 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 	}
 	if j.stage == "collect" {
 		allowed = map[string]bool{"get_headlines": true}
+	}
+	if j.stage == "game_ideas" {
+		allowed = map[string]bool{"read_archive": true, "search_archive": true, "index_universe": true}
 	}
 	if j.stage == "investigate" {
 		allowed = map[string]bool{"read_article": true, "search_news": true, "market_snapshot": true, "sec_filings": true, "ecb_fx": true}
@@ -178,7 +186,7 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 			for _, ev := range j.evidence {
 				types[ev.Tool] = true
 			}
-			ready := j.stage == "memo_reason" || j.stage == "collect" && len(j.headlines) > 0 || j.stage == "summarize" && len(j.articles) > 0 || j.stage == "investigate" && types["read_article"] && types["search_news"] && types["market_snapshot"]
+			ready := j.stage == "game_ideas" && types["read_archive"] && types["search_archive"] && types["index_universe"] || j.stage == "memo_reason" || j.stage == "collect" && len(j.headlines) > 0 || j.stage == "summarize" && len(j.articles) > 0 || j.stage == "investigate" && types["read_article"] && types["search_news"] && types["market_snapshot"]
 			if ready {
 				payload["tools"] = []any{}
 				payload["text"] = map[string]any{"format": researchFinalFormat(j)}
@@ -316,6 +324,9 @@ func (a *agent) runTool(ctx context.Context, j *agentJob, name string, args json
 	dec.DisallowUnknownFields()
 	if len(args) > 4096 || dec.Decode(&in) != nil || dec.Decode(new(any)) != io.EOF || string(args) == "null" {
 		return nil, "", errors.New("Invalid arguments")
+	}
+	if j.stage == "game_ideas" {
+		return a.runGameTool(j, name, in.SourceID, in.Query)
 	}
 	allowed := j.stage == "investigate" && (name == "read_article" || name == "search_news" || name == "market_snapshot" || name == "sec_filings" || name == "ecb_fx") || j.stage == "summarize" && name == "read_article" || j.stage == "collect" && name == "get_headlines"
 	if !allowed {

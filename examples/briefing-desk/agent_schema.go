@@ -14,6 +14,13 @@ func researchFinalFormat(j *agentJob) map[string]any {
 	}
 	var shape map[string]any
 	switch j.stage {
+	case "game_ideas":
+		ids := []string{}
+		for _, e := range j.evidence {
+			ids = append(ids, e.ID)
+		}
+		idea := schema(map[string]any{"symbol": enum([]string{"QQQ", "SPY", "SMH", "XLK"}), "thesis": text(20, 600), "risk": text(10, 400), "sources": array(enum(ids), 1, 6)}, "symbol", "thesis", "risk", "sources")
+		shape = schema(map[string]any{"comment": text(10, 700), "ideas": array(idea, 0, 3)}, "comment", "ideas")
 	case "memo_reason":
 		shape = schema(map[string]any{"reason": text(20, 700), "point_ids": array(map[string]any{"type": "string", "pattern": "^P[1-5]$"}, 1, 5)}, "reason", "point_ids")
 	case "collect":

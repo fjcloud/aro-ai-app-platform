@@ -1,59 +1,16 @@
-# Signal Desk: memo scoring validation
+# Signal Desk: weekly paper game
 
-The current app is a simple memo editor and news list sorted by opportunity score.
-The default memo targets semiconductors and electronic components. BUY/SHORT
-triage and the ticker dashboard belong to the previous revision (`84c756e`).
+Validated locally on 28 October 2026. A replacement ARO deployment remains untested.
 
-## Scoring contract
+- **Real corpus:** 289 distinct primary Techmeme stories from 19–25 October. One unavailable archive ID (`261021p29`) is disclosed in the UI and JSON export. Headlines/excerpts are archived source material, not full publisher articles or generated full-text summaries.
+- **Real scoring:** all 289 ranked against the semiconductor memo with native d3-mini on Apple Metal, FP16. MPS remains unvalidated upstream; this does not establish accelerator parity or investment accuracy.
+- **Real research:** Azure DeepSeek-V4-Pro `2026-04-23` uses `read_archive`, `search_archive` and `index_universe` only. Current-web and price tools are unavailable to the replay agent.
+- **Real settlement:** a $1,000 SMH test position entered at the 26 October open and valued at the 27 October completed close returned +$50.12. This is one replay outcome, not a future return estimate. The whole fund was $10,050.12; the week was explicitly incomplete. The round was reset afterward; prior results are retained.
+- **Browser fixtures:** seven archive days, 21 news, memo edits/re-scoring, two index investments, +$100 and −$50 outcomes, $10,050 final fund, immutable committed choices, full JSON export and mobile layout. Fixture clocks exclude the current incomplete session.
+- **Go checks:** archive cutoff and tool restrictions, quote identity, invalid/missing prices, future-close exclusion, budget checks, server-owned symbols and persisted choices before market requests. Regression/race tests and vet run with the application.
 
-D3's native `score` question evaluates five ordered relevance/materiality levels.
-The app validates complete input coverage, all five probabilities, their sum and
-the agreement between the expected ordinal level and returned score. It normalizes
-`0–4` to `0–100`. Model confidence is a separate field and is not displayed as the
-opportunity score. The input contains the investment memo and source-summary facts;
-generated market commentary is excluded.
+Prices are observed daily opens/closes, not executable quotes. Returns exclude dividends, fees and slippage. Research is restricted to archived evidence, but historical model knowledge cannot be eliminated; do not describe this as a blind backtest.
 
-Azure DeepSeek generates a concise memo-specific explanation and cites existing
-source key-point IDs. It cannot change the D3 score. An explanation failure does
-not discard a successfully computed score. High and low scores are research
-priorities, not market direction, profit estimates or probabilities of success.
-Any current scored article can launch read-only investigation.
+Evidence: [live run](results/weekly-game/live.json), [live UI](results/weekly-game/live.png), [fixture run](results/weekly-game/fixture.json), [fixture UI](results/weekly-game/fixture.png).
 
-## Verified
-
-- Go race/vet checks and the workshop regression suite pass.
-- The browser fixture workflow validates descending score order, simple English UI,
-  preservation of an unsaved memo during refresh, memo edits triggering re-scoring,
-  hiding old research after a memo change, research export and mobile layout.
-- The active model configuration is Azure DeepSeek-V4-Pro `2026-04-23`, matching
-  the workshop, with actual pinned d3-mini on Apple MPS/Metal in FP16. CPU fallback
-  is disabled. MPS remains unvalidated upstream; this is functional validation.
-- A live local browser run scored the saved real news, displayed memo-specific
-  explanations and completed an investigation from a current scored article.
-- A separate live D3 test evaluates the same real semiconductor and retail stories
-  against two different memos, without changing the application's memo or scores.
-
-Evidence:
-
-- [Live memo-scored news](results/techmeme-terminal/memo-live.json)
-- [Simple live UI](results/techmeme-terminal/memo-live.png)
-- [Actual D3 sensitivity to two memos](results/techmeme-terminal/memo-sensitivity.json)
-- [Fixture workflow](results/techmeme-terminal/fixture-e2e.json)
-- [Fixture UI](results/techmeme-terminal/fixture-e2e.png)
-- [Deployed Azure model/version](results/techmeme-terminal/azure-deployment.json)
-
-Chromium always uses mock-keychain. Fixture providers are explicitly labeled and
-are separate from live inference. The preceding BUY/SHORT and three-story records
-are historical evidence of earlier versions, not the current scoring contract.
-
-## Research and deployment limits
-
-Publisher excerpts are labeled. Quote identity/currency/timestamps are validated;
-invalid or >72-hour-old references cannot price a scenario. Detailed exported
-research can contain hypothetical ETF scenarios whose gross P&L excludes costs;
-no model-generated reference price is accepted and no order tools exist.
-
-The former ARO lab is offline and its replacement is being recreated. The current
-version has not been validated on replacement OpenShift AI/T4 endpoints. Keep
-OAuth, restricted-v2, persistent storage and Git → Tekton → Argo CD deployment.
-See [local setup](../examples/briefing-desk/README.md) for the working Mac/Azure path.
+Run `make test`, `make test-terminal`, then `node e2e/briefing-desk-live-local.cjs` with the live local services. Every Chromium launch includes `--use-mock-keychain`.

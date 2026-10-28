@@ -103,6 +103,9 @@ func newFetcher() *fetcher {
 	}}}
 }
 func (f *fetcher) get(ctx context.Context, raw string) ([]byte, string, string, error) {
+	return f.getLimit(ctx, raw, 2*1024*1024)
+}
+func (f *fetcher) getLimit(ctx context.Context, raw string, limit int64) ([]byte, string, string, error) {
 	if _, e := publicURL(raw); e != nil {
 		return nil, "", "", e
 	}
@@ -120,9 +123,9 @@ func (f *fetcher) get(ctx context.Context, raw string) ([]byte, string, string, 
 	if res.StatusCode != 200 {
 		return nil, "", "", fmt.Errorf("Public source returned HTTP %d", res.StatusCode)
 	}
-	b, e := io.ReadAll(io.LimitReader(res.Body, 2*1024*1024+1))
-	if e != nil || len(b) > 2*1024*1024 {
-		return nil, "", "", errors.New("Source exceeds the 2 MiB retrieval limit")
+	b, e := io.ReadAll(io.LimitReader(res.Body, limit+1))
+	if e != nil || int64(len(b)) > limit {
+		return nil, "", "", errors.New("Source exceeds the retrieval size limit")
 	}
 	return b, res.Request.URL.String(), res.Header.Get("Content-Type"), nil
 }

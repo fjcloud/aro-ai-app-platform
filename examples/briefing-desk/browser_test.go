@@ -64,6 +64,19 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 			reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]any{"type": "message", "content": []any{map[string]string{"type": "output_text", "text": string(text)}}}}})
 		}
 		switch {
+		case strings.HasPrefix(first.Content, "Research historical index ideas"):
+			switch count {
+			case 0:
+				call("read_archive", `{"source_id":"original"}`)
+				return
+			case 1:
+				call("search_archive", `{"query":"chip"}`)
+				return
+			case 2:
+				call("index_universe", "{}")
+				return
+			}
+			finish(map[string]any{"comment": "Fixture archive-only research for the fund memo.", "ideas": []gameIdea{{Symbol: "SMH", Thesis: "Fixture semiconductor exposure based on archived chip demand.", Risk: "Fixture sector concentration and uncertain market transmission.", Sources: []string{"E1", "E3"}}, {Symbol: "QQQ", Thesis: "Fixture broad technology alternative to sector concentration.", Risk: "Fixture index dilution and uncertain financial transmission.", Sources: []string{"E1", "E3"}}}})
 		case strings.HasPrefix(first.Content, "Explain this memo opportunity score:"):
 			finish(memoRationale{Reason: "Fixture explanation links the source evidence to the fund memo.", PointIDs: []string{"P1"}})
 		case strings.HasPrefix(first.Content, "Call get_headlines"):
@@ -140,6 +153,22 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 		body := ""
 		typ := "text/html"
 		switch {
+		case strings.Contains(r.URL.Hostname(), "techmeme") && strings.Contains(r.URL.Path, "/h"):
+			day := strings.Split(strings.Trim(r.URL.Path, "/"), "/")[0]
+			date, _ := time.Parse("060102", day)
+			hour := 12
+			if strings.HasSuffix(r.URL.Path, "h2355") {
+				hour = 23
+				date = date.Add(55 * time.Minute)
+			}
+			if strings.HasSuffix(r.URL.Path, "h0000") {
+				hour = 0
+			}
+			date = date.Add(time.Duration(hour) * time.Hour)
+			body = "<script>var pgrdad='" + date.Format("January 2, 2006, 3:04 PM") + "';</script>"
+			for i, name := range []string{"bullish", "bearish", "neutral"} {
+				body += fmt.Sprintf(`<div class="item"><span pml="%sp%d"></span><div class="ii"><a class="ourh" href="https://fixture.example/%s/%s">Fixture %s chip news</a> — Archived fixture excerpt: a concrete source fact used to test the complete historical game.</div></div>`, day, i+1, day, name, name)
+			}
 		case strings.Contains(r.URL.Hostname(), "techmeme"):
 			typ = "text/xml"
 			body = `<rss><channel>`
@@ -150,7 +179,13 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 		case strings.Contains(r.URL.Hostname(), "finance.yahoo"):
 			typ = "application/json"
 			symbol := strings.TrimPrefix(r.URL.Path, "/v8/finance/chart/")
-			body = fmt.Sprintf(`{"chart":{"result":[{"meta":{"symbol":%q,"currency":"USD","regularMarketPrice":100,"regularMarketTime":%d}}]}}`, symbol, time.Now().Unix())
+			loc, _ := time.LoadLocation("America/New_York")
+			start := time.Date(2026, 10, 26, 9, 30, 0, 0, loc)
+			close := 110.0
+			if symbol == "QQQ" {
+				close = 95
+			}
+			body = fmt.Sprintf(`{"chart":{"result":[{"meta":{"symbol":%q,"currency":"USD"},"timestamp":[%d,%d],"indicators":{"quote":[{"open":[100,100],"close":[%f,%f]}]}}]}}`, symbol, start.Unix(), start.AddDate(0, 0, 1).Unix(), close, close)
 		default:
 			name := strings.Trim(r.URL.Path, "/")
 			body = fmt.Sprintf(`<html><title>Fixture %s chip story</title><article>%s</article></html>`, name, strings.Repeat("A synthetic publisher text with enough readable content for the retrieval tool. ", 5))
@@ -163,8 +198,10 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 	model, _ := newDecisionClient(decision.URL, "fixture-d3", "")
 	st, _ := openStore(t.TempDir())
 	s := &server{ctx: context.Background(), store: st, agent: a, model: model, imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
+	s.clock = fixtureTime
+	s.initGame()
 	app := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/api/state" {
+		if r.URL.Path == "/api/state" || r.URL.Path == "/api/game" {
 			rec := httptest.NewRecorder()
 			s.routes().ServeHTTP(rec, r)
 			var data map[string]any

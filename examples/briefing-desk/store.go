@@ -176,8 +176,8 @@ func (s *store) add(url string) (document, bool, error) {
 			return copyDocument(d), false, nil
 		}
 	}
-	if len(s.docs) >= 120 {
-		return document{}, false, errors.New("Library is limited to 120 articles in this workshop")
+	if len(s.docs) >= 2000 {
+		return document{}, false, errors.New("Library is limited to 2000 articles in this workshop")
 	}
 	d := document{ID: id(), URL: url, Status: "queued", Created: stamp(), Events: []event{{Stage: "queued", Message: "Waiting for the retrieval agent", At: stamp()}}, Classes: map[string]classification{}, Research: map[string]research{}}
 	if e := atomicJSON(filepath.Join(s.dir, "documents", d.ID+".json"), d); e != nil {
