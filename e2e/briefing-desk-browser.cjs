@@ -5,7 +5,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
  const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});
  try{
   const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.APP_URL);
-  const state=()=>page.evaluate(async()=>await(await fetch('/api/game')).json());let s=await state();assert.equal(s.validation_fixture,true);
+  const state=()=>page.evaluate(async()=>await(await fetch('/api/game')).json());let s=await state();assert.equal(s.validation_fixture,true);await expect(page.locator('#news-file')).toBeHidden();
   await page.locator('#fetch').click();await expect.poll(async()=>{s=await state();return s.game.status==='ready'&&s.total===21&&s.ranked===21;},{timeout:30000}).toBe(true);
   await expect(page.locator('.story')).toHaveCount(21);await expect(page.locator('.opportunity strong').first()).toHaveText('90');await expect(page.locator('#preview')).toBeVisible();
   // Editing the memo re-ranks the saved archive without re-importing live news.

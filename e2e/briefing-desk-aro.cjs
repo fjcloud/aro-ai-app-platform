@@ -6,7 +6,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
  const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});
  try{
   const context=await browser.newContext({viewport:{width:1440,height:1000},...(process.env.BROWSER_STATE?{storageState:process.env.BROWSER_STATE}:{})});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(url);
-  const state=()=>page.evaluate(async()=>await(await fetch('/api/game')).json());let s=await state();assert.ok(!s.preview&&!s.validation_fixture);
+  const state=()=>page.evaluate(async()=>await(await fetch('/api/game')).json());let s=await state();assert.ok(!s.preview&&!s.validation_fixture);await expect(page.locator('#news-file')).toBeHidden();
   const model=JSON.parse(fs.readFileSync(process.env.D3_METADATA,'utf8')).data[0];assert.equal(model.device,'cuda:0');assert.equal(model.dtype,'float16');const config=await page.evaluate(async()=>await(await fetch('/api/state')).json());assert.equal(config.agent,'maas-vllm-inference-1/deepseekv4pro');
   if(s.game.round.status!=='draft'){await page.locator('#reset').click();await expect.poll(async()=>(await state()).game.round.status).toBe('draft');}
   let imported=Boolean(s.game.manifest.imported_at),collectionError='';
