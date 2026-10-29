@@ -118,19 +118,24 @@ def developer():
     latest = max(runs, key=lambda r: r['metadata']['creationTimestamp'])
     require(any(c['type'] == 'Succeeded' and c['status'] == 'True' for c in latest.get('status', {}).get('conditions', [])), 'Latest Tekton build Succeeded')
     route = resource('route', app, ns)
-    require(route['spec'].get('tls', {}).get('termination') == 'reencrypt' and route['spec']['tls'].get('insecureEdgeTerminationPolicy') == 'Redirect', 'HTTPS reencrypt Route redirects HTTP')
+    require(route['spec'].get('tls', {}).get('termination') == 'edge' and route['spec']['tls'].get('insecureEdgeTerminationPolicy') == 'Redirect', 'HTTPS edge Route redirects HTTP')
     url = 'https://' + route['spec']['host']
     with urllib.request.urlopen(url + '/healthz', timeout=30) as response:
         require(json.load(response) == {'status': 'ok'}, 'Public HTTPS health endpoint')
-    token = oc('whoami', '-t')
-    require(bool(token), 'OpenShift user token available for authenticated app check')
-    request = urllib.request.Request(url, headers={'Authorization':'Bearer ' + token})
     class NoRedirect(urllib.request.HTTPRedirectHandler):
         def redirect_request(self, request, fp, code, msg, headers, newurl):
             return None
-    with urllib.request.build_opener(NoRedirect).open(request, timeout=30) as response:
+    with urllib.request.build_opener(NoRedirect).open(url, timeout=30) as response:
         page = response.read().decode('utf-8')
-    require('A week of news. A paper investment.' in page, 'Authenticated Signal Desk UI')
+    require('A week of news. A paper investment.' in page, 'Signal Desk UI is public without credentials or redirects')
+    with urllib.request.urlopen(url + '/api/game', timeout=30) as response:
+        require('game' in json.load(response), 'Game API is public without credentials')
+    request = urllib.request.Request(url + '/mcp', data=json.dumps({
+        'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list', 'params': {}}).encode(),
+        headers={'Content-Type': 'application/json', 'Accept': 'application/json, text/event-stream'})
+    with urllib.request.urlopen(request, timeout=30) as response:
+        tools = {t['name'] for t in json.load(response)['result']['tools']}
+    require(tools == {'list_news','read_archive','search_archive','index_universe'}, 'Public MCP discovers exactly the four read-only tools without a token')
     if os.environ.get('EXPECT_UPDATED_APP') == 'true':
         require('High relevance only' in html.unescape(page), 'Shipped update includes the relevance filter')
     spec = deployment['spec']['template']['spec']
@@ -142,10 +147,10 @@ def developer():
     require(requested_image == container['image'], 'Successful Tekton target matches the deployed image')
     resources = container.get('resources', {})
     require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '500m', 'memory': '512Mi'}, 'Resource requests and limits match AGENTS.md')
-    require(all(container.get(probe, {}).get('httpGet', {}).get('path') == '/healthz' and container[probe]['httpGet'].get('port') == 8443 and container[probe]['httpGet'].get('scheme') == 'HTTPS' for probe in ['livenessProbe', 'readinessProbe']), 'Liveness and readiness probes use HTTPS /healthz:8443')
+    require(all(container.get(probe, {}).get('httpGet', {}).get('path') == '/healthz' and container[probe]['httpGet'].get('port') == 'http' and container[probe]['httpGet'].get('scheme') == 'HTTP' for probe in ['livenessProbe', 'readinessProbe']), 'Liveness and readiness probes reach the app directly over HTTP')
     require(spec.get('serviceAccountName') == 'signal-desk', 'Dedicated runtime identity')
-    require(any(e.get('name')=='LISTEN_ADDR' and e.get('value')=='127.0.0.1:8080' for e in container.get('env',[])), 'Go backend listens behind OAuth only')
-    require(any(c['name']=='oauth-proxy' for c in spec['containers']), 'OpenShift OAuth proxy present')
+    require(any(e.get('name')=='LISTEN_ADDR' and e.get('value')==':8080' for e in container.get('env',[])), 'Go backend listens on the Service port')
+    require(len(spec['containers']) == 1 and spec['containers'][0]['name'] == app, 'One app container without an authentication proxy')
     security = spec.get('securityContext', {})
     require(security.get('runAsNonRoot') is True and security.get('seccompProfile', {}).get('type') == 'RuntimeDefault' and 'runAsUser' not in security, 'Deployment uses portable restricted pod security')
     cs = container.get('securityContext', {})

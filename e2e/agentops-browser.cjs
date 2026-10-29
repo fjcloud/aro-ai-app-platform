@@ -3,9 +3,9 @@
 const{chromium,expect}=require('@playwright/test');
 const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),images=path.join(root,'content/modules/ROOT/assets/images');
-const base=process.env.RHOAI_URL?.replace(/\/$/,''),app=process.env.APP_URL?.replace(/\/$/,''),state=process.env.BROWSER_STATE,tokenFile=process.env.MCP_TOKEN_FILE;
+const base=process.env.RHOAI_URL?.replace(/\/$/,''),app=process.env.APP_URL?.replace(/\/$/,''),state=process.env.BROWSER_STATE;
 const namespace=process.env.APP_NAMESPACE||'signal-desk-dev';
-assert.ok(base&&app&&state&&tokenFile,'Set RHOAI_URL, APP_URL, BROWSER_STATE and MCP_TOKEN_FILE');
+assert.ok(base&&app&&state,'Set RHOAI_URL, APP_URL and BROWSER_STATE');
 const screenshot=async(page,name)=>{if(process.env.CAPTURE_GUIDE==='true')await page.screenshot({path:path.join(images,'signal-desk-playground-'+name+'.png'),fullPage:true})};
 (async()=>{const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});
 try{const context=await browser.newContext({storageState:state,viewport:{width:1440,height:1000}}),page=await context.newPage();
@@ -23,14 +23,15 @@ await page.getByRole('tab',{name:'MCP',exact:true}).click();
 await expect(page.getByRole('row').filter({hasText:'Signal-Desk'})).toBeVisible({timeout:30000});
 await screenshot(page,'mcp');
 await page.getByRole('checkbox').check();
-await expect(page.getByTestId('mcp-token-input')).toBeVisible();
-await screenshot(page,'authorize');
-await page.getByTestId('mcp-token-input').fill(fs.readFileSync(tokenFile,'utf8').trim());
-await page.getByTestId('mcp-token-authorize-button').click();
-await expect(page.getByText('Connection successful',{exact:true})).toBeVisible({timeout:30000});
-await page.getByTestId('modal-submit-button').click();
+const connection=page.getByTestId('mcp-server-success-modal');
+await expect(connection).toBeVisible({timeout:60000});
+await expect(connection).toContainText('4 out of 4 tools are active.');
 await expect(page.getByTestId('mcp-token-input')).toBeHidden();
-console.log('MCP connection authorized.');
+await screenshot(page,'connected');
+await connection.getByTestId('modal-submit-button').click();
+await expect(page.getByRole('button',{name:'View tools for Signal-Desk',exact:true})).toContainText('4 active',{timeout:30000});
+await expect(page.getByTestId('mcp-token-input')).toBeHidden();
+console.log('Public MCP connected without a token.');
 
 const tools=page.getByRole('button',{name:/View tools/i});
 if(await tools.count()){
@@ -48,7 +49,7 @@ const names=[...new Set(calls.map(x=>x.name))];for(const name of ['search_archiv
 await page.waitForTimeout(1000);await page.getByRole('tab',{name:'Model',exact:true}).click();
 await screenshot(page,'answer');
 
-const result={passed:true,project:namespace,model:done.model,status:done.status,response_id:done.id,tools:names,at:new Date().toISOString()};
+const result={passed:true,project:namespace,model:done.model,status:done.status,response_id:done.id,tools:names,mcp_authentication:'none',at:new Date().toISOString()};
 fs.writeFileSync(root+'/e2e/results/signal-desk-aro/playground-current.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 
 }finally{await browser.close()}})().catch(e=>{console.error(e.stack);process.exitCode=1});

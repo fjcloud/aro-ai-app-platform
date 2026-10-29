@@ -33,7 +33,11 @@ D3 rejected both an invalid token and a valid workspace-pod token lacking model 
 
 Evidence: [actual developer API acceptance](results/signal-desk-aro/developer-apis.txt). Reproduce with `E2E_NS=... DEV_POD=... python3 e2e/check.py model-apis`. This executes the documentation and makes real inference requests, without printing credentials or full model responses. All guide shell blocks passed Bash syntax checks, the Antora build passed, and 33 workshop/17 template Python checks passed.
 
-## Signal Desk naming and illustrated Playground — 29 October 2026
+## Signal Desk naming and illustrated Playground — earlier authenticated app
+
+This section records the rename before public access was enabled. The latest validation below supersedes its app/MCP authentication setup.
+
+### 29 October 2026
 
 The active template, namespaces, registry paths, pipeline and Route now use `signal-desk`. The stable ARO template branch is `aro-signal-desk`; the earlier branch remains available for existing links. Dev Spaces was launched from the renamed template, and its CLI uses `system:serviceaccount:signal-desk-dev:workshop-developer`.
 
@@ -43,4 +47,14 @@ The new app was built by Tekton and delivered by Argo CD at revision `03d70d9e52
 
 The native OpenShift AI Playground was created in the new project through the UI. The illustrated guide records actual selection of the runtime subscription, system instructions, empty token authorization dialog, four available MCP tools and a completed answer. The completed native Responses stream contains actual `search_archive`, `list_news`, `index_universe` and `read_archive` calls. Tokens are absent from the captured images. All browser launches use `--use-mock-keychain`.
 
-Current evidence: [five developer API probes](results/signal-desk-aro/developer-apis-current.txt), [delivery checks](results/signal-desk-aro/delivery-current.txt), [browser replay](results/signal-desk-aro/replay.json), [replay UI](results/signal-desk-aro/replay.png), [new MLflow workspace and spans](results/signal-desk-aro/renamed-deployment.json), [actual Playground calls](results/signal-desk-aro/playground-current.json). Earlier results above remain historical evidence.
+Evidence from the rename: [five developer API probes](results/signal-desk-aro/developer-apis-current.txt), [delivery checks](results/signal-desk-aro/delivery-current.txt), [browser replay](https://github.com/fjcloud/aro-ai-app-platform/blob/cab5a1813b5036e18a9c5f39524de75b06156518/e2e/results/signal-desk-aro/replay.json), [replay UI](https://github.com/fjcloud/aro-ai-app-platform/blob/cab5a1813b5036e18a9c5f39524de75b06156518/e2e/results/signal-desk-aro/replay.png), [new MLflow workspace and spans](results/signal-desk-aro/renamed-deployment.json), [actual Playground calls](https://github.com/fjcloud/aro-ai-app-platform/blob/cab5a1813b5036e18a9c5f39524de75b06156518/e2e/results/signal-desk-aro/playground-current.json). Earlier results above remain historical evidence.
+
+## Public Signal Desk and MCP — 29 October 2026
+
+Signal Desk now uses a single restricted-v2 app container, a direct Service on port 8080 and an HTTPS edge Route with HTTP redirect. The OAuth sidecar, cookie/TLS secrets, OAuth image stream, delegation binding and MCP token identity were removed from the active lab. The runtime ServiceAccount, backend MaaS key, service CA, MLflow access and persistent data remain configured.
+
+Unauthenticated requests to the root page, game API and MCP discovery passed without redirects or credentials; discovery returned exactly the four read-only tools. Tekton build `build-app-p8578` succeeded and Argo CD delivered revision `e403d6bb79441b6108f63e5b9188d702fd8d791d`. The deployed image digest, scoped workspace commit, non-privileged build and single-container restricted-v2 checks passed.
+
+The full 289-article browser replay passed in a fresh browser context with no saved authentication state or cookies. A separate fresh app research verified that the native DeepSeek Responses loop and MLflow export still work. In the OpenShift AI Playground, selecting Signal-Desk opens the success confirmation directly, without any token entry; after Save, its completed Responses stream contains real archive search, read and index catalog calls. The guide screenshots were refreshed from that actual UI.
+
+Evidence: [public deployment and endpoint checks](results/signal-desk-aro/public-delivery.txt), [public browser replay](results/signal-desk-aro/replay.json), [fresh research and MLflow](results/signal-desk-aro/public-access.json), [Playground without MCP authentication](results/signal-desk-aro/playground-current.json). OpenShift AI itself retains cluster login; only the app and its read-only MCP connector are public. Workshop state is shared between visitors.

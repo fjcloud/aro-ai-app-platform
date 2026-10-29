@@ -4,7 +4,7 @@ The app has produced an investment hypothesis. Verify how it reached that hypoth
 
 [NOTE]
 ====
-*Persona:* Developer, then Platform Engineer for the Playground token +
+*Persona:* Developer +
 *Time:* 20–30 minutes +
 *Outcome:* Actual archived evidence, visible MLflow traces and the same read-only tools in the Playground.
 ====
@@ -21,7 +21,7 @@ The agent should use information from the archived week only. Its tools cannot r
 
 == Exercise the same evidence in the Playground
 
-Gen AI Playground and external MaaS models are *Technology Preview* in OpenShift AI 3.5. The app's MCP connector uses Streamable HTTP behind its OpenShift OAuth proxy.
+Gen AI Playground and external MaaS models are *Technology Preview* in OpenShift AI 3.5. The app's public MCP connector uses Streamable HTTP over HTTPS. It needs no Signal Desk token.
 
 === 1. Select the model and runtime subscription
 
@@ -46,18 +46,9 @@ The application must be deployed and its news loaded before this step. Open *MCP
 
 image::signal-desk-playground-mcp.png[Select the Signal-Desk MCP server]
 
-From the *bastion terminal*, the facilitator creates a short-lived, app-scoped token:
+The four tools connect directly without an authorization dialog or token. In *Connection successful*, confirm *4 out of 4 tools are active*, then click *Save*. The Playground itself still uses your OpenShift AI session and the selected MaaS subscription.
 
-[source,sh,role=execute]
-----
-oc create token signal-desk-playground -n signal-desk-dev --duration=15m
-----
-
-Paste it into *Access token*, click *Authorize*, wait for *Connection successful*, then click *Save*.
-
-image::signal-desk-playground-authorize.png[The MCP authorization dialog before entering a token]
-
-This token permits the connector's OAuth access check against this application's Service; it cannot read Secrets or edit workloads. It is separate from the MaaS credential. D3 needs no key. Keep tokens out of prompts, Git and screenshots. If authorization expires, create a new token and authorize again.
+image::signal-desk-playground-connected.png[Public MCP connection with four active tools and no token]
 
 Expect *4 tools enabled*. Click the *4 active* button (*View tools*) to inspect `list_news`, `read_archive`, `search_archive` and `index_universe`.
 
