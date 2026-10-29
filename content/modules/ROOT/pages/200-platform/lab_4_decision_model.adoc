@@ -6,7 +6,7 @@ DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 an
 [NOTE]
 ====
 *Persona:* Platform Engineer +
-*Time:* 15 minutes active; allow time for the runtime build and model download. +
+*Time:* 5 minutes active; allow time for the first model download. +
 *Requires:* Classic ARO 4.21+, cluster-admin, Azure permissions, CPU headroom and T4 capacity.
 ====
 
@@ -14,7 +14,7 @@ d3-mini is a 4.54B-parameter community decision model from https://huggingface.c
 
 Red Hat https://www.redhat.com/en/about/press-releases/red-hat-completes-acquisition-neural-magic-fuel-optimized-generative-ai-innovation-across-hybrid-cloud[acquired Neural Magic], a leading contributor to vLLM, in January 2025.
 
-The model revision, serving source and CUDA image are pinned in `deploy/decision/runtime/Dockerfile` and the preparation helper. FP16 fits on a single 16 GB T4. Do not run another GPU model on the same card for this exercise.
+The model revision, serving source and CUDA image are pinned in `deploy/decision/runtime/Dockerfile` and the runtime registry. FP16 fits on a single 16 GB T4. Do not run another GPU model on the same card for this exercise.
 
 == Check GPU discovery and the driver
 
@@ -33,17 +33,18 @@ Continue when `GPU` is `1`. A Ready node alone does not prove that its GPU drive
 
 == Deploy d3-mini
 
-The platform prepares the delivery namespaces and developer identity. Then Tekton builds the pinned custom runtime, caches the model and creates the KServe service:
+The runtime image is already built and pinned. Create the model resources directly:
 
 [source,sh,role=execute]
 ----
 python3 scripts/prepare-developer.py
-python3 scripts/prepare-decision-model.py
+oc apply -k deploy/decision
+oc wait inferenceservice/d3-mini -n decision-serving --for=condition=Ready --timeout=1800s
 oc get inferenceservice,servingruntime,pvc -n decision-serving
 oc get pods -n decision-serving
 ----
 
-The helper needs a clean, committed workshop checkout reachable from GitHub because Tekton builds that exact Git revision. It preserves the original CPU pools. To repeat setup after a successful runtime build, use `python3 scripts/prepare-decision-model.py --reuse-runtime`.
+OpenShift AI starts the published runtime on the T4. On its first start, it downloads the pinned model into the persistent cache. Later starts reuse those weights. No image build, Git credentials or Tekton runtime pipeline is needed in this lab.
 
 Expect a Ready `d3-mini` inference service and no public model Route. The application endpoint is fixed:
 

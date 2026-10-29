@@ -1,0 +1,28 @@
+{
+  "live_market_data": true,
+  "model_calls": 0,
+  "passed": true,
+  "quote": {
+    "symbol": "SMH",
+    "entry_date": "2026-10-29",
+    "exit_date": "2026-10-29",
+    "entry_price": 559.0910034179688,
+    "exit_price": 560.865,
+    "return_pct": 0.31730014813080576,
+    "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/SMH?events=div%2Csplits\u0026interval=1d\u0026period1=1793246400\u0026period2=1793283931",
+    "retrieved": "2026-10-29T14:25:31Z",
+    "week_complete": false,
+    "basis": "First US session open after the fixed news cutoff → latest available regular-market quote. Intraday and delayed quotes are timestamped. Gross price return; dividends, fees and slippage excluded.",
+    "quote_time": "2026-10-29T14:25:31Z",
+    "price_type": "latest available quote (may be delayed)"
+  },
+  "week": {
+    "id": "2026-10-26_2026-10-28",
+    "news_start": "2026-10-26",
+    "news_end": "2026-10-28",
+    "cutoff": "2026-10-29T04:05:00Z",
+    "market_start": "2026-10-29",
+    "market_end": "",
+    "valuation_mode": "latest"
+  }
+}

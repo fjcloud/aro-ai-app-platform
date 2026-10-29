@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: decision-serving
+  labels:
+    opendatahub.io/dashboard: 'true'

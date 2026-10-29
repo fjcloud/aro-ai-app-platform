@@ -126,6 +126,7 @@ func TestClassifierRejectsIncompleteCoverage(t *testing.T) {
 	}
 }
 func testServer(t *testing.T) *server {
+	t.Setenv("NEWS_CORPUS", "live")
 	t.Helper()
 	st, e := openStore(t.TempDir())
 	if e != nil {

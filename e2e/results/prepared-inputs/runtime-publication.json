@@ -1,0 +1,10 @@
+{
+  "published": true,
+  "anonymous_manifest_verified": true,
+  "image": "ghcr.io/fjcloud/d3-mini-runtime@sha256:bfde28f35d78b1f4ced10bf2ddff7f1e7d030459ce0938ec65620c1d51daa411",
+  "source_revision": "fe03062db8b6f407410531cab39936de4da64f8d",
+  "workflow": "https://github.com/fjcloud/aro-ai-app-platform/actions/runs/40888536498",
+  "model_revision": "a475367de0d8133a3c1a2a0dc12303d89cfa2ab4",
+  "cpu_import_check": "passed",
+  "live_gpu_acceptance": "recorded separately"
+}

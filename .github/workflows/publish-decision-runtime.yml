@@ -2,7 +2,7 @@ name: publish decision runtime
 on:
   workflow_dispatch:
   push:
-    branches: [main, prepared-runtime-and-news]
+    branches: [main]
     paths:
       - deploy/decision/runtime/Dockerfile
       - .github/workflows/publish-decision-runtime.yml

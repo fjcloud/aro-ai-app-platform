@@ -25,18 +25,18 @@ This requires direct D3 access from Dev Spaces and the Dev Spaces-to-Responses p
 
 Platform/usage/protocol/model-apis probes make billable model calls. `APP_NAME` defaults to `signal-desk`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
 
-Validate the UI with a full archived-week import, real T4 scores, an actual native Responses tool loop, a virtual allocation and subsequent-week observed prices. Verify unavailable archive IDs, incomplete-week labels and errors. Confirm an MLflow research trace and the same archive tools in the native Playground. The app and read-only MCP endpoint are public over HTTPS; model keys remain in backend Secrets. Participants share the workshop state. Every Chromium launch includes `--use-mock-keychain`.
+Validate the UI with the fixed repository news corpus, real T4 scores, an actual native Responses tool loop, a virtual allocation and the latest timestamped market quote. Verify that entry follows the fixed news cutoff and that refreshing the quote cannot change the portfolio. Confirm an MLflow research trace and the same archive tools in the native Playground. The app and read-only MCP endpoint are public over HTTPS; model keys remain in backend Secrets. Participants share the workshop state. Every Chromium launch includes `--use-mock-keychain`.
 
 For the public Route browser test, save model metadata from the direct d3-mini probe in Lab 2.2, then run with a fresh browser context:
 
 ```sh
 APP_URL=https://your-app-route \
-D3_METADATA=/private/path/d3-models.json NEWS_IMPORT_FILE=/path/to/current-week-news.json \
+D3_METADATA=/private/path/d3-models.json \
 EXPECT_UPDATED_APP=true APPLICATION_REVISION=your-deployed-git-revision \
   node e2e/briefing-desk-aro.cjs
 ```
 
-The test tries direct collection first. A blocked collection fails unless an explicit import file is supplied; the report records that recovery. It never invents news, scores or prices.
+The live script detects the repository-snapshot mode and requires timestamped latest quotes. It also retains earlier archived-week acceptance; only that legacy mode accepts `NEWS_IMPORT_FILE`. The separate `saved-news-browser.cjs` fixture loads the real embedded corpus with explicitly synthetic models and prices; it is not live inference evidence.
 
 To repeat the native Playground test with an existing private OpenShift AI browser session:
 

@@ -17,7 +17,15 @@ import (
 
 // Opt-in browser harness. All model replies and market/news HTTP responses are
 // explicit fixtures; production has no fixture-model fallback.
-func TestTerminalBrowserFixtures(t *testing.T) {
+func TestTerminalBrowserFixtures(t *testing.T)       { terminalBrowserFixtures(t, false) }
+func TestRepositoryNewsBrowserFixtures(t *testing.T) { terminalBrowserFixtures(t, true) }
+func terminalBrowserFixtures(t *testing.T, bundled bool) {
+	if bundled {
+		t.Setenv("NEWS_CORPUS", "bundled")
+	} else {
+		t.Setenv("NEWS_CORPUS", "live")
+	}
+
 	if os.Getenv("BROWSER_E2E") != "1" {
 		t.Skip("opt-in Playwright integration")
 	}
@@ -181,11 +189,19 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 			symbol := strings.TrimPrefix(r.URL.Path, "/v8/finance/chart/")
 			loc, _ := time.LoadLocation("America/New_York")
 			start := time.Date(2026, 10, 26, 9, 30, 0, 0, loc)
+			if bundled {
+				corpus, err := bundledCorpus()
+				if err != nil {
+					t.Fatal(err)
+				}
+				day, _ := time.ParseInLocation("2006-01-02", corpus.Week.MarketStart, loc)
+				start = day.Add(9*time.Hour + 30*time.Minute)
+			}
 			close := 110.0
 			if symbol == "QQQ" {
 				close = 95
 			}
-			body = fmt.Sprintf(`{"chart":{"result":[{"meta":{"symbol":%q,"currency":"USD"},"timestamp":[%d,%d],"indicators":{"quote":[{"open":[100,100],"close":[%f,%f]}]}}]}}`, symbol, start.Unix(), start.AddDate(0, 0, 1).Unix(), close, close)
+			body = fmt.Sprintf(`{"chart":{"result":[{"meta":{"symbol":%q,"currency":"USD","regularMarketPrice":%f,"regularMarketTime":%d},"timestamp":[%d,%d],"indicators":{"quote":[{"open":[100,100],"close":[%f,%f]}]}}]}}`, symbol, close, start.Add(2*time.Hour).Unix(), start.Unix(), start.AddDate(0, 0, 1).Unix(), close, close)
 		default:
 			name := strings.Trim(r.URL.Path, "/")
 			body = fmt.Sprintf(`<html><title>Fixture %s chip story</title><article>%s</article></html>`, name, strings.Repeat("A synthetic publisher text with enough readable content for the retrieval tool. ", 5))
@@ -199,6 +215,12 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 	st, _ := openStore(t.TempDir())
 	s := &server{ctx: context.Background(), store: st, agent: a, model: model, imports: make(chan struct{}, 2), classes: make(chan struct{}, 1), researches: make(chan struct{}, 1)}
 	s.clock = fixtureTime
+	if bundled {
+		corpus, _ := bundledCorpus()
+		loc, _ := time.LoadLocation("America/New_York")
+		day, _ := time.ParseInLocation("2006-01-02", corpus.Week.MarketStart, loc)
+		s.clock = func() time.Time { return day.Add(12 * time.Hour) }
+	}
 	s.initGame()
 	app := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api/state" || r.URL.Path == "/api/game" {
@@ -215,7 +237,11 @@ func TestTerminalBrowserFixtures(t *testing.T) {
 	defer app.Close()
 	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, "node", "../../e2e/briefing-desk-browser.cjs")
+	script := "../../e2e/briefing-desk-browser.cjs"
+	if bundled {
+		script = "../../e2e/saved-news-browser.cjs"
+	}
+	cmd := exec.CommandContext(ctx, "node", script)
 	cmd.Env = append(os.Environ(), "APP_URL="+app.URL, "TEST_SCOPE="+scope)
 	out, e := cmd.CombinedOutput()
 	t.Log(string(out))

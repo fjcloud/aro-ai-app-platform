@@ -9,7 +9,7 @@ Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platf
 . The launcher retrieves the assigned Showroom URL. Shared links contain only the guide and workshop ID; each participant signs in separately.
 . Follow Act 0 to clone the repository and run `make onboard` to sign in to the existing cluster.
 
-Platform labs prepare OpenShift AI, DeepSeek on Foundry through MaaS, and one T4 running the community d3-mini native decision runtime. Developers use OpenCode to build *Signal Desk*: rank last week's Techmeme news for a fund, research hypothetical index exposure and replay a $10,000 virtual portfolio against this week's observed prices. Playground MCP and MLflow make the agent's evidence and calls visible.
+Platform labs prepare OpenShift AI, DeepSeek on Foundry through MaaS, and one T4 running the community d3-mini native decision runtime. Developers use OpenCode to build *Signal Desk*: rank the repository’s dated Techmeme news for a fund, research hypothetical index exposure and replay a $10,000 virtual portfolio against the latest available market quotes. Playground MCP and MLflow make the agent's evidence and calls visible.
 
 `make onboard` signs in using the existing ARO credentials retrieved from Azure, then detects the resource group containing that resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
 
@@ -22,20 +22,24 @@ Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are 
 [source,text]
 ----
 Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry
-Techmeme archives → Go app → d3-mini on one T4 → relevance /100
+Repository news JSON → Go app → d3-mini on one T4 → relevance /100
                          → OpenShift AI Responses → DeepSeek + archive tools
-Virtual allocation → freeze → historical prices → paper result
+Virtual allocation → freeze → entry open + latest quote → paper result
 Playground → MCP archive tools        Agent → MLflow
 Git → Tekton → Argo CD → same app
 ----
 
 Use the https://github.com/fjcloud/go-app-template/tree/aro-signal-desk[Signal Desk template branch]. `AGENTS.md` defines delivery rules; `APP_CONTRACT.md` defines the application and fixed APIs. The working reference is `examples/briefing-desk`; model manifests are `deploy/decision`. Clone this workshop's `main` branch.
 
-The platform path is: apply all operator manifests; add one D8 CPU worker and one `Standard_NC8as_T4_v3` worker with explicit MachineSet commands; enable the platform services; deploy DeepSeek and d3-mini. The developer tests D3, MaaS Chat Completions and native Responses independently from Dev Spaces with `curl | jq`, then builds the app from its contract through the existing GitOps path. Archived excerpts, missing coverage and incomplete-week returns stay visible. No real orders are sent.
+The platform path is: apply all operator manifests; add one D8 CPU worker and one `Standard_NC8as_T4_v3` worker with explicit MachineSet commands; enable the platform services; deploy DeepSeek and d3-mini. The developer tests D3, MaaS Chat Completions and native Responses independently from Dev Spaces with `curl | jq`, then builds the app from its contract through the existing GitOps path. Source dates, collection provenance and market-quote timestamps stay visible. No real orders are sent.
 
 == Maintain the workshop
 
 `make test` runs the helper and reference-app tests. `make docs` builds the guide; `make serve` previews it at http://localhost:8443.
+
+The published d3-mini image is pinned by digest in `deploy/decision/runtime-image.txt` and `servingruntime.yaml`. The `publish decision runtime` GitHub Actions workflow rebuilds it when the pinned Dockerfile changes, or on manual dispatch. It needs the repository's `REDHAT_REGISTRY_AUTH` secret for the Red Hat base image; participants only pull the public result. After validating a replacement on a T4, update both digest references together.
+
+`examples/briefing-desk/news/techmeme.json` supplies the dated news corpus. Its adjacent README records provenance and the maintainer refresh command. Keep that JSON with the Go reference; market prices are fetched at comparison time.
 
 `content/` contains the guide, `deploy/` the active platform/model manifests, `scripts/` the setup helpers, and `e2e/` the validation scripts and current evidence. `docs/index.html` preserves the old terminal link as a redirect to Cloud Terminal.
 

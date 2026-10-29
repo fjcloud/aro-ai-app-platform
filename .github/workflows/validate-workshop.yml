@@ -36,7 +36,7 @@ jobs:
         run: npx playwright install --with-deps chromium
         working-directory: e2e
       - name: Validate terminal with explicit fixture providers
-        run: go test -race -count=1 -run TestTerminalBrowserFixtures -timeout 120s ./...
+        run: go test -race -count=1 -run 'Test(Terminal|RepositoryNews)BrowserFixtures' -timeout 180s ./...
         working-directory: examples/briefing-desk
         env:
           BROWSER_E2E: "1"
@@ -44,4 +44,6 @@ jobs:
         if: always()
         with:
           name: weekly-game-fixture-results
-          path: e2e/results/weekly-game/
+          path: |
+            e2e/results/weekly-game/
+            e2e/results/prepared-inputs/

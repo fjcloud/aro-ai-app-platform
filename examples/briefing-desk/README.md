@@ -1,13 +1,12 @@
 # Signal Desk
 
-A simple paper-investment game: **last week's news → your fund's ranking → index ideas → invest → reveal this week's result**.
+A simple paper-investment game: **saved news → fund relevance → index ideas → virtual investment → latest market price**.
 
 1. Edit the fund memo (semiconductors/components by default).
-2. Load the previous Monday–Sunday from Techmeme's archives. Export the complete collected corpus as JSON, including coverage gaps.
-   If Techmeme blocks cloud requests, use **Import news** with a same-week facilitator export. Imported dates/URLs are checked, uploaded scores are ignored, and the decision model scores the facts. The UI identifies manual provenance.
+2. Load the 161 dated Techmeme articles embedded from `news/techmeme.json`. No live news download or manual import is needed; retain the collection provenance and source links.
 3. Open a ranked story. DeepSeek compares archived news and proposes up to three long-only ETF index proxies: QQQ, SPY, SMH or XLK.
 4. Allocate the **$10,000 virtual budget**, then reveal the result. The entire portfolio is saved and frozen before market prices are requested.
-5. Compare entry at this week's first available US session open with the latest completed session close. While the week is running, results are explicitly provisional. Play again to start another round.
+5. Compare the first US session open after the fixed news cutoff with the latest available regular-market quote. Intraday and delayed prices include their actual timestamp. Play again to start another round.
 
 The interface has one column: memo, paper fund and ranked news. Thirty stories are shown initially; Show more reveals the rest. No live orders are sent.
 
@@ -15,7 +14,7 @@ d3-mini supplies the actual memo relevance score: `100 × expected ordinal level
 
 News uses archived Techmeme headlines/excerpts, without fetching today's publisher pages. Imports use daily snapshots, backfill missing primary post IDs, deduplicate publisher URLs and disclose unavailable IDs. This does not include every related discussion link or guarantee full publisher-text coverage.
 
-Game research can only read/search that archived week and consult a fixed index catalog. It cannot call current web or price tools. This remains a historical educational replay: model training knowledge is not erased, so it is not a blind or calibrated backtest. Historical prices come from Yahoo Finance daily data. Returns are gross price-only, excluding dividends, fees and slippage; unavailable data is reported rather than invented.
+Game research can only read/search the saved news period and consult a fixed index catalog. It cannot call current web or price tools. This remains a historical educational replay: model training knowledge is not erased, so it is not a blind or calibrated backtest. Entry prices and the latest regular-market quote come from Yahoo Finance. Returns are gross price-only, excluding dividends, fees and slippage; unavailable data is reported rather than invented.
 
 ## Local development
 
@@ -63,12 +62,7 @@ billing and quotas apply, with no automatic model fallback.
 For a disconnected preview, use `PREVIEW_MODE=1 DEV_ASSETS=1 go run .` with a
 separate data directory. Its scores and news are clearly labeled synthetic.
 
-To prepare that file from a network where Techmeme is available (no model or key needed):
-
-```sh
-set -o pipefail
-go run . export-news | jq . > techmeme-news.json
-```
+Maintainers can refresh the dated corpus using the instructions in [news/README.md](news/README.md). The workshop itself uses the committed snapshot.
 
 ## Validation
 

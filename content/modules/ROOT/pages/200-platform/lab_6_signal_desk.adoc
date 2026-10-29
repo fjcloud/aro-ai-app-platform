@@ -60,25 +60,25 @@ The application is *Signal Desk*: `signal-desk-dev` hosts the app and agent, and
 
 Read `APP_CONTRACT.md` in the template. The backend owns five simple responsibilities:
 
-. Collect the prior Monday–Sunday Techmeme archive and retain coverage gaps.
-. Accept a same-week manual JSON export if live Techmeme collection is blocked; ignore its model outputs and disclose imported provenance.
+. Read the dated Techmeme news snapshot bundled with the application.
+. Preserve its source dates, cutoff and collection provenance.
 . Score the archived news against the fund memo with d3-mini.
 . Ask DeepSeek for hypothetical long-only index exposures using bounded archive tools.
-. Save and freeze the user's virtual portfolio, then calculate actual subsequent-week gross price returns.
+. Freeze the virtual portfolio, then compare its entry price with the latest available market quote.
 
 [source,text]
 ----
-Techmeme archive → Go app → d3-mini /v1/systemone → relevance /100
+Repository news JSON → Go app → d3-mini /v1/systemone → relevance /100
                        └→ OpenShift AI /v1/responses → DeepSeek / MaaS
                                ↕ read_archive / search_archive / index_universe
 
-Browser → $10,000 paper allocation → freeze → historical prices → result
+Browser → $10,000 paper allocation → freeze → latest market quote → result
 Playground → public MCP /mcp → the same read-only archive/catalog
 Agent and scoring calls → OpenTelemetry → MLflow
 Git → Tekton → Argo CD → same Go app
 ----
 
-The model cannot fetch this week's prices during research. Prices are requested by deterministic Go code only after commitment. A running week is visibly provisional. Archived snippets are not full publisher articles; scoring relevance is not predicting profit. Historical replay cannot erase knowledge from model training, so this is not a blind backtest.
+The model cannot fetch this week's prices during research. Prices are requested by deterministic Go code only after commitment and include the quote timestamp. Archived snippets are not full publisher articles; scoring relevance is not predicting profit. Historical replay cannot erase knowledge from model training, so this is not a blind backtest.
 
 == Hand over to the developer
 
