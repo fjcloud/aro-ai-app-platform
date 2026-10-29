@@ -24,13 +24,15 @@ def endpoint(value):
         return None
 
 
-def discover(read=read_json):
+def discover(read=read_json, api_server=None):
     subscription = read("az", "account", "show", "-o", "json")["id"]
-    infra = read("oc", "--request-timeout=30s", "get", "infrastructure", "cluster", "-o", "json")
-    status = infra.get("status", {})
-    if status.get("platformStatus", {}).get("type") != "Azure":
-        raise ValueError("The connected OpenShift cluster is not on Azure.")
-    api = endpoint(status.get("apiServerURL", ""))
+    if api_server is None:
+        infra = read("oc", "--request-timeout=30s", "get", "infrastructure", "cluster", "-o", "json")
+        status = infra.get("status", {})
+        if status.get("platformStatus", {}).get("type") != "Azure":
+            raise ValueError("The connected OpenShift cluster is not on Azure.")
+        api_server = status.get("apiServerURL", "")
+    api = endpoint(api_server)
     if api is None:
         raise ValueError("The cluster does not report a valid HTTPS API URL.")
     clusters = read("az", "aro", "list", "--subscription", subscription, "-o", "json")
@@ -50,7 +52,14 @@ def discover(read=read_json):
             "RESOURCEGROUP_ID": group["id"], "ARO_CLUSTER_ID": cluster_id}
 
 
-def login(values, read=read_json, run=subprocess.run):
+def configured_server(run=subprocess.run):
+    server = run(["oc", "whoami", "--show-server"], capture_output=True, text=True, timeout=30)
+    if server.returncode or endpoint(server.stdout.strip()) is None:
+        raise ValueError("Could not identify the existing ARO API server.")
+    return server.stdout.strip()
+
+
+def login(values, read=read_json, run=subprocess.run, server=None):
     credentials = read("az", "aro", "list-credentials",
                        "--name", values["ARO_CLUSTER_ID"].rsplit("/", 1)[-1],
                        "--resource-group", values["RESOURCEGROUP"],
@@ -59,12 +68,10 @@ def login(values, read=read_json, run=subprocess.run):
     password = credentials.get("kubeadminPassword")
     if not isinstance(username, str) or not username or not isinstance(password, str) or not password:
         raise ValueError("Azure returned no ARO administrator credentials.")
-    server = run(["oc", "whoami", "--show-server"], capture_output=True, text=True, timeout=30)
-    if server.returncode or endpoint(server.stdout.strip()) is None:
-        raise ValueError("Could not identify the existing ARO API server.")
+    server = server or configured_server(run)
     # Capture diagnostics: subprocess errors must never print a command containing the password.
     try:
-        result = run(["oc", "login", "--server", server.stdout.strip(),
+        result = run(["oc", "login", "--server", server,
                       "--username", username, "--password", password],
                      capture_output=True, text=True, timeout=120)
     except subprocess.SubprocessError:
@@ -82,9 +89,11 @@ def main():
                         help="Sign in with the ARO administrator credentials retrieved from Azure")
     args = parser.parse_args()
     try:
-        values = discover()
+        # The configured server is local metadata, usable even after the session expires.
+        server = configured_server() if args.login else None
+        values = discover(api_server=server)
         if args.login:
-            login(values)
+            login(values, server=server)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         temporary = args.output.with_suffix(".env.tmp")
         temporary.write_text("# Discovered from the connected ARO cluster; no credentials.\n" +

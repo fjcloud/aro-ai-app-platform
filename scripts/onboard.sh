@@ -5,10 +5,6 @@ for tool in oc az git jq python3 curl; do
   command -v "$tool" >/dev/null 2>&1 || { echo "Missing $tool. Ask the facilitator to prepare the RHDP bastion." >&2; exit 1; }
 done
 az account show --output none
-oc whoami >/dev/null 2>&1 || {
-  echo 'Log in to the existing cluster using the RHDP access details or the console Copy login command.' >&2
-  exit 1
-}
 python3 "$(dirname "${BASH_SOURCE[0]}")/workshop-env.py" --login
 oc whoami -t >/dev/null 2>&1 || { echo 'ARO login did not establish a user session. Rerun make onboard.' >&2; exit 1; }
 [[ "$(oc auth can-i '*' '*' --all-namespaces)" == yes ]] || {

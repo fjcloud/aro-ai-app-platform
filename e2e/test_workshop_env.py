@@ -96,6 +96,15 @@ class ResourceGroupDiscovery(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "found 0"):
             workshop_env.discover(self.read)
 
+    def test_login_discovery_works_without_an_authenticated_cluster_request(self):
+        values = workshop_env.discover(self.read, api_server='https://api.example.test:6443')
+        self.assertEqual(values['ARO_CLUSTER_ID'], CLUSTER_ID)
+        self.assertFalse(any(command[0] == 'oc' for command in self.calls))
+
+    def test_login_discovery_still_rejects_an_unmatched_server(self):
+        with self.assertRaisesRegex(ValueError, 'found 0'):
+            workshop_env.discover(self.read, api_server='https://api.other.test:6443')
+
 
 class AROLogin(unittest.TestCase):
     def setUp(self):
