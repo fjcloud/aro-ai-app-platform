@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "scope": "Same persisted summaries, mandates and research notes after the final image rollout",
+  "snapshot": {
+    "profiles_sha256": "fc657446e9f1a05f170b16e5873881d999de8ca6f81e92b2049b16980dfd63a0",
+    "documents": {
+      "f544e62d7b14d8886a6fad13": {
+        "status": "ready",
+        "summary_sha256": "c009e914ba0c09adb6bb66c6ff3c47cd61f85b5e925c30c95152859eb0b219a9",
+        "research_sha256": "a05d963f8925fd9aa9345fc8543add1973a96ca4e95ac3bf116b3ee74dcf1e7f"
+      },
+      "686b7d700c8bb377a0d5f7c8": {
+        "status": "ready",
+        "summary_sha256": "f7d411daf6975eea49fd76f62038af60028ddf71c52d90513ef1025bb813eef8",
+        "research_sha256": "421787c9a57b2f12d55ecda2e329a923998132b46a4ef1e78d46e7f1c4f354cc"
+      },
+      "1723b90b2012515154b5aa4f": {
+        "status": "ready",
+        "summary_sha256": "b2049f635ab2ff278947ea45c5515b3b251dfe2038e090b0964a578ab2052b4e",
+        "research_sha256": "c231b28918e8f5edbe346e6ff6102c1bc3876d6629c13c70a07137ca763d9c48"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "scope": "Local synthetic fixture validation",
+  "live_models": false,
+  "checks": [
+    "simple memo and ranked news UI",
+    "opportunity scores are not confidence percentages",
+    "descending score order",
+    "memo draft survives refresh",
+    "memo changes re-score existing summaries",
+    "old memo research is hidden",
+    "any current scored story can be investigated",
+    "research Markdown export",
+    "mobile layout",
+    "mock-keychain",
+    "no JavaScript errors"
+  ]
+}

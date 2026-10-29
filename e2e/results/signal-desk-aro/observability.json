@@ -1,0 +1,138 @@
+{
+  "checks": [
+    {
+      "panel": "Model tokens by subscription",
+      "query": "sum by (model, subscription) (authorized_hits{model=\"deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|signal-desk)\"})",
+      "series": 2,
+      "samples": [
+        {
+          "labels": {
+            "model": "deepseekv4pro",
+            "subscription": "deepseekv4pro-signal-desk"
+          },
+          "value": "28903"
+        },
+        {
+          "labels": {
+            "model": "deepseekv4pro",
+            "subscription": "deepseekv4pro-workshop"
+          },
+          "value": "10232579"
+        }
+      ]
+    },
+    {
+      "panel": "Model requests accepted by quota checks",
+      "query": "sum by (subscription) (authorized_calls{limitador_namespace=\"llm-serving/deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|signal-desk)\"})",
+      "series": 2,
+      "samples": [
+        {
+          "labels": {
+            "subscription": "deepseekv4pro-signal-desk"
+          },
+          "value": "8"
+        },
+        {
+          "labels": {
+            "subscription": "deepseekv4pro-workshop"
+          },
+          "value": "294"
+        }
+      ]
+    },
+    {
+      "panel": "Quota rejections (HTTP 429)",
+      "query": "sum(limited_calls{limitador_namespace=\"llm-serving/deepseekv4pro\"}) or vector(0)",
+      "series": 1,
+      "samples": [
+        {
+          "labels": {},
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "panel": "D3 completed scoring requests",
+      "query": "sum(vllm_srun_requests_total{namespace=\"decision-serving\",exported_endpoint=\"/v1/systemone\",status=\"200\"})",
+      "series": 1,
+      "samples": [
+        {
+          "labels": {},
+          "value": "580"
+        }
+      ]
+    },
+    {
+      "panel": "D3 request latency p95",
+      "query": "histogram_quantile(0.95, sum by (le) (rate(vllm_srun_request_duration_seconds_bucket{namespace=\"decision-serving\",exported_endpoint=\"/v1/systemone\"}[5m])))",
+      "series": 1,
+      "samples": [
+        {
+          "labels": {},
+          "value": "NaN"
+        }
+      ]
+    },
+    {
+      "panel": "D3 queued requests",
+      "query": "sum(vllm_srun_queue_depth{namespace=\"decision-serving\"})",
+      "series": 1,
+      "samples": [
+        {
+          "labels": {},
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "panel": "T4 utilization \u2014 D3 scoring",
+      "query": "DCGM_FI_DEV_GPU_UTIL{exported_namespace=\"decision-serving\"}",
+      "series": 1,
+      "samples": [
+        {
+          "labels": {
+            "gpu": "0",
+            "modelName": "Tesla T4",
+            "namespace": "nvidia-gpu-operator"
+          },
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "panel": "T4 memory used (GiB)",
+      "query": "DCGM_FI_DEV_FB_USED{exported_namespace=\"decision-serving\"} / 1024",
+      "series": 1,
+      "samples": [
+        {
+          "labels": {
+            "gpu": "0",
+            "modelName": "Tesla T4",
+            "namespace": "nvidia-gpu-operator"
+          },
+          "value": "11.3828125"
+        }
+      ]
+    },
+    {
+      "panel": "Scrape health \u2014 1 means reachable",
+      "query": "min by (namespace) (up{namespace=~\"decision-serving|kuadrant-system\",job=~\"d3-mini|kuadrant-system/kuadrant-limitador-monitor\"})",
+      "series": 2,
+      "samples": [
+        {
+          "labels": {
+            "namespace": "decision-serving"
+          },
+          "value": "1"
+        },
+        {
+          "labels": {
+            "namespace": "kuadrant-system"
+          },
+          "value": "1"
+        }
+      ]
+    }
+  ],
+  "note": "Latency can be NaN when no requests completed in the last five minutes."
+}

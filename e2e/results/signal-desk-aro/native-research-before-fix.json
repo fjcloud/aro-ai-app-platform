@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-29T07:05:41.895Z",
+  "source_revision": "9e7554884e8b6b9c24f8bb64cd47da94ec2676e2",
+  "research_attempts": 2,
+  "research_failures": [
+    {
+      "origin": "saved proposal",
+      "error": "Research tool budget exhausted"
+    },
+    {
+      "origin": "browser attempt",
+      "error": "Research tool budget exhausted"
+    }
+  ],
+  "note": "Observed before native evidence-complete finalization was added. The UI exposed each error; the browser retried with the same model."
+}

@@ -29,7 +29,7 @@ def main():
         if data.get('status') != 'success' or not results:
             raise RuntimeError('No collected series: ' + panel['title'])
         if 'Scrape health' in panel['title'] and (
-                {r['metric'].get('namespace') for r in results} != {'speech-serving', 'kuadrant-system'}
+                {r['metric'].get('namespace') for r in results} != {'decision-serving', 'kuadrant-system'}
                 or any(r['value'][1] != '1' for r in results)):
             raise RuntimeError('A workshop scrape target is down')
         report.append({'panel': panel['title'], 'query': query, 'series': len(results),

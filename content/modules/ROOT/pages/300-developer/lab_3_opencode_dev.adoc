@@ -1,193 +1,123 @@
-= Lab 2.2 — Prompt to Deployment
+= Lab 2.3 — Build and Ship Signal Desk
 
-You have a Dev Space, DeepSeek-V4 Pro on Foundry, and a short `AGENTS.md`. Three steps in OpenCode take you from an application template to a voice-driven cluster-health app, then through a real change — still no Ansible, no local Docker.
+Use DeepSeek in OpenCode to build the game described by `APP_CONTRACT.md`, keeping the prepared delivery scaffold. The reference supplies working API clients and replay rules so the exercise focuses on the app rather than inventing model protocols.
 
 [NOTE]
 ====
-*Estimated time:* 35 minutes +
 *Persona:* Developer +
-*What you build:* A Cluster Voice web application in Go — generated, built with Tekton, deployed via your own Argo CD instance, then updated
+*Time:* 35–45 minutes, plus the first archive import +
+*Outcome:* English app, generated/adapted with DeepSeek, built by Tekton and deployed by your own Argo CD.
 ====
 
-[TIP]
-====
-OpenCode includes `AGENTS.md` in its project context. Describe the application and review the proposed plan. The runbook supplies the Dockerfile and the Git, Tekton and Argo CD steps; the checkpoints verify the result.
-====
+The model API checks in Lab 2.2 must pass before this exercise. The app uses last week’s news to freeze investment choices, then compares them with the latest completed US market session this week. Today’s incomplete session is excluded.
 
-== Step 1: Open the Project and Launch OpenCode
+== Step 1: Read the contract
 
-Dev Spaces already cloned the template — it is in `$\{PROJECT_SOURCE}`. The template sets `APP_NAME=live-transcript`.
+In the *Dev Spaces terminal*:
 
 [source,sh,role=execute]
 ----
-cd ${PROJECT_SOURCE}
-echo "APP_NAME=$APP_NAME"
-ls
-----
-
-.Expected key entries
-[source,console]
-----
-APP_NAME=live-transcript
-AGENTS.md  deploy/  devfile.yaml  gitops/  opencode.json  pipeline/
-----
-
-[source,sh,role=execute]
-----
+cd "${PROJECT_SOURCE}"
+cat APP_CONTRACT.md
+oc auth can-i create pipelineruns -n "${APP_NAME}-build"
+oc auth can-i create deployments -n "${APP_NAME}-dev"
 opencode
 ----
 
-[cols="1,2,2",options="header"]
-|===
-| Phase | What it does | Duration
-| Git | Create a personal repo on ephemeral Git, commit, and push | ~30s
-| Image | `oc apply -k pipeline/base` + Tekton PipelineRun | 3–5 min
-| GitOps | Verify the built image, apply `gitops/base`, create the Argo CD Application | 2–3 min
-|===
+Expect both permissions to be `yes`. Do not give the coding model administrator credentials or ask it to change SCC/RBAC.
 
-image::cicd-gitops.png[Prompt to deployment, align="center"]
-
----
+OpenCode reads the project runbook. Press kbd:[Tab] to switch between *plan* (read-only) and *build* (writes files); use `/exit` to return to the shell.
 
 == Step 2: Plan
 
-Press kbd:[Tab] until the TUI shows *plan*, then paste. Keep this session open for the build step.
+Switch OpenCode to *plan* and paste:
 
 [source,text,role=execute]
 ----
-Cluster Voice in Go: a browser app where I speak to my OpenShift cluster. Start from ALL files of the reference implementation linked in AGENTS.md, including the MCP connector, OpenTelemetry tracing and tests. Keep the technical app name live-transcript and existing delivery scaffold. Transcribe with internal Whisper, let me edit or type my question, then submit it explicitly to the DeepSeek runtime agent through MaaS. Use only the read-only catalog metrics tools. Display the answer and actual monitoring evidence, including timestamps, units, missing data and errors. Keep audio in memory, the prepared OAuth proxy, and all runtime credentials server-side.
+Build Signal Desk in Go using APP_CONTRACT.md and AGENTS.md. Start from all Go files, go.mod/go.sum and web assets of the linked briefing-desk reference, including tests, native OpenShift AI Responses client, D3 scoring, archived research, MCP and tracing. Keep the prepared scaffold and technical app name live-transcript. The English UI should be one simple page: fund memo, $10,000 paper portfolio and last week's ranked Techmeme news. Explain the model endpoints, archive cutoff, portfolio freezing and actual-price settlement in your plan. No real trades, invented prices or new privileges.
 ----
 
-Review the plan. Adjust if needed. The plan is the context for the next prompt.
+Review the plan, especially the distinction between a relevance score and a return. The app must use the platform endpoints from its ConfigMap, not Azure credentials or a model URL guessed by the coding assistant.
 
----
+== Step 3: Build and deploy
 
-== Step 3: Build and Deploy
-
-Press kbd:[Tab] to *build* in the *same* session.
+Switch to *build* in the same session:
 
 [source,text,role=execute]
 ----
-Implement the plan and deploy it using AGENTS.md.
-Keep the preconfigured internal-registry image in the Deployment. Wait for Tekton to succeed and the image tag to exist before creating the Argo CD Application. Wait for Synced / Healthy and the Deployment rollout, then print the app and Argo CD URLs.
+Implement the plan and deploy using AGENTS.md. Preserve all existing scaffold files, OAuth, restricted-v2 and the exact internal registry image. Run Go tests and the local build. Commit and push the complete source, wait for Tekton to succeed and verify the image tag before creating Argo CD delivery. Wait for the matching Git revision to be Synced / Healthy and the Deployment rollout. Print the app and Argo CD URLs.
 ----
 
-Before Tekton starts, `git status --porcelain` must be empty: the local source you tested must match the pushed commit, including any authorized facilitator-prepared changes.
-
-OpenCode writes the files, compiles, then ships from `AGENTS.md`. When it is done it should print the app route and the Argo CD console URL. The Argo CD `Application` must live in `$\{APP_NAME}-dev` (never `default`).
+The source must be clean and pushed before Tekton starts. `AGENTS.md` supplies the Dockerfile and complete Git → Tekton → Argo CD procedure. A local build or an old healthy revision is not a successful deployment.
 
 [IMPORTANT]
 ====
-The template already declares `image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript:latest` with `imagePullPolicy: Always`. Tekton runs `clone → validate-image → build`. A placeholder, wrong build namespace or mismatched rendered image stops the pipeline before Buildah.
-
-For an older personal checkout containing `image: placeholder`, replace it with the reference above and commit/push before rebuilding. Argo CD deploys the manifest from Git; changing only the live Deployment is temporary and can be reverted by GitOps. If an existing app has an image pull error, inspect `oc describe pod` for the exact image and registry error before retrying.
+Keep `image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript:latest` with `imagePullPolicy: Always`. Do not use `placeholder` or an invented image. The pipeline validates the rendered Deployment before building. Never bypass that check or grant SCCs to fix an error.
 ====
 
-=== Checkpoint — the app is live
+== Step 4: Play one round
 
-[source,sh,role=execute]
+Open the HTTPS app Route and sign in with OpenShift.
+
+. Read the default semiconductor fund memo; expand it if you want to change the fund.
+. Click *Load last week's news*. The first run downloads seven days of primary Techmeme stories, then scores them on the single T4. Wait for the ranked count to reach the imported count. Saved snapshots and scores are reused on subsequent loads.
+. Click *Export the news* and check the week, collected stories and unavailable archive IDs. A missing item must be disclosed; archived excerpts are not full publisher pages.
+. Open an interesting story and click *Find index ideas*. Expect a hypothetical thesis and risk for supported ETF proxies. A high relevance score alone is not a BUY instruction.
+. Add a virtual amount to one or more ideas. Stay within $10,000. No return should be revealed yet.
+. Click *Reveal this week's result*. The complete portfolio freezes before historical prices are requested. Inspect entry/exit dates and the price-data source.
+. If the current week is unfinished, check *Week in progress*. *Update result* may refresh prices without changing choices. *Play again* starts a fresh budget and retains the previous round.
+
+[TIP]
+====
+Techmeme can reject requests from a cloud IP with HTTP 403. Keep live collection as the default. If it is blocked, click *Import news* and choose the facilitator's JSON news export for the *same displayed week*. The app checks the week, dates and source links, discards any uploaded scores/research, and ranks the archived facts on the T4. The UI labels the corpus as manually imported; source provenance is supplied by the file.
+
+For the 19–25 October 2026 session, a real collected export is available at https://raw.githubusercontent.com/fjcloud/aro-ai-app-platform/main/e2e/results/signal-desk-aro/news-2026-10-19.json[Download the dated news export]. Save the JSON file locally, then select it with *Import news*. Do not reuse it for another week; the app rejects mismatched dates.
+
+A facilitator can prepare a new export on a network that allows Techmeme, without running either model or supplying credentials:
+
+[source,sh]
 ----
-APP_NAME="${APP_NAME:-live-transcript}"
-
-APP_ROUTE=$(oc get route $APP_NAME -n ${APP_NAME}-dev \
-  -o jsonpath='{.spec.host}' 2>/dev/null)
-ARGOCD_ROUTE=$(oc get route argocd-server -n ${APP_NAME}-dev \
-  -o jsonpath='{.spec.host}' 2>/dev/null)
-
-echo "================================================"
-echo " App:    https://${APP_ROUTE}"
-echo " ArgoCD: https://${ARGOCD_ROUTE}"
-echo "================================================"
-
-oc get application $APP_NAME -n ${APP_NAME}-dev \
-  -o jsonpath='{.status.sync.status} / {.status.health.status}' && echo
-
-curl -fsS https://${APP_ROUTE}/healthz
-----
-
-Expected:
-
-[source,json]
-----
-{"status":"ok"}
+cd examples/briefing-desk
+set -o pipefail
+go run . export-news | jq . > techmeme-news.json
 ----
 
-Open both URLs in your browser:
+Share the resulting file with participants. No proxy or automatic substitute feed is used. The export includes unavailable archive IDs; it is not a full-text publisher archive.
+====
 
-* The app URL asks you to sign in with OpenShift. Allow the microphone, ask a question in French, and verify that its text appears. Stop, check the text and click *Ask the cluster*. Expand the monitoring evidence and check that it contains real queries and sample timestamps. The browser microphone indicator must switch off after Stop.
-* The Argo CD console shows your `live-transcript` Application in *Synced / Healthy* — *your* Argo CD instance, scoped to your project
+The entry is the first available US session open after the news week; valuation is the last completed US session close this week. Before the first completed session, prices are unavailable and the app must say so. No simulated/random prices or full-week profit claims are acceptable. Returns exclude dividends, fees and slippage.
 
-For the Argo CD console, sign in as `admin`. Retrieve the password for *your instance* from the workspace terminal:
+If a model, archive or price provider is unavailable, the UI must show the error and preserve progress. Do not replace inference with a keyword rule or invented output.
 
-[source,sh,role=execute]
-----
-oc get secret argocd-cluster -n ${APP_NAME}-dev \
-  -o jsonpath='{.data.admin\.password}' | base64 -d; echo
-----
+== Step 5: Ship a small change
 
-DeepSeek helped write the app. At runtime, the Go backend transcribes with Whisper, then sends the question and selected metrics to DeepSeek through a separate MaaS key. Microphone audio never goes to Foundry. The developer CLI identity and the read-only application identity are separate.
-
----
-
-== Step 4: Ship a change
-
-Close the GitOps loop: change the app, push, start a new Tekton build, then restart the Deployment to pull the updated image. In this workshop, builds are started explicitly; a Git push alone does not trigger Tekton.
-
-Start a new OpenCode session in `$\{PROJECT_SOURCE}`. Press kbd:[Tab] to *build*:
+Ask OpenCode, in *build* mode:
 
 [source,text,role=execute]
 ----
-Add a “CPU over 1h” shortcut that fills the question field with “Show CPU utilization over the last hour, with evidence.” Let me submit it explicitly. Keep microphone capture, evidence, authentication and tool validation working. Commit and push, rebuild with Tekton, and deploy using AGENTS.md.
-Wait for the matching Git revision in Argo CD to be Synced / Healthy, then print the app URL.
+Add a simple “High relevance only” checkbox above the news list. When selected, show only current memo scores of at least 70/100 and display the filtered count; uncheck to restore all news. Keep the checkbox visible when zero stories match and give it a stable accessible name. Keep the archived corpus export, saved portfolio, scoring, agent tools, OAuth and replay rules unchanged. Test it, commit and push, then rebuild and deploy with AGENTS.md. Wait for the new Git revision and rollout before reporting success.
 ----
 
-Wait for OpenCode to confirm the PipelineRun succeeded.
-
-You can watch the build in the OpenShift console: *Pipelines → PipelineRuns* in the `live-transcript-build` namespace.
-
-Argo CD polls Git. Refresh it and wait for the pushed commit; `Synced / Healthy` can still describe the previous revision immediately after a push.
+Verify the new UI on the Route. In the Dev Spaces terminal:
 
 [source,sh,role=execute]
 ----
-APP_NAME="${APP_NAME:-live-transcript}"
-
-oc annotate application $APP_NAME -n ${APP_NAME}-dev \
+oc annotate application "$APP_NAME" -n "${APP_NAME}-dev" \
   argocd.argoproj.io/refresh=hard --overwrite
-oc wait application/$APP_NAME -n ${APP_NAME}-dev \
+oc wait application/"$APP_NAME" -n "${APP_NAME}-dev" \
   --for=jsonpath='{.status.sync.revision}'="$(git rev-parse HEAD)" --timeout=180s
-
-oc get application $APP_NAME -n ${APP_NAME}-dev \
-  -o jsonpath='{.status.sync.status} / {.status.health.status}' && echo
-
-oc rollout status deployment/$APP_NAME -n ${APP_NAME}-dev --timeout=120s
-
-ROUTE=$(oc get route $APP_NAME -n ${APP_NAME}-dev -o jsonpath='{.spec.host}')
-echo "https://${ROUTE}"
-curl -fsS https://${ROUTE}/healthz
+oc get application "$APP_NAME" -n "${APP_NAME}-dev" -o json | \
+  jq '{revision:.status.sync.revision,sync:.status.sync.status,health:.status.health.status}'
+oc rollout restart deployment/"$APP_NAME" -n "${APP_NAME}-dev"
+oc rollout status deployment/"$APP_NAME" -n "${APP_NAME}-dev" --timeout=180s
+EXPECTED_DIGEST=$(oc get istag "${APP_NAME}:latest" -n "${APP_NAME}-build" -o jsonpath='{.image.metadata.name}')
+oc get pods -n "${APP_NAME}-dev" -l "app.kubernetes.io/name=${APP_NAME}" -o json | \
+  jq -e --arg name "$APP_NAME" --arg digest "$EXPECTED_DIGEST" \
+  '[.items[].status.containerStatuses[] | select(.name==$name)] | length > 0 and all(.[]; .ready and (.imageID | endswith("@"+$digest)))'
+ROUTE=$(oc get route "$APP_NAME" -n "${APP_NAME}-dev" -o jsonpath='{.spec.host}')
+curl --fail-with-body -sS "https://${ROUTE}/healthz" | jq .
 ----
 
-.Expected
-[source,text,options=nowrap]
-----
-Synced / Healthy
-----
+You have generated/adapted an app with DeepSeek, played a real-price replay and shipped a second revision through the same delivery path.
 
-Open the URL, click *CPU over 1h*, then *Ask the cluster*. Check that the agent queried `cpu_percent` with the `1h` window and displayed the result evidence. Test the microphone again.
-
-[cols="1,2", options="header"]
-|===
-| Step | Platform action
-
-| `git push`
-| Updated code on your personal Git repo
-
-| Tekton `PipelineRun`
-| `git-clone` + `buildah`, image to the internal registry
-
-| `oc rollout restart`
-| Pods pull `$\{APP_NAME}:latest`
-|===
-
-Act 2 is complete: you generated, built, deployed and updated your application.
-
-➡️ Move on to *Act 3: Observe and evaluate*.
+Continue to *Act 3 — Observe and evaluate*.

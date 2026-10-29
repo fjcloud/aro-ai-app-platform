@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-28T14:24:23Z",
+  "cases": [
+    {
+      "article": "Moore Threads Q3 Revenue Surges 1,774% to ~$240M",
+      "retail_memo_score": 12.3,
+      "semiconductor_memo_score": 72.9,
+      "source": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand"
+    },
+    {
+      "article": "Etsy Q3 Revenue Beats Estimates, Net Income Surges on Depop Sale",
+      "retail_memo_score": 77.1,
+      "semiconductor_memo_score": 6.3,
+      "source": "https://www.wsj.com/business/retail/etsy-sales-rise-as-the-number-of-active-buyers-increases-01c646c9?st=eiH3p6\u0026reflink=desktopwebshare_permalink"
+    }
+  ],
+  "model": "vllm-sr/d3-mini",
+  "passed": true,
+  "scope": "Actual D3 scoring of the same real source summaries against two investment memos; no app memo or scores were changed"
+}

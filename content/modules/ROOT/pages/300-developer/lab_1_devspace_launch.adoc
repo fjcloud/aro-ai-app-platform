@@ -6,7 +6,7 @@ Welcome to Act 2. You are now the *Developer*. Everything you need — editor, t
 ====
 *Estimated time:* 10 minutes +
 *Persona:* Developer +
-*What you need:* The launch URL from Lab 1.5 and your cluster login
+*What you need:* The launch URL from Lab 1.7 and your cluster login
 ====
 
 == What is OpenShift Dev Spaces?
@@ -20,7 +20,7 @@ OpenShift Dev Spaces provides *cloud-based developer workspaces* — VS Code-com
 
 == Get the Dev Spaces URL
 
-Use the URL you printed in Lab 1.5. It clones the Go app template (`go-app-template`) — not this workshop repo — and creates a workspace from its `devfile.yaml`:
+Use the URL you printed in Lab 1.7. It clones the Go app template (`go-app-template`) — not this workshop repo — and creates a workspace from its `devfile.yaml`:
 
 [source,text,options=nowrap]
 ----
@@ -125,31 +125,7 @@ if ! git diff --quiet HEAD -- opencode.json; then
 fi
 ----
 +
-. Ask DeepSeek for one sentence. `$OPENAI_BASE_URL` already ends in `/v1`.
-+
-[source,sh,role=execute]
-----
-curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}'
-----
-+
-[TIP]
-====
-`$OPENAI_API_KEY` and `$OPENAI_BASE_URL` come from Secret `ai-provider-openai-api-key`. This is a MaaS key, not the Azure account key. The client model id is `deepseekv4pro`. A short reply costs a fraction of a cent. Reasoning tokens, when the response includes them, are billed as output.
-====
-
-. Start OpenCode:
-+
-[source,sh,role=execute]
-----
-opencode
-----
-+
-The OpenCode terminal user interface (TUI) launches. It reads `AGENTS.md` and connects to DeepSeek-V4 Pro automatically.
-Two session modes are available: *plan* (read-only — no file writes) and *build* (writes files). Press kbd:[Tab] to switch from one to the other.
-Use `/exit` to leave OpenCode when needed.
+. Test both model APIs in *Lab 2.2* before starting OpenCode. Your MaaS key is already injected; do not print it.
 
 == Understanding the OpenCode Configuration
 
@@ -157,7 +133,7 @@ OpenCode reads **project** `opencode.json` first (it overrides the platform moun
 
 [source,sh,role=execute]
 ----
-cat ${PROJECT_SOURCE}/opencode.json
+jq . "${PROJECT_SOURCE}/opencode.json"
 ----
 
 Expected content:
@@ -192,7 +168,7 @@ Expected content:
 }
 ----
 
-OpenCode still reads `AGENTS.md` from the project directory at the start of every session. These instructions guide generation. Tekton validates the image reference, and you check the deployed application in Lab 2.2.
+OpenCode still reads `AGENTS.md` from the project directory at the start of every session. These instructions guide generation. Tekton validates the image reference, and you check the deployed application in Lab 2.3.
 
 `limit.output` is 32 768. Keep prompts specific and review usage and pricing in Lab 3.1.
 
@@ -203,7 +179,7 @@ OpenCode still reads `AGENTS.md` from the project directory at the start of ever
 cd ${PROJECT_SOURCE}
 opencode --version && \
 echo "GIT_SERVER=$GIT_SERVER" && \
-python3 -c 'import json; print(json.load(open("opencode.json"))["model"])'
+jq -r .model opencode.json
 ----
 
 .Expected Output
@@ -214,6 +190,6 @@ GIT_SERVER=https://git.<workshop-domain>
 deepseek/deepseekv4pro
 ----
 
-Your Dev Space is running, tools are installed, and the LLM is reachable. ✓
+Your Dev Space is running and the scoped identity and model configuration are ready. Test inference next.
 
-➡️ Move on to *Lab 2.2: Prompt to Deployment*.
+Continue to xref:300-developer/lab_2_model_apis.adoc[Lab 2.2 — Test the Model APIs].

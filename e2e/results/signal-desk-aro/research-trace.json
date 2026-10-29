@@ -1,0 +1,118 @@
+{
+  "passed": true,
+  "trace_id": "tr-3f76b0a52613fd1b60b8b14916f6d661",
+  "state": "OK",
+  "spans": [
+    {
+      "name": "game.research",
+      "span_id": "HKZbRdADfH8=",
+      "parent_span_id": null,
+      "start_time_unix_nano": 1793258186115114114,
+      "end_time_unix_nano": 1793258191918219655,
+      "attributes": [
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
+          }
+        }
+      ]
+    },
+    {
+      "name": "agent.game_ideas",
+      "span_id": "yQLVTDtpG7o=",
+      "parent_span_id": "HKZbRdADfH8=",
+      "start_time_unix_nano": 1793258186137320708,
+      "end_time_unix_nano": 1793258191906564770,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "AGENT"
+          }
+        },
+        {
+          "key": "gen_ai.request.model",
+          "value": {
+            "string_value": "maas-vllm-inference-1/deepseekv4pro"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
+          }
+        },
+        {
+          "key": "mlflow.llm.model",
+          "value": {
+            "string_value": "maas-vllm-inference-1/deepseekv4pro"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tool.read_archive",
+      "span_id": "1xT+pCd3Ris=",
+      "parent_span_id": "yQLVTDtpG7o=",
+      "start_time_unix_nano": 1793258187446165777,
+      "end_time_unix_nano": 1793258187446193077,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "TOOL"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tool.search_archive",
+      "span_id": "npymue4OzY0=",
+      "parent_span_id": "yQLVTDtpG7o=",
+      "start_time_unix_nano": 1793258187446299780,
+      "end_time_unix_nano": 1793258187449341754,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "TOOL"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tool.index_universe",
+      "span_id": "TbqzJzsmWDM=",
+      "parent_span_id": "yQLVTDtpG7o=",
+      "start_time_unix_nano": 1793258187449962669,
+      "end_time_unix_nano": 1793258187449973469,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "TOOL"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
+          }
+        }
+      ]
+    }
+  ]
+}

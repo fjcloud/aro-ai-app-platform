@@ -1,0 +1,80 @@
+{
+  "passed": true,
+  "scope": "Real browser, native OpenShift AI Responses function calls and local d3-mini on one T4",
+  "article": {
+    "id": "f544e62d7b14d8886a6fad13",
+    "url": "https://www.bbc.co.uk/news/articles/cwvg0ddz1z77o?at_medium=RSS&at_campaign=rss",
+    "title": "US midterm elections: Trump's biggest economic problem looks familiar",
+    "classification": {
+      "profile_id": "macro",
+      "profile_version": 3,
+      "summary_hash": "d4fd8018b2d85fb1a2c75e1352b38bdd0211ee856a67bf5f2a2bf42c0169d66e",
+      "status": "done",
+      "priority": "monitor",
+      "confidence": 0.2844450871149699,
+      "probabilities": {
+        "insufficient_context": 0.13218329846858978,
+        "material": 0.2859920561313629,
+        "monitor": 0.4633338153362274,
+        "not_financial": 0.11849083006381989
+      },
+      "latency_ms": 428,
+      "input_tokens": 700,
+      "trace_id": "12b6bf73d642a77cb66c2d7bb44c66f8",
+      "at": "2026-10-28T09:43:44Z",
+      "stale": false
+    }
+  },
+  "research": {
+    "trace_id": "678e05390e6a4b444281fde11ba9fcf7",
+    "tools": [
+      {
+        "id": "E1",
+        "tool": "read_article",
+        "url": "https://www.bbc.co.uk/news/articles/cwvg0ddz1z77o?at_medium=RSS&at_campaign=rss",
+        "retrieved": "2026-10-28T09:47:08Z"
+      },
+      {
+        "id": "E2",
+        "tool": "search_news",
+        "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+        "retrieved": "2026-10-28T09:47:08Z"
+      },
+      {
+        "id": "E3",
+        "tool": "search_news",
+        "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+        "retrieved": "2026-10-28T09:47:08Z"
+      },
+      {
+        "id": "E4",
+        "tool": "search_news",
+        "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+        "retrieved": "2026-10-28T09:47:09Z"
+      },
+      {
+        "id": "E5",
+        "tool": "ecb_fx",
+        "url": "https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A?lastNObservations=5&format=csvdata",
+        "retrieved": "2026-10-28T09:47:11Z"
+      }
+    ],
+    "facts": 5,
+    "hypotheses": 2
+  },
+  "checks": [
+    "English UI",
+    "actual RSS tool callback",
+    "actual article read",
+    "local T4 full-input classification",
+    "Investigate button launches native agent",
+    "at least two distinct tools",
+    "collected evidence IDs validated",
+    "English Markdown export",
+    "financial feed filter",
+    "mobile layout",
+    "mandate edits invalidate results",
+    "stale investigation refused",
+    "no browser errors"
+  ]
+}

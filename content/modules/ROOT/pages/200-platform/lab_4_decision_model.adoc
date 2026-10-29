@@ -1,0 +1,85 @@
+= Lab 1.6 — Serve d3-mini
+:page-aliases: 200-platform/lab_4_whisper.adoc
+
+DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 and scores a news item's relevance to an investment memo. The developer will compare it with the language model using curl + jq in Lab 2.2.
+
+[NOTE]
+====
+*Persona:* Platform Engineer +
+*Time:* 15 minutes active; allow time for the runtime build and model download. +
+*Requires:* Classic ARO 4.21+, cluster-admin, Azure permissions, CPU headroom and T4 capacity.
+====
+
+d3-mini is a 4.54B-parameter community decision model from https://huggingface.co/vllm-sr/d3-mini[vLLM Semantic Router], Apache-2.0 licensed. It returns choices or ordinal scores without generating a paragraph. It is *not a RedHatAI model or a supported Red Hat AI Inference model/runtime*. OpenShift AI/KServe manages its custom native runtime; this workshop does not claim Red Hat support for that model/runtime. DeepSeek remains the managed language model.
+
+The model revision, serving source and CUDA image are pinned in `deploy/decision/runtime/Dockerfile` and the preparation helper. FP16 fits on a single 16 GB T4. Do not run another GPU model on the same card for this exercise.
+
+== Check GPU discovery and the driver
+
+The operators were installed in Lab 1.1 and their instances enabled in Lab 1.3. The NVIDIA operator now configures the new T4 node.
+
+Inspect GPU discovery and the driver:
+
+[source,sh,role=execute]
+----
+oc get clusterpolicy gpu-cluster-policy
+oc get nodes -l workshop.fjcloud.io/gpu=t4 \
+  -o 'custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu'
+----
+
+Continue when `GPU` is `1`. A Ready node alone does not prove that its GPU driver is ready.
+
+== Deploy d3-mini
+
+The platform prepares the delivery namespaces and developer identity. Then Tekton builds the pinned custom runtime, caches the model and creates the KServe service:
+
+[source,sh,role=execute]
+----
+python3 scripts/prepare-developer.py
+python3 scripts/prepare-decision-model.py
+oc get inferenceservice,servingruntime,pvc -n decision-serving
+oc get pods -n decision-serving
+----
+
+The helper needs a clean, committed workshop checkout reachable from GitHub because Tekton builds that exact Git revision. It preserves the original CPU pools. To repeat setup after a successful runtime build, use `python3 scripts/prepare-decision-model.py --reuse-runtime`.
+
+Expect a Ready `d3-mini` inference service and no public model Route. The application endpoint is fixed:
+
+[source,text]
+----
+http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone
+----
+
+A Ready GPU node does not establish model readiness. Wait for `InferenceService/Ready` before handing the endpoint to the developer. If Azure reports a failed VM, inspect `oc describe machine` and Machine API events; OpenShift may replace an unhealthy new machine automatically. Do not continue after the readiness timeout or add a second T4 to hide a provisioning error.
+
+
+== Give developers authenticated API access
+
+The native `/v1/systemone` protocol is not OpenAI Chat Completions and is not published as an OpenAI MaaS model. Keep its GPU service internal. A standard OpenShift OAuth proxy provides a separate internal HTTPS endpoint, using scoped OpenShift Bearer tokens instead of inventing a MaaS key for this protocol.
+
+[source,sh,role=execute]
+----
+oc apply -k deploy/decision/access
+COOKIE_SECRET=$(openssl rand -base64 32)
+oc create secret generic d3-api-cookie -n decision-serving \
+  --from-literal=cookie-secret="$COOKIE_SECRET" --dry-run=client -o yaml | oc apply -f -
+unset COOKIE_SECRET
+OAUTH_PROXY_IMAGE=$(oc adm release info --image-for=oauth-proxy)
+oc create --dry-run=client -f deploy/decision/access/deployment.yaml -o json | \
+  jq --arg image "$OAUTH_PROXY_IMAGE" '.spec.template.spec.containers[0].image = $image' | oc apply -f -
+oc rollout status deployment/d3-api -n decision-serving --timeout=180s
+----
+
+The developer's `workshop-developer` identity can only use the `d3-api` Service; it cannot modify the model namespace. Invalid or unauthorized tokens are rejected. The proxy uses the cluster's release image, service certificate and restricted-v2. No public model Route is created.
+
+[source,text]
+----
+Developer: https://d3-api.decision-serving.svc.cluster.local:8443/v1/systemone
+App:       http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone
+----
+
+The app's existing direct path is limited by NetworkPolicy to the application pods. Both endpoints use the same native request body and the same T4 model; the developer endpoint adds OpenShift authentication.
+
+The model is visible as `d3-mini` under project `decision-serving` in OpenShift AI. Wait for Ready; a provisioned GPU alone does not prove model readiness. The developer tests both APIs in Lab 2.2 before coding.
+
+Continue to xref:200-platform/lab_5_agents_md.adoc[Lab 1.7 — Prepare Developer Access].

@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: workshop-d3-mini
+  namespace: decision-serving
+  labels:
+    monitoring.opendatahub.io/scrape: "true"
+spec:
+  selector:
+    matchLabels:
+      app: d3-mini-metrics
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s

@@ -1,95 +1,20 @@
-= Lab 1.1 — Install the Platform
+= Lab 1.1 — Install All Operators
 :page-aliases: 200-platform/lab_2_operators.adoc
 
-Prepare the complete platform before adding a model. Install OpenShift AI, Dev Spaces, GitOps, Pipelines, Connectivity Link and the GPU operators together. Then enable their instances: the IDE, KServe, MaaS, MLflow and the HTTPS gateway. Whisper will use the same OpenShift AI installation in Lab 1.4.
-
-[NOTE]
-====
-*Persona:* Platform Engineer +
-*Time:* ~10 minutes active; allow 20–30 minutes for operators, platform images and an additional CPU worker. +
-*Outcome:* Platform ready, with no coding model or provider key yet.
-====
-
-== Check CPU capacity before installing
+*Platform Engineer · bastion terminal.* Submit all operator subscriptions together. No installation script is needed.
 
 [source,sh,role=execute]
 ----
-source state/workshop.env
-set -o pipefail
-INFRA=$(oc get infrastructure cluster -o jsonpath='{.status.infrastructureName}')
-REGION=$(az aro show --name "${ARO_CLUSTER_ID##*/}" --resource-group "$RESOURCEGROUP" \
-  --subscription "$SUBSCRIPTION" --query location -o tsv)
-oc get machinesets -n openshift-machine-api \
-  -o 'custom-columns=NAME:.metadata.name,SIZE:.spec.template.spec.providerSpec.value.vmSize,READY:.status.readyReplicas'
-oc get pv -o 'custom-columns=CLAIM:.spec.claimRef.name,ZONE:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values'
+cd "$HOME/aro-ai-app-platform"
+oc apply -k deploy/operators
+oc get subscriptions -A
+oc get csv -A
 ----
 
-OpenShift AI, MaaS, Dev Spaces and Tekton need CPU headroom. Three small D4 workers can run out of schedulable CPU. If more headroom is needed, add one `Standard_D8s_v3` worker. Choose a zone containing an original CPU MachineSet. An existing Dev Spaces PVC requires CPU capacity in its own zone; adapt `CPU_ZONE=3` to its PV zone. Skip this step if the cluster already has enough capacity.
+The manifests install OpenShift AI, Dev Spaces, Pipelines, GitOps, Connectivity Link, cert-manager, LeaderWorkerSet, Node Feature Discovery, NVIDIA GPU Operator, Cluster Observability and OpenTelemetry. OpenShift AI manages the additional MLflow and TrustyAI operators when its components are enabled in Lab 1.3.
 
-[source,sh,role=execute]
-----
-CPU_ZONE=3
-CPU_TEMPLATE=$(oc get machinesets -n openshift-machine-api -o json |
-  jq -er --arg zone "$CPU_ZONE" '
-    [.items[] | select(.spec.template.spec.providerSpec.value.zone == $zone)
-     | select(.spec.template.spec.providerSpec.value.vmSize | startswith("Standard_D"))]
-    | sort_by(.metadata.name) | .[0].metadata.name // error("No CPU template in this zone")
-  ')
-CPU_POOL="${INFRA}-speech-cpu-${REGION}${CPU_ZONE}"
+OLM resolves dependencies and pulls the controllers in the background. A subscription is not proof that its operator is ready. Next, add CPU capacity and one GPU worker, then wait for the complete operator inventory before creating platform instances.
 
-oc get machineset "$CPU_TEMPLATE" -n openshift-machine-api -o json | \
-  jq --arg name "$CPU_POOL" '
-    del(.status)
-    | .metadata = {name: $name, namespace: "openshift-machine-api",
-        labels: {"workshop.fjcloud.io/speech-capacity": "true"}}
-    | .spec.replicas = 1
-    | .spec.selector.matchLabels["machine.openshift.io/cluster-api-machineset"] = $name
-    | .spec.template.metadata.labels["machine.openshift.io/cluster-api-machineset"] = $name
-    | .spec.template.spec.providerSpec.value.vmSize = "Standard_D8s_v3"
-  ' | oc create -f -
+If a subscription reports an error, inspect it with `oc describe subscription <name> -n <namespace>`. Do not bypass dependency errors or grant privileged SCCs.
 
-oc wait machineset/"$CPU_POOL" -n openshift-machine-api \
-  --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
-----
-
-The new MachineSet inherits the cluster’s image, subnet, disks and bootstrap configuration. The original pools are unchanged. `replicas = 1` creates one additional worker, with its own hourly cost. Repeating `oc create` reports *AlreadyExists* for the same pool.
-
-== Install operators and enable their instances
-
-From the workshop repository in the bastion terminal:
-
-[source,sh,role=execute]
-----
-bash scripts/install-platform.sh
-----
-
-The script runs these phases in order and stops on failure:
-
-. Apply `deploy/operators`: OpenShift AI 3.5, Dev Spaces, GitOps, Pipelines, NFD, NVIDIA, cert-manager, LeaderWorkerSet, Red Hat Connectivity Link, Cluster Observability Operator and OpenTelemetry.
-. Wait for each operator Deployment to exist and become Available, with a bounded timeout. Install the workshop Tekton tasks after their CRDs exist.
-. Start the workshop PostgreSQL database, then apply `deploy/instances` to enable the IDE, KServe, MaaS, GPU discovery and driver management.
-. Bind the MaaS gateway to this cluster’s domain and ingress certificate; configure Authorino TLS and the OpenShift AI dashboard.
-. Enable MaaS telemetry and the OpenShift AI metrics stack (one 5 GiB metrics volume, seven-day retention), then wait for the gateway to be Programmed and Dev Spaces to be Active.
-
-The MLflow operator is enabled in this same platform step. TrustyAI is also managed: the 3.5 Playground backend discovers the NeMo Guardrails API even when no guardrail instance is deployed. A small SQLite/PVC tracking instance stores workshop traces; Lab 1.6 prepares the application experiment and permissions.
-
-The included PostgreSQL uses ephemeral storage for this disposable workshop. Use a persistent, backed-up database and independent credentials for production. Do not restart its storage during the workshop: MaaS API keys are stored there.
-
-[TIP]
-====
-If installation stops, inspect `oc get subscriptions -A` and `oc get pods -A --field-selector=status.phase=Pending`. Resolve OLM errors or worker capacity, then rerun the script. Do not disable managed components to make the installation fit.
-====
-
-== Check the result
-
-[source,sh,role=execute]
-----
-oc get dsc/default-dsc
-oc get gateway/maas-default-gateway -n openshift-ingress
-oc get checluster/devspaces -n openshift-operators
-oc get tasks -n openshift-pipelines
-----
-
-OpenShift AI is Ready, the gateway is Programmed and Dev Spaces is Active. The NVIDIA driver can wait for a GPU node; its absence does not block the external coding model. Each developer will create an Argo CD instance in their own application namespace.
-
-➡️ Move on to *Lab 1.2: Publish DeepSeek on Foundry*.
+Continue to xref:200-platform/lab_2_workers.adoc[Lab 1.2 — Add CPU and GPU Workers].

@@ -1,0 +1,102 @@
+kube:admin
+Home
+Projects
+AI hub
+Gen AI studio
+Playground
+Tech Preview
+AI asset endpoints
+Tech Preview
+API keys
+Prompts
+Develop & train
+Observe & monitor
+Learning resources
+Applications
+Settings
+Playground
+
+Project
+
+live-transcript-dev
+Compare chat
+New chat
+View code
+Settings
+8.90 s
+T: 45753
+TTFT: 1.39 s
+kube:admin
+10/28/2026, 10:15:41 PM
+
+Use Signal-Desk tools. Search the loaded archived week for semiconductor demand. Read one returned source_id and inspect the index catalog. Explain one hypothetical index exposure for our semiconductor fund, its risk and the archive cutoff. Use only returned evidence. Do not fetch current prices, predict a profit or claim verified ETF holdings.
+
+maas-vllm-inference-1/deepseekv4pro
+AI
+10/28/2026, 10:15:41 PM
+
+Here is my analysis based solely on the archived evidence returned:
+
+Semiconductor Demand in the Loaded Week
+
+The search returned 15 matches across the archived week (October 19–25, 2026). Key themes include:
+
+AI chip demand driving infrastructure buildout: Ciena's CEO reports AI demand outpacing supply for optical networking chips; Intel's CTO discusses AI chip demand and catching TSMC; Nvidia's Vera team describes agentic AI reshaping CPU design priorities.
+Chip-backed debt becoming a $1T market: Blackstone's 2023 CoreWeave loan is cited as the blueprint.
+Geopolitical friction: 32 Nvidia Blackwell Ultra B300 chips were found in systems linked to China Telecom despite US export controls; DeepSeek and Huawei are collaborating on future AI chip designs.
+Labor disruption: Micron's Taiwan union staged the first-ever semiconductor strike in Taiwan, demanding profit-sharing.
+Startup activity: Tenstorrent raised $1.5B at a $6.2B valuation; Flapping Airplanes raised $1B for chip-efficient AI training.
+One Article Read: Micron Strike (source_id: 781eaf42c055e495363e227c)
+
+Published October 22, 2026, this Nikkei Asia piece reports that a Micron labor union staged Taiwan's first-ever strike in the semiconductor industry, demanding a regular profit-sharing scheme for employees. This is a concentrated supply-chain risk: Micron's Taichung facility is its largest Taiwan site, and any prolonged labor action could disrupt DRAM/NAND output. A follow-up article on October 21 (source_id: 4278a6347e0ad74c2d5fc19d) notes Micron and the union later signed a multi-issue agreement, suggesting resolution.
+
+Index Catalog
+
+The index universe provides four static ETF proxies:
+
+QQQ
+Nasdaq-100
+Invesco
+SPY
+S&P 500
+State Street SPDR
+SMH
+MVIS US Listed Semiconductor 25
+VanEck
+XLK
+Technology Select Sector
+State Street SPDR
+Hypothetical Index Exposure: SMH (VanEck Semiconductor ETF)
+
+For a semiconductor-focused fund, SMH — tracking the MVIS US Listed Semiconductor 25 Index — is the most directly relevant proxy. It concentrates exposure in 25 US-listed semiconductor companies, spanning chip designers, fabricators, and equipment makers.
+
+Risk
+
+The archived week reveals a concentrated supply-chain and geopolitical risk: the Micron strike in Taiwan (the first ever in that industry) demonstrates labor vulnerability at a critical fabrication hub. Simultaneously, the discovery of sanctioned Nvidia Blackwell Ultra B300 chips in China Telecom-linked systems signals that export controls are being circumvented, which could trigger tighter restrictions or retaliatory measures — both of which would directly impact the constituents of a pure-play semiconductor index like SMH.
+
+Archive Cutoff
+
+The archive cutoff is October 26, 2026, at 04:00 UTC. The loaded week spans news from October 19 through October 25, 2026. No information beyond that cutoff is available, and no current prices, forward-looking returns, or verified ETF holdings can be claimed from this data.
+
+Tool response: search_archive
+8.90 s
+T: 45753
+5142 T/s
+TTFT: 1.39 s
+3.3 KB
+This chatbot uses AI. Check for mistakes.
+Settings
+Model
+Prompt
+Knowledge
+Off
+MCP
+1
+Model
+maas-vllm-inference-1/deepseekv4pro
+Subscription  
+Signal Desk runtime
+Temperature: 0 - 2
+  
+Streaming
+Add audio transcription model

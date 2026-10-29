@@ -1,0 +1,140 @@
+{
+  "passed": true,
+  "at": "2026-10-28T14:35:12.309Z",
+  "scope": "Actual D3 ordinal scoring on Metal, Azure DeepSeek memo explanations and research; real saved news",
+  "memo": {
+    "name": "Semiconductor fund",
+    "criteria": "We invest in semiconductors and electronic components across chip designers, foundries, fabrication equipment, memory, advanced packaging and supply chains. Prioritize material changes in chip demand, capacity, revenue, margins, capital spending, manufacturing technology, supply constraints and export restrictions. Both positive and negative developments can create research opportunities. AI or cloud news matters when a concrete connection to chip demand or suppliers is supported. Consumer apps, retail earnings, routine product launches and political stories have low priority without a documented semiconductor transmission. Score the value of researching the news for this mandate, not whether to buy or sell and not its expected return. Distinguish source evidence from speculation and flag limited excerpt coverage.",
+    "version": 3
+  },
+  "classifier": "vllm-sr/d3-mini",
+  "device": "mps",
+  "dtype": "float16",
+  "agent": "deepseekv4pro",
+  "articles": [
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand",
+      "title": "Moore Threads Q3 Revenue Surges 1,774% to ~$240M",
+      "score": 72.9,
+      "reason": "Moore Threads is a Chinese AI chipmaker (P4) with a 1,774% YoY revenue surge (P1) and a 100,000-GPU cluster build (P3), directly matching the fund's focus on material changes in chip demand, revenue, and AI-related semiconductor developments. The excerpt is limited to a Techmeme summary without the full Bloomberg article, so details on margins, capacity, or supply constraints are missing.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 609
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/dongshan-precision-set-to-debut-after-1-3-billion-hk-listing",
+      "title": "Chinese PCB Maker Dongshan Rises in Hong Kong Debut After $1.3B IPO Misses Target",
+      "score": 35.6,
+      "reason": "Dongshan Precision is a PCB manufacturer, which falls within the fund's semiconductor and electronic components supply chain coverage, but the source points only describe IPO mechanics and valuation without any documented change in chip demand, capacity, revenue, margins, capital spending, manufacturing technology, supply constraints, or export restrictions. The excerpt provides no concrete semiconductor transmission, limiting the research opportunity.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 622
+    },
+    {
+      "url": "https://www.ft.com/content/d92ede23-75c3-4549-bec2-7fa4be979786",
+      "title": "Slough becomes Europe's biggest data center hub with 40+ sites",
+      "score": 32.9,
+      "reason": "The excerpt confirms a concentration of over 40 data centers in Slough, which implies sustained demand for servers, networking chips, memory, and power-management semiconductors, aligning with the memo's focus on chip demand driven by cloud infrastructure. However, the excerpt lacks concrete data on capacity additions, capital spending, or specific supplier impacts, limiting the strength of the signal.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 588
+    },
+    {
+      "url": "https://www.ft.com/content/24a35e41-2641-4cec-97f5-a974412f9952",
+      "title": "Anthropic's seven co-founders remain tight-knit and influential; Daniela Amodei seen as balance to Dario",
+      "score": 29.2,
+      "reason": "The excerpt describes Anthropic's co-founder dynamics and control, but provides no concrete link to semiconductor demand, chip supply chains, capacity, capex, or export restrictions. Without documented transmission to chip designers, foundries, or fabrication equipment, the article does not match the fund's mandate for material semiconductor developments.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 616
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/samsung-unveils-galaxy-buds-on-clip-on-earbuds-for-229",
+      "title": "Samsung Announces $229 Galaxy Buds On, Its First Open-Fit Cuff Earbuds",
+      "score": 23.1,
+      "reason": "The source describes a consumer earbud product launch with no documented connection to semiconductor demand, chip supply chains, or fabrication technology. The mention of AI-assisted design is unsupported by evidence of a concrete chip demand impact, and the excerpt coverage is limited, so the memo's semiconductor mandate is not materially addressed.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 624
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/amazon-unveils-new-echo-show-16-alexa-speakers-smart-clock-and-photo-frame",
+      "title": "Amazon Launches $500 Echo Show 16, $200 Echo Time Alarm, and Alexa Photo Frame",
+      "score": 21.7,
+      "reason": "The source describes consumer device launches and price changes for Amazon's Alexa products, with no documented connection to semiconductor demand, chip suppliers, manufacturing technology, or supply constraints. The excerpt lacks evidence of a material transmission to chip designers, foundries, fabrication equipment, memory, or advanced packaging, making it a low-priority match for the fund's semiconductor mandate.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 603
+    },
+    {
+      "url": "https://x.com/artificialanlys/status/2115265133467635877",
+      "title": "Artificial Analysis Intelligence Index v5: Private Benchmarks, Claude Opus 5.5 Leads, Open-Weight Gap Widens",
+      "score": 20.4,
+      "reason": "The article describes an AI benchmark methodology update and model ranking changes, but provides no concrete connection to semiconductor demand, capacity, revenue, margins, capital spending, manufacturing technology, supply constraints, or export restrictions as required by the fund memo. The score of 20.4 reflects low priority because the source lacks documented semiconductor transmission, and the excerpt offers no evidence linking these benchmark shifts to chip suppliers or fabrication economics.",
+      "coverage": "publisher_readable_text",
+      "input_tokens": 759
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/ai-cybersecurity-startup-upwind-raises-at-3-8-billion-value",
+      "title": "AI Cybersecurity Startup Upwind Hits $3.8B Valuation After $400M Raise",
+      "score": 19.8,
+      "reason": "The funding round and valuation increase for Upwind Security indicate growing investment in AI and cloud cybersecurity, but the excerpt provides no concrete link to semiconductor demand, chip suppliers, or fabrication capacity, making the connection to the fund's mandate speculative and unsupported.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 634
+    },
+    {
+      "url": "https://www.engadget.com/2299227/meta-tamagotchi-like-ai-digital-pet-app-waddle-world/",
+      "title": "Meta’s Waddle World Is a Tamagotchi-Style AI Pet App, Now Testing in the Philippines",
+      "score": 18,
+      "reason": "The article describes a consumer AI pet app and a physical companion device from Meta, with no documented connection to semiconductor demand, chip suppliers, capacity, manufacturing technology, or export restrictions. The memo requires a concrete semiconductor transmission, which is absent here; the app's AI features and limited Philippines release provide no evidence of material changes in chip demand or supply chains.",
+      "coverage": "publisher_readable_text",
+      "input_tokens": 674
+    },
+    {
+      "url": "https://www.coindesk.com/tech/2026/10/28/google-to-preview-crypto-custody-security-system-as-ai-threats-grow",
+      "title": "Google previews MPC crypto custody service as private-key thefts mount",
+      "score": 17.4,
+      "reason": "The article describes a Google cloud custody service in private preview with no disclosed pricing, no commercial launch until 2027, and no concrete link to semiconductor demand, capacity, capital spending, or supply chains; the fund memo requires a documented semiconductor transmission, which is absent here, so the low score reflects a weak match.",
+      "coverage": "publisher_readable_text",
+      "input_tokens": 782
+    },
+    {
+      "url": "https://www.sfchronicle.com/bayarea/article/open-ai-engineer-indicted-for-bugging-headquarters-22497813.php",
+      "title": "OpenAI Engineer Indicted for Allegedly Bugging Conference Room with Toilet-Paper-Wrapped Device",
+      "score": 15.5,
+      "reason": "The article describes an alleged corporate espionage incident at OpenAI involving a listening device, but the source provides no documented transmission mechanism linking this event to semiconductor demand, capacity, capital spending, supply constraints, or export restrictions; the connection to chip demand or suppliers remains speculative and unsupported by the excerpt.",
+      "coverage": "publisher_readable_text",
+      "input_tokens": 687
+    },
+    {
+      "url": "https://www.wired.com/review/kindle-paperwhite-kindle-colorsoft-2026/",
+      "title": "Amazon Kindle Paperwhite and Colorsoft (2026) Review: Page-Turn Buttons Are the Real Upgrade",
+      "score": 11.6,
+      "reason": "The article describes a consumer e-reader product refresh with minor weight reductions and accessory changes, but provides no documented connection to semiconductor demand, capacity, margins, or supply-chain impacts relevant to the fund's chip-focused mandate.",
+      "coverage": "publisher_readable_text",
+      "input_tokens": 729
+    },
+    {
+      "url": "https://www.wsj.com/business/retail/etsy-sales-rise-as-the-number-of-active-buyers-increases-01c646c9?st=eiH3p6&reflink=desktopwebshare_permalink",
+      "title": "Etsy Q3 Revenue Beats Estimates, Net Income Surges on Depop Sale",
+      "score": 6.3,
+      "reason": "The article covers Etsy's consumer marketplace earnings, revenue, and a divestiture, with no documented connection to semiconductor demand, chip supply chains, or fabrication technology. The excerpt provides no evidence of a transmission channel to the fund's semiconductor mandate, and coverage is limited to a Techmeme excerpt, so a material link cannot be assessed.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 615
+    },
+    {
+      "url": "https://www.reuters.com/technology/hacker-trying-breach-us-federal-election-commission-system-email-shows-2026-10-27/",
+      "title": "Hacker Attack Forces FEC to Take Filing System Offline, Blocking Report Submissions",
+      "score": 1.7,
+      "reason": "The article describes a cyberattack on a U.S. election agency with no documented link to semiconductor demand, chip supply chains, manufacturing technology, or export restrictions. The excerpt provides no evidence of any semiconductor transmission channel, and coverage is limited to a Techmeme summary rather than the full Reuters article.",
+      "coverage": "rss_excerpt",
+      "input_tokens": 589
+    }
+  ],
+  "investigation": "Existing current memo research reused",
+  "checks": [
+    "simple English UI",
+    "memo-relative scores out of 100, not confidence or returns",
+    "descending opportunity order",
+    "no ticker dashboard or BUY/SHORT feed filters",
+    "source-grounded memo explanations",
+    "current-score investigation",
+    "mobile layout",
+    "mock-keychain",
+    "no JavaScript errors"
+  ]
+}

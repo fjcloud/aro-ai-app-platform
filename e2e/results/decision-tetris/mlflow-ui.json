@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "workspace": "live-transcript-dev",
+  "experiment": "decision-tetris",
+  "ui": "Native MLflow 3.14.0 via OpenShift AI",
+  "observed": [
+    "experiment overview",
+    "trace count",
+    "latency metrics",
+    "input token usage",
+    "zero generated tokens"
+  ],
+  "browser_keychain": "mock",
+  "cost_note": "No cost data available; zero displayed cost is not a billing measurement."
+}

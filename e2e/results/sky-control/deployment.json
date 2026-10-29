@@ -1,0 +1,48 @@
+{
+  "lab": "tfclk",
+  "application_revision": "be0fba63b7068cd32ba3e5343fd3c73d80ee9618",
+  "sync": "Synced",
+  "health": "Healthy",
+  "app_scc": "restricted-v2",
+  "containers": [
+    {
+      "name": "live-transcript",
+      "imageID": "image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript@sha256:0270b64bcae2ad1202f7428c5afb74ebbef1494d5c7b0242093181545226ab78",
+      "ready": true
+    },
+    {
+      "name": "oauth-proxy",
+      "imageID": "image-registry.openshift-image-registry.svc:5000/live-transcript-dev/cluster-voice-oauth@sha256:e8c8cd28578b5f26e60f5903fc27dcbb811f38891b7205bf443d33b4420223d3",
+      "ready": true
+    }
+  ],
+  "pipeline_run": "build-sky-app-rnvtm",
+  "pipeline_succeeded": "True",
+  "build_scc": "pipelines-scc",
+  "hostUsers": false,
+  "model": {
+    "repo": "vllm-sr/d3-mini",
+    "revision": "a475367de0d8133a3c1a2a0dc12303d89cfa2ab4",
+    "model_sha256": "9ac186bb30b30c129d7aae03d73932600424963bd4644c2041a9d7120f029af5",
+    "engine": "native",
+    "device": "cuda:0",
+    "dtype": "float16",
+    "parameters": 4539918336,
+    "ready": true,
+    "numerics": "approximate",
+    "golden": {
+      "status": "unverified",
+      "checked": 0,
+      "matched": 0,
+      "reference": null
+    }
+  },
+  "runtime_image": "image-registry.openshift-image-registry.svc:5000/live-transcript-build/decision-runtime@sha256:259decda193592a021d5c7b7d95c0ca4f5772167cac9a1fe2393774953b4b0db",
+  "model_scc": "restricted-v2",
+  "inferenceservice_ready": "True",
+  "gpu_after_stress": "Tesla T4, 12309 MiB, 16384 MiB",
+  "public_model_routes": 0,
+  "experiment": "sky-control",
+  "experiment_id": "4",
+  "temporary_registry_secret_exists": false
+}

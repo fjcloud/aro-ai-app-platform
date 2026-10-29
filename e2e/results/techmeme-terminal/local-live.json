@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "at": "2026-10-28T13:03:21.265Z",
+  "scope": "Actual local Go app, public Techmeme data, hosted Groq Qwen and local d3-mini Metal; no inference fixtures",
+  "agent": "qwen/qwen3.8-27b",
+  "classifier": "vllm-sr/d3-mini",
+  "device": "mps",
+  "dtype": "float16",
+  "upstream_accelerator_validated": false,
+  "articles": [
+    {
+      "url": "https://www.reuters.com/technology/hacker-trying-breach-us-federal-election-commission-system-email-shows-2026-10-27/",
+      "title": "FEC Filing System Temporarily Offline After Hacker Attack",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 525,
+      "latency_ms": 2389
+    },
+    {
+      "url": "https://www.ft.com/content/d92ede23-75c3-4549-bec2-7fa4be979786",
+      "title": "How UK's Slough Became Europe's Largest Data Center Hub",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 524,
+      "latency_ms": 2391
+    },
+    {
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand",
+      "title": "Moore Threads Q3 Revenue Jumps 1,774% as AI Chip Demand Surges",
+      "coverage": "rss_excerpt",
+      "signal": "no_signal",
+      "input_tokens": 569,
+      "latency_ms": 2528
+    }
+  ],
+  "investigation": "Not triggered: no directional signal in the real sample",
+  "checks": [
+    "English UI",
+    "live article summaries",
+    "actual Metal classifications",
+    "NO SIGNAL gate",
+    "mobile layout",
+    "no JavaScript errors",
+    "mock-keychain"
+  ]
+}

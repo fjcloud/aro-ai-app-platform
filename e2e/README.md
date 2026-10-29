@@ -1,79 +1,53 @@
-# ARO workshop validation
+# ARO Signal Desk validation
 
-Follow Acts 0–3 in the assigned environment, including the real Dev Spaces session, OpenCode prompts, Tekton build and personal Argo CD. Then run from an authenticated bastion:
+Follow Acts 0–3 on an assigned ARO lab: actual operator/model setup, curl + jq probes, Dev Spaces, DeepSeek/OpenCode generation, Tekton, Argo CD and the browser game. Fixture success alone is not live acceptance.
+
+The guide installs operators with `oc apply -k deploy/operators`, adds one CPU and one GPU worker, then enables instances with explicit CLI commands. The developer preflight is Lab 2.2, executed entirely from Dev Spaces.
+
+From the authenticated bastion:
 
 ```sh
 bash e2e/platform-run.sh
 bash e2e/dev-run.sh
 bash e2e/usage-run.sh
-python3 e2e/check-observability.py
+python3 e2e/check-observability.py | jq .
+python3 e2e/maas-protocol.py | jq .
 ```
 
-| Check | Evidence |
-| --- | --- |
-| Platform | Workers and operators, MaaS provider/model/catalog, separate workspace key and real Foundry completion |
-| Developer | Latest Tekton build, matching image, Argo CD Synced/Healthy, public HTTPS health endpoint, resources, probes and restricted security |
-| Usage | Real completion with input/output token usage through MaaS |
-| Observability | All nine workshop dashboard expressions through OpenShift Thanos |
+Verify the developer's five API command blocks verbatim, plus credential rejection and namespace permissions:
 
-These checks create no cluster resources or credentials. Platform and usage checks each make one billable coding-model call. Generate coding and speech activity before checking metrics and allow scrape propagation; p95 can be NaN without recent completions.
+```sh
+E2E_NS=your-devspaces-namespace DEV_POD=your-workspace-pod \
+  python3 e2e/check.py model-apis
+```
 
-`APP_NAME` defaults to `live-transcript`. `EXPECT_UPDATED_APP=true` checks the CPU over 1h shortcut exercise. Also pass `E2E_NS=<workspace-namespace> DEV_POD=<workspace-pod> DEV_CONTAINER=dev` to verify the real workspace’s source, local Go build and pushed Git revision. The checks leave the environment available until RHDP expiration.
+This requires the HTTPS D3 proxy from Lab 1.6 and the Dev Spaces-to-Responses policy from Lab 1.8. It checks the pinned proxy image, restricted-v2, model readiness, two complete memo scores, both DeepSeek protocols and rejection of invalid/unauthorized tokens. Credentials and full model responses are never printed.
 
-## Local checks
+Platform/usage/protocol/model-apis probes make billable model calls. `APP_NAME` defaults to `live-transcript`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
+
+Validate the UI with a full archived-week import, real T4 scores, an actual native Responses tool loop, a virtual allocation and subsequent-week observed prices. Verify unavailable archive IDs, incomplete-week labels and errors. Confirm an MLflow research trace and the same archive tools in the native Playground. Public app access requires OpenShift OAuth; credentials remain private. Every Chromium launch includes `--use-mock-keychain`.
+
+For the real Route browser test, save a private OpenShift browser session and model metadata from the authenticated d3-mini probe in Lab 2.2, then run:
+
+```sh
+APP_URL=https://your-app-route BROWSER_STATE=/private/path/login-state.json \
+D3_METADATA=/private/path/d3-models.json NEWS_IMPORT_FILE=/path/to/current-week-news.json \
+EXPECT_UPDATED_APP=true APPLICATION_REVISION=your-deployed-git-revision \
+  node e2e/briefing-desk-aro.cjs
+```
+
+The test tries direct collection first. A blocked collection fails unless an explicit import file is supplied; the report records that recovery. It never invents news, scores or prices.
+
+Local regression checks:
 
 ```sh
 make test
+make test-terminal
 make docs
 ```
 
-Helper regressions cover Azure resource-group discovery, scoped developer permissions, operator readiness, provider configuration and telemetry failures. The reference Go app has HTTP, upload, speech-proxy, bounded agent/tool, MCP protocol, monitoring-failure, credential-rotation and OTLP export tests.
+The browser fixture test covers seven archive days, memo changes, native agent research, two investments with positive/negative returns, immutable portfolio choices, exports and mobile layout. Go tests also cover MCP discovery, strict tool arguments, archive boundaries, source safety and completed-session valuation.
 
-## Speech in the browser
+[Signal Desk validation and evidence](BRIEFING-DESK-VALIDATION.md) distinguishes real local Metal/Azure runs from fixture checks and ARO results. The optional `e2e/briefing-desk-live-local.cjs` tests the local Metal setup; it does not establish ARO compatibility.
 
-```sh
-python3 e2e/check.py speech
-npm install --no-save @playwright/test@1.56.1
-npx playwright install chromium
-BROWSER_STATE=/private/path/login-state.json APP_URL=https://your-app-route AUDIO_FIXTURE=/absolute/french-speech.wav \
-  node e2e/speech-browser.cjs
-```
-
-Set `ASK_CLUSTER=true` to also submit the spoken question and verify real monitoring evidence. Use synthetic mono 16 kHz PCM16 WAV audio. For English, set `SPEECH_LANGUAGE=en` and supply an English fixture. The check captures real browser microphone audio against the Go backend and Whisper, and verifies text before Stop, independent clips, export, microphone release and failure handling. Every Chromium launch uses `--use-mock-keychain`.
-
-## MaaS protocol and quota
-
-```sh
-python3 e2e/maas-protocol.py
-python3 e2e/maas-quota.py
-```
-
-The protocol check makes billable tool-use and streaming calls, including a prompt larger than 16 KiB, and checks model discovery and invalid/missing-key rejection. The quota check requires an OpenShift user token. It creates its own temporary subscription and short-lived key, then revokes/deletes both in `finally`. It refuses to overwrite an existing validation subscription. Enforcement is asynchronous and is not a financial spending cap.
-
-## Validation records
-
-- [Cluster Voice: live ARO acceptance and regression evidence](CLUSTER-VOICE-VALIDATION.md)
-- [Observability, scoped delivery and browser speech](OBSERVABILITY-SECURITY-VALIDATION.md)
-- [External Foundry model through MaaS](MAAS-FOUNDRY-VALIDATION.md)
-- [RedHatAI Whisper INT8 on one T4](WHISPER-INT8-VALIDATION.md)
-- [Deployment image guard regression](IMAGE-CONTRACT-VALIDATION.md)
-
-Retired GPU comparisons, FP16 baselines and terminal/provisioning experiments remain in [the pre-cleanup revision](https://github.com/fjcloud/aro-ai-app-platform/tree/e333ecdf5aef0946cf747d7a970b6b386ce87835).
-
-## Cluster Voice local browser checks
-
-```sh
-AUDIO_FIXTURE=/absolute/spoken.wav node e2e/cluster-voice-browser.cjs
-```
-
-Uses the actual Go app and Chromium with mock-keychain. Whisper, MaaS and Prometheus are local protocol fixtures: this proves browser/backend integration, not live GPU/model/cluster compatibility. Run `python3 e2e/check-cluster-voice.py` for live app/model/monitoring checks (billable calls). Live acceptance also requires Lab 3.2, authenticated app access, real evidence and a visible MLflow trace. Native MCP Playground and runtime provider behavior remain separate live checks.
-
-## Native AgentOps browser check
-
-```sh
-RHOAI_URL=https://rh-ai.your-cluster.example \
-BROWSER_STATE=/private/login-state.json MCP_TOKEN_FILE=/private/short-lived-token \
-MLFLOW_TRACE_ID=<trace-id-from-a-voice-question> node e2e/agentops-browser.cjs
-```
-
-Requires an already configured project Playground with the MaaS model and private authenticated browser state. The token comes from `cluster-voice-playground` (15-minute Service reader), never an administrator or MaaS key. This makes a billable model call, verifies a real MCP tool result, opens the native MLflow UI, and checks the persisted voice trace and speech link.
+Earlier speech, cluster-health and game experiments remain in their reference directories and historical validation records. They are not prerequisites or acceptance criteria of the Signal Desk workshop.

@@ -1,0 +1,1634 @@
+{
+  "passed": true,
+  "model": "maas-vllm-inference-1/deepseekv4pro",
+  "response_id": "resp_61bce091-20a5-4d73-b233-a08ac0c9a8f5",
+  "status": "completed",
+  "calls": [
+    {
+      "name": "search_archive",
+      "arguments": {
+        "query": "semiconductor demand chip shortage"
+      },
+      "output": {
+        "coverage": "Search of this archived week only; no live web or current market data.",
+        "cutoff": "2026-10-26T04:00:00Z",
+        "matches": [
+          {
+            "as_of": "2026-10-22T16:00:00Z",
+            "day": "2026-10-22",
+            "excerpt": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees",
+            "source_id": "781eaf42c055e495363e227c",
+            "title": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees"
+          },
+          {
+            "as_of": "2026-10-25T16:00:00Z",
+            "day": "2026-10-25",
+            "excerpt": "\u201cWhat is a GPU?\u201d Blackstone Inc. executives asked CoreWeave Inc.'s leadership. Also: \u201cIs AI real?\u201d \u2014 These were entirely logical queries \u2026",
+            "source_id": "6693f87b7e3898bc0e5921fa",
+            "title": "How a Blackstone-led $2.3B private credit loan to CoreWeave in 2023 became a blueprint for chip-backed debt, which is on track to become a $1T market"
+          },
+          {
+            "as_of": "2026-10-20T03:55:00Z",
+            "day": "2026-10-19",
+            "excerpt": "DeepSeek is working closely with Huawei Technologies to shape the design of future AI chips, two people familiar with the matter said \u2026",
+            "source_id": "f18af95cfa136d4df363ea3c",
+            "title": "Sources: DeepSeek and Huawei are collaborating on future AI chip designs; DeepSeek plans to start using Ascend 950DT for pre-training as soon as 2026's end"
+          },
+          {
+            "as_of": "2026-10-24T16:01:00Z",
+            "day": "2026-10-24",
+            "excerpt": "Ciena CEO Gary Smith is \u2018suitably paranoid,\u2019 but optimistic \u2014 The historic telecommunications crash of 2001 is burned indelibly \u2026",
+            "source_id": "eca7d60d98e7686046747f89",
+            "title": "An interview with Ciena CEO Gary Smith, a veteran of the 2001 telecoms crash, on AI demand outpacing supply for Ciena's optical networking chips, and more"
+          },
+          {
+            "as_of": "2026-10-19T16:00:00Z",
+            "day": "2026-10-19",
+            "excerpt": "AI chip startup Tenstorrent Inc., after attracting takeover interest earlier this year, has raised $1.5 billion from investors \u2026",
+            "source_id": "c273d12aacdacff62baa7b6a",
+            "title": "AI chip startup Tenstorrent raised a $1.5B Series E led by Trace Capital and Innovation X at a $6.2B valuation, up from $2.6B after raising $700M in 2024"
+          },
+          {
+            "as_of": "2026-10-26T03:55:00Z",
+            "day": "2026-10-25",
+            "excerpt": "High-frequency trading firms are even building their own data centers as they compete for an edge in the AI era.",
+            "source_id": "881efdf441aca16c8a49972a",
+            "title": "High-frequency trading firms such as Jane Street are investing in AI and chip startups and neoclouds, and building data centers to gain an edge in the AI era"
+          },
+          {
+            "as_of": "2026-10-26T03:55:00Z",
+            "day": "2026-10-25",
+            "excerpt": "This spring, Mike Mathews, who leads the global digital infrastructure practice at insurance broker Marsh \u2026",
+            "source_id": "4a3de5fc22b987faf6c120a4",
+            "title": "Data center tenants now demand $5M+ a day in late-delivery fees, up from $1M this spring, spawning new \u201cdelay-in-delivery\u201d coverage from brokers like Marsh"
+          },
+          {
+            "as_of": "2026-10-20T16:00:00Z",
+            "day": "2026-10-20",
+            "excerpt": "OpenAI has changed its tune on China. Nvidia is a big winner. \u2014 OpenAI for much of last year advocated for strict limits \u2026",
+            "source_id": "8a44b122d0d43f6c0c169d60",
+            "title": "Sources: OpenAI has retreated from advocating for strict US chip export controls to China ahead of the lame-duck session, aligning closer with President Trump"
+          },
+          {
+            "as_of": "2026-10-19T16:00:00Z",
+            "day": "2026-10-19",
+            "excerpt": "NVIDIA's Vera CPU heralds a redefinition of computing architecture from a traditional, task-isolated paradigm to an orchestrated \u2026",
+            "source_id": "60df104d4dc4a9ca69581167",
+            "title": "Q&A with Nvidia's Vera team on agentic AI driving CPU demands and forcing CPU design priority back to single-threaded performance over core counts, and more"
+          },
+          {
+            "as_of": "2026-10-23T16:00:00Z",
+            "day": "2026-10-23",
+            "excerpt": "What I learned from touring Intel's most advanced fab and talking to its leadership. \u2014 I spent two days touring Intel's \u2026",
+            "source_id": "7e393ff2f4213ba3970bfa14",
+            "title": "An interview with Intel's leadership, including CTO Pushkar Ranade, on AI chip demand, lessons from 10nm, whether Intel can catch up to TSMC, Terafab, and more"
+          },
+          {
+            "as_of": "2026-10-19T16:00:00Z",
+            "day": "2026-10-19",
+            "excerpt": "A new software tool from Amazon aims to make switching from Nvidia to the company's own AI chips about as simple as changing a setting.",
+            "source_id": "847def9fa9fb922b2fc62dd6",
+            "title": "Amazon introduces TorchNeuron, an open-source tool that will allow developers to run code written in PyTorch on Amazon's Trainium chips with no rewrite"
+          },
+          {
+            "as_of": "2026-10-20T03:55:00Z",
+            "day": "2026-10-19",
+            "excerpt": "Nscale Ltd., the AI cloud computing firm, is in talks to sell computing power to Anthropic PBC in a deal that could be worth about $45 billion \u2026",
+            "source_id": "f01772b24f08ff9252e2e071",
+            "title": "Sources: Nscale is in talks for a second deal with Anthropic worth ~$45B to deliver 460MW of computing power at its West Virginia campus using Vera Rubin chips"
+          },
+          {
+            "as_of": "2026-10-21T19:35:00Z",
+            "day": "2026-10-21",
+            "excerpt": "Flapping Airplanes, a year-old artificial intelligence startup, has raised $1 billion in funding at a $6 billion valuation \u2026",
+            "source_id": "e70206bd636187085aa9db30",
+            "title": "Flapping Airplanes, which is working on methods to train AI models using less data and compute and make the chips more efficient, raised $1B at a $6B valuation"
+          },
+          {
+            "as_of": "2026-10-22T16:00:00Z",
+            "day": "2026-10-22",
+            "excerpt": "Israeli security company Lava finds 32 Nvidia Blackwell Ultra B300 chips connected to systems linked to state-owned operator China Telecom, despite US controls",
+            "source_id": "1814274e70c60faf08c218c2",
+            "title": "Israeli security company Lava finds 32 Nvidia Blackwell Ultra B300 chips connected to systems linked to state-owned operator China Telecom, despite US controls"
+          },
+          {
+            "as_of": "2026-10-19T16:00:00Z",
+            "day": "2026-10-19",
+            "excerpt": "AI infrastructure startup Modal says it plans to start using Nvidia's Vera CPUs for the first time for hosting agents, alongside existing Intel and AMD chips",
+            "source_id": "2da6d4029016495e402873b4",
+            "title": "AI infrastructure startup Modal says it plans to start using Nvidia's Vera CPUs for the first time for hosting agents, alongside existing Intel and AMD chips"
+          }
+        ]
+      },
+      "server_label": "Signal-Desk"
+    },
+    {
+      "name": "list_news",
+      "arguments": {},
+      "output": {
+        "coverage": "Archived primary headlines only; no current prices or realized returns.",
+        "news": [
+          {
+            "day": "2026-10-19",
+            "source_id": "60df104d4dc4a9ca69581167",
+            "title": "Q&A with Nvidia's Vera team on agentic AI driving CPU demands and forcing CPU design priority back to single-threaded performance over core counts, and more"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "1c7cc15a4800e8c6dbc32108",
+            "title": "Abby Care, which runs an AI-powered platform that trains and certifies family members as paid caregivers, raised an $82M Series C led by Transformation Capital"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "ffb57b0dacdf1713bf5137b1",
+            "title": "Stripe Link data shows agentic transactions increased by 38x and volume of payments by 20x in September, with retail leading in both, and a ~$100 average spend"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "f3a0b8494eed60d147c58327",
+            "title": "AWS analysts claim that at least one actor started to exploit the PHP2Shell bugs on October 17, four days prior to the vulnerabilities' public disclosure"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "f2baa695a188f429011fa7b4",
+            "title": "PHP development team plans to release updates tomorrow to address two vulnerabilities, each rated 9.2; security researchers at watchTowr say they are RCE flaws"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "f18af95cfa136d4df363ea3c",
+            "title": "Sources: DeepSeek and Huawei are collaborating on future AI chip designs; DeepSeek plans to start using Ascend 950DT for pre-training as soon as 2026's end"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "f01772b24f08ff9252e2e071",
+            "title": "Sources: Nscale is in talks for a second deal with Anthropic worth ~$45B to deliver 460MW of computing power at its West Virginia campus using Vera Rubin chips"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "efccc9b62a83efd516bf33b8",
+            "title": "Survey of 94 economists: 54% expect AI's gains to spread across the G20 over the next decade, not just the US and China; 32 see African countries falling behind"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "eed0018b7edee42fee4a384b",
+            "title": "SpaceX reports Q3 capex of $19.6B, up from $6.9B a year earlier, and Q3 connectivity revenue, which includes Starlink, up 69% YoY to $5.2B"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "eecc0b339bfd4b1ddae213c2",
+            "title": "Google DeepMind says four Gemini 4 Argon agents beat Minecraft without any human help in 27 hours and 14 minutes, costing $1,620 at Argon's planned 2027 price"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "e008938f2d6a1237e1f059e1",
+            "title": "A look at Anthropic's opaque, five-member Long-Term Benefit Trust, where members own no Anthropic equity but hold enormous sway by appointing most of its board"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "dcc1cc86537ae072c703ad11",
+            "title": "Apple announces a \u201cPro and tell\u201d event on October 28 at 10am PT in LA, where its first touchscreen MacBook, a 14-inch MacBook Pro with M6, and more are expected"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "d3b248601286bd2b0dd4754f",
+            "title": "Enact, which develops full-stack tech for general-purpose robots, emerges from stealth with a $30M pre-seed from Mistral CEO Arthur Mensch, Yann LeCun, and more"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "ccde63351771fca72842c543",
+            "title": "Sources: US investigators pursuing ShinyHunters, which stole FBI data, identified executives at two ransomware negotiation firms who had unusually close ties"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "cb4fbb1801bb5326f7998758",
+            "title": "Allium: stablecoin payments rose 45% YoY to $482B YTD through September 30, with transactions up 71% to 1.04B, while circulating supply grew just 0.4% to ~$305B"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "ca7bcf3ea15a769802bc82af",
+            "title": "How Democrats, who polls predict will flip at least one chamber of Congress in the midterm elections, are preparing to aggressively scrutinize the AI industry"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "c273d12aacdacff62baa7b6a",
+            "title": "AI chip startup Tenstorrent raised a $1.5B Series E led by Trace Capital and Innovation X at a $6.2B valuation, up from $2.6B after raising $700M in 2024"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "bb29edb2db44822be25066f8",
+            "title": "Netflix says despite investor concern about its view-hours growth, its engagement is \u201chealthy\u201d and it will try to bring more third-party content to its service"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "bb0b7ec163ce94c624bd3651",
+            "title": "Epic says \u201cFortnite is coming back to the App Store in Australia\u201d on Thursday after an Australian federal ruled in an antitrust case that Apple must open up iOS"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "ba5d216dc579bdf5491f7de6",
+            "title": "OpenAI says its new models are better for building and migrating software in low-resource legacy programming languages like COBOL, Fortran, and Visual Basic"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "b80a8bd76e68cebfe47290c2",
+            "title": "Sources: DHS officials asked CISA to hack a voting machine to report vulnerabilities to the White House without telling the vendor; the request wasn't acted on"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "b66d170ddc65c61f5742cb8f",
+            "title": "Netflix says it expects FY 2026 ad revenue of ~$2.7B, under its ~$3B forecast, and its Q4 operating margin will be impacted due to costs associated with layoffs"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "b62932129405f1fe49155039",
+            "title": "Sources: DeepSeek raised ~$15B in its latest fundraising round, one of China's largest ever, with CATL and Tencent among the biggest contributors"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "adcc1af98421998f8efe7715",
+            "title": "Elon Musk says \u201cI will give one of my SpaceX shares to every kid in America\u201d in 2027, a gift worth ~$10.5B, after Anthropic committed 5% of its shares to APBF"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "abfe2e9f41ee2eaaafa25309",
+            "title": "Cloudflare debuts Clairic, a System One-class extraction model it says processes unstructured data faster, more cheaply, and more accurately than normal LLMs"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "ab224d3b1c604bf36ab5ca30",
+            "title": "Meta details Prometheus, its gigawatt-scale supercluster in Ohio, which will have ~1M GPUs at full scale and was used to train its Muse foundational models"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "a509823331c184679594e706",
+            "title": "Whop, which helps people start, run, and scale businesses and uses AI to suggest business decisions, raised $205M led by Sequoia Capital at a $5.1B valuation"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "a07bb28909e2aead98d25c95",
+            "title": "Cloudflare's Matthew Prince says PHP2Shell exploit attempts on its network rose from thousands in the 10 hours before the disclosure to millions afterward"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "94d2829c6ffef919bf676eb9",
+            "title": "Dream Labs, which offers an API for its Dream-1 robot foundation model trained on human videos, raised a $90M seed led by B Capital and Kindred Ventures"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "8563192ca4a2dcb5ad0f8c4c",
+            "title": "Foxconn agrees to acquire a 50% stake in Mitsubishi's automotive components unit for ~$727M; Mitsubishi will provide autonomous tech for Foxconn's EV platforms"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "847def9fa9fb922b2fc62dd6",
+            "title": "Amazon introduces TorchNeuron, an open-source tool that will allow developers to run code written in PyTorch on Amazon's Trainium chips with no rewrite"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "804b105514f5bf5986f6c6ee",
+            "title": "The US FTC clears Publicis' $2.2B LiveRamp acquisition, subject to a consent decree requiring equal access to LiveRamp's data connectivity tools for all clients"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "7d5fab339e5482d0bf6c7c87",
+            "title": "Vinted faces an influx of listings suspected of containing stolen goods following widespread French riots, which targeted Sephora, Louis Vuitton, and Burberry"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "79dd307347f926cfc2a47aa5",
+            "title": "Deutsche Telekom, Orange, Telef\u00f3nica, and Vodafone agree to explore a joint bid to offer \u201cdirect-to-device\u201d satellite service in Europe, challenging Starlink"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "7896c6c661829ded73caef03",
+            "title": "METR says a pilot test of OpenAI's monitoring system found vulnerabilities, including an exploit that could have let AI agents hide hundreds of recent actions"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "78354f51f669070d1a4d8cc9",
+            "title": "Jensen Huang says he urged UK-based neocloud Nscale to \u201cwork around the clock\u201d to resolve data center delays amid investor pushback over its $30B IPO valuation"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "781732c5eb459e2b2944995c",
+            "title": "A profile of Alona Katz, chief of Brooklyn DA's Virtual Currency Unit, who recently led an operation that seized and disrupted over 240 crypto fraud websites"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "7643cb0c7d9ed95055d13510",
+            "title": "Four Z.ai founders participated in a 2018 to 2021 research project co-funded by CGTRI, which the UK's MI5 said had \u201cvery strong ties\u201d to China's main spy agency"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "7579e6eafea1628c362effa7",
+            "title": "CyberSN: US cybersecurity job postings fell 26.4% YoY to a four-year low of 235,786 roles from January to September; AI security engineer demand soared 268.3%"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "71a715bb415e4fbec7859647",
+            "title": "Sources: Eric Schmidt, who owns ~1% of Anthropic after investing tens of millions in its Series A, is poised to have one of the largest windfalls from its IPO"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "70a1d2b5221f83ec79ef88a3",
+            "title": "Sources: SpaceX is in talks with at least one major cellular infrastructure firm to secure a minimum of 80K US cell sites, as it eyes a wireless carrier launch"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "68c4f727a9ef3dfac0e3b343",
+            "title": "A US judge dismisses a civil sexual abuse lawsuit brought against Sam Altman by his sister, after she refused to appear for an independent medical examination"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "650ff8ae6b50ce19bd37a40f",
+            "title": "Tolan, an AI assistant focused on users that are not tech-savvy, raised $30M from USV, Khosla Ventures, and Homebrew, and says 70% of its users are women"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "62dfd1a25c3811161b17dfa4",
+            "title": "Mercury CEO Immad Akhund says the fintech hit $1B in annualized revenue, up ~50% YoY, has more than 450K customers, and is launching a payroll service"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "61b0b7c632fd46ac38c6fae9",
+            "title": "Korean data-center company Elice falls 30%+ in Kosdaq trading debut; sources: Australian data center operator AirTrunk delays real estate investment trust IPO"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "5ce9b3d48d4c245b730ae83e",
+            "title": "Filing: US prosecutors say OpenAI suspect Abdulrahman Alfozan maintained frequent WhatsApp contact in 2025 and 2026 with an unnamed Saudi Royal Family member"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "5ca40acad8aed2b7fdaa6139",
+            "title": "Ramp says it applied to the US OCC for a trust bank charter that, if approved, would allow it to offer fiduciary investment management and digital asset custody"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "57e426d8479534f026dec535",
+            "title": "Survey: the chatbot gender adoption gap among US adults has closed since 2024, though men are more likely to use them daily; ChatGPT has identical use rates"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "57c71bcf83fc00c1f821c150",
+            "title": "The Browser Company says it will shut down its Arc browser on December 22, launched in 2023, shifting attention to its AI-focused Dia browser, launched in 2025"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "55bed8481925ad46e83bbff6",
+            "title": "Sources: OpenAI is racing to secure investor commitments before Anthropic's expected IPO in mid-Nov. and aims to raise ~$30B; the round could value it at $1.4T+"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "55750cdc930db7e01c3452b8",
+            "title": "German energy company PreussenElektra says it is working with Nvidia to assess whether the country's idle nuclear plants could be turned into data centers"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "552e05c83d89bb65dda326e9",
+            "title": "MiniMax launches M3.1 Flash, saying it delivers \u201ca generational leap\u201d in agentic tasks, coding, computer use, and cybersecurity, with weights due October 23"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "52b99134e1cb3ac2c36ac001",
+            "title": "Source: Anthropic is preparing a model with superior intuition and reasoning that can discern unstated intentions and is better at thinking outside of the box"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "5235c1481e806b2abdefca51",
+            "title": "Tel Aviv-based doubleAI releases a code execution model for improving GPU and CPU performance; doubleAI raised $220M, using ~50% to buy 1,000 Nvidia B300 chips"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "50ee2192695b6db446fec94c",
+            "title": "Sources: Ted Sarandos complained for months of a lack of new hit shows at Netflix and US watch time being down; it just fired its film chief and content chief"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "4f85b55293f50d49ebe46deb",
+            "title": "An interview with OnlyFans CEO Keily Blair about plans to offer financial services to its 2.5M active creators, a potential IPO, and more"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "488ac729541be015e43cb89b",
+            "title": "Stockholm-based legal AI startup Legora raised a $550M Series E at an $8.8B post-money valuation, up from $5.55B after raising a $550M Series D in March"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "450f8fe4169cd9056485c363",
+            "title": "Analysis: companies are set for a massive acceleration of 50GW+ in data center capacity additions in 2027; 24GW+ across 40 campuses are in the advanced stages"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "4278a6347e0ad74c2d5fc19d",
+            "title": "Micron and the union of workers at its Taichung facility sign a multi-issue agreement, without giving details, resolving tensions at its largest Taiwan site"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "3e6b22e04b69663b11eb8b1c",
+            "title": "The US DHS orders all federal civilian agencies to remove any DeepSeek tech from their IT systems and prohibits future procurement of its products and services"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "38aeba5b68467d9f042aeba5",
+            "title": "Note-taking tool Otter.ai raised $320M in non-dilutive capital from General Catalyst's Customer Value Fund; PitchBook says it raised $50M prior to this round"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "37732ed609432ea401941fe8",
+            "title": "Sources: Waymo aims to expand its fleet to 8K by the end of this year, up from 4K today, and to 20K by the end of 2027, after raising $5B in debt this month"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "347413cb6d262ced12b581ed",
+            "title": "SCOTUS rejects an appeal by BMG, Sony Music, UMG, and Warner Music, upholding a decision that copyright termination rights apply globally, not just in the US"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "32b4c3c0019d63f2282178af",
+            "title": "Netflix reports Q3 revenue up 12% YoY to $12.87B, in line with est., net income up 44% YoY to $3.66B, in part due to expenses timing; NFLX drops 5%+ after hours"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "2ed28275805a9e29e493db50",
+            "title": "Town, which develops enterprise AI assistants, raised a $108M Series B at a $1B valuation, after announcing a $55M Series A in June"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "2da6d4029016495e402873b4",
+            "title": "AI infrastructure startup Modal says it plans to start using Nvidia's Vera CPUs for the first time for hosting agents, alongside existing Intel and AMD chips"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "2d9388e48afd29d220d97ab0",
+            "title": "Researcher: a Chinese-speaking hacker used AI agents to target 1,200+ websites and breach 100+ entities, like Deere and SharkNinja, spending ~$5,000 in tokens"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "2a653c47068959fa1c2a71b4",
+            "title": "An interview with Goodfire researcher Nick Cammarata, whose viral blog post claimed LLMs are easier to understand than thought, as other researchers push back"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "29b64c2916720796b1b05df0",
+            "title": "Sources: Visa is in late-stage talks to buy stablecoin custody and infrastructure provider Fireblocks for ~$2.5B, its first acquisition in the stablecoin sector"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "28eea97cc7464ff2d5be994b",
+            "title": "A profile of Xbox CEO Asha Sharma; sources: Xbox plans a major Game Pass overhaul, a next-gen handheld device by late 2027, and a next-gen console by late 2028"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "28b302d512932b409085dc80",
+            "title": "Prism Data, which provides credit-scoring data and analytics that help lenders assess borrowers, raised a $20M Series A led by Story Ventures"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "1bcc511eb493633b2aa52718",
+            "title": "Character.AI's Chapter 11 court filings indicate a two-part deal with Disney to transfer talent and tech, shielding Disney from Character.AI's legal liabilities"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "1ab2ffbd64124a9614c79fce",
+            "title": "Spotify launches paid podcast memberships in 34 markets, including the US; creators can offer perks like bonus content or fewer ads and keep 90% of revenue"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "16998ed4681a1c98f014277e",
+            "title": "SpaceX reports Q3 revenue up 161% YoY to $14.58B, vs. $12.72B est., AI revenue up 830% to $7.56B, and AI operating income of $431M, up from a loss of $1.7B"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "16361071a803489d47e77139",
+            "title": "Developers and vibe coders are using AI tools like Claude Code to get rid of sponsored ads on their smart TVs, disable tracking features, and more"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "13fec93e9a62a0421c1b0f04",
+            "title": "Sources: Axel Springer CEO Mathias D\u00f6pfner proposed joining a bid for TikTok's European business over lunch with Charles Kushner, the US ambassador to France"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "1209b67954e47014708e4d04",
+            "title": "IBM reports Q3 revenue up 5% YoY to $17.1B, above $16.82B est., net income up 26% to $2.19B, software revenue up 8% to $7.8B, and infrastructure revenue up 4%"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "0ff17721fd5ffccfcb0fadb3",
+            "title": "Microsoft debuts new security tools in Microsoft 365 E7 and its Project Perception system that treat AI agents as potential insider threats via risk assessments"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "09fa26a6b2de61696ee09c32",
+            "title": "An interview with Ond\u0159ej Sur\u00fd, a volunteer who maintains PHP and automates its patches, about his role in fixing two critical PHP security vulnerabilities"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "fe475dbb0e1bbd42eda5f0b7",
+            "title": "Leaked documents detail ECHOTRIBBLE, a nascent US Army Cyber Command program for agentic AI to autonomously navigate networks to identify and neutralize targets"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "fdd089d7429171ba712ad8dd",
+            "title": "Anthropic's leaked federal AI bill draws widespread criticism from AI safety advocates for being significantly weaker than the bipartisan FRONTIER Act"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "fd96659b6bf698fa2a405af8",
+            "title": "Hugging Face releases Carbon-X, an open-weight, 14B-parameter decoder-only model trained on 300B tokens that lets users query DNA sequences via natural language"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "fcccfd752da6e039381e4d5e",
+            "title": "Inception launches Mercury 3, a diffusion-based LLM it claims is \u201ccomparable to Luna and Haiku models\u201d but 4x to 8x faster, generating ~1,000 tokens per second"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "f965baf7cf8b3f8360124aaa",
+            "title": "Spotify launches its first standalone, native in-car app built on Android Automotive OS, debuting on select Audi models, with a custom UI controlled by Spotify"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "f7a486ab4e702c0c0ee4273d",
+            "title": "Sources: Elon Musk has invested ~$1B in Ellisons' Skydance; in 2022, David Ellison's father, Larry Ellison, invested $1B in Musk's deal to take Twitter private"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "efedc974781aa465ecb8e4ee",
+            "title": "GM says it plans to debut OnStar AI, an in-car assistant that can execute vehicle functions and run diagnostics via voice commands, in the 2027 Cadillac Lyriq"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "ed8bbb648b37d5d54223614d",
+            "title": "Warp Sciences, founded by ex-OpenAI product chief Kevin Weil to speed up AI drug development, emerges from stealth with $215M at an $865M post-money valuation"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "e70206bd636187085aa9db30",
+            "title": "Flapping Airplanes, which is working on methods to train AI models using less data and compute and make the chips more efficient, raised $1B at a $6B valuation"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "e684d5e162e409a4febee25c",
+            "title": "Microsoft says its GPT-5-powered Diagnostic Orchestrator uses agents that mimic panels of experts to diagnose conditions up to 4x more accurately than doctors"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "e54ce8c7206459cadb2cceae",
+            "title": "Claude flagged 493 security issues across 25 open-source projects, covering 5M+ lines of C, C++, Java, PHP, and Python code; one went unnoticed for 21 years"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "e45c685c1bad7753dd3acbd5",
+            "title": "Estonia-based web traffic security company Blackwall raised a $100M Series C led by AVP at a $2.2B valuation, after raising a $49.2M Series B in March 2025"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "e2db9e67bf8dadd0031dd784",
+            "title": "TikTok staff depositions: TikTok executives ignored internal warnings over child sexual exploitation on Live, where staff said minors appeared in livestreams"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "df6d68316c4ffe852f6c599e",
+            "title": "AuxoAI, which helps large businesses build and deploy AI systems, raised a $20.7M Series A led by NTTVC to accelerate growth and scale"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "debf8a22c2166e6e03f7d8eb",
+            "title": "Cloudflare says it deployed WAF mitigations for all free and paid tier customers to combat two PHP flaws by default, about nine hours ahead of public disclosure"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "ddef03f4bde552c3fc59d395",
+            "title": "Anthropic donates the Agent Skills open standard to the Agentic AI Foundation and says 70+ platforms have integrated it, after donating MCP to the AAIF in 2025"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "ddd884858245f7eab85883f0",
+            "title": "PHP's creators disclose a critical memory-management vulnerability, dubbed \u201cPHP2Shell\u201d, that affects up to 70% of websites, discovered via GPT-5.6 Sol in August"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "dd7c3b8411f4919463de8737",
+            "title": "A look at Huawei and DeepSeek's mutual reliance, where Huawei provides compute hardware while DeepSeek contributes model workloads and kernel optimization"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "dcd6936949a1cdec13a95ca5",
+            "title": "Sources: the Pentagon quietly establishes the Technology Support Office (TSO), an agency to execute covert sabotage, cyberattacks, and supply chain disruptions"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "dcb8c469c9f9d06ad94dc0ee",
+            "title": "NextDC's stock fell as much as 44% to AU$5.15 after the Australian data center company cut its earnings forecast by 33%+; its shares were above AU$16 in June"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "d92234bc03410a0b82f8cc4c",
+            "title": "Spotify confirms it is rolling out a new family plan verification method requiring members to scan QR codes on plan managers' phones within seven days of notice"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "d5934293a521a4911c1c738c",
+            "title": "Meta reports 18% YoY ad revenue growth in Europe for Q3, down from ~40% in Q1 and 24% in Q2, lagging the US and Canada, after rolling out Less Personalized Ads"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "d4c735e0d48b20b9d247b5ae",
+            "title": "Apple says it plans to add Reachability for the iPhone Duo later in 2026, helping people with smaller hands more easily access the left or right display edges"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "d3bbf97b338129018dec02fb",
+            "title": "OpenAI says the PHP flaws, found using GPT-5.6 Sol, \u201care among several significant vulnerabilities\u201d it found and expects \u201csimilar findings to increase sharply\u201d"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "d1b2d7f8c194a5a61b839caf",
+            "title": "How the AI boom is boosting paint maker PPG's sales: its specialized gray coatings resist fire, rust, and more, and total $3M to $8M per data center, per JLL"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "c9881b3160862f3709602278",
+            "title": "Meta says it will create a new class of nonvoting stock to raise the capital it needs for developing AI models, with an effective date in January 2027"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "c9481d9112c85b8aee08f02c",
+            "title": "Barclays plans to cut 5,000 jobs, or ~5% of its workforce, by the end of 2026 as part of AI-driven cost cutting, with ~60% coming from support and developers"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "c90c539937ef5999e2eca832",
+            "title": "Memo: Nscale CEO Josh Payne says it has \u201cmore than $100B in contracted revenue\u201d; sources say it still plans to list by the end of 2026 at a $30B-$35B valuation"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "c68c1116121fbe82fa559c3b",
+            "title": "AI's ability to forecast extreme weather faces a major test in the coming months amid a historic El Ni\u00f1o, as some scientists question the tech's accuracy"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "c49d77644f3d93b27d85d946",
+            "title": "Recursive releases Flint, an open-weight, 40B-parameter coding model developed with its Eureka Machine AI system, which automated most of the development"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "c3124b4d00b794a135950fec",
+            "title": "The UK CMA proposes measures requiring Apple to provide easier access to its contactless tech and reduce access fees, with a consultation until November 17"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "c30082cdb94b6cca50608673",
+            "title": "OpenAI expands ChatGPT ads to 26 additional countries, taking the total to 83 countries, and says the platform's advertiser base is 100K+, up from 20K in August"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "c06080f37a652e59eba8b3ad",
+            "title": "OpenAI, PerturbAI, and Scripps say thousands of GPT-Rosalind agents analyzed data on millions of mouse brain cells in 32 minutes, a job that takes humans months"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "bddf599d89ec19b102e4fa7d",
+            "title": "Eight intermediate TLS certificates from eMudhra with private key sizes of just 3 to 8 bits were compromised; browser makers and major apps have blocked them"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "b8ca0c814228c4ee5cc916bf",
+            "title": "Foursquare co-founder says the company was acquired in September in a deal resulting in a $0 payout for equity holders, and faults leadership installed in 2021"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "b11dd353d200b1b00035b01b",
+            "title": "Sources: advisers within Elon Musk's empire are pushing to announce a SpaceX-Tesla merger by H1 2027 so it can close while President Trump remains in power"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "b078d1444828e9f6b650512d",
+            "title": "Sources: Polymarket's investors pressured CEO Shayne Coplan to fix its financial controls; Elon Musk's lawyer, Alex Spiro, joined its board and now helps daily"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "aff17c281f3a76fc716b2825",
+            "title": "SAP: Q3 cloud revenue up 25% YoY to \u20ac6.67B, vs. \u20ac6.57B est., total revenue up 12% to \u20ac10.27B, current cloud backlog up 26% to \u20ac24.1B, all in constant currencies"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "ad3234a8a37adb677f090e43",
+            "title": "The PHP Foundation details how it found and fixed the two flaws, and says it had to release patches a day early after the CVE IDs began circulating online"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "abd378833e23ce73b8966ec8",
+            "title": "The EU Commission launches a DSA probe into Booking Holdings' Booking.com to determine whether it is doing enough to combat fraudulent listings and phishing"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "a915273234ce6f2e2568b684",
+            "title": "OpenAI says two agents, one GPT-6.1 Sol and one GPT-6 Astra, weakened misalignment monitoring while making requested changes during two internal coding tasks"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "a55c4c303c0bc8580160156b",
+            "title": "Pigment, a French startup that makes AI-powered software to help businesses forecast finances, spin up slide decks, and more, raised $250M at a $2.3B valuation"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "a1b55a74d0a0847c4532d4de",
+            "title": "Sources: Sam Altman told OpenAI staff of three AI endgames: an IAEA-style regulator, a CERN-like lab merger, or one lab using RSI to \u201cmelt everyone else's GPUs\u201d"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "9edfd769603033b64696a52e",
+            "title": "Super Micro reports preliminary Q1 revenues of $18.5B to $19.5B, vs. $15B est., and gross margins of 12% to 12.5%; SMCI jumps 11%+ after hours"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "9e145b5e3808d29818487cc6",
+            "title": "Coherence Neuro, which is developing AI models and brain implants to help combat brain tumors, raised a $45M seed from the OpenAI Startup Fund and Founders Fund"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "9c53c5286611bbfa028a4a30",
+            "title": "Google debuts TorchTPU, an open-source version of PyTorch for running AI apps on TPUs and Google Cloud via a simple configuration change and no code rewriting"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "9bcdc3995c830e5a1193bca1",
+            "title": "President Trump says he called Sundar Pichai to ask Google Maps to rename the Atlantic Ocean, though he would \u201cprobably pass\u201d following Pichai's pushback"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "9ba20079a7863bfcec274ef6",
+            "title": "Sources: SoftBank's SB Energy is considering going public as soon as December or waiting until 2027, as it closely watches Anthropic's IPO, expected in November"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "97c8a654bc5ef5a6423ec933",
+            "title": "A report claims exploit tool PHP2Shell enables RCE on PHP sites; watchTowr says two vulnerabilities affect every version since PHP 5, which was released in 2004"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "950293eabbbb563abb3a80af",
+            "title": "Analysis: London fell from 7th to last place out of 18 European capitals for median mobile download speed from 2021 to 2026; 5G adoption has outrun 5G capacity"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "943f3ab31bb5ded30658156b",
+            "title": "How the data center industry courts kids amid a backlash: 11+ firms and groups hosting field trips since 2025, flag kits and cards for first graders, and more"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "9362c1fafda87f6a8eb92054",
+            "title": "Microsoft and Alphabet join 14 other companies objecting to a plan by OKXICE, a venture of OKX and ICE, to trade blockchain-based versions of their shares"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "8d565fa03ce0646dc5ae9c90",
+            "title": "A look at Chinese philosophical views on AI; one says aligning AI to human values may be a \u201csuicidal mistake\u201d and another fears the \u201cmachinization of humans\u201d"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "8bae495fa3a7e7600a59f05f",
+            "title": "AI code-testing startup Blacksmith raised a $66M Series C led by Sequoia Capital at a $1B valuation, up from $550M after raising a $45M Series B in August"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "8afb828fa08a8dde4c119f2d",
+            "title": "Google, Temasek, and Bain: online spending in SE Asia to rise ~17% YoY to $368B in 2026 despite economic headwinds, as businesses harness AI to spur spending"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "846ad278d7ea056a5f42f266",
+            "title": "Filings: Nvidia, Anthropic, and OpenAI had their highest-spending lobbying quarter between July and September, spending $2.2M, $2.1M, and $1.5M, respectively"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "813c952695823f1f116169a4",
+            "title": "Anthropic's IPO prospectus: H1 2026 revenue of $16.3B, ~20% from two customers, vs. $1.1B in H1 2025, and an $80.7B net loss driven by accounting charges"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "7f58ef4420d63914231a64de",
+            "title": "ServiceNow and Nvidia launch Arc, a personal, long-running enterprise AI agent for productivity tasks across email and Teams, for RTX Spark and Nvidia OpenShell"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "7cab2e574705e838bd53f0bc",
+            "title": "Sources: DayOne is weighing options for its US IPO, including a delay or smaller listing that could raise $2.5B to $3B, after initially seeking up to $5B in Q4"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "7c44f8b4677236ba6c48700c",
+            "title": "Demis Hassabis says he expects AGI within two to three years, down from his three-to-five-year prediction earlier in 2026, and discusses AI's science potential"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "7c09e7c2ba0867564aaba0ed",
+            "title": "Spotify reports Q3 revenue up 16% YoY to \u20ac4.97B, below \u20ac4.98B est., subscribers up 9% to 306M, MAUs up 11% to 788M, meeting est., and \u20ac672M operating income"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "78e08f506c657e86c80379b2",
+            "title": "Elon Musk says Tesla and SpaceX have formed special committees to discuss a possible merger and calls the possibility of a Tesla-SpaceX merger a \u201cgood idea\u201d"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "74a2d0e493f771d9b7dfda77",
+            "title": "GitLab patches a critical flaw that lets unauthenticated attackers run code on self-managed servers, affecting every release since 7.0 in 2014"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "72143a29f2c975db9f408c49",
+            "title": "Anthropic unveils Claude Duet, a proactive agent app on iOS, Android, and the web that works in the background, in research preview for US Pro and Max users"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "6e49a4472a03e31c13373ee7",
+            "title": "Amazon plans to hire 300K+ US seasonal, part-time, and full-time workers for the upcoming holiday shopping season, up 20% YoY, paying $20-$24/hour on average"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "6cbd842d467f6d94e4518a73",
+            "title": "ASI, which makes AI tools for the military and air traffic controllers, raised a $325M Series C at a $3B valuation, after winning an $875M FAA contract in June"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "6ac0fc8a35a9ca5133f72b0e",
+            "title": "Analysis: 11K+ accounts on X, Bluesky, Discord, Telegram, and others made nearly 25K posts to unmask a Cornell sexual assault accuser, after she named seven men"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "6667845be89633d3c508f64a",
+            "title": "OpenAI says it will make its AI models available on Google Cloud's model garden and Antigravity coding tool in the coming weeks, after launching on AWS in April"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "65ebc407da61968034a72960",
+            "title": "The PHP Foundation says its patches for the RCE vulnerabilities are limited to PHP 8.2 and newer, leaving legacy deployments dependent on third-party vendors"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "60680189acfad58acb89b004",
+            "title": "Firefly, whose AI software connects with existing cameras, radios, and sensors to detect incidents and coordinate real-time responses, raised a $20M Series A"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "5e4c08a20000e8df8b0c6a01",
+            "title": "Sources: OpenAI has cut its valuation target to $1.25T, down from the $1.4T valuation it pitched earlier this month, after facing resistance from some investors"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "59294b734e802414e56cc8c0",
+            "title": "Reliable Robotics, which develops an autonomous flight system, raised a $115M extension for its $160M Series D, pushing its valuation to $1B+"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "56ec3f5f06142bdc0127b5b8",
+            "title": "Chinese robovan maker Neolix raised a $400M Series E led by Boyu, taking total funding to $1.4B+; it operates 30K+ vehicles in 300+ cities across 20 countries"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "5621659916215ceb456ed1a1",
+            "title": "Oro Mobility, a Hertz-owned fleet management business that has a deal to manage Uber's planned Lucid robotaxi fleet starting in San Francisco, raised $80M"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "5433fee8b66f9d2c3ac2f255",
+            "title": "Walmart unveils its Agent Gateway, a new MCP server to help users' approved AI agents shop its website, and dedicated Agent Profiles with special \u201cterms\u201d for AI"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "524742a18e978984a3708e86",
+            "title": "Ukraine says the abrupt throttling of US-funded Starshield grounded dozens of drones mid-flight, costing one unit $1M+, and halted some strikes for three days"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "51e3b26b74e51e8a93d27749",
+            "title": "Cloud provider Railway says an unauthorized party may have accessed customer encrypted environment variables and, for some, obtained the decrypted contents"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "4e2b61c8c55544ef02cc9d0b",
+            "title": "Minneapolis-based Slingshot, which uses AI to help businesses offer embedded insurance, emerges from stealth with a $27M seed co-led by Rally and Skyward Group"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "4e059f601bd49c7a2b51b0d1",
+            "title": "Nvidia launches its OpenShell Reference Architecture, a framework to secure, monitor, and govern AI agents, and partners with Canonical, AWS, BBVA, and others"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "4dc9a6c0f0df7a0d95b1899b",
+            "title": "Survey: 20% of US adults regularly consume news on TikTok, up from just 3% in 2020; 39% of those aged 18 to 29 and 25% of those aged 30 to 49 do so regularly"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "4d8b759548635b413791df23",
+            "title": "Microsoft says China-linked hackers used AI penetration testing tool ARTEX to compromise ConnectWise as part of a campaign targeting hundreds of organizations"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "48d08407f5f853ecb8f27124",
+            "title": "Microsoft reveals pricing for Xbox Cloud Gaming without Game Pass, for Xbox Insiders now and others next month: 10 hours for $3.99, 25 for $7.99, 50 for $11.99"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "45067138ad69805eecf0ed96",
+            "title": "Daytona, which is building cloud infrastructure for AI agents, raised a $60M Series B led by FirstMark at a $1B valuation, bringing its total funding to $91M"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "423667af633a6ba081fa56ca",
+            "title": "Palantir says that neither the company nor the US government has a \u201ckill switch\u201d for its Maven platform that NATO uses, after Ukraine's Starlink disruptions"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "415a53f8d8c67c504c4b1f5e",
+            "title": "Apple says it will commit up to $100M over three years to Pennsylvania-based Perryman, a titanium supplier for the iPhone Duo, and expand its Qnity partnership"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "413074b352e8593d4e774ebf",
+            "title": "Salesforce agrees to acquire AI-powered marketing platform Braze for nearly $5.7B in enterprise value, paying $47.50 per share, set to close from February 2027"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "3d3f382dff2e6c19e83d022c",
+            "title": "Amazon pledges to spend \u20ac16B+ in Germany in 2027 on AWS and AI data centers, its Leo satellite internet, Prime Video media production, and a Berlin robotics lab"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "3cbf8db84f932a917a95f964",
+            "title": "US Treasury proposes rules tightening restrictions on US investments in areas including AI and supercomputing in China, Russia, and other \u201ccountries of concern\u201d"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "322f118ee38a0570a0946e59",
+            "title": "Google says it is rolling out Personal Intelligence for Gemini on Android Auto now and to cars with Google built-in in the coming months as an opt-in feature"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "2e3d397b9a2253789a84b41d",
+            "title": "Netflix execs and industry insiders say co-CEO Ted Sarandos devised its mass-market and international growth strategy, which the now-fired Bela Bajaria executed"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "2d6a45156e9619628cc73203",
+            "title": "Source and leaked memo: EA plans to cut ~400 jobs, or ~3% of its total staff, and shut down BioWare; EA went private in August following a $55B leveraged buyout"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "2b8670eb3000e924488399ca",
+            "title": "1Password passes $500M in ARR, up from $400M in November 2025, driven by enterprise AI coding assistants and agents, and announces 1Password for Agents"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "282bffa21090e208eab03de9",
+            "title": "Anthropic and Citrini Research use an internal Claude model to autonomously generate protein minibinders against five scorpion neurotoxins, testing 211 designs"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "28077b5e62686e6b2b5bf876",
+            "title": "Meta reports Q3 revenue up 26% YoY to $64.6B, operating income down 37% to $12.99B on a $9.89B AG settlement charge, and family DAP up 3% to 3.64B for September"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "27101a02acc79062399a481f",
+            "title": "Chicago-based Formic, which provides robots-as-a-service automation to manufacturers, raised $50M, including a $40M Series B and $10M in asset-backed financing"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "264a2080ab306080db51e1e8",
+            "title": "A look at Elon Musk's potential SpaceX-Tesla merger, which would create a $3.6T company at current prices but faces hurdles from shareholders and regulators"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "2593e71314b6e69a2f21a66f",
+            "title": "DeepSeek open-sources DeepInfer, its high-performance inference framework that powers its production services, starting with support for DeepSeek-V4.1-Flash"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "20d889de29a7a9c9b8f47426",
+            "title": "iPhone Duo review: fun to play with and cool matte inner display, but small cover display, heavier and bulkier than other phones, average cameras, and gets hot"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "1f8e4b3f0853026986f21f0b",
+            "title": "Google says Cloud services in its London region are recovering after a \u201cpower event\u201d caused a multi-hour outage that affected Revolut and several European banks"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "1edc575d6e3ec24a8d0b7f29",
+            "title": "A New Mexico court orders Meta to pay $25B in penalties after a jury found Meta misled residents about its data practices in the Cambridge Analytica scandal"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "1ce76a2533f7cad30e773de8",
+            "title": "Several government, school, and hospital websites in Europe were taken offline as organizations rush to protect themselves from two critical PHP security flaws"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "1af2b0f7a6cbd8d04182a495",
+            "title": "Amazon issues refunds from a 2025 settlement, crediting \u201cPresident Trump's Federal Trade Commission,\u201d the first time an FTC refund has been tied to a president"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "1814274e70c60faf08c218c2",
+            "title": "Israeli security company Lava finds 32 Nvidia Blackwell Ultra B300 chips connected to systems linked to state-owned operator China Telecom, despite US controls"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "159baeb8327e6ea0bd26f653",
+            "title": "GTC Berlin: Jensen Huang pushes Europe on AI adoption, saying \u201cfor Europe to benefit from AI ... you need all the end markets, the end industries to adopt AI\u201d"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "11d498170e5e291a9b26c99e",
+            "title": "Nvidia unveils the DSX POD, a modular containerized version of its Vera Rubin reference architecture to cut data center deployment from six months to 14 days"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "118a4f1713892b5ef6b7c901",
+            "title": "Watchtower, which uses AI and simulation software to help the US Armed Forces make logistical decisions, emerges from stealth with a $35M seed"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "0f3cf32e167e93ed55496754",
+            "title": "Apple is rolling out a new \u201cMade for iPhone Duo\u201d badge in the App Store, and touts Netflix, Prime Video, Zoom, Word, and Outlook as Duo-optimized apps at launch"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "0e97dce4c6e0b028af9b98b3",
+            "title": "Report: Anthropic's draft S-1 shows it spent ~$9B on compute and infrastructure in H1, up from $2.3B a year earlier, and could spend $750B in the coming years"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "0bf6936053a58ece62e29417",
+            "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est."
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "0b1ffbe12e200491591d9acb",
+            "title": "Sources: Samsung and SK Hynix are upgrading their China fabs to produce NAND flash chips with 200+ layers, aiming to fend off fast-growing Chinese rival YMTC"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "fde03cd06c0e11065916ed1d",
+            "title": "Report: SK Hynix gained ~$15B from selling down its Kioxia stake earlier this year, and plans to return ~$12B to shareholders via a special dividend"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "fca3f7d9d3eef4227262e602",
+            "title": "Inside Meta's law enforcement outreach team, which uses AI and human reviewers to analyze social media posts, aiming to prevent threats like school shootings"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "faff1c51e4b23204a857b370",
+            "title": "Sources: Datadog offered to acquire Israeli cloud cybersecurity startup Upwind Security for nearly $4B; Upwind is finalizing a $300M round at a ~$3.8B valuation"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "fa9fa7002b02c6d01741898c",
+            "title": "a16z rebrands a16z Crypto as a16z Frontier and expands the fund's scope to back startups developing AI, robotics, and other emerging technologies"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "f98de35f2dd38d610aa93f44",
+            "title": "Mark Zuckerberg says Muse has drawn 10M+ users since its launch and 25%+ of users are making purchases through the app, with an average purchase size of $200+"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "f6cf9c7abcce8e8a04d407e2",
+            "title": "SEC filings show how Meta restructured its stock to shield Mark Zuckerberg from California's proposed wealth tax, after he said he'd sell his Palo Alto home"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "f64bdc5f6ad21110033307dc",
+            "title": "OpenAI makes Decisions API, its Jev competitor, generally available with new voice and visual modalities, at $0.10/1M input tokens and no output-token charges"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "f2462e77f318a9046c69a91d",
+            "title": "Eka Robotics, which is developing a \u201cvision-force-action\u201d architecture for its physical AI models, raised a $150M Series A at a $1.45B post-money valuation"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "eca7d60d98e7686046747f89",
+            "title": "An interview with Ciena CEO Gary Smith, a veteran of the 2001 telecoms crash, on AI demand outpacing supply for Ciena's optical networking chips, and more"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "eb7ddcea8cc4fcbbe596fbd9",
+            "title": "Source: Elon Musk's public endorsement of a SpaceX-Tesla merger rattled some insiders, who worry his comments could invite shareholder scrutiny and delays"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "e0298ebf5c661d272eaa108b",
+            "title": "Anthropic says it partnered with Theorem to use Claude to formally prove useful security properties at the assembly code level across 123 open-source libraries"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "df783c82418b5f67e2ad1894",
+            "title": "Arda, which builds AI software and agents to accelerate assembly lines and manufacturing, raised $230M at a $1.5B valuation led by Altimeter, Accel, and Khosla"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "def37d64c5ba0b3fbf6b148d",
+            "title": "Dario Amodei says Anthropic's \u201crace to the top\u201d makes AI safer, cites nine safety decisions with \u201csubstantial costs\u201d, and admits mishandling a draft AI bill"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "da0e6cf31eb85fd1b5e58bad",
+            "title": "Sources: US banks are restricting third-party AI agents from accessing customer accounts, after some agents appeared to act independently of user instructions"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "d90d62116f550e50f43b99ed",
+            "title": "Alibaba, Tencent, and Huawei are pouring billions into data centers in Shaoguan, a hinterland region with cheap power and a cool climate, angering some locals"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "d5a41e8a7739dd75ab2261a3",
+            "title": "Utopai, an AI film studio that says it has more than 20 projects in the works, raised $60M at a $1B valuation"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "d4a40e40c972b04d5581615c",
+            "title": "Mach9, which develops AI-powered CAD software trained on proprietary, in-house AI models using multimodal image and laser scan datasets, raised a $34M Series A"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "d31600e56273c095a19e3ba2",
+            "title": "Chinese state media: China inaugurates the National Data Group, a new state-owned enterprise that will focus on developing and utilizing data resources"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "c7523f294ec39aead832b1db",
+            "title": "Artificial Analysis says Kimi K3.1 Pro lands 4th on its Intelligence Index, behind only Opus 5.5 (max), Sonnet 5.5 (max), and Muse Wonder Full (max)"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "c2fa3bb5f324def5ebae93e5",
+            "title": "Baba, which develops AI tools to help Medicare and Medicaid patients connect to care teams and handle advocacy tasks, raised a $40M Series A led by FirstMark"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "c20708ed88c3c0f4da2e69eb",
+            "title": "OpenAI suspected the three fired researchers of leaking internal model designs to AI safety researcher Ryan Greenblatt, including via disappearing Signal chats"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "c04d1887df316e5c8b689965",
+            "title": "Nirva, which plans to launch a wearable AI personal companion that offers relationship advice and more, raised $25M, bringing its total funding to $33M"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "c010efe0089403f21dfab8cc",
+            "title": "Elon Musk says SpaceX closed $40B in GPU debt, debt markets have shut off credit for AI data center firms, and 200+ neoclouds face \u201cdeath and consolidation\u201d"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "bed3adc3754f225b3ccbdabd",
+            "title": "OpenAI acquires Orchestra Bio, which builds AI agents for managing drug development, and plans to integrate its tech into OpenAI life sciences suite Rosalind"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "bec11b08cb73eec153d6e4bd",
+            "title": "Moonshot says it removed cyber-related data from training phases for Kimi K3.1 Pro \u201cto reduce potential misuse risk while preserving general usefulness\u201d"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "beb5563dba6eb1a393dcf062",
+            "title": "Sources: Anthropic and London-based PE firm Hg agree to launch a consultancy by the end of 2026 to embed AI consultants and engineers into European businesses"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "b36748053120b059a19bc419",
+            "title": "OpenAI says it built an \u201coffline world\u201d from cached web content to train isolated frontier models to browse, search for information, and use web apps"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "b26224332068ef19cd650c96",
+            "title": "Moonshot unveils Kimi K3.1 Pro, a 3T-class open-weight model with a 1M-token context window, and K3.1 Pro Highspeed, with full weights to be released by Nov. 4"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "b1220e32316d4eb841191132",
+            "title": "Ukraine says Starshield was working normally again on Saturday morning; US officials said Trump asked Elon Musk to restore the service"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "b0a655e8269e998e685689b4",
+            "title": "Chinese state media: DeepSeek and MiniMax completed registration and won approval to open-source and deploy AI models overseas under proposed export controls"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "ad1ba9083e0c8c93540cff14",
+            "title": "Filing: Meta reports ~$825B in lease and contract commitments, up from nearly $700B in July; off-balance-sheet leases total $355.7B through 2036; META drops 5%+"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "ac5d3fe8a8592f528e091c72",
+            "title": "Mave, which is developing an AI-driven tool to automate security investigations, raised a $28M Series A led by Red Dot, bringing its total funding to $34M"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "a9d74c17d925cefc97250129",
+            "title": "A look at OpenAI's Project Daybreak, which lets vetted partners use its top hacking models to find and fix vulnerabilities and helped uncover PHP2Shell RCE bugs"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "a9661ff47e6a00f77f0af7e0",
+            "title": "Amazon rebrands its Kindle Unlimited subscription as Kindle+ and expands access to audiobooks, including titles narrated by AI"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "a72cccd03ec3b84dd7ab1559",
+            "title": "Sources: Instacart, currently valued at $12B, is in talks to sell itself and held preliminary conversations with DoorDash and Uber; CART jumps 9%+"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "a6d5b0be0a816d0bdf12bfb1",
+            "title": "SK Telecom unit SK Hyper is in talks with tech firms and investors to finance 15GW of data center capacity in South Korea by 2035; the first 5GW will cost $350B"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "a5738a11e4c3dba89f1616cf",
+            "title": "Sources: Apple tweaked macOS for its OLED touch MacBook Pro, due Wednesday, with a dynamic interface that adapts to whether touch or the trackpad was last used"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "a437d8a4aa17e7faf32cdfe6",
+            "title": "The UK plans to invest \u00a3100M to create the AI Biosecurity Lab to boost defenses against biological threats, supported by OpenAI, Anthropic, and Google DeepMind"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "a4097ed960df33600290044e",
+            "title": "Memo: eBay is cutting ~9% of its workforce to simplify operations and reallocate resources toward high-growth areas; eBay cut 6%, or ~800 staff, in February"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "a262685c3672975479e45a4c",
+            "title": "Lawmakers and Hill staffers in both parties say AI leaders are becoming a political liability as they swing between claims of prosperity and existential dangers"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "a0b02677c0b2fd59aad2b999",
+            "title": "OpenEvidence says nearly two-thirds of ~1M US physicians use its AI search engine; a source says it is on track to generate $400M-$500M in 2026 ad revenue"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "9c75535f707451601ca8e87b",
+            "title": "Canva launches Craft, its first image generation model, trained on human-designed templates, available to all users, with plans to support third-party chatbots"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "9b89d621b1850ea07270284f",
+            "title": "Pressure to back promising AI startups is upending the VC investment process, with investors willing to buy into the same round at rapidly escalating valuations"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "98012f305ed03189045d3520",
+            "title": "US officials say Trump asked Elon Musk to lift Starshield restrictions; Ukraine officials said it was not fully fixed Thursday but was working at higher speeds"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "968d1533f38ca3ca06d445df",
+            "title": "Iranian security officials say the country has detailed plans to target undersea communications cables in the Gulf if the US and Israel attack Iran again"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "8fe6c13d9c16090addd43389",
+            "title": "Source: Replit recently moved most AI spend from Anthropic to OpenAI, which gave 30%+ off in a deal worth $100M+/year, after Anthropic discontinued its discount"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "8a44b122d0d43f6c0c169d60",
+            "title": "Sources: OpenAI has retreated from advocating for strict US chip export controls to China ahead of the lame-duck session, aligning closer with President Trump"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "88a371b295c3e50d7a1b6934",
+            "title": "eMudhra says it will exit the SSL/TLS certificate business, 1% of its revenue, after its TLS certificates with private keys of just 3 to 8 bits were compromised"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "881efdf441aca16c8a49972a",
+            "title": "High-frequency trading firms such as Jane Street are investing in AI and chip startups and neoclouds, and building data centers to gain an edge in the AI era"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "87d64abfcc7843ba5aacaf43",
+            "title": "Source: a16z plans to drop \u201ccrypto\u201d from its flagship blockchain fund, rebranding it to \u201ca16z frontier\u201d and broadening its investment strategy beyond crypto"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "864fd68f3cbf2926fd8b25b6",
+            "title": "CapitalOS, which helps vertical software platforms offer spend management, cards, and bill payment tools to SMB customers, raised a $21.9M Series A led by LGVP"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "7f8e3ccb4e2aba8eff01e7b1",
+            "title": "The iTunes Store is re-emerging as a venue for big pop stars, including Taylor Swift, to hawk collectibles to superfans and bolster their chart positions"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "7e393ff2f4213ba3970bfa14",
+            "title": "An interview with Intel's leadership, including CTO Pushkar Ranade, on AI chip demand, lessons from 10nm, whether Intel can catch up to TSMC, Terafab, and more"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "7e3900c0b6ba324fc2a36128",
+            "title": "Oura sues Indian smart ring rival Ultrahuman again to block US sales of Ring Pro, months after a redesign helped Ultrahuman return following an import ban"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "7e280b904c7e131f5e322483",
+            "title": "Outside of tech there has been no financial payoff to US companies for using AI, now viewed as a margin-hurting cost center, as VC-backed firms burn more tokens"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "7da1603f21498c617ddba829",
+            "title": "The US sanctions Chinese VC firm MiraclePlus for financing Zhisuan, founded by Ding Linwei, who in 2026 was convicted of stealing Google's AI trade secrets"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "799526629a036589414cc628",
+            "title": "Andy Jassy says AWS capacity for 2027 is \u201clargely sold out\u201d and a \u201cgood chunk\u201d of 2028 capacity is also sold, though AWS reserves some capacity for on-demand"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "7967c7b7da627b257c8c8e4b",
+            "title": "A look at Meta's role in Brazil's runoff, where Lula da Silva alleges Meta restricts his content and a court ordered it not to interfere; Meta cites glitches"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "781eaf42c055e495363e227c",
+            "title": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "77e8ce3ee4315382d765263c",
+            "title": "Sources: Kalshi is targeting a December rollout for exchange-traded futures contracts tracking US inflation, rivaling exchanges like CME and ICE"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "6dba25b9494ad77f34d3480d",
+            "title": "Xona, which plans to deploy a 258-satellite low-Earth orbit constellation as a commercial alternative to GPS, raised a $250M Series D at a $2.45B valuation"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "6a0e4ceee184465e84ff2588",
+            "title": "iPhone Duo review: the outer device is by far the worst iPhone Apple has ever made, while the inner device is a splendid tablet with a UI that bests the iPad's"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "686cadabfa6c760f6b7c7dde",
+            "title": "Anthropic attributes Mythos 5's deception of a GitHub maintainer to recklessness, biased reasoning, and an urge to finish jobs, saying newer models rarely do so"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "68087d5c901efa12e68bb095",
+            "title": "LSEG agrees to acquire Octus, an NY-based provider of credit intelligence, data, and workflow software, from Permira and Octus' management for $3.54B in cash"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "673b9126903bf7170fc2afca",
+            "title": "Global PC shipments fell 21% YoY in Q3 to 57M units, as memory and other costs pushed prices up; Lenovo retained its market leadership despite a 23% decline"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "6693f87b7e3898bc0e5921fa",
+            "title": "How a Blackstone-led $2.3B private credit loan to CoreWeave in 2023 became a blueprint for chip-backed debt, which is on track to become a $1T market"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "5e63ccdd1d437092f0d777cc",
+            "title": "SK Hynix says its SSD subsidiary Solidigm has halted a review of a potential US IPO to fund a new US chip fab, citing \u201cmarket conditions and share price trends\u201d"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "5b65463e4bf2d4d3e287e4d8",
+            "title": "Greece's parliament passes a bill to ban social media platforms for children under 15 from January 1, 2027, and gives companies 2.5 months to verify users' ages"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "57b578ba74f83a582235b2d0",
+            "title": "The PHP Foundation, which coordinated fixes for two critical PHP flaws, operates on a shoestring budget with one full-time staff member and 14 contractors"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "55f84500ad5d8ba315f3883f",
+            "title": "Source: Shein has agreed to pay $100M, equivalent to 44% of its Q2 profit, to settle a US FTC investigation over delivery delays and other customer complaints"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "4f9fb735349c1f32d7c3afff",
+            "title": "AISI finds Mythos 5 attempted a supply-chain attack by submitting malicious code and creating fake accounts to pressure a GitHub maintainer into accepting it"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "4f9eac7ce04d4865ba7abd1f",
+            "title": "Microsoft says it is closing The Garage, which for 17 years gave employees worldwide space and tools for side projects and ran the company's Global Hackathon"
+          },
+          {
+            "day": "2026-10-19",
+            "source_id": "4cf3bcc2e2c0e69ed25096ef",
+            "title": "An Australian minister says the eSafety Commissioner plans to sue Meta, TikTok, Snapchat, and YouTube over alleged breaches of the under-16 social media ban"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "4c9be4c9a8b1e0cb7868143c",
+            "title": "How the US and China are building rival \u201cAI empires\u201d to extend their power over innovation, production, science, culture, and, ultimately, advanced thought"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "4a5bd7e730628cf51defc8ef",
+            "title": "A look at Alpha School, a network of private schools that claims to teach kids 2x as fast using AI; data shows ~50% of K-8 students missed this goal in math"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "4a3de5fc22b987faf6c120a4",
+            "title": "Data center tenants now demand $5M+ a day in late-delivery fees, up from $1M this spring, spawning new \u201cdelay-in-delivery\u201d coverage from brokers like Marsh"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "44eae3f7f61022510ae0e35a",
+            "title": "Sources: Nvidia is in talks to invest hundreds of millions of dollars in Firmus, which pulled its IPO earlier this month, citing market volatility"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "3a9256883f792a12896a414e",
+            "title": "iPhone Duo teardown: 5/10 repairability, a foldable record, but some screens crack along the fold, possibly because a hinge support bar fails to drop far enough"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "39954c4e782480f5f0ebb610",
+            "title": "Kimi K3.1 Pro's debut draws scrutiny over allegations that influencers were asked to promote the model without disclosing a commercial relationship to Moonshot"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "37721ed60bccfaf255f7b1b7",
+            "title": "Sources detail how Ramp investors Joe Lonsdale and Keith Rabois pushed US lawmakers to probe rival Airwallex's China ties after Airwallex scrapped a Ramp deal"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "343f19cea9dab89918481c76",
+            "title": "Instagram launches an Apple TV app for watching Reels, longer videos, and live shows; the app previously launched on Fire TV, Google TV, and Samsung smart TVs"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "33292f8f0da089b47b4aef1f",
+            "title": "Meta expects its 2026 capex to be $135B-$145B, vs. $130B-$145B previously, and forecasts Q4 revenue of $73B-$76B, vs. $73.6B est.; META jumps 3%+ after hours"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "3235979bee816596f33096ff",
+            "title": "Maxinsights, which creates training data for robots using first-person footage from cameras worn by 5,000+ contractors, raised a $30M seed led by Peak XV"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "313263a4c106d1c40ef08c3c",
+            "title": "Meta Chief Global Affairs Officer Joel Kaplan plans to leave in 2027, after 15+ years as Mark Zuckerberg's top DC adviser; Kaplan helped Meta get close to Trump"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "3098b1d0b7c02996920662f4",
+            "title": "Sources: OpenAI nears an up to $30B round led by investors from the UAE and Coatue at a $1.25T pre-money valuation, as an \u201copportunistic\u201d bridge ahead of an IPO"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "2b29c2e0bfacfde342a1fab4",
+            "title": "OpenAI plans to restrict internet access for its frontier models during training until adequate alignment, monitoring, and security safeguards are established"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "2b1006e8cf1fd7c7a4b8bd99",
+            "title": "Filing: Meta says Mark Zuckerberg is considering leaving California if it passes a one-time 5% tax on billionaires; voters will decide on the measure next month"
+          },
+          {
+            "day": "2026-10-21",
+            "source_id": "27b3f0769f1c316cd857a593",
+            "title": "China criticizes the US DHS's DeepSeek ban, vowing \u201cresolute countermeasures\u201d while rejecting allegations from the FBI and AI labs of illicit distillation"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "26e5e61392164f854ca97db6",
+            "title": "Google updates its privacy policy to clarify it could use data shared via Personal Intelligence from connected apps, including Gmail and Photos, to target ads"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "23bab1f5b8f3b368f8768abc",
+            "title": "Atlanta-based Tractian, which uses AI and sensors to predict machine failures and recommend maintenance plans, raised a $130M Series D at a $1.4B valuation"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "233ff0eb7048dd065880ec4b",
+            "title": "Sources: Elon Musk ordered Starshield slowdown in Ukraine and discussed it with Trump after the issue became public; some US officials say he acted unilaterally"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "208c3411c48fbc5a7ce773ca",
+            "title": "Pathos AI, which uses AI to develop oncology drugs, raised a $237M Series E at a $3B post-money valuation, up from $1.6B after its $365M Series D in May 2025"
+          },
+          {
+            "day": "2026-10-24",
+            "source_id": "1eae19de42dfe34f1a888b91",
+            "title": "Block unveils Dessa, a \u201ctrue speech-to-speech\u201d AI model trained on \u201cnothing but human conversation\u201d that it says runs locally on a MacBook Pro M4 Max or newer"
+          },
+          {
+            "day": "2026-10-23",
+            "source_id": "1c73f719f56cb93aecee5a9e",
+            "title": "Memo: Helen Chiang, Xbox's first COO, is leaving Microsoft on October 23, just months after the role was created; she spent 21 years at the company"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "1b3312006411bc751b0c57f5",
+            "title": "Ant-backed Mynt, which runs mobile wallet app GCash, rose as much as 2.4% in Manila after raising $841M in the Philippines' largest-ever IPO, valuing it at ~$7B"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "155d86d0d3d6cc5505293ce1",
+            "title": "Sources: ByteDance, Alibaba, and Tencent ordered 3M+ of Nvidia's new RTX PRO 5500 GPUs worth $35B+, in a rush to secure less powerful, export-compliant chips"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "120eb232ef2eb255ff3d5522",
+            "title": "Thiel's leaked Rome lectures cast EA and AI \u201csafetyism\u201d as Antichrist forerunners, Bill Gates as \u201cMr. Hyde\u201d, and Eliezer Yudkowsky as \u201cmore Luddite than Greta\u201d"
+          },
+          {
+            "day": "2026-10-20",
+            "source_id": "10ed09d373306ab66a30b083",
+            "title": "Sensor Tower: Muse passed 10.9M downloads since its September debut, 10.2M of them in the US, becoming the 12th app to hit 10M US downloads in its first 40 days"
+          },
+          {
+            "day": "2026-10-25",
+            "source_id": "0f1688ef9675b4f324e3f599",
+            "title": "Moderators of r/opensource ban submissions of projects using, made by, or intended for AI, exclude non-English speakers over AI translation concerns, and more"
+          },
+          {
+            "day": "2026-10-22",
+            "source_id": "0c2348cd70969079c876bbf5",
+            "title": "An Australian federal judge rules Apple must let Australian iPhone users install apps from third-party app stores starting March 1, 2027; Apple plans to appeal"
+          }
+        ],
+        "week": {
+          "id": "2026-10-19",
+          "news_start": "2026-10-19",
+          "news_end": "2026-10-25",
+          "cutoff": "2026-10-26T04:00:00Z",
+          "market_start": "2026-10-26",
+          "market_end": "2026-10-30"
+        }
+      },
+      "server_label": "Signal-Desk"
+    },
+    {
+      "name": "index_universe",
+      "arguments": {},
+      "output": {
+        "basis": "Static fund index categories, not verified historical constituents. No prices or returns are included.",
+        "proxies": [
+          {
+            "symbol": "QQQ",
+            "index": "Nasdaq-100",
+            "issuer_url": "https://www.invesco.com/qqq-etf/en/about.html"
+          },
+          {
+            "symbol": "SPY",
+            "index": "S&P 500",
+            "issuer_url": "https://www.ssga.com/us/en/individual/etfs/state-street-spdr-sp-500-etf-trust-spy"
+          },
+          {
+            "symbol": "SMH",
+            "index": "MVIS US Listed Semiconductor 25",
+            "issuer_url": "https://www.vaneck.com/us/en/investments/semiconductor-etf-smh/"
+          },
+          {
+            "symbol": "XLK",
+            "index": "Technology Select Sector",
+            "issuer_url": "https://www.ssga.com/us/en/individual/etfs/state-street-technology-select-sector-spdr-etf-xlk"
+          }
+        ]
+      },
+      "server_label": "Signal-Desk"
+    },
+    {
+      "name": "read_archive",
+      "arguments": {
+        "source_id": "781eaf42c055e495363e227c"
+      },
+      "output": {
+        "coverage": "Manually imported archived facts. Source dates and URLs are supplied by the import, not independently re-fetched.",
+        "excerpt": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees",
+        "published_day": "2026-10-22",
+        "snapshot_as_of": "2026-10-22T16:00:00Z",
+        "source_url": "https://asia.nikkei.com/business/tech/semiconductors/taiwan-s-first-ever-chip-workers-strike-begins-at-micron-plant",
+        "title": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees"
+      },
+      "server_label": "Signal-Desk"
+    }
+  ]
+}

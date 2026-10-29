@@ -1,0 +1,504 @@
+{
+  "passed": true,
+  "scope": "Real browser, asynchronous Go physics and local d3-mini on one T4",
+  "nominal": {
+    "config": {
+      "aircraft": 6,
+      "arrivals_per_minute": 0,
+      "speed": 12
+    },
+    "simSeconds": 890.3999843879992,
+    "stats": {
+      "landed": 1,
+      "departed": 2,
+      "crashes": 0,
+      "safety_stops": 0,
+      "accepted": 46,
+      "unsafe": 0,
+      "stale": 0,
+      "late": 0,
+      "errors": 0,
+      "decisions": 46
+    },
+    "cycles": [
+      {
+        "choice": "land_SKY001_09L",
+        "status": "accepted",
+        "total_ms": 1291,
+        "inference_ms": 1285,
+        "budget_ms": 3750,
+        "input_tokens": 1581,
+        "trace_id": "eb119a72277a11b91d028a4998b96a68"
+      },
+      {
+        "choice": "depart_DEP008_09R",
+        "status": "accepted",
+        "total_ms": 1189,
+        "inference_ms": 1185,
+        "budget_ms": 3750,
+        "input_tokens": 1560,
+        "trace_id": "560afdc9d30c5872d1fb20a4f2628bd1"
+      },
+      {
+        "choice": "depart_DEP007_09L",
+        "status": "accepted",
+        "total_ms": 1107,
+        "inference_ms": 1103,
+        "budget_ms": 3750,
+        "input_tokens": 1514,
+        "trace_id": "1794b8aafd08fe2e270763b794ad791b"
+      },
+      {
+        "choice": "land_RHT002_09R",
+        "status": "accepted",
+        "total_ms": 1086,
+        "inference_ms": 1082,
+        "budget_ms": 3750,
+        "input_tokens": 1454,
+        "trace_id": "b8395cdf89195c4ba0743cb758eb2fd7"
+      },
+      {
+        "choice": "land_AFR003_09L",
+        "status": "accepted",
+        "total_ms": 1048,
+        "inference_ms": 1046,
+        "budget_ms": 3750,
+        "input_tokens": 1390,
+        "trace_id": "c41d382d4beb2686170f6b76a88642a1"
+      },
+      {
+        "choice": "land_SKY004_09R",
+        "status": "accepted",
+        "total_ms": 1044,
+        "inference_ms": 1043,
+        "budget_ms": 3750,
+        "input_tokens": 1363,
+        "trace_id": "821befc123382f80ac7d74a6397a6f9e"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1029,
+        "inference_ms": 1029,
+        "budget_ms": 3750,
+        "input_tokens": 1316,
+        "trace_id": "620452fadb9b9a689c3b3115c3047b85"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 965,
+        "inference_ms": 965,
+        "budget_ms": 3750,
+        "input_tokens": 1316,
+        "trace_id": "3ddff2337a88a0001596b7d556d5ad3d"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1038,
+        "inference_ms": 1038,
+        "budget_ms": 3750,
+        "input_tokens": 1318,
+        "trace_id": "b0f069beafc7463c6a098a29b5fbde2e"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1031,
+        "inference_ms": 1031,
+        "budget_ms": 3750,
+        "input_tokens": 1319,
+        "trace_id": "3ae75d59c4e3eb9c96d402a8151c22df"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1026,
+        "inference_ms": 1026,
+        "budget_ms": 3750,
+        "input_tokens": 1322,
+        "trace_id": "760d39985bc8a290b92f38e5710a7801"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1039,
+        "inference_ms": 1039,
+        "budget_ms": 3750,
+        "input_tokens": 1321,
+        "trace_id": "45a078164cad0e3c960569c1419e7e0b"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1031,
+        "inference_ms": 1030,
+        "budget_ms": 3750,
+        "input_tokens": 1323,
+        "trace_id": "56ea57a7de8c34ac6c9eee6decc32523"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1031,
+        "inference_ms": 1031,
+        "budget_ms": 3750,
+        "input_tokens": 1329,
+        "trace_id": "c44515b45b0b69898a5e1bbb4a441433"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1038,
+        "inference_ms": 1038,
+        "budget_ms": 3750,
+        "input_tokens": 1332,
+        "trace_id": "ea6df169825a2a88798949daf5756697"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 1032,
+        "inference_ms": 1032,
+        "budget_ms": 3750,
+        "input_tokens": 1330,
+        "trace_id": "6792c5164bf1766320af48db46bbfb66"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 964,
+        "inference_ms": 964,
+        "budget_ms": 3750,
+        "input_tokens": 1323,
+        "trace_id": "0af331f96e1c191987b92520e6fda1df"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 935,
+        "inference_ms": 935,
+        "budget_ms": 3750,
+        "input_tokens": 1332,
+        "trace_id": "843a0a0e7e4a86b298426c3575b0a8c3"
+      },
+      {
+        "choice": "land_SKY006_09L",
+        "status": "accepted",
+        "total_ms": 1032,
+        "inference_ms": 1031,
+        "budget_ms": 3750,
+        "input_tokens": 1312,
+        "trace_id": "0edd3ca644f7c3afa067ce4395999966"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 948,
+        "inference_ms": 948,
+        "budget_ms": 3750,
+        "input_tokens": 1191,
+        "trace_id": "4ea538717e4ea0b2d71a4f7a62d573ba"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 960,
+        "inference_ms": 960,
+        "budget_ms": 3750,
+        "input_tokens": 1206,
+        "trace_id": "9130ede6646520a5427d030af40979ee"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 955,
+        "inference_ms": 954,
+        "budget_ms": 3750,
+        "input_tokens": 1209,
+        "trace_id": "2a4a786cf9198dba65b191ddd9df6463"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 962,
+        "inference_ms": 955,
+        "budget_ms": 3750,
+        "input_tokens": 1203,
+        "trace_id": "5d0361d40b06c148089d214a4bfc12ba"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 952,
+        "inference_ms": 951,
+        "budget_ms": 3750,
+        "input_tokens": 1197,
+        "trace_id": "fe0205ac127190651fb7c0967ec8c62e"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 953,
+        "inference_ms": 953,
+        "budget_ms": 3750,
+        "input_tokens": 1207,
+        "trace_id": "9e31d5250f57e09284529fb6833e0ff8"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 876,
+        "inference_ms": 875,
+        "budget_ms": 3750,
+        "input_tokens": 1206,
+        "trace_id": "0b8d13326aa53d0aa4ce3fb796694bef"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 958,
+        "inference_ms": 957,
+        "budget_ms": 3750,
+        "input_tokens": 1208,
+        "trace_id": "bb16cf2f3a3a9b397889a1d0596128c8"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 957,
+        "inference_ms": 956,
+        "budget_ms": 3750,
+        "input_tokens": 1205,
+        "trace_id": "27802f5251ed77ac8a23ed63a270d5d5"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 868,
+        "inference_ms": 867,
+        "budget_ms": 3750,
+        "input_tokens": 1191,
+        "trace_id": "c4fba3d0283df360bb8152b7ebc5795d"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 961,
+        "inference_ms": 960,
+        "budget_ms": 3750,
+        "input_tokens": 1211,
+        "trace_id": "b9043c4a94e8f2bbdd21dfaccb347ebd"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 879,
+        "inference_ms": 879,
+        "budget_ms": 3750,
+        "input_tokens": 1203,
+        "trace_id": "3be194af5b75f6b52351f59825160ac5"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 860,
+        "inference_ms": 859,
+        "budget_ms": 3750,
+        "input_tokens": 1209,
+        "trace_id": "9c7c6cfd3ba55227d438b1411ad247c3"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 853,
+        "inference_ms": 852,
+        "budget_ms": 3750,
+        "input_tokens": 1211,
+        "trace_id": "351eace67e0f11311f808572fb5c29f4"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 860,
+        "inference_ms": 860,
+        "budget_ms": 3750,
+        "input_tokens": 1205,
+        "trace_id": "917eba5632fbf7d7f51de765b9b81f8a"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 732,
+        "inference_ms": 732,
+        "budget_ms": 3750,
+        "input_tokens": 1209,
+        "trace_id": "26a92aaa46ac19989c098b173a1a61a7"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 861,
+        "inference_ms": 860,
+        "budget_ms": 3750,
+        "input_tokens": 1207,
+        "trace_id": "73c9e4d793397e3545ec601c9ced18f8"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 730,
+        "inference_ms": 729,
+        "budget_ms": 3750,
+        "input_tokens": 1209,
+        "trace_id": "998a2332afa97e86c50d08b10b79307e"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 962,
+        "inference_ms": 962,
+        "budget_ms": 3750,
+        "input_tokens": 1210,
+        "trace_id": "cfa95a3b5191c5057e61f23578410b5c"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 930,
+        "inference_ms": 930,
+        "budget_ms": 3750,
+        "input_tokens": 1133,
+        "trace_id": "0c102e737211cd7c6d17e1b01c902c02"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 893,
+        "inference_ms": 893,
+        "budget_ms": 3750,
+        "input_tokens": 1050,
+        "trace_id": "0cb92d0c4f0ba9decdf923a2ff0a0a00"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 901,
+        "inference_ms": 900,
+        "budget_ms": 3750,
+        "input_tokens": 1063,
+        "trace_id": "44d1ed94e9a61c9822eb0411c1386fd0"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 893,
+        "inference_ms": 892,
+        "budget_ms": 3750,
+        "input_tokens": 1059,
+        "trace_id": "fb3daa828da2921145d0f329b858d0a8"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 815,
+        "inference_ms": 815,
+        "budget_ms": 3750,
+        "input_tokens": 1063,
+        "trace_id": "9f09f1c14b0b616d94399a0641099766"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 660,
+        "inference_ms": 660,
+        "budget_ms": 3750,
+        "input_tokens": 1063,
+        "trace_id": "87c77a1b9fa4fa31f3fce236e7f21c7e"
+      },
+      {
+        "choice": "wait",
+        "status": "accepted",
+        "total_ms": 901,
+        "inference_ms": 901,
+        "budget_ms": 3750,
+        "input_tokens": 1065,
+        "trace_id": "76b856f9ef2681344813f0351fc38ef4"
+      },
+      {
+        "choice": "land_RHT005_09R",
+        "status": "accepted",
+        "total_ms": 900,
+        "inference_ms": 900,
+        "budget_ms": 3750,
+        "input_tokens": 1061,
+        "trace_id": "489ccde546d64a236050ab54b943791b"
+      }
+    ]
+  },
+  "stressed": {
+    "config": {
+      "aircraft": 24,
+      "arrivals_per_minute": 4,
+      "speed": 60
+    },
+    "simSeconds": 666.0001739399999,
+    "stats": {
+      "landed": 0,
+      "departed": 0,
+      "crashes": 0,
+      "safety_stops": 0,
+      "accepted": 0,
+      "unsafe": 0,
+      "stale": 0,
+      "late": 3,
+      "errors": 0,
+      "decisions": 3
+    },
+    "cycles": [
+      {
+        "choice": "land_SKY004_09L",
+        "status": "late",
+        "total_ms": 3368,
+        "inference_ms": 3277,
+        "budget_ms": 750,
+        "input_tokens": 4607,
+        "trace_id": "0dc0b0fbd9978aa3f827d9a5ac877a5e"
+      },
+      {
+        "choice": "land_AFR012_09L",
+        "status": "late",
+        "total_ms": 3376,
+        "inference_ms": 3283,
+        "budget_ms": 750,
+        "input_tokens": 4610,
+        "trace_id": "7f1c98d685713d684d24ee44a1addf6d"
+      },
+      {
+        "choice": "land_SKY001_09L",
+        "status": "late",
+        "total_ms": 3391,
+        "inference_ms": 3295,
+        "budget_ms": 750,
+        "input_tokens": 4617,
+        "trace_id": "2177bd25c48f6b629b274d702b2118d6"
+      }
+    ]
+  },
+  "checks": [
+    "physics advances during inference",
+    "real landing and departure",
+    "flight inspection",
+    "pause freezes simulation",
+    "runway closure",
+    "medical priority request",
+    "difficulty sliders and preset",
+    "overdue results discarded",
+    "critical inference state shown separately from backlog",
+    "zero crashes",
+    "no safety stops in nominal run",
+    "mobile layout",
+    "no browser errors"
+  ]
+}

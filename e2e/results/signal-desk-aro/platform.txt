@@ -1,0 +1,29 @@
+PASS: Cluster administrator access
+PASS: All workers are Ready
+PASS: devspaces-operator available
+PASS: openshift-gitops-server available
+PASS: tekton-pipelines-controller available
+PASS: rhods-operator available
+PASS: kuadrant-operator-controller-manager available
+PASS: cert-manager available
+PASS: openshift-lws-operator available
+PASS: nfd-controller-manager available
+PASS: gpu-operator available
+PASS: workshop-git-clone installed
+PASS: workshop-buildah installed
+PASS: Dev Spaces Active
+PASS: Platform pins the MaaS-published DeepSeek model
+PASS: externalprovider.inference.opendatahub.io Ready
+PASS: externalmodel.inference.opendatahub.io Ready
+PASS: maasmodelref Ready
+PASS: maasauthpolicy Active
+PASS: maassubscription Active
+PASS: Workspace has a separate MaaS key, not the Foundry key
+PASS: Provider key is visible to the inference payload processor
+PASS: Provider key is not marked for workspace injection
+PASS: Workspace uses the MaaS HTTPS base URL
+PASS: MaaS routed a real Foundry completion
+PASS: Foundry returned measured token usage
+Token usage: {"prompt_tokens": 14, "completion_tokens": 8, "total_tokens": 22, "audio_prompt_tokens": 0}
+Effective Foundry tokens/minute: 500000
+PASS: MaaS rejects an invalid API key

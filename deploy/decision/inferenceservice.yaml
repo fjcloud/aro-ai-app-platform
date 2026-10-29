@@ -1,0 +1,52 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: d3-mini
+  namespace: decision-serving
+  labels:
+    opendatahub.io/dashboard: 'true'
+    app: d3-mini
+  annotations:
+    openshift.io/display-name: d3-mini · local decision model
+    serving.kserve.io/deploymentMode: RawDeployment
+    serving.kserve.io/enable-route: 'false'
+    security.opendatahub.io/enable-auth: 'false'
+spec:
+  predictor:
+    automountServiceAccountToken: false
+    deploymentStrategy:
+      type: Recreate
+    minReplicas: 1
+    maxReplicas: 1
+    nodeSelector:
+      node.kubernetes.io/instance-type: Standard_NC8as_T4_v3
+    tolerations:
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      operator: Exists
+    model:
+      modelFormat:
+        name: decision3
+      runtime: d3-native
+      resources:
+        limits:
+          cpu: '4'
+          memory: 20Gi
+          nvidia.com/gpu: '1'
+        requests:
+          cpu: '2'
+          memory: 8Gi
+          nvidia.com/gpu: '1'
+      volumeMounts:
+      - mountPath: /cache
+        name: cache
+      - mountPath: /dev/shm
+        name: shm
+    volumes:
+    - name: cache
+      persistentVolumeClaim:
+        claimName: decision-cache
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 1Gi
+      name: shm

@@ -4,6 +4,8 @@ import base64
 import html
 import json
 import os
+from pathlib import Path
+import re
 import subprocess
 import sys
 import urllib.error
@@ -128,9 +130,9 @@ def developer():
             return None
     with urllib.request.build_opener(NoRedirect).open(request, timeout=30) as response:
         page = response.read().decode('utf-8')
-    require('Talk to your cluster.' in page, 'Authenticated Cluster Voice UI')
+    require('A week of news. A paper investment.' in page, 'Authenticated Signal Desk UI')
     if os.environ.get('EXPECT_UPDATED_APP') == 'true':
-        require('CPU over 1h' in html.unescape(page), 'Shipped update includes the CPU shortcut')
+        require('High relevance only' in html.unescape(page), 'Shipped update includes the relevance filter')
     spec = deployment['spec']['template']['spec']
     container = spec['containers'][0]
     expected_image = f'image-registry.openshift-image-registry.svc:5000/{app}-build/{app}:latest'
@@ -139,9 +141,9 @@ def developer():
     requested_image = next((p['value'] for p in latest['spec'].get('params', []) if p['name'] == 'image'), expected_image)
     require(requested_image == container['image'], 'Successful Tekton target matches the deployed image')
     resources = container.get('resources', {})
-    require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '500m', 'memory': '256Mi'}, 'Resource requests and limits match AGENTS.md')
+    require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '500m', 'memory': '512Mi'}, 'Resource requests and limits match AGENTS.md')
     require(all(container.get(probe, {}).get('httpGet', {}).get('path') == '/healthz' and container[probe]['httpGet'].get('port') == 8443 and container[probe]['httpGet'].get('scheme') == 'HTTPS' for probe in ['livenessProbe', 'readinessProbe']), 'Liveness and readiness probes use HTTPS /healthz:8443')
-    require(spec.get('serviceAccountName') == 'cluster-voice', 'Dedicated runtime identity')
+    require(spec.get('serviceAccountName') == 'signal-desk', 'Dedicated runtime identity')
     require(any(e.get('name')=='LISTEN_ADDR' and e.get('value')=='127.0.0.1:8080' for e in container.get('env',[])), 'Go backend listens behind OAuth only')
     require(any(c['name']=='oauth-proxy' for c in spec['containers']), 'OpenShift OAuth proxy present')
     security = spec.get('securityContext', {})
@@ -153,7 +155,9 @@ def developer():
     build_pods = json.loads(oc('get', 'pods', '-n', app + '-build', '-l', 'tekton.dev/pipelineRun=' + latest['metadata']['name'], '-o', 'json'))['items']
     require(bool(build_pods) and all(p['spec'].get('hostUsers') is False for p in build_pods), 'Build tasks isolated in Linux user namespaces')
     require(all(not c.get('securityContext', {}).get('privileged', False) and c.get('securityContext', {}).get('allowPrivilegeEscalation') is False for p in build_pods for c in p['spec'].get('containers', []) + p['spec'].get('initContainers', [])), 'No privileged build container or privilege escalation')
-    require(any(c.get('ready') and '@sha256:' in c.get('imageID', '') for p in pods for c in p.get('status', {}).get('containerStatuses', [])), 'Running application pulled a built image digest')
+    expected_digest = resource('imagestreamtag', app + ':latest', app + '-build')['image']['metadata']['name']
+    app_containers = [c for p in pods for c in p.get('status', {}).get('containerStatuses', []) if c['name'] == app]
+    require(bool(app_containers) and all(c.get('ready') and c.get('imageID', '').endswith('@' + expected_digest) for c in app_containers), 'Running application matches the newly built image digest')
     workspace_ns, workspace_pod = os.environ.get('E2E_NS'), os.environ.get('DEV_POD')
     if workspace_ns or workspace_pod:
         require(bool(workspace_ns and workspace_pod), 'Both E2E_NS and DEV_POD supplied')
@@ -170,9 +174,54 @@ def developer():
     print('Git revision:', application['status']['sync'].get('revision', 'unknown'))
 
 
+def model_apis():
+    """Execute the documented preflight as the actual scoped workspace user."""
+    ns, pod = os.environ.get('E2E_NS'), os.environ.get('DEV_POD')
+    require(bool(ns and pod), 'E2E_NS and DEV_POD identify a real Dev Spaces workspace')
+    proxy = resource('deployment', 'd3-api', 'decision-serving')
+    require(proxy.get('status', {}).get('availableReplicas', 0) == 1, 'Authenticated D3 proxy is available')
+    require('@sha256:' in proxy['spec']['template']['spec']['containers'][0]['image'], 'D3 proxy uses the pinned cluster release image')
+    proxy_pods = json.loads(oc('get', 'pods', '-n', 'decision-serving', '-l', 'app.kubernetes.io/name=d3-api', '-o', 'json'))['items']
+    require(bool(proxy_pods) and all(p['metadata'].get('annotations', {}).get('openshift.io/scc') == 'restricted-v2' for p in proxy_pods), 'D3 authentication proxy runs under restricted-v2')
+    require(not json.loads(oc('get', 'routes', '-n', 'decision-serving', '-o', 'json'))['items'], 'Decision model APIs have no public Route')
+    identity = 'system:serviceaccount:live-transcript-dev:workshop-developer'
+    require(oc('auth', 'can-i', 'get', 'service/d3-api', '-n', 'decision-serving', '--as=' + identity) == 'yes', 'Developer can call the authenticated D3 Service')
+    for verb, kind in [('get', 'secrets'), ('patch', 'inferenceservices')]:
+        denied = subprocess.run(['oc', 'auth', 'can-i', verb, kind, '-n', 'decision-serving', '--as=' + identity], text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=30)
+        require(denied.returncode == 1 and denied.stdout.strip() == 'no', 'Developer cannot ' + verb + ' ' + kind + ' in the model namespace')
+    page = (Path(__file__).resolve().parents[1] / 'content/modules/ROOT/pages/300-developer/lab_2_model_apis.adoc').read_text()
+    blocks = re.findall(r'\[source,sh,role=execute\]\n----\n(.*?)\n----', page, re.S)
+    require(len(blocks) == 5, 'All five documented API blocks are selected')
+    prefix = ['exec', pod, '-n', ns, '-c', os.environ.get('DEV_CONTAINER', 'dev'), '--', 'bash', '-c']
+    raw = subprocess.check_output(['oc', *prefix, 'set -euo pipefail\n' + '\n'.join(blocks)], text=True, stderr=subprocess.DEVNULL, timeout=600).strip()
+    require(raw.startswith('yes\n'), 'The curl tests run with scoped developer model access')
+    remaining, responses, decoder = raw[4:].lstrip(), [], json.JSONDecoder()
+    while remaining:
+        response, end = decoder.raw_decode(remaining)
+        responses.append(response)
+        remaining = remaining[end:].lstrip()
+    require(len(responses) == 5, 'Model discovery, two memo scores, Chat Completions and Responses returned JSON')
+    metadata, chips, retail, chat, native = responses
+    require(metadata['device'] == 'cuda:0' and metadata['dtype'] == 'float16', 'Developer reaches the actual T4 model over verified HTTPS')
+    require(chips['coverage'] == retail['coverage'] == 'complete', 'Both decision requests cover the complete input')
+    require(0 <= retail['score'] < chips['score'] <= 4, 'The semiconductor example ranks higher for the semiconductor fund than the retail fund')
+    require(bool(chat['answer']) and chat['usage']['total_tokens'] > 0, 'Developer MaaS key reaches DeepSeek with real token usage')
+    require(native['status'] == 'completed' and native['model'] == 'maas-vllm-inference-1/deepseekv4pro' and bool(native['output']), 'Native OpenShift AI Responses is reachable from Dev Spaces')
+    negative = r"""set -euo pipefail
+D3_URL=https://d3-api.decision-serving.svc.cluster.local:8443
+SERVICE_CA=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+for credential in invalid-token "$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"; do
+  curl -sS --max-time 20 --cacert "$SERVICE_CA" -o /dev/null -w '%{http_code}\n' \
+    "$D3_URL/v1/models" -H "Authorization: Bearer $credential"
+done
+"""
+    require(oc(*prefix, negative).splitlines() == ['403', '403'], 'D3 rejects an invalid token and a valid but unauthorized workspace pod token')
+    print('API checks completed without printing credentials or model responses.')
+
+
 if __name__ == '__main__':
     try:
-        {'platform': platform, 'developer': developer, 'usage': completion, 'speech': speech}[sys.argv[1]]()
+        {'platform': platform, 'developer': developer, 'usage': completion, 'speech': speech, 'model-apis': model_apis}[sys.argv[1]]()
     except AssertionError as error:
         sys.exit('FAIL: ' + str(error))
     except urllib.error.HTTPError as error:

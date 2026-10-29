@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "at": "2026-10-29T07:16:51.850040+00:00",
+  "source_revision": "d36a88813816605c4142152aa6cf1835c216b8c0",
+  "retries": 0,
+  "research": [
+    {
+      "article_id": "0bf6936053a58ece62e29417",
+      "status": "done",
+      "tools": [
+        "read_archive",
+        "search_archive",
+        "index_universe"
+      ],
+      "ideas": 3,
+      "trace_id": "tr-3f76b0a52613fd1b60b8b14916f6d661",
+      "duration_seconds": 6.58
+    },
+    {
+      "article_id": "155d86d0d3d6cc5505293ce1",
+      "status": "done",
+      "tools": [
+        "read_archive",
+        "search_archive",
+        "index_universe"
+      ],
+      "ideas": 3,
+      "trace_id": "tr-1119fc8089ba7d56189d3369c298ebf7",
+      "duration_seconds": 10.24
+    },
+    {
+      "article_id": "9edfd769603033b64696a52e",
+      "status": "done",
+      "tools": [
+        "read_archive",
+        "search_archive",
+        "index_universe"
+      ],
+      "ideas": 2,
+      "trace_id": "tr-2279172af5d65543136d02e892d07ed4",
+      "duration_seconds": 8.32
+    }
+  ]
+}

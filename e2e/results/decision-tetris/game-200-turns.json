@@ -1,0 +1,3413 @@
+{
+  "model": "vllm-sr/d3-mini",
+  "inference": "LIVE one Tesla T4, local FP16",
+  "seed": 42,
+  "turns": 200,
+  "lines": 68,
+  "score": 28800,
+  "game_over": false,
+  "median_ms": 1032.0,
+  "max_ms": 1874,
+  "turn_results": [
+    {
+      "turn": 1,
+      "piece_choice": "r0x8",
+      "lines": 0,
+      "source": "model",
+      "latency_ms": 784,
+      "confidence": 0.37682940438389784,
+      "input_tokens": 652,
+      "features": {
+        "lines": 0,
+        "holes": 0,
+        "added_holes": 0,
+        "height_sum": 4,
+        "max_height": 2,
+        "bumpiness": 2
+      }
+    },
+    {
+      "turn": 2,
+      "piece_choice": "r0x5",
+      "lines": 0,
+      "source": "model",
+      "latency_ms": 1402,
+      "confidence": 0.19081870192277264,
+      "input_tokens": 1816,
+      "features": {
+        "lines": 0,
+        "holes": 0,
+        "added_holes": 0,
+        "height_sum": 8,
+        "max_height": 2,
+        "bumpiness": 2
+      }
+    },
+    {
+      "turn": 3,
+      "piece_choice": "r0x2",
+      "lines": 0,
+      "source": "model",
+      "latency_ms": 874,
+      "confidence": 0.18416583024899372,
+      "input_tokens": 1032,
+      "features": {
+        "lines": 0,
+        "holes": 1,
+        "added_holes": 1,
+        "height_sum": 13,
+        "max_height": 2,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 4,
+      "piece_choice": "r2x2",
+      "lines": 0,
+      "source": "model",
+      "latency_ms": 1364,
+      "confidence": 0.13636534438100043,
+      "input_tokens": 1841,
+      "features": {
+        "lines": 0,
+        "holes": 1,
+        "added_holes": 0,
+        "height_sum": 17,
+        "max_height": 3,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 5,
+      "piece_choice": "r0x5",
+      "lines": 0,
+      "source": "model",
+      "latency_ms": 861,
+      "confidence": 0.3376426363284822,
+      "input_tokens": 1047,
+      "features": {
+        "lines": 0,
+        "holes": 1,
+        "added_holes": 0,
+        "height_sum": 21,
+        "max_height": 3,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 6,
+      "piece_choice": "r0x3",
+      "lines": 0,
+      "source": "model",
+      "latency_ms": 867,
+      "confidence": 0.10661019603990164,
+      "input_tokens": 1046,
+      "features": {
+        "lines": 0,
+        "holes": 2,
+        "added_holes": 1,
+        "height_sum": 26,
+        "max_height": 4,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 7,
+      "piece_choice": "r3x0",
+      "lines": 1,
+      "source": "model",
+      "latency_ms": 1389,
+      "confidence": 0.21930078997466274,
+      "input_tokens": 1859,
+      "features": {
+        "lines": 1,
+        "holes": 2,
+        "added_holes": 0,
+        "height_sum": 20,
+        "max_height": 3,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 8,
+      "piece_choice": "r0x7",
+      "lines": 1,
+      "source": "model",
+      "latency_ms": 870,
+      "confidence": 0.276155116952988,
+      "input_tokens": 1042,
+      "features": {
+        "lines": 0,
+        "holes": 2,
+        "added_holes": 0,
+        "height_sum": 24,
+        "max_height": 3,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 9,
+      "piece_choice": "r1x0",
+      "lines": 1,
+      "source": "model",
+      "latency_ms": 1063,
+      "confidence": 0.12160920164664252,
+      "input_tokens": 1045,
+      "features": {
+        "lines": 0,
+        "holes": 2,
+        "added_holes": 0,
+        "height_sum": 28,
+        "max_height": 4,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 10,
+      "piece_choice": "r0x1",
+      "lines": 1,
+      "source": "model",
+      "latency_ms": 869,
+      "confidence": 0.24460437462356258,
+      "input_tokens": 1041,
+      "features": {
+        "lines": 0,
+        "holes": 2,
+        "added_holes": 0,
+        "height_sum": 32,
+        "max_height": 4,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 11,
+      "piece_choice": "r3x8",
+      "lines": 2,
+      "source": "model",
+      "latency_ms": 1379,
+      "confidence": 0.7583044516503346,
+      "input_tokens": 1845,
+      "features": {
+        "lines": 1,
+        "holes": 2,
+        "added_holes": 0,
+        "height_sum": 26,
+        "max_height": 4,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 12,
+      "piece_choice": "r0x6",
+      "lines": 2,
+      "source": "model",
+      "latency_ms": 622,
+      "confidence": 0.3157090285843032,
+      "input_tokens": 672,
+      "features": {
+        "lines": 0,
+        "holes": 2,
+        "added_holes": 0,
+        "height_sum": 30,
+        "max_height": 4,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 13,
+      "piece_choice": "r3x4",
+      "lines": 3,
+      "source": "model",
+      "latency_ms": 1520,
+      "confidence": 0.6294746333300554,
+      "input_tokens": 1855,
+      "features": {
+        "lines": 1,
+        "holes": 2,
+        "added_holes": 0,
+        "height_sum": 24,
+        "max_height": 3,
+        "bumpiness": 3
+      }
+    },
+    {
+      "turn": 14,
+      "piece_choice": "r0x0",
+      "lines": 3,
+      "source": "model",
+      "latency_ms": 1364,
+      "confidence": 0.09619112850782682,
+      "input_tokens": 1834,
+      "features": {
+        "lines": 0,
+        "holes": 3,
+        "added_holes": 1,
+        "height_sum": 29,
+        "max_height": 4,
+        "bumpiness": 3
+      }
+    },
+    {
+      "turn": 15,
+      "piece_choice": "r3x3",
+      "lines": 4,
+      "source": "model",
+      "latency_ms": 1495,
+      "confidence": 0.6405111851564559,
+      "input_tokens": 1835,
+      "features": {
+        "lines": 1,
+        "holes": 1,
+        "added_holes": -2,
+        "height_sum": 21,
+        "max_height": 4,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 16,
+      "piece_choice": "r0x0",
+      "lines": 4,
+      "source": "model",
+      "latency_ms": 748,
+      "confidence": 0.1636098368183412,
+      "input_tokens": 1050,
+      "features": {
+        "lines": 0,
+        "holes": 2,
+        "added_holes": 1,
+        "height_sum": 26,
+        "max_height": 4,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 17,
+      "piece_choice": "r3x2",
+      "lines": 4,
+      "source": "model",
+      "latency_ms": 1500,
+      "confidence": 0.12593864619448641,
+      "input_tokens": 1861,
+      "features": {
+        "lines": 0,
+        "holes": 3,
+        "added_holes": 1,
+        "height_sum": 31,
+        "max_height": 5,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 18,
+      "piece_choice": "r0x5",
+      "lines": 4,
+      "source": "model",
+      "latency_ms": 646,
+      "confidence": 0.24376780550264912,
+      "input_tokens": 675,
+      "features": {
+        "lines": 0,
+        "holes": 3,
+        "added_holes": 0,
+        "height_sum": 35,
+        "max_height": 5,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 19,
+      "piece_choice": "r0x0",
+      "lines": 4,
+      "source": "model",
+      "latency_ms": 887,
+      "confidence": 0.20969575332701956,
+      "input_tokens": 1050,
+      "features": {
+        "lines": 0,
+        "holes": 3,
+        "added_holes": 0,
+        "height_sum": 39,
+        "max_height": 6,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 20,
+      "piece_choice": "r0x0",
+      "lines": 4,
+      "source": "model",
+      "latency_ms": 908,
+      "confidence": 0.15551830272919992,
+      "input_tokens": 1054,
+      "features": {
+        "lines": 0,
+        "holes": 5,
+        "added_holes": 2,
+        "height_sum": 45,
+        "max_height": 7,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 21,
+      "piece_choice": "r2x7",
+      "lines": 5,
+      "source": "model",
+      "latency_ms": 1426,
+      "confidence": 0.4267628346115678,
+      "input_tokens": 1872,
+      "features": {
+        "lines": 1,
+        "holes": 5,
+        "added_holes": 0,
+        "height_sum": 39,
+        "max_height": 6,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 22,
+      "piece_choice": "r0x7",
+      "lines": 5,
+      "source": "model",
+      "latency_ms": 869,
+      "confidence": 0.14773872739956553,
+      "input_tokens": 1044,
+      "features": {
+        "lines": 0,
+        "holes": 6,
+        "added_holes": 1,
+        "height_sum": 44,
+        "max_height": 6,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 23,
+      "piece_choice": "r2x6",
+      "lines": 5,
+      "source": "model",
+      "latency_ms": 1385,
+      "confidence": 0.11604412296298748,
+      "input_tokens": 1851,
+      "features": {
+        "lines": 0,
+        "holes": 7,
+        "added_holes": 1,
+        "height_sum": 49,
+        "max_height": 6,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 24,
+      "piece_choice": "r1x4",
+      "lines": 5,
+      "source": "model",
+      "latency_ms": 870,
+      "confidence": 0.24752011066321383,
+      "input_tokens": 1057,
+      "features": {
+        "lines": 0,
+        "holes": 8,
+        "added_holes": 1,
+        "height_sum": 54,
+        "max_height": 6,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 25,
+      "piece_choice": "r0x6",
+      "lines": 5,
+      "source": "model",
+      "latency_ms": 631,
+      "confidence": 0.23450033668426154,
+      "input_tokens": 673,
+      "features": {
+        "lines": 0,
+        "holes": 8,
+        "added_holes": 0,
+        "height_sum": 58,
+        "max_height": 7,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 26,
+      "piece_choice": "r0x0",
+      "lines": 5,
+      "source": "model",
+      "latency_ms": 878,
+      "confidence": 0.24716922936501137,
+      "input_tokens": 1066,
+      "features": {
+        "lines": 0,
+        "holes": 8,
+        "added_holes": 0,
+        "height_sum": 62,
+        "max_height": 7,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 27,
+      "piece_choice": "r3x8",
+      "lines": 5,
+      "source": "model",
+      "latency_ms": 1415,
+      "confidence": 0.13324928161835436,
+      "input_tokens": 1897,
+      "features": {
+        "lines": 0,
+        "holes": 9,
+        "added_holes": 1,
+        "height_sum": 67,
+        "max_height": 8,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 28,
+      "piece_choice": "r3x3",
+      "lines": 6,
+      "source": "model",
+      "latency_ms": 1494,
+      "confidence": 0.6953902397276804,
+      "input_tokens": 1902,
+      "features": {
+        "lines": 1,
+        "holes": 9,
+        "added_holes": 0,
+        "height_sum": 61,
+        "max_height": 7,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 29,
+      "piece_choice": "r3x7",
+      "lines": 6,
+      "source": "model",
+      "latency_ms": 1415,
+      "confidence": 0.23560206246120974,
+      "input_tokens": 1894,
+      "features": {
+        "lines": 0,
+        "holes": 9,
+        "added_holes": 0,
+        "height_sum": 65,
+        "max_height": 8,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 30,
+      "piece_choice": "r0x5",
+      "lines": 6,
+      "source": "model",
+      "latency_ms": 880,
+      "confidence": 0.16480389207907292,
+      "input_tokens": 1074,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 1,
+        "height_sum": 70,
+        "max_height": 8,
+        "bumpiness": 3
+      }
+    },
+    {
+      "turn": 31,
+      "piece_choice": "r0x0",
+      "lines": 6,
+      "source": "model",
+      "latency_ms": 628,
+      "confidence": 0.1603487262017254,
+      "input_tokens": 688,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 74,
+        "max_height": 8,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 32,
+      "piece_choice": "r1x2",
+      "lines": 7,
+      "source": "model",
+      "latency_ms": 1414,
+      "confidence": 0.5633303861028647,
+      "input_tokens": 1913,
+      "features": {
+        "lines": 1,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 68,
+        "max_height": 8,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 33,
+      "piece_choice": "r3x4",
+      "lines": 8,
+      "source": "model",
+      "latency_ms": 1411,
+      "confidence": 0.6322294961668493,
+      "input_tokens": 1916,
+      "features": {
+        "lines": 1,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 62,
+        "max_height": 7,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 34,
+      "piece_choice": "r1x9",
+      "lines": 8,
+      "source": "model",
+      "latency_ms": 892,
+      "confidence": 0.30395167646629284,
+      "input_tokens": 1079,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 66,
+        "max_height": 8,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 35,
+      "piece_choice": "r0x5",
+      "lines": 8,
+      "source": "model",
+      "latency_ms": 895,
+      "confidence": 0.22906018212638313,
+      "input_tokens": 1073,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 70,
+        "max_height": 8,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 36,
+      "piece_choice": "r2x4",
+      "lines": 8,
+      "source": "model",
+      "latency_ms": 1540,
+      "confidence": 0.13356303181881876,
+      "input_tokens": 1919,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 74,
+        "max_height": 9,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 37,
+      "piece_choice": "r0x0",
+      "lines": 8,
+      "source": "model",
+      "latency_ms": 634,
+      "confidence": 0.22630228877049924,
+      "input_tokens": 699,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 78,
+        "max_height": 9,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 38,
+      "piece_choice": "r1x8",
+      "lines": 9,
+      "source": "model",
+      "latency_ms": 1007,
+      "confidence": 0.7781700576197705,
+      "input_tokens": 1093,
+      "features": {
+        "lines": 1,
+        "holes": 8,
+        "added_holes": -2,
+        "height_sum": 70,
+        "max_height": 9,
+        "bumpiness": 14
+      }
+    },
+    {
+      "turn": 39,
+      "piece_choice": "r1x2",
+      "lines": 9,
+      "source": "model",
+      "latency_ms": 896,
+      "confidence": 0.13972678469712846,
+      "input_tokens": 1087,
+      "features": {
+        "lines": 0,
+        "holes": 9,
+        "added_holes": 1,
+        "height_sum": 75,
+        "max_height": 9,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 40,
+      "piece_choice": "r2x5",
+      "lines": 9,
+      "source": "model",
+      "latency_ms": 1543,
+      "confidence": 0.24847917973322634,
+      "input_tokens": 1938,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 1,
+        "height_sum": 80,
+        "max_height": 9,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 41,
+      "piece_choice": "r1x3",
+      "lines": 9,
+      "source": "model",
+      "latency_ms": 781,
+      "confidence": 0.28579795968520777,
+      "input_tokens": 1090,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 84,
+        "max_height": 10,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 42,
+      "piece_choice": "r3x8",
+      "lines": 9,
+      "source": "model",
+      "latency_ms": 1463,
+      "confidence": 0.11642816411317891,
+      "input_tokens": 1933,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 1,
+        "height_sum": 89,
+        "max_height": 11,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 43,
+      "piece_choice": "r0x4",
+      "lines": 9,
+      "source": "model",
+      "latency_ms": 781,
+      "confidence": 0.1287123323429556,
+      "input_tokens": 1090,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 93,
+        "max_height": 11,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 44,
+      "piece_choice": "r0x0",
+      "lines": 9,
+      "source": "model",
+      "latency_ms": 630,
+      "confidence": 0.3546317496854635,
+      "input_tokens": 706,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 97,
+        "max_height": 11,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 45,
+      "piece_choice": "r1x1",
+      "lines": 10,
+      "source": "model",
+      "latency_ms": 917,
+      "confidence": 0.577048879307694,
+      "input_tokens": 1113,
+      "features": {
+        "lines": 1,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 91,
+        "max_height": 10,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 46,
+      "piece_choice": "r3x6",
+      "lines": 10,
+      "source": "model",
+      "latency_ms": 1474,
+      "confidence": 0.1449252767924496,
+      "input_tokens": 1951,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 95,
+        "max_height": 11,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 47,
+      "piece_choice": "r0x3",
+      "lines": 10,
+      "source": "model",
+      "latency_ms": 919,
+      "confidence": 0.1336898054998558,
+      "input_tokens": 1108,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 2,
+        "height_sum": 101,
+        "max_height": 11,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 48,
+      "piece_choice": "r2x6",
+      "lines": 10,
+      "source": "model",
+      "latency_ms": 1299,
+      "confidence": 0.06926065085149442,
+      "input_tokens": 1980,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 1,
+        "height_sum": 106,
+        "max_height": 12,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 49,
+      "piece_choice": "r3x8",
+      "lines": 10,
+      "source": "model",
+      "latency_ms": 1356,
+      "confidence": 0.17264726151614598,
+      "input_tokens": 1979,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 110,
+        "max_height": 13,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 50,
+      "piece_choice": "r2x0",
+      "lines": 11,
+      "source": "model",
+      "latency_ms": 1382,
+      "confidence": 0.4637817905057803,
+      "input_tokens": 1975,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": -2,
+        "height_sum": 102,
+        "max_height": 12,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 51,
+      "piece_choice": "r2x5",
+      "lines": 11,
+      "source": "model",
+      "latency_ms": 1426,
+      "confidence": 0.13541362202727109,
+      "input_tokens": 1977,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 106,
+        "max_height": 12,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 52,
+      "piece_choice": "r1x3",
+      "lines": 11,
+      "source": "model",
+      "latency_ms": 798,
+      "confidence": 0.19777765570919956,
+      "input_tokens": 1117,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 1,
+        "height_sum": 111,
+        "max_height": 12,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 53,
+      "piece_choice": "r0x0",
+      "lines": 12,
+      "source": "model",
+      "latency_ms": 1345,
+      "confidence": 0.44524667221681147,
+      "input_tokens": 1963,
+      "features": {
+        "lines": 1,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 105,
+        "max_height": 11,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 54,
+      "piece_choice": "r0x2",
+      "lines": 12,
+      "source": "model",
+      "latency_ms": 796,
+      "confidence": 0.31246462662360525,
+      "input_tokens": 1109,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 109,
+        "max_height": 12,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 55,
+      "piece_choice": "r1x0",
+      "lines": 13,
+      "source": "model",
+      "latency_ms": 834,
+      "confidence": 0.6595722290190171,
+      "input_tokens": 1115,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": -1,
+        "height_sum": 102,
+        "max_height": 11,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 56,
+      "piece_choice": "r0x5",
+      "lines": 13,
+      "source": "model",
+      "latency_ms": 601,
+      "confidence": 0.222024988348735,
+      "input_tokens": 709,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 106,
+        "max_height": 12,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 57,
+      "piece_choice": "r3x7",
+      "lines": 14,
+      "source": "model",
+      "latency_ms": 1302,
+      "confidence": 0.664571105998324,
+      "input_tokens": 1969,
+      "features": {
+        "lines": 1,
+        "holes": 13,
+        "added_holes": 1,
+        "height_sum": 101,
+        "max_height": 11,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 58,
+      "piece_choice": "r0x1",
+      "lines": 14,
+      "source": "model",
+      "latency_ms": 643,
+      "confidence": 0.265173065220381,
+      "input_tokens": 710,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 105,
+        "max_height": 11,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 59,
+      "piece_choice": "r2x3",
+      "lines": 14,
+      "source": "model",
+      "latency_ms": 1427,
+      "confidence": 0.21113202297344782,
+      "input_tokens": 1963,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 1,
+        "height_sum": 110,
+        "max_height": 12,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 60,
+      "piece_choice": "r2x4",
+      "lines": 14,
+      "source": "model",
+      "latency_ms": 1328,
+      "confidence": 0.12555551814787871,
+      "input_tokens": 1964,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 114,
+        "max_height": 13,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 61,
+      "piece_choice": "r1x9",
+      "lines": 14,
+      "source": "model",
+      "latency_ms": 1030,
+      "confidence": 0.3176578520143062,
+      "input_tokens": 1116,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 118,
+        "max_height": 13,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 62,
+      "piece_choice": "r0x0",
+      "lines": 14,
+      "source": "model",
+      "latency_ms": 1029,
+      "confidence": 0.11850719915381334,
+      "input_tokens": 1119,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 2,
+        "height_sum": 124,
+        "max_height": 13,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 63,
+      "piece_choice": "r0x2",
+      "lines": 14,
+      "source": "model",
+      "latency_ms": 1030,
+      "confidence": 0.21671246195403024,
+      "input_tokens": 1120,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 0,
+        "height_sum": 128,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 64,
+      "piece_choice": "r3x6",
+      "lines": 14,
+      "source": "model",
+      "latency_ms": 1306,
+      "confidence": 0.22822005730533307,
+      "input_tokens": 1979,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 0,
+        "height_sum": 132,
+        "max_height": 14,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 65,
+      "piece_choice": "r1x8",
+      "lines": 15,
+      "source": "model",
+      "latency_ms": 1043,
+      "confidence": 0.8575493512462518,
+      "input_tokens": 1124,
+      "features": {
+        "lines": 1,
+        "holes": 15,
+        "added_holes": -1,
+        "height_sum": 125,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 66,
+      "piece_choice": "r1x0",
+      "lines": 15,
+      "source": "model",
+      "latency_ms": 805,
+      "confidence": 0.2386040257762979,
+      "input_tokens": 1120,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 129,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 67,
+      "piece_choice": "r2x3",
+      "lines": 15,
+      "source": "model",
+      "latency_ms": 1539,
+      "confidence": 0.26398491825413234,
+      "input_tokens": 1972,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 133,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 68,
+      "piece_choice": "r2x5",
+      "lines": 15,
+      "source": "model",
+      "latency_ms": 1313,
+      "confidence": 0.0943457809779993,
+      "input_tokens": 1977,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 1,
+        "height_sum": 138,
+        "max_height": 15,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 69,
+      "piece_choice": "r0x1",
+      "lines": 16,
+      "source": "model",
+      "latency_ms": 898,
+      "confidence": 0.7992729278082358,
+      "input_tokens": 724,
+      "features": {
+        "lines": 1,
+        "holes": 15,
+        "added_holes": -1,
+        "height_sum": 131,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 70,
+      "piece_choice": "r0x3",
+      "lines": 16,
+      "source": "model",
+      "latency_ms": 804,
+      "confidence": 0.3295464722746759,
+      "input_tokens": 1117,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 135,
+        "max_height": 15,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 71,
+      "piece_choice": "r0x0",
+      "lines": 16,
+      "source": "model",
+      "latency_ms": 557,
+      "confidence": 0.22328159035154577,
+      "input_tokens": 724,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 139,
+        "max_height": 15,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 72,
+      "piece_choice": "r1x5",
+      "lines": 16,
+      "source": "model",
+      "latency_ms": 1083,
+      "confidence": 0.20437378449766952,
+      "input_tokens": 1125,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 143,
+        "max_height": 17,
+        "bumpiness": 14
+      }
+    },
+    {
+      "turn": 73,
+      "piece_choice": "r1x8",
+      "lines": 17,
+      "source": "model",
+      "latency_ms": 1635,
+      "confidence": 0.6364452922770903,
+      "input_tokens": 1997,
+      "features": {
+        "lines": 1,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 137,
+        "max_height": 16,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 74,
+      "piece_choice": "r1x2",
+      "lines": 18,
+      "source": "model",
+      "latency_ms": 1556,
+      "confidence": 0.7065421802886567,
+      "input_tokens": 1989,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": -1,
+        "height_sum": 130,
+        "max_height": 15,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 75,
+      "piece_choice": "r1x7",
+      "lines": 19,
+      "source": "model",
+      "latency_ms": 1044,
+      "confidence": 0.7512337748321177,
+      "input_tokens": 1122,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 124,
+        "max_height": 14,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 76,
+      "piece_choice": "r0x2",
+      "lines": 19,
+      "source": "model",
+      "latency_ms": 862,
+      "confidence": 0.20989804295654338,
+      "input_tokens": 1124,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 128,
+        "max_height": 14,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 77,
+      "piece_choice": "r1x8",
+      "lines": 20,
+      "source": "model",
+      "latency_ms": 1874,
+      "confidence": 0.6599540362211577,
+      "input_tokens": 1985,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 122,
+        "max_height": 13,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 78,
+      "piece_choice": "r2x6",
+      "lines": 20,
+      "source": "model",
+      "latency_ms": 1542,
+      "confidence": 0.21113368157222168,
+      "input_tokens": 1982,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 126,
+        "max_height": 14,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 79,
+      "piece_choice": "r0x0",
+      "lines": 20,
+      "source": "model",
+      "latency_ms": 795,
+      "confidence": 0.41357075379631614,
+      "input_tokens": 721,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 130,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 80,
+      "piece_choice": "r1x9",
+      "lines": 21,
+      "source": "model",
+      "latency_ms": 806,
+      "confidence": 0.8590693422958737,
+      "input_tokens": 1117,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 124,
+        "max_height": 14,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 81,
+      "piece_choice": "r2x2",
+      "lines": 22,
+      "source": "model",
+      "latency_ms": 1316,
+      "confidence": 0.4367499640665235,
+      "input_tokens": 1964,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 118,
+        "max_height": 13,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 82,
+      "piece_choice": "r1x5",
+      "lines": 22,
+      "source": "model",
+      "latency_ms": 1035,
+      "confidence": 0.21265634752475385,
+      "input_tokens": 1110,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 122,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 83,
+      "piece_choice": "r0x0",
+      "lines": 23,
+      "source": "model",
+      "latency_ms": 1035,
+      "confidence": 0.5294078131545594,
+      "input_tokens": 1118,
+      "features": {
+        "lines": 1,
+        "holes": 13,
+        "added_holes": -1,
+        "height_sum": 115,
+        "max_height": 13,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 84,
+      "piece_choice": "r1x3",
+      "lines": 24,
+      "source": "model",
+      "latency_ms": 1547,
+      "confidence": 0.4980375274144484,
+      "input_tokens": 1983,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": -1,
+        "height_sum": 108,
+        "max_height": 12,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 85,
+      "piece_choice": "r1x7",
+      "lines": 25,
+      "source": "model",
+      "latency_ms": 810,
+      "confidence": 0.7483050081554854,
+      "input_tokens": 1120,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 102,
+        "max_height": 11,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 86,
+      "piece_choice": "r1x0",
+      "lines": 26,
+      "source": "model",
+      "latency_ms": 812,
+      "confidence": 0.7140458668117482,
+      "input_tokens": 1113,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 96,
+        "max_height": 12,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 87,
+      "piece_choice": "r0x4",
+      "lines": 26,
+      "source": "model",
+      "latency_ms": 788,
+      "confidence": 0.4019219574196444,
+      "input_tokens": 717,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 100,
+        "max_height": 12,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 88,
+      "piece_choice": "r2x6",
+      "lines": 26,
+      "source": "model",
+      "latency_ms": 1541,
+      "confidence": 0.1400299649025724,
+      "input_tokens": 1976,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 104,
+        "max_height": 12,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 89,
+      "piece_choice": "r3x8",
+      "lines": 26,
+      "source": "model",
+      "latency_ms": 1542,
+      "confidence": 0.18485196908634138,
+      "input_tokens": 1974,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 108,
+        "max_height": 12,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 90,
+      "piece_choice": "r3x1",
+      "lines": 27,
+      "source": "model",
+      "latency_ms": 1544,
+      "confidence": 0.39130432268651255,
+      "input_tokens": 1973,
+      "features": {
+        "lines": 1,
+        "holes": 11,
+        "added_holes": -1,
+        "height_sum": 101,
+        "max_height": 11,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 91,
+      "piece_choice": "r0x6",
+      "lines": 27,
+      "source": "model",
+      "latency_ms": 806,
+      "confidence": 0.315555586678416,
+      "input_tokens": 1116,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 105,
+        "max_height": 12,
+        "bumpiness": 12
+      }
+    },
+    {
+      "turn": 92,
+      "piece_choice": "r3x8",
+      "lines": 27,
+      "source": "model",
+      "latency_ms": 1546,
+      "confidence": 0.10165205526406465,
+      "input_tokens": 1984,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 109,
+        "max_height": 14,
+        "bumpiness": 13
+      }
+    },
+    {
+      "turn": 93,
+      "piece_choice": "r0x4",
+      "lines": 27,
+      "source": "model",
+      "latency_ms": 796,
+      "confidence": 0.35808064545588875,
+      "input_tokens": 722,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 113,
+        "max_height": 14,
+        "bumpiness": 15
+      }
+    },
+    {
+      "turn": 94,
+      "piece_choice": "r1x3",
+      "lines": 28,
+      "source": "model",
+      "latency_ms": 864,
+      "confidence": 0.8658943695142656,
+      "input_tokens": 1122,
+      "features": {
+        "lines": 1,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 107,
+        "max_height": 13,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 95,
+      "piece_choice": "r3x0",
+      "lines": 30,
+      "source": "model",
+      "latency_ms": 1326,
+      "confidence": 0.6374310253405955,
+      "input_tokens": 1975,
+      "features": {
+        "lines": 2,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 91,
+        "max_height": 11,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 96,
+      "piece_choice": "r1x6",
+      "lines": 30,
+      "source": "model",
+      "latency_ms": 1034,
+      "confidence": 0.25331534484578894,
+      "input_tokens": 1092,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 95,
+        "max_height": 11,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 97,
+      "piece_choice": "r1x2",
+      "lines": 31,
+      "source": "model",
+      "latency_ms": 1619,
+      "confidence": 0.3477735109346104,
+      "input_tokens": 1961,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": 1,
+        "height_sum": 90,
+        "max_height": 10,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 98,
+      "piece_choice": "r0x4",
+      "lines": 31,
+      "source": "model",
+      "latency_ms": 1039,
+      "confidence": 0.2743308878447932,
+      "input_tokens": 1099,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 94,
+        "max_height": 10,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 99,
+      "piece_choice": "r2x3",
+      "lines": 31,
+      "source": "model",
+      "latency_ms": 1541,
+      "confidence": 0.1305463973229422,
+      "input_tokens": 1947,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 98,
+        "max_height": 11,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 100,
+      "piece_choice": "r0x0",
+      "lines": 31,
+      "source": "model",
+      "latency_ms": 796,
+      "confidence": 0.29716650203940886,
+      "input_tokens": 714,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 102,
+        "max_height": 11,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 101,
+      "piece_choice": "r3x7",
+      "lines": 32,
+      "source": "model",
+      "latency_ms": 1542,
+      "confidence": 0.7815664027453091,
+      "input_tokens": 1958,
+      "features": {
+        "lines": 1,
+        "holes": 13,
+        "added_holes": 1,
+        "height_sum": 97,
+        "max_height": 11,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 102,
+      "piece_choice": "r1x9",
+      "lines": 32,
+      "source": "model",
+      "latency_ms": 1038,
+      "confidence": 0.1488322063476085,
+      "input_tokens": 1112,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 101,
+        "max_height": 13,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 103,
+      "piece_choice": "r2x4",
+      "lines": 32,
+      "source": "model",
+      "latency_ms": 1550,
+      "confidence": 0.25543626290198257,
+      "input_tokens": 1971,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 105,
+        "max_height": 13,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 104,
+      "piece_choice": "r0x0",
+      "lines": 32,
+      "source": "model",
+      "latency_ms": 803,
+      "confidence": 0.1955016723749996,
+      "input_tokens": 1108,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 1,
+        "height_sum": 110,
+        "max_height": 13,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 105,
+      "piece_choice": "r0x2",
+      "lines": 33,
+      "source": "model",
+      "latency_ms": 814,
+      "confidence": 0.768914316912025,
+      "input_tokens": 1110,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": -2,
+        "height_sum": 102,
+        "max_height": 12,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 106,
+      "piece_choice": "r1x6",
+      "lines": 33,
+      "source": "model",
+      "latency_ms": 813,
+      "confidence": 0.16524875725751553,
+      "input_tokens": 1115,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 106,
+        "max_height": 12,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 107,
+      "piece_choice": "r2x0",
+      "lines": 34,
+      "source": "model",
+      "latency_ms": 1327,
+      "confidence": 0.6149023353852632,
+      "input_tokens": 1979,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 100,
+        "max_height": 11,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 108,
+      "piece_choice": "r3x7",
+      "lines": 34,
+      "source": "model",
+      "latency_ms": 1325,
+      "confidence": 0.23637481503360247,
+      "input_tokens": 1971,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 104,
+        "max_height": 12,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 109,
+      "piece_choice": "r1x5",
+      "lines": 35,
+      "source": "model",
+      "latency_ms": 810,
+      "confidence": 0.7195607942882504,
+      "input_tokens": 1110,
+      "features": {
+        "lines": 1,
+        "holes": 11,
+        "added_holes": -1,
+        "height_sum": 97,
+        "max_height": 12,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 110,
+      "piece_choice": "r1x3",
+      "lines": 36,
+      "source": "model",
+      "latency_ms": 809,
+      "confidence": 0.7925981337600913,
+      "input_tokens": 1116,
+      "features": {
+        "lines": 1,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 91,
+        "max_height": 11,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 111,
+      "piece_choice": "r0x0",
+      "lines": 37,
+      "source": "model",
+      "latency_ms": 1544,
+      "confidence": 0.3280286725606642,
+      "input_tokens": 1936,
+      "features": {
+        "lines": 1,
+        "holes": 10,
+        "added_holes": -1,
+        "height_sum": 84,
+        "max_height": 10,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 112,
+      "piece_choice": "r0x6",
+      "lines": 37,
+      "source": "model",
+      "latency_ms": 804,
+      "confidence": 0.3010608190834283,
+      "input_tokens": 707,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 88,
+        "max_height": 10,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 113,
+      "piece_choice": "r0x2",
+      "lines": 37,
+      "source": "model",
+      "latency_ms": 805,
+      "confidence": 0.1613723566731075,
+      "input_tokens": 1093,
+      "features": {
+        "lines": 0,
+        "holes": 10,
+        "added_holes": 0,
+        "height_sum": 92,
+        "max_height": 10,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 114,
+      "piece_choice": "r0x0",
+      "lines": 37,
+      "source": "model",
+      "latency_ms": 782,
+      "confidence": 0.04210513891456391,
+      "input_tokens": 704,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 1,
+        "height_sum": 97,
+        "max_height": 11,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 115,
+      "piece_choice": "r1x9",
+      "lines": 38,
+      "source": "model",
+      "latency_ms": 820,
+      "confidence": 0.8949622196771821,
+      "input_tokens": 1110,
+      "features": {
+        "lines": 1,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 91,
+        "max_height": 10,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 116,
+      "piece_choice": "r1x2",
+      "lines": 38,
+      "source": "model",
+      "latency_ms": 1044,
+      "confidence": 0.29315667640949455,
+      "input_tokens": 1094,
+      "features": {
+        "lines": 0,
+        "holes": 11,
+        "added_holes": 0,
+        "height_sum": 95,
+        "max_height": 11,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 117,
+      "piece_choice": "r3x7",
+      "lines": 39,
+      "source": "model",
+      "latency_ms": 1550,
+      "confidence": 0.7035881540120468,
+      "input_tokens": 1957,
+      "features": {
+        "lines": 1,
+        "holes": 12,
+        "added_holes": 1,
+        "height_sum": 90,
+        "max_height": 10,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 118,
+      "piece_choice": "r3x5",
+      "lines": 39,
+      "source": "model",
+      "latency_ms": 1314,
+      "confidence": 0.1610825270015608,
+      "input_tokens": 1938,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 94,
+        "max_height": 11,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 119,
+      "piece_choice": "r3x8",
+      "lines": 39,
+      "source": "model",
+      "latency_ms": 1322,
+      "confidence": 0.22576948339586064,
+      "input_tokens": 1963,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 98,
+        "max_height": 12,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 120,
+      "piece_choice": "r3x3",
+      "lines": 39,
+      "source": "model",
+      "latency_ms": 1331,
+      "confidence": 0.192179770276253,
+      "input_tokens": 1977,
+      "features": {
+        "lines": 0,
+        "holes": 12,
+        "added_holes": 0,
+        "height_sum": 102,
+        "max_height": 12,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 121,
+      "piece_choice": "r2x3",
+      "lines": 39,
+      "source": "model",
+      "latency_ms": 1564,
+      "confidence": 0.12325119891714831,
+      "input_tokens": 1978,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 1,
+        "height_sum": 107,
+        "max_height": 12,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 122,
+      "piece_choice": "r0x1",
+      "lines": 39,
+      "source": "model",
+      "latency_ms": 798,
+      "confidence": 0.23041194197097378,
+      "input_tokens": 719,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 111,
+        "max_height": 12,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 123,
+      "piece_choice": "r1x6",
+      "lines": 39,
+      "source": "model",
+      "latency_ms": 813,
+      "confidence": 0.23674296773970127,
+      "input_tokens": 1117,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 115,
+        "max_height": 13,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 124,
+      "piece_choice": "r1x0",
+      "lines": 40,
+      "source": "model",
+      "latency_ms": 815,
+      "confidence": 0.38216729173190617,
+      "input_tokens": 1118,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 1,
+        "height_sum": 110,
+        "max_height": 12,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 125,
+      "piece_choice": "r0x2",
+      "lines": 40,
+      "source": "model",
+      "latency_ms": 1052,
+      "confidence": 0.22512467602349745,
+      "input_tokens": 1121,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 1,
+        "height_sum": 115,
+        "max_height": 12,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 126,
+      "piece_choice": "r2x7",
+      "lines": 40,
+      "source": "model",
+      "latency_ms": 1567,
+      "confidence": 0.1224935726631128,
+      "input_tokens": 1968,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 119,
+        "max_height": 12,
+        "bumpiness": 1
+      }
+    },
+    {
+      "turn": 127,
+      "piece_choice": "r1x0",
+      "lines": 41,
+      "source": "model",
+      "latency_ms": 1068,
+      "confidence": 0.6920155171304616,
+      "input_tokens": 1106,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": -1,
+        "height_sum": 112,
+        "max_height": 13,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 128,
+      "piece_choice": "r2x2",
+      "lines": 42,
+      "source": "model",
+      "latency_ms": 1554,
+      "confidence": 0.7762094452906915,
+      "input_tokens": 1967,
+      "features": {
+        "lines": 1,
+        "holes": 13,
+        "added_holes": -1,
+        "height_sum": 105,
+        "max_height": 12,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 129,
+      "piece_choice": "r0x6",
+      "lines": 42,
+      "source": "model",
+      "latency_ms": 815,
+      "confidence": 0.21059410138632,
+      "input_tokens": 1112,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 109,
+        "max_height": 12,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 130,
+      "piece_choice": "r2x4",
+      "lines": 43,
+      "source": "model",
+      "latency_ms": 1331,
+      "confidence": 0.3364632544848051,
+      "input_tokens": 1969,
+      "features": {
+        "lines": 1,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 103,
+        "max_height": 11,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 131,
+      "piece_choice": "r0x7",
+      "lines": 43,
+      "source": "model",
+      "latency_ms": 834,
+      "confidence": 0.2029093343331019,
+      "input_tokens": 712,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 107,
+        "max_height": 12,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 132,
+      "piece_choice": "r0x2",
+      "lines": 43,
+      "source": "model",
+      "latency_ms": 822,
+      "confidence": 0.23096155026479853,
+      "input_tokens": 1113,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 111,
+        "max_height": 12,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 133,
+      "piece_choice": "r2x3",
+      "lines": 43,
+      "source": "model",
+      "latency_ms": 1341,
+      "confidence": 0.14531499915029342,
+      "input_tokens": 1976,
+      "features": {
+        "lines": 0,
+        "holes": 13,
+        "added_holes": 0,
+        "height_sum": 115,
+        "max_height": 13,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 134,
+      "piece_choice": "r3x8",
+      "lines": 43,
+      "source": "model",
+      "latency_ms": 1339,
+      "confidence": 0.1025320489892075,
+      "input_tokens": 1983,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 1,
+        "height_sum": 120,
+        "max_height": 14,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 135,
+      "piece_choice": "r3x5",
+      "lines": 43,
+      "source": "model",
+      "latency_ms": 1352,
+      "confidence": 0.1866914261054823,
+      "input_tokens": 1985,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 124,
+        "max_height": 14,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 136,
+      "piece_choice": "r0x7",
+      "lines": 43,
+      "source": "model",
+      "latency_ms": 1054,
+      "confidence": 0.2602746478769613,
+      "input_tokens": 1123,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 1,
+        "height_sum": 129,
+        "max_height": 15,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 137,
+      "piece_choice": "r1x0",
+      "lines": 43,
+      "source": "model",
+      "latency_ms": 824,
+      "confidence": 0.29365878482028446,
+      "input_tokens": 1119,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 133,
+        "max_height": 15,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 138,
+      "piece_choice": "r0x1",
+      "lines": 44,
+      "source": "model",
+      "latency_ms": 573,
+      "confidence": 0.7942439538556303,
+      "input_tokens": 719,
+      "features": {
+        "lines": 1,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 127,
+        "max_height": 14,
+        "bumpiness": 2
+      }
+    },
+    {
+      "turn": 139,
+      "piece_choice": "r1x4",
+      "lines": 44,
+      "source": "model",
+      "latency_ms": 815,
+      "confidence": 0.17789071329083558,
+      "input_tokens": 1106,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 131,
+        "max_height": 15,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 140,
+      "piece_choice": "r3x6",
+      "lines": 44,
+      "source": "model",
+      "latency_ms": 1337,
+      "confidence": 0.13500738601664214,
+      "input_tokens": 1973,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 135,
+        "max_height": 16,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 141,
+      "piece_choice": "r1x5",
+      "lines": 44,
+      "source": "model",
+      "latency_ms": 813,
+      "confidence": 0.22846135256231362,
+      "input_tokens": 1121,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 139,
+        "max_height": 17,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 142,
+      "piece_choice": "r3x8",
+      "lines": 44,
+      "source": "model",
+      "latency_ms": 1575,
+      "confidence": 0.1680851543488462,
+      "input_tokens": 1987,
+      "features": {
+        "lines": 0,
+        "holes": 17,
+        "added_holes": 2,
+        "height_sum": 145,
+        "max_height": 17,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 143,
+      "piece_choice": "r3x6",
+      "lines": 44,
+      "source": "model",
+      "latency_ms": 1335,
+      "confidence": 0.09014883924819195,
+      "input_tokens": 1979,
+      "features": {
+        "lines": 0,
+        "holes": 17,
+        "added_holes": 0,
+        "height_sum": 149,
+        "max_height": 19,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 144,
+      "piece_choice": "r0x0",
+      "lines": 44,
+      "source": "model",
+      "latency_ms": 1351,
+      "confidence": 0.184347492167327,
+      "input_tokens": 1592,
+      "features": {
+        "lines": 0,
+        "holes": 17,
+        "added_holes": 0,
+        "height_sum": 153,
+        "max_height": 19,
+        "bumpiness": 12
+      }
+    },
+    {
+      "turn": 145,
+      "piece_choice": "r1x0",
+      "lines": 44,
+      "source": "model",
+      "latency_ms": 936,
+      "confidence": 0.1230366295492072,
+      "input_tokens": 936,
+      "features": {
+        "lines": 0,
+        "holes": 17,
+        "added_holes": 0,
+        "height_sum": 157,
+        "max_height": 19,
+        "bumpiness": 14
+      }
+    },
+    {
+      "turn": 146,
+      "piece_choice": "r1x3",
+      "lines": 45,
+      "source": "model",
+      "latency_ms": 889,
+      "confidence": 0.8845229831185388,
+      "input_tokens": 886,
+      "features": {
+        "lines": 1,
+        "holes": 17,
+        "added_holes": 0,
+        "height_sum": 151,
+        "max_height": 18,
+        "bumpiness": 16
+      }
+    },
+    {
+      "turn": 147,
+      "piece_choice": "r0x8",
+      "lines": 45,
+      "source": "model",
+      "latency_ms": 867,
+      "confidence": 0.447733424320226,
+      "input_tokens": 735,
+      "features": {
+        "lines": 0,
+        "holes": 17,
+        "added_holes": 0,
+        "height_sum": 155,
+        "max_height": 18,
+        "bumpiness": 14
+      }
+    },
+    {
+      "turn": 148,
+      "piece_choice": "r1x2",
+      "lines": 45,
+      "source": "model",
+      "latency_ms": 1455,
+      "confidence": 0.06980720157265824,
+      "input_tokens": 1744,
+      "features": {
+        "lines": 0,
+        "holes": 18,
+        "added_holes": 1,
+        "height_sum": 160,
+        "max_height": 18,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 149,
+      "piece_choice": "r1x0",
+      "lines": 45,
+      "source": "model",
+      "latency_ms": 1027,
+      "confidence": 0.1565981966773802,
+      "input_tokens": 1031,
+      "features": {
+        "lines": 0,
+        "holes": 18,
+        "added_holes": 0,
+        "height_sum": 164,
+        "max_height": 18,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 150,
+      "piece_choice": "r0x5",
+      "lines": 45,
+      "source": "model",
+      "latency_ms": 799,
+      "confidence": 0.28455201891154014,
+      "input_tokens": 731,
+      "features": {
+        "lines": 0,
+        "holes": 18,
+        "added_holes": 0,
+        "height_sum": 168,
+        "max_height": 18,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 151,
+      "piece_choice": "r1x3",
+      "lines": 46,
+      "source": "model",
+      "latency_ms": 882,
+      "confidence": 0.7893193746240068,
+      "input_tokens": 880,
+      "features": {
+        "lines": 1,
+        "holes": 20,
+        "added_holes": 2,
+        "height_sum": 164,
+        "max_height": 17,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 152,
+      "piece_choice": "r2x4",
+      "lines": 46,
+      "source": "model",
+      "latency_ms": 1340,
+      "confidence": 0.21427924017329783,
+      "input_tokens": 1982,
+      "features": {
+        "lines": 0,
+        "holes": 20,
+        "added_holes": 0,
+        "height_sum": 168,
+        "max_height": 18,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 153,
+      "piece_choice": "r0x0",
+      "lines": 47,
+      "source": "model",
+      "latency_ms": 1421,
+      "confidence": 0.3557159675194703,
+      "input_tokens": 1682,
+      "features": {
+        "lines": 1,
+        "holes": 20,
+        "added_holes": 0,
+        "height_sum": 162,
+        "max_height": 17,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 154,
+      "piece_choice": "r1x0",
+      "lines": 47,
+      "source": "model",
+      "latency_ms": 935,
+      "confidence": 0.12002782250236801,
+      "input_tokens": 926,
+      "features": {
+        "lines": 0,
+        "holes": 20,
+        "added_holes": 0,
+        "height_sum": 166,
+        "max_height": 19,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 155,
+      "piece_choice": "r1x6",
+      "lines": 47,
+      "source": "model",
+      "latency_ms": 1018,
+      "confidence": 0.3504317561994943,
+      "input_tokens": 1030,
+      "features": {
+        "lines": 0,
+        "holes": 20,
+        "added_holes": 0,
+        "height_sum": 170,
+        "max_height": 19,
+        "bumpiness": 11
+      }
+    },
+    {
+      "turn": 156,
+      "piece_choice": "r1x2",
+      "lines": 48,
+      "source": "model",
+      "latency_ms": 1196,
+      "confidence": 0.6232892633104363,
+      "input_tokens": 1401,
+      "features": {
+        "lines": 1,
+        "holes": 18,
+        "added_holes": -2,
+        "height_sum": 162,
+        "max_height": 18,
+        "bumpiness": 13
+      }
+    },
+    {
+      "turn": 157,
+      "piece_choice": "r1x8",
+      "lines": 48,
+      "source": "model",
+      "latency_ms": 931,
+      "confidence": 0.15554835393311886,
+      "input_tokens": 934,
+      "features": {
+        "lines": 0,
+        "holes": 18,
+        "added_holes": 0,
+        "height_sum": 166,
+        "max_height": 18,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 158,
+      "piece_choice": "r2x1",
+      "lines": 48,
+      "source": "model",
+      "latency_ms": 1454,
+      "confidence": 0.12026581985027532,
+      "input_tokens": 1737,
+      "features": {
+        "lines": 0,
+        "holes": 19,
+        "added_holes": 1,
+        "height_sum": 171,
+        "max_height": 18,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 159,
+      "piece_choice": "r0x6",
+      "lines": 48,
+      "source": "model",
+      "latency_ms": 886,
+      "confidence": 0.454415606157009,
+      "input_tokens": 877,
+      "features": {
+        "lines": 0,
+        "holes": 19,
+        "added_holes": 0,
+        "height_sum": 175,
+        "max_height": 19,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 160,
+      "piece_choice": "r3x8",
+      "lines": 48,
+      "source": "model",
+      "latency_ms": 958,
+      "confidence": 0.10744678298462666,
+      "input_tokens": 992,
+      "features": {
+        "lines": 0,
+        "holes": 20,
+        "added_holes": 1,
+        "height_sum": 180,
+        "max_height": 19,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 161,
+      "piece_choice": "r0x4",
+      "lines": 49,
+      "source": "model",
+      "latency_ms": 689,
+      "confidence": 0.9399199624899021,
+      "input_tokens": 532,
+      "features": {
+        "lines": 1,
+        "holes": 19,
+        "added_holes": -1,
+        "height_sum": 173,
+        "max_height": 18,
+        "bumpiness": 3
+      }
+    },
+    {
+      "turn": 162,
+      "piece_choice": "r1x1",
+      "lines": 50,
+      "source": "model",
+      "latency_ms": 944,
+      "confidence": 0.748112705784928,
+      "input_tokens": 966,
+      "features": {
+        "lines": 1,
+        "holes": 19,
+        "added_holes": 0,
+        "height_sum": 167,
+        "max_height": 18,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 163,
+      "piece_choice": "r2x5",
+      "lines": 50,
+      "source": "model",
+      "latency_ms": 1529,
+      "confidence": 0.21384815883382113,
+      "input_tokens": 1825,
+      "features": {
+        "lines": 0,
+        "holes": 19,
+        "added_holes": 0,
+        "height_sum": 171,
+        "max_height": 18,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 164,
+      "piece_choice": "r0x3",
+      "lines": 50,
+      "source": "model",
+      "latency_ms": 685,
+      "confidence": 0.24865677737707076,
+      "input_tokens": 731,
+      "features": {
+        "lines": 0,
+        "holes": 19,
+        "added_holes": 0,
+        "height_sum": 175,
+        "max_height": 18,
+        "bumpiness": 3
+      }
+    },
+    {
+      "turn": 165,
+      "piece_choice": "r1x0",
+      "lines": 51,
+      "source": "model",
+      "latency_ms": 1195,
+      "confidence": 0.7354435570014003,
+      "input_tokens": 1371,
+      "features": {
+        "lines": 1,
+        "holes": 18,
+        "added_holes": -1,
+        "height_sum": 168,
+        "max_height": 18,
+        "bumpiness": 3
+      }
+    },
+    {
+      "turn": 166,
+      "piece_choice": "r1x8",
+      "lines": 53,
+      "source": "model",
+      "latency_ms": 820,
+      "confidence": 0.9133380397948088,
+      "input_tokens": 1112,
+      "features": {
+        "lines": 2,
+        "holes": 16,
+        "added_holes": -2,
+        "height_sum": 150,
+        "max_height": 16,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 167,
+      "piece_choice": "r1x4",
+      "lines": 55,
+      "source": "model",
+      "latency_ms": 822,
+      "confidence": 0.9018860388086377,
+      "input_tokens": 1120,
+      "features": {
+        "lines": 2,
+        "holes": 15,
+        "added_holes": -1,
+        "height_sum": 133,
+        "max_height": 15,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 168,
+      "piece_choice": "r1x2",
+      "lines": 56,
+      "source": "model",
+      "latency_ms": 1582,
+      "confidence": 0.4968251711985111,
+      "input_tokens": 1986,
+      "features": {
+        "lines": 1,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 127,
+        "max_height": 14,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 169,
+      "piece_choice": "r0x5",
+      "lines": 56,
+      "source": "model",
+      "latency_ms": 575,
+      "confidence": 0.2766325165148854,
+      "input_tokens": 722,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 131,
+        "max_height": 14,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 170,
+      "piece_choice": "r3x6",
+      "lines": 56,
+      "source": "model",
+      "latency_ms": 1342,
+      "confidence": 0.17092628771598903,
+      "input_tokens": 1979,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 1,
+        "height_sum": 136,
+        "max_height": 15,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 171,
+      "piece_choice": "r3x8",
+      "lines": 56,
+      "source": "model",
+      "latency_ms": 1407,
+      "confidence": 0.31372497237696,
+      "input_tokens": 1980,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 0,
+        "height_sum": 140,
+        "max_height": 15,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 172,
+      "piece_choice": "r1x8",
+      "lines": 56,
+      "source": "model",
+      "latency_ms": 919,
+      "confidence": 0.39536641001578726,
+      "input_tokens": 1118,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 0,
+        "height_sum": 144,
+        "max_height": 17,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 173,
+      "piece_choice": "r1x0",
+      "lines": 57,
+      "source": "model",
+      "latency_ms": 824,
+      "confidence": 0.3508067340176747,
+      "input_tokens": 1119,
+      "features": {
+        "lines": 1,
+        "holes": 15,
+        "added_holes": -1,
+        "height_sum": 137,
+        "max_height": 16,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 174,
+      "piece_choice": "r2x1",
+      "lines": 58,
+      "source": "model",
+      "latency_ms": 1419,
+      "confidence": 0.5628561709567279,
+      "input_tokens": 1974,
+      "features": {
+        "lines": 1,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 131,
+        "max_height": 15,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 175,
+      "piece_choice": "r0x0",
+      "lines": 58,
+      "source": "model",
+      "latency_ms": 820,
+      "confidence": 0.4063677663879606,
+      "input_tokens": 1117,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 135,
+        "max_height": 15,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 176,
+      "piece_choice": "r3x4",
+      "lines": 59,
+      "source": "model",
+      "latency_ms": 1422,
+      "confidence": 0.7248749283579125,
+      "input_tokens": 1967,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": -1,
+        "height_sum": 128,
+        "max_height": 14,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 177,
+      "piece_choice": "r1x6",
+      "lines": 60,
+      "source": "model",
+      "latency_ms": 824,
+      "confidence": 0.7545623811167222,
+      "input_tokens": 1120,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 122,
+        "max_height": 13,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 178,
+      "piece_choice": "r0x6",
+      "lines": 60,
+      "source": "model",
+      "latency_ms": 1057,
+      "confidence": 0.2779114140554837,
+      "input_tokens": 1111,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 126,
+        "max_height": 14,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 179,
+      "piece_choice": "r0x0",
+      "lines": 60,
+      "source": "model",
+      "latency_ms": 572,
+      "confidence": 0.18391343091088003,
+      "input_tokens": 714,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 130,
+        "max_height": 14,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 180,
+      "piece_choice": "r1x4",
+      "lines": 61,
+      "source": "model",
+      "latency_ms": 821,
+      "confidence": 0.8204402723865069,
+      "input_tokens": 1119,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 124,
+        "max_height": 14,
+        "bumpiness": 9
+      }
+    },
+    {
+      "turn": 181,
+      "piece_choice": "r3x2",
+      "lines": 61,
+      "source": "model",
+      "latency_ms": 1346,
+      "confidence": 0.15556564899540265,
+      "input_tokens": 1983,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 1,
+        "height_sum": 129,
+        "max_height": 14,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 182,
+      "piece_choice": "r2x5",
+      "lines": 61,
+      "source": "model",
+      "latency_ms": 1571,
+      "confidence": 0.1712614417604059,
+      "input_tokens": 1966,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 133,
+        "max_height": 14,
+        "bumpiness": 3
+      }
+    },
+    {
+      "turn": 183,
+      "piece_choice": "r3x8",
+      "lines": 62,
+      "source": "model",
+      "latency_ms": 1336,
+      "confidence": 0.834852889816235,
+      "input_tokens": 1957,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": -1,
+        "height_sum": 126,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 184,
+      "piece_choice": "r1x1",
+      "lines": 63,
+      "source": "model",
+      "latency_ms": 929,
+      "confidence": 0.6787959823687271,
+      "input_tokens": 1115,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 120,
+        "max_height": 13,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 185,
+      "piece_choice": "r0x7",
+      "lines": 63,
+      "source": "model",
+      "latency_ms": 796,
+      "confidence": 0.08609070599891772,
+      "input_tokens": 718,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 1,
+        "height_sum": 125,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 186,
+      "piece_choice": "r0x3",
+      "lines": 63,
+      "source": "model",
+      "latency_ms": 822,
+      "confidence": 0.2252866132117313,
+      "input_tokens": 1116,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 129,
+        "max_height": 14,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 187,
+      "piece_choice": "r1x2",
+      "lines": 63,
+      "source": "model",
+      "latency_ms": 819,
+      "confidence": 0.3593025497287974,
+      "input_tokens": 1116,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 133,
+        "max_height": 15,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 188,
+      "piece_choice": "r2x6",
+      "lines": 63,
+      "source": "model",
+      "latency_ms": 1354,
+      "confidence": 0.15832970963011664,
+      "input_tokens": 1986,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 137,
+        "max_height": 15,
+        "bumpiness": 10
+      }
+    },
+    {
+      "turn": 189,
+      "piece_choice": "r1x0",
+      "lines": 64,
+      "source": "model",
+      "latency_ms": 1356,
+      "confidence": 0.48647108968488306,
+      "input_tokens": 1989,
+      "features": {
+        "lines": 1,
+        "holes": 16,
+        "added_holes": 1,
+        "height_sum": 132,
+        "max_height": 14,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 190,
+      "piece_choice": "r1x9",
+      "lines": 64,
+      "source": "model",
+      "latency_ms": 868,
+      "confidence": 0.22401235706239012,
+      "input_tokens": 1120,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 0,
+        "height_sum": 136,
+        "max_height": 16,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 191,
+      "piece_choice": "r0x1",
+      "lines": 64,
+      "source": "model",
+      "latency_ms": 821,
+      "confidence": 0.22791737361675843,
+      "input_tokens": 1121,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 0,
+        "height_sum": 140,
+        "max_height": 16,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 192,
+      "piece_choice": "r0x4",
+      "lines": 66,
+      "source": "model",
+      "latency_ms": 912,
+      "confidence": 0.8558640317907944,
+      "input_tokens": 725,
+      "features": {
+        "lines": 2,
+        "holes": 14,
+        "added_holes": -2,
+        "height_sum": 122,
+        "max_height": 14,
+        "bumpiness": 7
+      }
+    },
+    {
+      "turn": 193,
+      "piece_choice": "r2x6",
+      "lines": 66,
+      "source": "model",
+      "latency_ms": 1344,
+      "confidence": 0.24548565551402043,
+      "input_tokens": 1976,
+      "features": {
+        "lines": 0,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 126,
+        "max_height": 14,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 194,
+      "piece_choice": "r1x0",
+      "lines": 67,
+      "source": "model",
+      "latency_ms": 905,
+      "confidence": 0.5149589600760974,
+      "input_tokens": 1111,
+      "features": {
+        "lines": 1,
+        "holes": 14,
+        "added_holes": 0,
+        "height_sum": 120,
+        "max_height": 13,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 195,
+      "piece_choice": "r2x4",
+      "lines": 67,
+      "source": "model",
+      "latency_ms": 1336,
+      "confidence": 0.14748118327867832,
+      "input_tokens": 1961,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 1,
+        "height_sum": 125,
+        "max_height": 13,
+        "bumpiness": 5
+      }
+    },
+    {
+      "turn": 196,
+      "piece_choice": "r2x7",
+      "lines": 67,
+      "source": "model",
+      "latency_ms": 1416,
+      "confidence": 0.12696502851303862,
+      "input_tokens": 1967,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 1,
+        "height_sum": 130,
+        "max_height": 14,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 197,
+      "piece_choice": "r1x0",
+      "lines": 67,
+      "source": "model",
+      "latency_ms": 828,
+      "confidence": 0.1111209526104143,
+      "input_tokens": 1117,
+      "features": {
+        "lines": 0,
+        "holes": 16,
+        "added_holes": 0,
+        "height_sum": 134,
+        "max_height": 16,
+        "bumpiness": 6
+      }
+    },
+    {
+      "turn": 198,
+      "piece_choice": "r2x1",
+      "lines": 67,
+      "source": "model",
+      "latency_ms": 1348,
+      "confidence": 0.10236483841189387,
+      "input_tokens": 1974,
+      "features": {
+        "lines": 0,
+        "holes": 17,
+        "added_holes": 1,
+        "height_sum": 139,
+        "max_height": 16,
+        "bumpiness": 4
+      }
+    },
+    {
+      "turn": 199,
+      "piece_choice": "r0x4",
+      "lines": 68,
+      "source": "model",
+      "latency_ms": 1399,
+      "confidence": 0.5642136097751294,
+      "input_tokens": 1966,
+      "features": {
+        "lines": 1,
+        "holes": 15,
+        "added_holes": -2,
+        "height_sum": 131,
+        "max_height": 15,
+        "bumpiness": 8
+      }
+    },
+    {
+      "turn": 200,
+      "piece_choice": "r2x1",
+      "lines": 68,
+      "source": "model",
+      "latency_ms": 1357,
+      "confidence": 0.20974871841593098,
+      "input_tokens": 1983,
+      "features": {
+        "lines": 0,
+        "holes": 15,
+        "added_holes": 0,
+        "height_sum": 135,
+        "max_height": 15,
+        "bumpiness": 6
+      }
+    }
+  ]
+}

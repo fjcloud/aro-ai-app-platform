@@ -1,0 +1,83 @@
+= Lab 1.8 — Prepare the Signal Desk Agent
+:page-aliases: 200-platform/lab_6_cluster_voice.adoc
+
+The decision model scores relevance. The runtime agent researches possible index exposure through *OpenShift AI's native Responses API*. Prepare that second path before the developer builds the app.
+
+[NOTE]
+====
+*Persona:* Platform Engineer +
+*Time:* 10–15 minutes after MLflow is ready +
+*Outcome:* Fixed model endpoints, separate runtime key, OAuth identity, storage and trace experiment.
+====
+
+== Create the native Playground backend
+
+Open *Red Hat OpenShift AI → Gen AI studio → AI asset endpoints*. Select project `live-transcript-dev`, choose the MaaS *DeepSeek-V4 Pro* model and *Add to playground*. Create the Playground and wait for its backend to be ready. Keep the model registered from MaaS; do not create a second Foundry endpoint or paste the Azure account key.
+
+From the bastion, inspect the native backend:
+
+[source,sh,role=execute]
+----
+oc get deployment lsd-genai-playground -n live-transcript-dev
+oc get service lsd-genai-playground-service -n live-transcript-dev
+oc get pods -n live-transcript-dev
+oc apply -f deploy/briefing/developer-responses-access.yaml
+oc get mlflow mlflow -o json | jq '{conditions:.status.conditions,url:.status.url}'
+----
+
+The runtime application calls:
+
+[source,text]
+----
+http://lsd-genai-playground-service.live-transcript-dev.svc.cluster.local:8321/v1/responses
+model: maas-vllm-inference-1/deepseekv4pro
+----
+
+The additional NetworkPolicy permits the Dev Spaces namespaces to reach only the native API port (8321), without editing the operator-owned policy or opening its metrics port.
+
+This is the native OpenShift AI agent backend. OpenCode uses the MaaS Chat Completions endpoint for coding; the app uses Responses for model/tool turns. Both reach the same DeepSeek deployment, with separate MaaS credentials.
+
+== Prepare runtime access
+
+[source,sh,role=execute]
+----
+python3 scripts/prepare-briefing-desk.py
+oc get serviceaccount signal-desk -n live-transcript-dev
+oc get configmap signal-desk-config -n live-transcript-dev -o json | jq .data
+oc get secret signal-desk-model signal-desk-oauth -n live-transcript-dev
+oc get pvc signal-desk-data -n live-transcript-dev
+----
+
+The helper creates a dedicated app identity, an OpenShift OAuth proxy, a separate `deepseekv4pro-signal-desk` MaaS subscription/key, the `signal-desk` MLflow experiment and a 2 GiB data volume. The runtime identity gets no cluster-monitoring or workload-editing permissions. The key expires after 24 hours; rerun preparation and restart the application if the lab continues longer.
+
+The fixed infrastructure name remains `live-transcript` for the prepared namespaces, registry image and pipeline. The exercise and browser UI are *Signal Desk*. Do not rename the delivery scaffold while generating the app.
+
+== The application contract
+
+Read `APP_CONTRACT.md` in the template. The backend owns five simple responsibilities:
+
+. Collect the prior Monday–Sunday Techmeme archive and retain coverage gaps.
+. Accept a same-week manual JSON export if live Techmeme collection is blocked; ignore its model outputs and disclose imported provenance.
+. Score the archived news against the fund memo with d3-mini.
+. Ask DeepSeek for hypothetical long-only index exposures using bounded archive tools.
+. Save and freeze the user's virtual portfolio, then calculate actual subsequent-week gross price returns.
+
+[source,text]
+----
+Techmeme archive → Go app → d3-mini /v1/systemone → relevance /100
+                       └→ OpenShift AI /v1/responses → DeepSeek / MaaS
+                               ↕ read_archive / search_archive / index_universe
+
+Browser → $10,000 paper allocation → freeze → historical prices → result
+Playground → authenticated MCP /mcp → the same read-only archive/catalog
+Agent and scoring calls → OpenTelemetry → MLflow
+Git → Tekton → Argo CD → same Go app
+----
+
+The model cannot fetch this week's prices during research. Prices are requested by deterministic Go code only after commitment. A running week is visibly provisional. Archived snippets are not full publisher articles; scoring relevance is not predicting profit. Historical replay cannot erase knowledge from model training, so this is not a blind backtest.
+
+== Hand over to the developer
+
+The developer will test the authenticated d3-mini endpoint, the MaaS Chat Completions endpoint and this Responses API independently from Dev Spaces in xref:300-developer/lab_2_model_apis.adoc[Lab 2.2]. No administrator credentials or Azure keys are needed in that workspace.
+
+Continue to xref:300-developer/lab_1_devspace_launch.adoc[Lab 2.1 — Launch Your Dev Space].

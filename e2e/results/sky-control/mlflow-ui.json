@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "experiment": "sky-control",
+  "workspace": "live-transcript-dev",
+  "traceMetrics": true,
+  "latency": true,
+  "tokenUsage": true,
+  "keychain": "mock"
+}

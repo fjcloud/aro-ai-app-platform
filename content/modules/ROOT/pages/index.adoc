@@ -1,149 +1,56 @@
 = AI-Powered Developer Platform on ARO
 
-Welcome to the *AI-Powered Developer Platform on ARO* workshop.
+Build *Signal Desk*: a simple investment replay game. Collect last week's Techmeme news, rank it for a semiconductor fund, research possible index exposure, allocate $10,000 of virtual money, then reveal how it would have performed this week.
 
-The story for today is a Monday at a company that uses a managed coding model and keeps speech inference on its own cluster. This morning the platform team installs the platform and publishes DeepSeek-V4 Pro on Foundry through OpenShift AI MaaS. The platform also serves Whisper on one T4 with OpenShift AI. This afternoon a developer ships Cluster Voice: speak to OpenShift and receive health answers grounded in internal monitoring metrics. You wear both hats, then test the tools in the Playground and inspect metrics, MLflow traces and costs.
+You play two roles. The *platform engineer* prepares OpenShift AI, a managed DeepSeek endpoint, one local T4 decision model and the delivery tools. The *developer* uses OpenCode and a short app contract to build and ship the game. Finally, inspect model usage, agent tools and MLflow traces.
 
+== The workshop in five steps
 
-== Who This Workshop Is For
+. *Platform:* apply all operator manifests with `oc`.
+. *Infrastructure:* add one CPU worker and one single-T4 worker, then enable platform instances.
+. *Models:* deploy DeepSeek on Foundry, publish it through OpenShift AI MaaS, and serve d3-mini on the T4.
+. *Developer preflight:* from Dev Spaces, explain and test each API independently with its own credential and `curl | jq`.
+. *Application:* build from `APP_CONTRACT.md`, collect last week's Techmeme news, rank it for the fund, allocate virtual money and compare with the latest completed market close this week.
 
-[cols="1,1", options="header"]
-|===
-| Persona | Role in This Workshop
-
-| *Platform Engineer* (morning)
-| Publishes DeepSeek-V4 Pro on Microsoft Foundry through MaaS, serves Whisper on one T4 with OpenShift AI, and prepares Dev Spaces, delivery tools and `AGENTS.md`.
-
-| *Developer* (afternoon)
-| Launches OpenShift Dev Spaces, talks to OpenCode backed by that MaaS endpoint, ships a real app through Tekton and Argo CD.
-|===
-
-== What You Will Build
+== What you build
 
 [source,text]
 ----
-Voice → Whisper → question → Go agent ↔ DeepSeek / MaaS
-                               ↕
-                        Thanos metrics (read only)
-                               ↓
-                        Answer + evidence
+Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry (coding)
 
-Playground → MCP → same tools     Go agent → MLflow traces
-Git → Tekton → Argo CD → same application
+Techmeme archive → Go app → d3-mini on one T4 → relevance /100
+                       └→ OpenShift AI Responses → DeepSeek / MaaS
+                                  ↕ archived news + index catalog tools
+Browser → virtual portfolio → freeze → historical prices → paper result
+
+Playground → MCP → same archive tools      Agent → MLflow traces
+Git → Tekton → Argo CD → same Go app
 ----
 
-DeepSeek powers both coding and the runtime agent, using separate MaaS keys and quotas. Whisper transcribes audio internally. Coding context, runtime questions and selected monitoring results go to Foundry; raw microphone audio stays on the cluster.
+*DeepSeek* generates code and researches hypothetical index ideas, through separate MaaS keys. *d3-mini* is a small community model that scores relevance without generating prose. It is served by a pinned custom native runtime on OpenShift AI/KServe; it is not a RedHatAI model or a supported Red Hat AI Inference runtime. No microphone or speech model is needed for this exercise.
 
-=== Act 1 — Platform
-* *DeepSeek-V4 Pro* on Microsoft Foundry, Global Standard, pay per token
-* *OpenShift AI Models-as-a-Service* governing the external coding endpoint with a separate API key and token quota
-* *OpenShift Dev Spaces* pointed at MaaS with one injected workshop key
-* *OpenShift AI + KServe + Red Hat AI Inference* serving RedHatAI Whisper Large v3 Turbo INT8 on one NVIDIA T4
-* *AGENTS.md* — project instructions for OpenCode
-* *OpenShift GitOps* (Argo CD) and *OpenShift Pipelines* (Tekton)
+The game separates three different values: memo relevance, the user's virtual allocation and observed historical performance. It never sends a real order. While this week is running, results remain provisional. This educational replay does not establish predictive performance or eliminate knowledge learned during model training.
 
-=== Act 2 — Developer
-* A personal Git repository on *ephemeral Git* (workshop-scoped, no GitHub account)
-* A *Cluster Voice* Go app: microphone or text → runtime agent → read-only monitoring tools → answer with evidence, adapted with OpenCode from the reference implementation
-* Image build and GitOps deploy from git, ephemeral Git, and `oc` — no Ansible, no local Docker
+== Workshop structure
 
-=== Act 3 — Observe and evaluate
-* Input and output tokens from the afternoon, priced from the Foundry list rate
-* Coding and runtime tokens and quotas through MaaS, speech latency and T4 activity
-* The same tools in the Gen AI Playground, MLflow model/tool traces, and grounded-answer checks
-
-== Learning Outcomes
-
-After completing this workshop, you will understand:
-
-* How MaaS publishes an external Foundry model with governed access, alongside a separate T4 speech model
-* How `AGENTS.md` gives the coding agent platform conventions, backed by deployment checks
-* How Dev Spaces + OpenCode is an AI-augmented inner loop with no laptop install
-* How Tekton and Argo CD form a GitOps path from a single repository
-* How managed model tokens and provisioned speech infrastructure have different cost models
-* How a read-only connector grounds an agent in real metrics, with MCP testing and MLflow tracing
-
-== How to follow the labs
-
-The morning/afternoon story represents two roles; you play both. Allow roughly half a day, including provisioning and image downloads. Timings are estimates.
-
-Run Acts 0 and 1 in the *bastion terminal* from Cloud Terminal. In Act 2, switch to the *Dev Spaces terminal* in the browser IDE. Lab 3.1 names the terminal to use for each task. Paste shell blocks into a terminal and prompt blocks into OpenCode. Use `/exit` to leave OpenCode, or open another terminal for checkpoint commands.
-
-The platform uses cluster-wide resources and the app uses fixed namespace names. Use one assigned cluster per participant. If several people share a cluster, the facilitator runs Act 1 once and assigns isolated app names, manifests and permissions before Act 2.
-
-== Workshop Structure
-
-[cols="1,1,3,1", options="header"]
+[cols="1,2,3",options="header"]
 |===
-| Act | Lab | Topic | Duration
-
-| *0 — Get in*
-| —
-| Connect to the existing RHDP cluster and log in with `oc`
-| 10 min
-
-.6+| *1 — Build the platform*
-| 1.1
-| Install the Platform
-| 10 min active / 20–30 min installation
-
-| 1.2
-| Publish DeepSeek on Foundry
-| 15 min
-
-| 1.3
-| Publish DeepSeek through MaaS
-| 15 min
-
-| 1.4
-| Serve Whisper on one T4
-| 15 min active / 25–40 min background
-
-| 1.5
-| Hand the Keys (`AGENTS.md` + Dev Spaces URL)
-| 10 min
-
-| 1.6
-| Give the Cluster a Voice
-| 15 min
-
-.2+| *2 — First day*
-| 2.1
-| Launch Your Dev Space
-| 10 min
-
-| 2.2
-| Prompt to Deployment (generate, ship, change)
-| 35 min
-
-.2+| *3 — Observe and evaluate*
-| 3.1
-| Usage, Performance and Cost
-| 15 min
-
-| 3.2
-| AgentOps: Tools, Traces and Evidence
-| 25 min
-
-| *—*
-| —
-| Conclusion & Q&A
-| 10 min
+| Act | Role | Labs
+| 0 — Get in | Platform Engineer | Connect to the assigned RHDP ARO environment and detect its resource group.
+| 1 — Build the platform | Platform Engineer | Apply all operator manifests; add one D8 CPU worker and one single-T4 worker; enable platform instances; deploy DeepSeek and publish it through MaaS; serve d3-mini and prepare scoped developer access, the runtime agent and tracing.
+| 2 — First day | Developer | Open Dev Spaces; learn the decision-model contract and test both models independently with authenticated curl + jq; build Signal Desk from APP_CONTRACT.md; ship through Tekton and Argo CD; replay last week’s news against this week’s latest completed market session.
+| 3 — Observe and evaluate | Both | Compare coding, agent and GPU usage; inspect traces and exercise the same bounded tools in the Playground.
 |===
 
-[TIP]
-====
-*Readiness gates:* operator installs and GPU provisioning take time. Continue when the guide says work can run in the background, and complete each readiness check before starting the next dependent step.
-====
+Allow roughly half a day including operator installation, GPU provisioning and downloads. Operator installation and worker creation use explicit `oc` / `az` commands and supplied manifests. Run Acts 0 and 1 in the *bastion terminal*. Act 2 runs in the *Dev Spaces terminal*. Paste shell blocks into the named terminal and prompt blocks into OpenCode; use `/exit` to return to the shell. JSON responses are formatted with `jq`.
 
 == Prerequisites
 
-You will need:
+* Assigned RHDP *classic ARO* environment, OpenShift 4.21+, Ready workers and WeTTY browser terminal.
+* Cluster-admin access for the platform role; a separate scoped developer identity is prepared for Act 2.
+* Azure permissions for Foundry in the assigned resource group, plus quota and capacity for one `Standard_NC8as_T4_v3` worker and CPU headroom.
+* A browser; no laptop model, Docker, API key or GitHub account is required from participants.
 
-* A current web browser and a microphone
-* An assigned RHDP *classic ARO* environment with OpenShift 4.21 or later, a bastion and WeTTY terminal
-* Azure permissions, quota and capacity for one `Standard_NC8as_T4_v3` GPU worker and additional CPU headroom when needed
-* Cluster-admin access and an Azure identity allowed to create Foundry resources in the assigned resource group
-* This workshop repository (cloned in Act 0) — not the Go app template
+Use one assigned cluster per participant. A shared cluster requires the facilitator to isolate app names, namespaces and permissions before the workshop.
 
-Let's get started.
+Continue to *Act 0 — Get in*.
