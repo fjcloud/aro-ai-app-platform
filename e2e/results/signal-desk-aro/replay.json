@@ -1,6 +1,12 @@
 {
   "passed": true,
-  "at": "2026-10-28T18:23:24.774Z",
+  "app_url": "https://live-transcript-live-transcript-dev.apps.z0tudc0s.eastus.aroapp.io",
+  "source_revision": "2dd784ef96e299a82f6fd6fd844c8281a347f62b",
+  "agent": "maas-vllm-inference-1/deepseekv4pro",
+  "manual_import": true,
+  "ranking_retries": 0,
+  "live_collection_error": "",
+  "at": "2026-10-28T21:11:46.545Z",
   "live_models": true,
   "news": 289,
   "ranked": 289,
@@ -22,41 +28,41 @@
     "score": 83.6
   },
   "research": {
-    "article_id": "22603b023aeb8666c6603601",
+    "article_id": "0bf6936053a58ece62e29417",
     "memo_version": 3,
     "summary_hash": "8f8f96d63128f2206d1781a98a3acfa41ffc348e60aa7239642bbab46af63878",
     "status": "done",
-    "comment": "Texas Instruments (TI) is the world's largest analog semiconductor producer, serving industrial, automotive and consumer markets. Its 28% YoY Q3 revenue beat and above-consensus Q4 guidance suggest a broad semiconductor demand recovery. The investment memo prioritizes material changes in chip demand, revenue, capacity and supply chains — TI's results are a sector bellwether supporting a constructive thesis for diversified semiconductor exposure. Evidence limits: the archived excerpt is a headline only with no end-market or capex detail; we cannot confirm whether the beat was driven by cyclical recovery, AI-related demand, or inventory restocking. No TI-specific commentary on export restrictions, capacity additions, or gross margin drivers is available.",
+    "comment": "The TI excerpt (E1) provides only topline Q3 results — 28% YoY revenue growth, a beat, and above-consensus Q4 guidance — with no segment-level detail on which end markets drove the beat. The archival search (E2, E4, E5) adds broader context of strong AI-driven chip demand but no TI-specific commentary on industrial or automotive recovery. This limits the precision of the thesis: the beat could reflect broad analog recovery, AI-adjacent demand, inventory restocking, or a mix. The SMH ETF captures TI directly as a major constituent (analog/embedded) alongside the full semiconductor value chain. QQQ offers indirect exposure via semiconductor-heavy tech mega-caps that benefit from the same demand tailwinds. XLK is a wider tech proxy with semiconductor exposure but is a weaker fit given its diluted link to TI-specific dynamics.",
     "ideas": [
       {
-        "id": "6ed59a4574699f3a111cf4c4",
+        "id": "44ae123c5ac80db502651bce",
         "symbol": "SMH",
-        "thesis": "If TI's broad-based revenue beat signals an accelerating semiconductor cycle, then SMH — holding a concentrated basket of 25 large US-listed chipmakers, equipment vendors and foundry suppliers — could capture the cross-current of rising demand across designers, fabricators and tool makers. TI itself is likely a material constituent given its market cap, providing direct exposure to the reporting company, while the fund's diversification extends the thesis beyond analog into memory, logic and equipment.",
-        "risk": "The TI beat may reflect company-specific market share gains or end-market mix shifts rather than a sector-wide recovery. If the revenue strength is narrowly concentrated in TI's industrial/automotive analog segments without spillover into memory, GPUs or foundry utilization, SMH's broader holdings could dilute the benefit.",
+        "thesis": "TI's 28% revenue surge and above-consensus Q4 guidance, if sustained across its broad analog and embedded portfolio, could signal a cyclical recovery in industrial and automotive semiconductor demand beyond AI-specific tailwinds. As a top-25 US-listed semiconductor ETF, SMH would capture TI directly along with peers that may report similar demand inflection. The broader archive context of sold-out cloud capacity and massive GPU orders suggests chip demand is broad-based.",
+        "risk": "The excerpt lacks segment detail — TI's beat could be concentrated in a narrow AI-adjacent product line rather than a broad-based analog recovery. If the beat reflects one-off restocking rather than sustained end-market demand, SMH's diversified holdings may not see correlated upside. Inventory corrections in analog have been prolonged historically.",
         "sources": [
           "E1",
-          "E3"
+          "E4"
         ]
       },
       {
-        "id": "a00f33ba0b445bca840f051d",
-        "symbol": "XLK",
-        "thesis": "If TI's results reflect a durable semiconductor demand upswing that also benefits downstream technology hardware and systems companies, XLK provides indirect exposure. TI's analog chips feed into a wide range of technology end-products held by XLK constituents (enterprise hardware, networking, IT services), and strong chip demand often correlates with broader technology capital spending and revenue growth.",
-        "risk": "XLK is a broad technology sector ETF with significant weight in software and services companies that have no direct semiconductor transmission. TI's analog strength may not meaningfully move the needle for XLK's mega-cap software constituents, diluting the signal from the chip cycle.",
-        "sources": [
-          "E1",
-          "E3"
-        ]
-      },
-      {
-        "id": "28392f7e5c440e16ea123b95",
+        "id": "7b7dd0b4cd7f294823159b5d",
         "symbol": "QQQ",
-        "thesis": "If TI's above-estimate results are partially driven by AI-related analog/power management chip demand — a plausible hypothesis given the same-week news of AWS capacity sold out through 2027 (E4) and Anthropic's massive revenue growth (E2) — then QQQ, with its heavy weighting in AI infrastructure beneficiaries and cloud hyperscalers, could express the thesis that semiconductor demand is being pulled forward by AI capex rather than a classic cyclical recovery.",
-        "risk": "The archived TI excerpt contains no mention of AI exposure. QQQ's ~50% weight in non-semiconductor names (streaming, e-commerce, software) creates substantial tracking error versus a pure semiconductor thesis. If TI's beat is entirely industrial and automotive analog — its historical core — QQQ's AI narrative link is unsupported.",
+        "thesis": "TI's strong results and guidance could be one data point in a broader semiconductor demand recovery story, indirectly benefiting large semiconductor-exposed Nasdaq-100 constituents. The archive evidence of AWS capacity being sold out into 2027-2028 (E4) and massive GPU orders from Chinese hyperscalers suggests persistent chip demand supporting the tech-heavy index.",
+        "risk": "Indirect link: QQQ holds TI at a negligible weight; TI's specific analog recovery may not move the broader index. The QQQ thesis relies on TI being a bellwether for tech hardware demand rather than a direct constituent driver. Confounding factors like Meta's operating income decline (E2) or Netflix ad revenue miss could offset any semiconductor tailwind.",
         "sources": [
           "E1",
-          "E2",
-          "E3"
+          "E4",
+          "E2"
+        ]
+      },
+      {
+        "id": "549fd68ba3f04544e685ba53",
+        "symbol": "XLK",
+        "thesis": "TI's above-consensus revenue and net income signal a potential semiconductor cycle upturn that could lift the technology sector broadly, with XLK capturing TI alongside other semiconductor and hardware names. The archive shows multiple chip-demand catalysts — AI infrastructure buildout, data center capacity shortages, and export-compliant GPU orders — that may support sector-level hardware revenue.",
+        "risk": "XLK's semiconductor weighting is diluted by software and IT services holdings. Without segment-level confirmation that TI's beat reflects a genuinely broad recovery, the transmission to the wider tech sector is speculative. The excerpt alone cannot distinguish between TI-specific execution and sector-wide demand improvement.",
+        "sources": [
+          "E1",
+          "E4"
         ]
       }
     ],
@@ -65,9 +71,9 @@
         "id": "E1",
         "tool": "read_archive",
         "url": "https://www.techmeme.com/261021/h2355",
-        "retrieved": "2026-10-28T18:20:13Z",
+        "retrieved": "2026-10-28T21:11:29Z",
         "data": {
-          "coverage": "Archived Techmeme headline/excerpt only. Publisher page was not fetched.",
+          "coverage": "Manually imported archived facts. Source dates and URLs are supplied by the import, not independently re-fetched.",
           "excerpt": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
           "published_day": "2026-10-21",
           "snapshot_as_of": "2026-10-22T03:55:00Z",
@@ -79,115 +85,115 @@
         "id": "E2",
         "tool": "search_archive",
         "url": "https://www.techmeme.com/",
-        "retrieved": "2026-10-28T18:20:13Z",
+        "retrieved": "2026-10-28T21:11:29Z",
         "data": {
           "coverage": "Search of this archived week only; no live web or current market data.",
           "cutoff": "2026-10-26T04:00:00Z",
           "matches": [
             {
-              "as_of": "2026-10-22T16:00:00Z",
-              "day": "2026-10-22",
-              "excerpt": "Barclays to Cut 5,000 Jobs as AI Starts to Create Efficiency — Video Player is loading. — Unmute — Current Time 0:00 Loaded: 69.77% Playback Rate",
-              "source_id": "ad270d29b6b18232078864c7",
-              "title": "Barclays plans to cut 5,000 jobs, or ~5% of its workforce, by the end of 2026 as part of AI-driven cost cutting, with ~60% coming from support and developers"
-            },
-            {
-              "as_of": "2026-10-22T16:00:00Z",
-              "day": "2026-10-22",
-              "excerpt": "This voice experience is generated by AI. Learn more. … Investors put $47.4 billion into physical AI in the first half of 2026 …",
-              "source_id": "56c2edf6cc3f784bed18efd6",
-              "title": "Maxinsights, which creates training data for robots using first-person footage from cameras worn by 5,000+ contractors, raised a $30M seed led by Peak XV"
-            },
-            {
-              "as_of": "2026-10-20T16:00:00Z",
-              "day": "2026-10-20",
-              "excerpt": "Analysis: London fell from 7th to last place out of 18 European capitals for median mobile download speed from 2021 to 2026; 5G adoption has outrun 5G capacity",
-              "source_id": "80b5c1c43e073a54c1cd0272",
-              "title": "Analysis: London fell from 7th to last place out of 18 European capitals for median mobile download speed from 2021 to 2026; 5G adoption has outrun 5G capacity"
-            },
-            {
-              "as_of": "2026-10-21T14:01:00Z",
-              "day": "2026-10-21",
-              "excerpt": "Memo: Nscale CEO Josh Payne says it has “more than $100B in contracted revenue”; sources say it still plans to list by the end of 2026 at a $30B-$35B valuation",
-              "source_id": "61f26ce383afb6b8da2be173",
-              "title": "Memo: Nscale CEO Josh Payne says it has “more than $100B in contracted revenue”; sources say it still plans to list by the end of 2026 at a $30B-$35B valuation"
-            },
-            {
-              "as_of": "2026-10-22T03:55:00Z",
-              "day": "2026-10-21",
-              "excerpt": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
-              "source_id": "22603b023aeb8666c6603601",
-              "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est."
-            },
-            {
-              "as_of": "2026-10-21T14:01:00Z",
-              "day": "2026-10-21",
-              "excerpt": "Founder of OpenEvidence chatbot says two-thirds of US physicians use the ad-powered tool, prompting a debate about patient care",
-              "source_id": "7c21f07ca747e8ef35c8baba",
-              "title": "OpenEvidence says nearly two-thirds of ~1M US physicians use its AI search engine; a source says it is on track to generate $400M-$500M in 2026 ad revenue"
-            },
-            {
-              "as_of": "2026-10-21T14:01:00Z",
-              "day": "2026-10-21",
-              "excerpt": "YOU CAN LEARN a lot about the people racing to build the world's most powerful technology by asking what keeps them up at night.",
-              "source_id": "a5ebca74ec3236a88eeec90c",
-              "title": "Demis Hassabis says he expects AGI within two to three years, down from his three-to-five-year prediction earlier in 2026, and discusses AI's science potential"
-            },
-            {
-              "as_of": "2026-10-21T03:55:00Z",
-              "day": "2026-10-20",
-              "excerpt": "In a new draft prospectus viewed by the Journal, the AI giant disclosed an $80.7 billion net loss for the first half of 2026 and a long list of risk factors",
-              "source_id": "c5b2e5bd387bd4ba3fb3df0e",
-              "title": "Anthropic's IPO prospectus: H1 2026 revenue of $16.3B, ~20% from two customers, vs. $1.1B in H1 2025, and an $80.7B net loss driven by accounting charges"
+              "as_of": "2026-10-23T16:00:00Z",
+              "day": "2026-10-23",
+              "excerpt": "New company backed by Anthropic and UK buyout group Hg will advise companies on how to deploy AI",
+              "source_id": "beb5563dba6eb1a393dcf062",
+              "title": "Sources: Anthropic and London-based PE firm Hg agree to launch a consultancy by the end of 2026 to embed AI consultants and engineers into European businesses"
             },
             {
               "as_of": "2026-10-21T03:55:00Z",
               "day": "2026-10-20",
               "excerpt": "Netflix says it expects FY 2026 ad revenue of ~$2.7B, under its ~$3B forecast, and its Q4 operating margin will be impacted due to costs associated with layoffs",
-              "source_id": "d9e92889a4cae06e465f1641",
+              "source_id": "b66d170ddc65c61f5742cb8f",
               "title": "Netflix says it expects FY 2026 ad revenue of ~$2.7B, under its ~$3B forecast, and its Q4 operating margin will be impacted due to costs associated with layoffs"
             },
             {
               "as_of": "2026-10-21T14:01:00Z",
               "day": "2026-10-21",
-              "excerpt": "NextDC's stock fell as much as 44% to AU$5.15 after the Australian data center company cut its earnings forecast by 33%+; its shares were above AU$16 in June",
-              "source_id": "cb8d55b9522cdbe5d3bf2e4c",
-              "title": "NextDC's stock fell as much as 44% to AU$5.15 after the Australian data center company cut its earnings forecast by 33%+; its shares were above AU$16 in June"
+              "excerpt": "YOU CAN LEARN a lot about the people racing to build the world's most powerful technology by asking what keeps them up at night.",
+              "source_id": "7c44f8b4677236ba6c48700c",
+              "title": "Demis Hassabis says he expects AGI within two to three years, down from his three-to-five-year prediction earlier in 2026, and discusses AI's science potential"
             },
             {
               "as_of": "2026-10-21T14:01:00Z",
               "day": "2026-10-21",
               "excerpt": "Apple says it plans to add Reachability for the iPhone Duo later in 2026, helping people with smaller hands more easily access the left or right display edges",
-              "source_id": "e958cbce53e18a3494bb75ba",
+              "source_id": "d4c735e0d48b20b9d247b5ae",
               "title": "Apple says it plans to add Reachability for the iPhone Duo later in 2026, helping people with smaller hands more easily access the left or right display edges"
             },
             {
-              "as_of": "2026-10-20T03:55:00Z",
-              "day": "2026-10-19",
-              "excerpt": "DeepSeek is working closely with Huawei Technologies to shape the design of future AI chips, two people familiar with the matter said …",
-              "source_id": "6e41ca4b5d609405050e2d8b",
-              "title": "Sources: DeepSeek and Huawei are collaborating on future AI chip designs; DeepSeek plans to start using Ascend 950DT for pre-training as soon as 2026's end"
+              "as_of": "2026-10-21T21:35:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Announces Establishment of New Class C Common Stock — Meta Platforms, Inc. (Nasdaq: META) today reported financial results for the quarter ended September 30, 2026.",
+              "source_id": "28077b5e62686e6b2b5bf876",
+              "title": "Meta reports Q3 revenue up 26% YoY to $64.6B, operating income down 37% to $12.99B on a $9.89B AG settlement charge, and family DAP up 3% to 3.64B for September"
+            },
+            {
+              "as_of": "2026-10-21T03:55:00Z",
+              "day": "2026-10-20",
+              "excerpt": "Netflix on Tuesday reported third-quarter earnings that topped analyst estimates and revenue that was in line as Wall Street eyes …",
+              "source_id": "32b4c3c0019d63f2282178af",
+              "title": "Netflix reports Q3 revenue up 12% YoY to $12.87B, in line with est., net income up 44% YoY to $3.66B, in part due to expenses timing; NFLX drops 5%+ after hours"
+            },
+            {
+              "as_of": "2026-10-22T16:00:00Z",
+              "day": "2026-10-22",
+              "excerpt": "Barclays to Cut 5,000 Jobs as AI Starts to Create Efficiency — Video Player is loading. — Unmute — Current Time 0:00 Loaded: 69.77% Playback Rate",
+              "source_id": "c9481d9112c85b8aee08f02c",
+              "title": "Barclays plans to cut 5,000 jobs, or ~5% of its workforce, by the end of 2026 as part of AI-driven cost cutting, with ~60% coming from support and developers"
+            },
+            {
+              "as_of": "2026-10-21T16:01:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Today, Calif.io, Wiz, OpenAI and Quarkslab disclosed two vulnerabilities in PHP, tracked as CVE-2026-109618 and CVE-2026-109619 and known as php2shell.",
+              "source_id": "debf8a22c2166e6e03f7d8eb",
+              "title": "Cloudflare says it deployed WAF mitigations for all free and paid tier customers to combat two PHP flaws by default, about nine hours ahead of public disclosure"
+            },
+            {
+              "as_of": "2026-10-22T03:55:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
+              "source_id": "0bf6936053a58ece62e29417",
+              "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est."
             },
             {
               "as_of": "2026-10-19T16:00:00Z",
               "day": "2026-10-19",
               "excerpt": "The Saudi national charged with planting a recording device in a sensitive OpenAI executive conference room in San Francisco was …",
-              "source_id": "1bdeb7176738a699680a8d47",
+              "source_id": "5ce9b3d48d4c245b730ae83e",
               "title": "Filing: US prosecutors say OpenAI suspect Abdulrahman Alfozan maintained frequent WhatsApp contact in 2025 and 2026 with an unnamed Saudi Royal Family member"
             },
             {
               "as_of": "2026-10-22T16:00:00Z",
               "day": "2026-10-22",
-              "excerpt": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees",
-              "source_id": "4dae586f6381e75cd3eeacb3",
-              "title": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees"
+              "excerpt": "This voice experience is generated by AI. Learn more. … Investors put $47.4 billion into physical AI in the first half of 2026 …",
+              "source_id": "3235979bee816596f33096ff",
+              "title": "Maxinsights, which creates training data for robots using first-person footage from cameras worn by 5,000+ contractors, raised a $30M seed led by Peak XV"
             },
             {
-              "as_of": "2026-10-23T16:00:00Z",
-              "day": "2026-10-23",
-              "excerpt": "New company backed by Anthropic and UK buyout group Hg will advise companies on how to deploy AI",
-              "source_id": "ac0c2ed2c568251907048873",
-              "title": "Sources: Anthropic and London-based PE firm Hg agree to launch a consultancy by the end of 2026 to embed AI consultants and engineers into European businesses"
+              "as_of": "2026-10-21T03:55:00Z",
+              "day": "2026-10-20",
+              "excerpt": "In a new draft prospectus viewed by the Journal, the AI giant disclosed an $80.7 billion net loss for the first half of 2026 and a long list of risk factors",
+              "source_id": "813c952695823f1f116169a4",
+              "title": "Anthropic's IPO prospectus: H1 2026 revenue of $16.3B, ~20% from two customers, vs. $1.1B in H1 2025, and an $80.7B net loss driven by accounting charges"
+            },
+            {
+              "as_of": "2026-10-21T14:01:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Memo: Nscale CEO Josh Payne says it has “more than $100B in contracted revenue”; sources say it still plans to list by the end of 2026 at a $30B-$35B valuation",
+              "source_id": "c90c539937ef5999e2eca832",
+              "title": "Memo: Nscale CEO Josh Payne says it has “more than $100B in contracted revenue”; sources say it still plans to list by the end of 2026 at a $30B-$35B valuation"
+            },
+            {
+              "as_of": "2026-10-20T16:00:00Z",
+              "day": "2026-10-20",
+              "excerpt": "Washington has blacklisted a Chinese venture firm established by ex-Microsoft Corp. AI scientist Lu Qi for alleged ties to a startup accused …",
+              "source_id": "7da1603f21498c617ddba829",
+              "title": "The US sanctions Chinese VC firm MiraclePlus for financing Zhisuan, founded by Ding Linwei, who in 2026 was convicted of stealing Google's AI trade secrets"
+            },
+            {
+              "as_of": "2026-10-20T03:55:00Z",
+              "day": "2026-10-19",
+              "excerpt": "DeepSeek is working closely with Huawei Technologies to shape the design of future AI chips, two people familiar with the matter said …",
+              "source_id": "f18af95cfa136d4df363ea3c",
+              "title": "Sources: DeepSeek and Huawei are collaborating on future AI chip designs; DeepSeek plans to start using Ascend 950DT for pre-training as soon as 2026's end"
             }
           ]
         }
@@ -196,7 +202,7 @@
         "id": "E3",
         "tool": "index_universe",
         "url": "https://www.ssga.com/",
-        "retrieved": "2026-10-28T18:20:13Z",
+        "retrieved": "2026-10-28T21:11:29Z",
         "data": {
           "basis": "Static fund index categories, not verified historical constituents. No prices or returns are included.",
           "proxies": [
@@ -227,76 +233,214 @@
         "id": "E4",
         "tool": "search_archive",
         "url": "https://www.techmeme.com/",
-        "retrieved": "2026-10-28T18:20:15Z",
+        "retrieved": "2026-10-28T21:11:30Z",
         "data": {
           "coverage": "Search of this archived week only; no live web or current market data.",
           "cutoff": "2026-10-26T04:00:00Z",
           "matches": [
             {
-              "as_of": "2026-10-24T16:01:00Z",
-              "day": "2026-10-24",
-              "excerpt": "Ciena CEO Gary Smith is ‘suitably paranoid,’ but optimistic — The historic telecommunications crash of 2001 is burned indelibly …",
-              "source_id": "b60a39ab5b50e75c8a469090",
-              "title": "An interview with Ciena CEO Gary Smith, a veteran of the 2001 telecoms crash, on AI demand outpacing supply for Ciena's optical networking chips, and more"
+              "as_of": "2026-10-20T03:55:00Z",
+              "day": "2026-10-19",
+              "excerpt": "Nscale Ltd., the AI cloud computing firm, is in talks to sell computing power to Anthropic PBC in a deal that could be worth about $45 billion …",
+              "source_id": "f01772b24f08ff9252e2e071",
+              "title": "Sources: Nscale is in talks for a second deal with Anthropic worth ~$45B to deliver 460MW of computing power at its West Virginia campus using Vera Rubin chips"
             },
             {
               "as_of": "2026-10-19T16:00:00Z",
               "day": "2026-10-19",
-              "excerpt": "NVIDIA's Vera CPU heralds a redefinition of computing architecture from a traditional, task-isolated paradigm to an orchestrated …",
-              "source_id": "eb6fba2cb7d9307a71f9c9c6",
-              "title": "Q&A with Nvidia's Vera team on agentic AI driving CPU demands and forcing CPU design priority back to single-threaded performance over core counts, and more"
+              "excerpt": "AI chip startup Tenstorrent Inc., after attracting takeover interest earlier this year, has raised $1.5 billion from investors …",
+              "source_id": "c273d12aacdacff62baa7b6a",
+              "title": "AI chip startup Tenstorrent raised a $1.5B Series E led by Trace Capital and Innovation X at a $6.2B valuation, up from $2.6B after raising $700M in 2024"
+            },
+            {
+              "as_of": "2026-10-21T19:35:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Flapping Airplanes, a year-old artificial intelligence startup, has raised $1 billion in funding at a $6 billion valuation …",
+              "source_id": "e70206bd636187085aa9db30",
+              "title": "Flapping Airplanes, which is working on methods to train AI models using less data and compute and make the chips more efficient, raised $1B at a $6B valuation"
+            },
+            {
+              "as_of": "2026-10-24T16:01:00Z",
+              "day": "2026-10-24",
+              "excerpt": "Ciena CEO Gary Smith is ‘suitably paranoid,’ but optimistic — The historic telecommunications crash of 2001 is burned indelibly …",
+              "source_id": "eca7d60d98e7686046747f89",
+              "title": "An interview with Ciena CEO Gary Smith, a veteran of the 2001 telecoms crash, on AI demand outpacing supply for Ciena's optical networking chips, and more"
+            },
+            {
+              "as_of": "2026-10-20T16:00:00Z",
+              "day": "2026-10-20",
+              "excerpt": "OpenAI has changed its tune on China. Nvidia is a big winner. — OpenAI for much of last year advocated for strict limits …",
+              "source_id": "8a44b122d0d43f6c0c169d60",
+              "title": "Sources: OpenAI has retreated from advocating for strict US chip export controls to China ahead of the lame-duck session, aligning closer with President Trump"
             },
             {
               "as_of": "2026-10-24T03:55:00Z",
               "day": "2026-10-23",
               "excerpt": "Amazon Web Services capacity is mostly booked up through at least next year, Amazon CEO Andy Jassy …",
-              "source_id": "550961b5882e51fb2de27c65",
+              "source_id": "799526629a036589414cc628",
               "title": "Andy Jassy says AWS capacity for 2027 is “largely sold out” and a “good chunk” of 2028 capacity is also sold, though AWS reserves some capacity for on-demand"
-            },
-            {
-              "as_of": "2026-10-22T03:55:00Z",
-              "day": "2026-10-21",
-              "excerpt": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
-              "source_id": "22603b023aeb8666c6603601",
-              "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est."
             },
             {
               "as_of": "2026-10-23T16:00:00Z",
               "day": "2026-10-23",
-              "excerpt": "What I learned from touring Intel's most advanced fab and talking to its leadership. — I spent two days touring Intel's …",
-              "source_id": "6c3da50ad6c02a47ca53dc92",
-              "title": "An interview with Intel's leadership, including CTO Pushkar Ranade, on AI chip demand, lessons from 10nm, whether Intel can catch up to TSMC, Terafab, and more"
+              "excerpt": "SK Hynix's shares fell as much as 4.2% in early trade in Seoul — SK Hynix halted plans to list its memory-chip unit in the U.S. …",
+              "source_id": "5e63ccdd1d437092f0d777cc",
+              "title": "SK Hynix says its SSD subsidiary Solidigm has halted a review of a potential US IPO to fund a new US chip fab, citing “market conditions and share price trends”"
+            },
+            {
+              "as_of": "2026-10-21T14:01:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Samsung Electronics (005930.KS) and SK Hynix (000660.KS) are upgrading their China factories to produce more advanced memory chips …",
+              "source_id": "0b1ffbe12e200491591d9acb",
+              "title": "Sources: Samsung and SK Hynix are upgrading their China fabs to produce NAND flash chips with 200+ layers, aiming to fend off fast-growing Chinese rival YMTC"
+            },
+            {
+              "as_of": "2026-10-25T16:00:00Z",
+              "day": "2026-10-25",
+              "excerpt": "“What is a GPU?” Blackstone Inc. executives asked CoreWeave Inc.'s leadership. Also: “Is AI real?” — These were entirely logical queries …",
+              "source_id": "6693f87b7e3898bc0e5921fa",
+              "title": "How a Blackstone-led $2.3B private credit loan to CoreWeave in 2023 became a blueprint for chip-backed debt, which is on track to become a $1T market"
+            },
+            {
+              "as_of": "2026-10-20T03:55:00Z",
+              "day": "2026-10-19",
+              "excerpt": "DeepSeek is working closely with Huawei Technologies to shape the design of future AI chips, two people familiar with the matter said …",
+              "source_id": "f18af95cfa136d4df363ea3c",
+              "title": "Sources: DeepSeek and Huawei are collaborating on future AI chip designs; DeepSeek plans to start using Ascend 950DT for pre-training as soon as 2026's end"
             },
             {
               "as_of": "2026-10-19T16:00:00Z",
               "day": "2026-10-19",
-              "excerpt": "CyberSN's Cybersecurity Jobs Report provides visibility into the US cybersecurity job market. It's a mixed bag.",
-              "source_id": "786238eea3aa768ad9f3f0a6",
-              "title": "CyberSN: US cybersecurity job postings fell 26.4% YoY to a four-year low of 235,786 roles from January to September; AI security engineer demand soared 268.3%"
+              "excerpt": "A new software tool from Amazon aims to make switching from Nvidia to the company's own AI chips about as simple as changing a setting.",
+              "source_id": "847def9fa9fb922b2fc62dd6",
+              "title": "Amazon introduces TorchNeuron, an open-source tool that will allow developers to run code written in PyTorch on Amazon's Trainium chips with no rewrite"
             },
             {
               "as_of": "2026-10-22T16:00:00Z",
               "day": "2026-10-22",
               "excerpt": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees",
-              "source_id": "4dae586f6381e75cd3eeacb3",
+              "source_id": "781eaf42c055e495363e227c",
               "title": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees"
+            },
+            {
+              "as_of": "2026-10-20T16:00:00Z",
+              "day": "2026-10-20",
+              "excerpt": "Analysis: London fell from 7th to last place out of 18 European capitals for median mobile download speed from 2021 to 2026; 5G adoption has outrun 5G capacity",
+              "source_id": "950293eabbbb563abb3a80af",
+              "title": "Analysis: London fell from 7th to last place out of 18 European capitals for median mobile download speed from 2021 to 2026; 5G adoption has outrun 5G capacity"
+            },
+            {
+              "as_of": "2026-10-20T16:00:00Z",
+              "day": "2026-10-20",
+              "excerpt": "ByteDance, Alibaba and Tencent have ordered more than 3 million of Nvidia's new RTX PRO 5500 graphics cards with a collective sticker price …",
+              "source_id": "155d86d0d3d6cc5505293ce1",
+              "title": "Sources: ByteDance, Alibaba, and Tencent ordered 3M+ of Nvidia's new RTX PRO 5500 GPUs worth $35B+, in a rush to secure less powerful, export-compliant chips"
+            },
+            {
+              "as_of": "2026-10-19T16:00:00Z",
+              "day": "2026-10-19",
+              "excerpt": "60GW Under Construction, SemiAnalysis Leading Indicators, 1.3T of Lease Contracts Signed YTD, The Shortage Could Move to Chips",
+              "source_id": "450f8fe4169cd9056485c363",
+              "title": "Analysis: companies are set for a massive acceleration of 50GW+ in data center capacity additions in 2027; 24GW+ across 40 campuses are in the advanced stages"
+            }
+          ]
+        }
+      },
+      {
+        "id": "E5",
+        "tool": "search_archive",
+        "url": "https://www.techmeme.com/",
+        "retrieved": "2026-10-28T21:11:31Z",
+        "data": {
+          "coverage": "Search of this archived week only; no live web or current market data.",
+          "cutoff": "2026-10-26T04:00:00Z",
+          "matches": [
+            {
+              "as_of": "2026-10-22T03:55:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
+              "source_id": "0bf6936053a58ece62e29417",
+              "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est."
+            },
+            {
+              "as_of": "2026-10-24T16:01:00Z",
+              "day": "2026-10-24",
+              "excerpt": "Ciena CEO Gary Smith is ‘suitably paranoid,’ but optimistic — The historic telecommunications crash of 2001 is burned indelibly …",
+              "source_id": "eca7d60d98e7686046747f89",
+              "title": "An interview with Ciena CEO Gary Smith, a veteran of the 2001 telecoms crash, on AI demand outpacing supply for Ciena's optical networking chips, and more"
+            },
+            {
+              "as_of": "2026-10-24T03:55:00Z",
+              "day": "2026-10-23",
+              "excerpt": "Amazon Web Services capacity is mostly booked up through at least next year, Amazon CEO Andy Jassy …",
+              "source_id": "799526629a036589414cc628",
+              "title": "Andy Jassy says AWS capacity for 2027 is “largely sold out” and a “good chunk” of 2028 capacity is also sold, though AWS reserves some capacity for on-demand"
+            },
+            {
+              "as_of": "2026-10-21T03:55:00Z",
+              "day": "2026-10-20",
+              "excerpt": "Google is beginning to roll out Personal Intelligence for Gemini on Android Auto and Android Automotive (cars with Google built-in).",
+              "source_id": "322f118ee38a0570a0946e59",
+              "title": "Google says it is rolling out Personal Intelligence for Gemini on Android Auto now and to cars with Google built-in in the coming months as an opt-in feature"
+            },
+            {
+              "as_of": "2026-10-22T16:00:00Z",
+              "day": "2026-10-22",
+              "excerpt": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees",
+              "source_id": "781eaf42c055e495363e227c",
+              "title": "A Micron labor union staged Taiwan's first-ever strike in the semiconductor industry on Thursday, demanding a regular profit-sharing scheme for its employees"
+            },
+            {
+              "as_of": "2026-10-21T14:01:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Say goodbye to those aux cables. Spotify's new in-car app is here, and it's rolling out to Audi vehicles today.",
+              "source_id": "f965baf7cf8b3f8360124aaa",
+              "title": "Spotify launches its first standalone, native in-car app built on Android Automotive OS, debuting on select Audi models, with a custom UI controlled by Spotify"
+            },
+            {
+              "as_of": "2026-10-23T16:00:00Z",
+              "day": "2026-10-23",
+              "excerpt": "What I learned from touring Intel's most advanced fab and talking to its leadership. — I spent two days touring Intel's …",
+              "source_id": "7e393ff2f4213ba3970bfa14",
+              "title": "An interview with Intel's leadership, including CTO Pushkar Ranade, on AI chip demand, lessons from 10nm, whether Intel can catch up to TSMC, Terafab, and more"
             },
             {
               "as_of": "2026-10-26T03:55:00Z",
               "day": "2026-10-25",
               "excerpt": "This spring, Mike Mathews, who leads the global digital infrastructure practice at insurance broker Marsh …",
-              "source_id": "0b646bed48683aecad734382",
+              "source_id": "4a3de5fc22b987faf6c120a4",
               "title": "Data center tenants now demand $5M+ a day in late-delivery fees, up from $1M this spring, spawning new “delay-in-delivery” coverage from brokers like Marsh"
+            },
+            {
+              "as_of": "2026-10-19T16:00:00Z",
+              "day": "2026-10-19",
+              "excerpt": "CyberSN's Cybersecurity Jobs Report provides visibility into the US cybersecurity job market. It's a mixed bag.",
+              "source_id": "7579e6eafea1628c362effa7",
+              "title": "CyberSN: US cybersecurity job postings fell 26.4% YoY to a four-year low of 235,786 roles from January to September; AI security engineer demand soared 268.3%"
+            },
+            {
+              "as_of": "2026-10-19T16:00:00Z",
+              "day": "2026-10-19",
+              "excerpt": "NVIDIA's Vera CPU heralds a redefinition of computing architecture from a traditional, task-isolated paradigm to an orchestrated …",
+              "source_id": "60df104d4dc4a9ca69581167",
+              "title": "Q&A with Nvidia's Vera team on agentic AI driving CPU demands and forcing CPU design priority back to single-threaded performance over core counts, and more"
+            },
+            {
+              "as_of": "2026-10-19T16:00:00Z",
+              "day": "2026-10-19",
+              "excerpt": "Foxconn agrees to acquire a 50% stake in Mitsubishi's automotive components unit for ~$727M; Mitsubishi will provide autonomous tech for Foxconn's EV platforms",
+              "source_id": "8563192ca4a2dcb5ad0f8c4c",
+              "title": "Foxconn agrees to acquire a 50% stake in Mitsubishi's automotive components unit for ~$727M; Mitsubishi will provide autonomous tech for Foxconn's EV platforms"
             }
           ]
         }
       }
     ],
     "cutoff": "2026-10-26T04:00:00Z",
-    "trace_id": "tr-6abc906f084c4f875c364b0b1bc93120"
+    "trace_id": "tr-ac1f4e539b71835ca14ed01e05203de7"
   },
   "round": {
-    "id": "88c71ef1ea1f84ac3c6eef0f",
+    "id": "5239641fb261259fafb7b072",
     "status": "settled",
     "memo": {
       "id": "tech",
@@ -304,34 +448,34 @@
       "criteria": "We invest in semiconductors and electronic components across chip designers, foundries, fabrication equipment, memory, advanced packaging and supply chains. Prioritize material changes in chip demand, capacity, revenue, margins, capital spending, manufacturing technology, supply constraints and export restrictions. Both positive and negative developments can create research opportunities. AI or cloud news matters when a concrete connection to chip demand or suppliers is supported. Consumer apps, retail earnings, routine product launches and political stories have low priority without a documented semiconductor transmission. Score the value of researching the news for this mandate, not whether to buy or sell and not its expected return. Distinguish source evidence from speculation and flag limited excerpt coverage.",
       "version": 3
     },
-    "committed_at": "2026-10-28T18:23:21Z",
+    "committed_at": "2026-10-28T21:11:43Z",
     "budget": 10000,
     "positions": [
       {
-        "article_id": "22603b023aeb8666c6603601",
-        "idea_id": "6ed59a4574699f3a111cf4c4",
+        "article_id": "0bf6936053a58ece62e29417",
+        "idea_id": "44ae123c5ac80db502651bce",
         "amount": 1000,
         "symbol": "SMH",
         "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
         "result": {
           "symbol": "SMH",
           "entry_date": "2026-10-26",
-          "exit_date": "2026-10-27",
+          "exit_date": "2026-10-28",
           "entry_price": 531.3499755859375,
-          "exit_price": 557.97998046875,
-          "return_pct": 5.01176364098761,
-          "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/SMH?events=div%2Csplits&interval=1d&period1=1792987200&period2=1793211801",
-          "retrieved": "2026-10-28T18:23:21Z",
+          "exit_price": 567.6699829101562,
+          "return_pct": 6.8354209076922245,
+          "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/SMH?events=div%2Csplits&interval=1d&period1=1792987200&period2=1793221903",
+          "retrieved": "2026-10-28T21:11:43Z",
           "week_complete": false,
           "basis": "First available session open after the news cutoff → last completed US session close. Gross price return; dividends, fees and slippage excluded."
         }
       }
     ],
     "invested": 1000,
-    "pnl": 50.1176364098761,
-    "value": 10050.117636409876,
-    "return_pct": 0.501176364098761,
-    "as_of": "2026-10-27",
+    "pnl": 68.35420907692225,
+    "value": 10068.354209076922,
+    "return_pct": 0.6835420907692225,
+    "as_of": "2026-10-28",
     "week_complete": false
   },
   "checks": [

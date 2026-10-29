@@ -9,18 +9,18 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
   const state=()=>page.evaluate(async()=>await(await fetch('/api/game')).json());let s=await state();assert.ok(!s.preview&&!s.validation_fixture);
   const model=JSON.parse(fs.readFileSync(process.env.D3_METADATA,'utf8')).data[0];assert.equal(model.device,'cuda:0');assert.equal(model.dtype,'float16');const config=await page.evaluate(async()=>await(await fetch('/api/state')).json());assert.equal(config.agent,'maas-vllm-inference-1/deepseekv4pro');
   if(s.game.round.status!=='draft'){await page.locator('#reset').click();await expect.poll(async()=>(await state()).game.round.status).toBe('draft');}
-  let imported=false,collectionError='';
-  if(!s.total)await page.locator('#fetch').click();
+  let imported=Boolean(s.game.manifest.imported_at),collectionError='';
+  if(!s.total){const started=page.waitForResponse(r=>r.url().endsWith('/api/game/load')&&r.request().method()==='POST');await page.locator('#fetch').click();assert.equal((await started).status(),202);}
   await expect.poll(async()=>{s=await state();return ['ready','failed'].includes(s.game.status);},{timeout:1800000,intervals:[3000,10000]}).toBe(true);
   if(s.game.status==='failed'){
    collectionError=s.game.error;
    assert.ok(process.env.NEWS_IMPORT_FILE,'Live collection failed: '+collectionError+'; provide NEWS_IMPORT_FILE to test manual recovery');
-   await page.locator('#news-file').setInputFiles(process.env.NEWS_IMPORT_FILE);imported=true;
+   const upload=page.waitForResponse(r=>r.url().endsWith('/api/game/import')&&r.request().method()==='POST');await page.locator('#news-file').setInputFiles(process.env.NEWS_IMPORT_FILE);assert.equal((await upload).status(),202);imported=true;
   }
   await expect.poll(async()=>{s=await state();return ['ready','failed'].includes(s.game.status);},{timeout:1800000,intervals:[3000,10000]}).toBe(true);
   let rankingRetries=0;
   if(s.game.status==='failed'&&process.env.NEWS_IMPORT_FILE&&s.total>0&&s.ranked<s.total){
-   await page.locator('#news-file').setInputFiles(process.env.NEWS_IMPORT_FILE);rankingRetries++;
+   const retry=page.waitForResponse(r=>r.url().endsWith('/api/game/import')&&r.request().method()==='POST');await page.locator('#news-file').setInputFiles(process.env.NEWS_IMPORT_FILE);assert.equal((await retry).status(),202);rankingRetries++;
    await expect.poll(async()=>{s=await state();return s.game.status==='ready'&&s.ranked===s.total;},{timeout:1800000,intervals:[3000,10000]}).toBe(true);
   }
   assert.equal(s.game.status,'ready',s.game.error);assert.ok(s.total>100&&s.ranked===s.total);

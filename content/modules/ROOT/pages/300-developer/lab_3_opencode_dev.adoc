@@ -91,7 +91,7 @@ Ask OpenCode, in *build* mode:
 
 [source,text,role=execute]
 ----
-Add a simple “High relevance only” checkbox above the news list. When selected, show only current memo scores of at least 70/100 and display the filtered count; uncheck to restore all news. Keep the archived corpus export, saved portfolio, scoring, agent tools, OAuth and replay rules unchanged. Test it, commit and push, then rebuild and deploy with AGENTS.md. Wait for the new Git revision and rollout before reporting success.
+Add a simple “High relevance only” checkbox above the news list. When selected, show only current memo scores of at least 70/100 and display the filtered count; uncheck to restore all news. Keep the checkbox visible when zero stories match and give it a stable accessible name. Keep the archived corpus export, saved portfolio, scoring, agent tools, OAuth and replay rules unchanged. Test it, commit and push, then rebuild and deploy with AGENTS.md. Wait for the new Git revision and rollout before reporting success.
 ----
 
 Verify the new UI on the Route. In the Dev Spaces terminal:
@@ -104,7 +104,12 @@ oc wait application/"$APP_NAME" -n "${APP_NAME}-dev" \
   --for=jsonpath='{.status.sync.revision}'="$(git rev-parse HEAD)" --timeout=180s
 oc get application "$APP_NAME" -n "${APP_NAME}-dev" -o json | \
   jq '{revision:.status.sync.revision,sync:.status.sync.status,health:.status.health.status}'
+oc rollout restart deployment/"$APP_NAME" -n "${APP_NAME}-dev"
 oc rollout status deployment/"$APP_NAME" -n "${APP_NAME}-dev" --timeout=180s
+EXPECTED_DIGEST=$(oc get istag "${APP_NAME}:latest" -n "${APP_NAME}-build" -o jsonpath='{.image.metadata.name}')
+oc get pods -n "${APP_NAME}-dev" -l "app.kubernetes.io/name=${APP_NAME}" -o json | \
+  jq -e --arg name "$APP_NAME" --arg digest "$EXPECTED_DIGEST" \
+  '[.items[].status.containerStatuses[] | select(.name==$name)] | length > 0 and all(.[]; .ready and (.imageID | endswith("@"+$digest)))'
 ROUTE=$(oc get route "$APP_NAME" -n "${APP_NAME}-dev" -o jsonpath='{.spec.host}')
 curl --fail-with-body -sS "https://${ROUTE}/healthz" | jq .
 ----

@@ -153,7 +153,9 @@ def developer():
     build_pods = json.loads(oc('get', 'pods', '-n', app + '-build', '-l', 'tekton.dev/pipelineRun=' + latest['metadata']['name'], '-o', 'json'))['items']
     require(bool(build_pods) and all(p['spec'].get('hostUsers') is False for p in build_pods), 'Build tasks isolated in Linux user namespaces')
     require(all(not c.get('securityContext', {}).get('privileged', False) and c.get('securityContext', {}).get('allowPrivilegeEscalation') is False for p in build_pods for c in p['spec'].get('containers', []) + p['spec'].get('initContainers', [])), 'No privileged build container or privilege escalation')
-    require(any(c.get('ready') and '@sha256:' in c.get('imageID', '') for p in pods for c in p.get('status', {}).get('containerStatuses', [])), 'Running application pulled a built image digest')
+    expected_digest = resource('imagestreamtag', app + ':latest', app + '-build')['image']['metadata']['name']
+    app_containers = [c for p in pods for c in p.get('status', {}).get('containerStatuses', []) if c['name'] == app]
+    require(bool(app_containers) and all(c.get('ready') and c.get('imageID', '').endswith('@' + expected_digest) for c in app_containers), 'Running application matches the newly built image digest')
     workspace_ns, workspace_pod = os.environ.get('E2E_NS'), os.environ.get('DEV_POD')
     if workspace_ns or workspace_pod:
         require(bool(workspace_ns and workspace_pod), 'Both E2E_NS and DEV_POD supplied')

@@ -21,6 +21,7 @@ For the real Route browser test, save a private OpenShift browser session and mo
 ```sh
 APP_URL=https://your-app-route BROWSER_STATE=/private/path/login-state.json \
 D3_METADATA=/private/path/d3-models.json NEWS_IMPORT_FILE=/path/to/current-week-news.json \
+EXPECT_UPDATED_APP=true APPLICATION_REVISION=your-deployed-git-revision \
   node e2e/briefing-desk-aro.cjs
 ```
 

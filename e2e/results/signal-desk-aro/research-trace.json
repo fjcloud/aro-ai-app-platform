@@ -1,0 +1,160 @@
+{
+  "passed": true,
+  "trace_id": "tr-ac1f4e539b71835ca14ed01e05203de7",
+  "state": "OK",
+  "spans": [
+    {
+      "name": "game.research",
+      "span_id": "5ijKA6AWqCg=",
+      "parent_span_id": null,
+      "start_time_unix_nano": 1793221887617171309,
+      "end_time_unix_nano": 1793221898678611442,
+      "attributes": [
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "agent.game_ideas",
+      "span_id": "/hKcK4YvQE8=",
+      "parent_span_id": "5ijKA6AWqCg=",
+      "start_time_unix_nano": 1793221887647786095,
+      "end_time_unix_nano": 1793221898665472585,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "AGENT"
+          }
+        },
+        {
+          "key": "gen_ai.request.model",
+          "value": {
+            "string_value": "maas-vllm-inference-1/deepseekv4pro"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+          }
+        },
+        {
+          "key": "mlflow.llm.model",
+          "value": {
+            "string_value": "maas-vllm-inference-1/deepseekv4pro"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tool.read_archive",
+      "span_id": "YFQZsKicMmo=",
+      "parent_span_id": "/hKcK4YvQE8=",
+      "start_time_unix_nano": 1793221889035630470,
+      "end_time_unix_nano": 1793221889035950149,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "TOOL"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tool.search_archive",
+      "span_id": "akvuQFXI0hQ=",
+      "parent_span_id": "/hKcK4YvQE8=",
+      "start_time_unix_nano": 1793221889036327324,
+      "end_time_unix_nano": 1793221889039922287,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "TOOL"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tool.index_universe",
+      "span_id": "ACzFCJki+rs=",
+      "parent_span_id": "/hKcK4YvQE8=",
+      "start_time_unix_nano": 1793221889040094876,
+      "end_time_unix_nano": 1793221889040101976,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "TOOL"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tool.search_archive",
+      "span_id": "hGFOu+Lic4o=",
+      "parent_span_id": "/hKcK4YvQE8=",
+      "start_time_unix_nano": 1793221890415028069,
+      "end_time_unix_nano": 1793221890418548624,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "TOOL"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tool.search_archive",
+      "span_id": "xDami7KQKL8=",
+      "parent_span_id": "/hKcK4YvQE8=",
+      "start_time_unix_nano": 1793221891697313540,
+      "end_time_unix_nano": 1793221891702194616,
+      "attributes": [
+        {
+          "key": "mlflow.spanType",
+          "value": {
+            "string_value": "TOOL"
+          }
+        },
+        {
+          "key": "mlflow.traceRequestId",
+          "value": {
+            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+          }
+        }
+      ]
+    }
+  ]
+}

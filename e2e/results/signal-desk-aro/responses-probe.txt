@@ -1,0 +1,66 @@
+curl: (7) Failed to connect to 127.0.0.1 port 18321: Connection refused
+{
+  "background": false,
+  "created_at": 1793210768,
+  "completed_at": 1793210769,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "id": "resp_9c2c5985-a4c5-46aa-8096-4319d728b256",
+  "incomplete_details": null,
+  "model": "maas-vllm-inference-1/deepseekv4pro",
+  "object": "response",
+  "output": [
+    {
+      "content": [
+        {
+          "text": "This research bridges a critical gap in the literature, offering actionable insights for both theory and practice.",
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "type": "message",
+      "id": "msg_19bc3d48-8a2c-4d41-b45b-1f01221fb534",
+      "status": "completed"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt": null,
+  "status": "completed",
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "top_p": 1.0,
+  "top_logprobs": 0,
+  "tools": [],
+  "tool_choice": "auto",
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 13,
+    "output_tokens": 20,
+    "total_tokens": 33,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "instructions": null,
+  "skills": null,
+  "max_tool_calls": null,
+  "reasoning": null,
+  "max_output_tokens": null,
+  "service_tier": "default",
+  "metadata": null,
+  "presence_penalty": 0.0,
+  "store": false,
+  "safety_identifier": null
+}
