@@ -1,4 +1,5 @@
 = Lab 1.2 — Add CPU and GPU Workers
+:page-aliases: 200-platform/lab_1_gpu_nodepool.adoc
 
 *Platform Engineer · bastion terminal.* Add one CPU worker and one single-T4 worker to the existing ARO cluster. Keep the original pools. If the additional D8 or T4 pool already exists, reuse it and skip that creation block.
 

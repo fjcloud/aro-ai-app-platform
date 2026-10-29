@@ -1,5 +1,4 @@
 = Lab 1.4 — Publish DeepSeek on Foundry
-:page-aliases: 200-platform/lab_1_gpu_nodepool.adoc
 
 The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. d3-mini will run separately on one T4 in Lab 1.6 to rank news; it is not OpenCode’s coding model.
 
