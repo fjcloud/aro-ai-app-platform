@@ -11,7 +11,7 @@ import urllib.request
 spec = importlib.util.spec_from_file_location('decision_model', Path(__file__).with_name('prepare-decision-model.py'))
 model = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(model)
-oc, get, apply, wait_job = model.oc, model.get, model.apply, model.wait_job
+oc, get, apply = model.oc, model.get, model.apply
 NS, BUILD, APP = model.NS, model.BUILD, model.APP
 
 def prepare_app(experiment_name='decision-tetris'):

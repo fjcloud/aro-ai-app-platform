@@ -1,0 +1,663 @@
+{
+  "passed": true,
+  "scope": "local Go app with actual fresh-lab T4 over port-forward; no research/browser/delivery claim",
+  "live_gpu_inference": true,
+  "news": 161,
+  "ranked": 161,
+  "week": {
+    "id": "2026-10-26_2026-10-28",
+    "news_start": "2026-10-26",
+    "news_end": "2026-10-28",
+    "cutoff": "2026-10-29T04:05:00Z",
+    "market_start": "2026-10-29",
+    "market_end": "",
+    "valuation_mode": "latest"
+  },
+  "elapsed_seconds": 90.84,
+  "scores": [
+    {
+      "source_url": "https://www.cnbc.com/2026/10/28/sk-hynix-third-quarter-profit.html",
+      "score": 82.4
+    },
+    {
+      "source_url": "https://www.cnbc.com/2026/10/29/samsung-electronics-third-quarter-earnings.html",
+      "score": 80.6
+    },
+    {
+      "source_url": "https://www.wsj.com/tech/apple-iphone-memory-chips-ai-c0084cc9?st=jB9Xwc&reflink=desktopwebshare_permalink",
+      "score": 80
+    },
+    {
+      "source_url": "https://www.theregister.com/systems/2026/10/28/sk-hynix-says-memory-shortages-to-persist-until-2030/5305887",
+      "score": 79.5
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/nxp-shares-slide-after-chipmaker-gives-tepid-revenue-forecast",
+      "score": 77.2
+    },
+    {
+      "source_url": "https://www.ft.com/content/94e5a0ae-874d-447a-bbfc-cd465a1a7555",
+      "score": 77.2
+    },
+    {
+      "source_url": "https://asia.nikkei.com/spotlight/supply-chain/ai-boom-sparks-circuit-board-crunch-across-global-tech-supply-chain",
+      "score": 74.7
+    },
+    {
+      "source_url": "https://www.theinformation.com/articles/openai-longtime-nvidia-customer-plans-buy-googles-ai-chips",
+      "score": 74.1
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand",
+      "score": 73.8
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-26/spacex-agrees-to-40-billion-chip-financing-deal-with-apollo",
+      "score": 72.9
+    },
+    {
+      "source_url": "https://www.cnbc.com/2026/10/27/nvidia-invest-meta.html",
+      "score": 71.2
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-28/marvell-is-said-to-near-deal-for-lumentum-in-ai-related-megadeal",
+      "score": 66.3
+    },
+    {
+      "source_url": "https://www.cnbc.com/2026/10/27/oracle-openai-chatgpt-codex-google-tpus.html",
+      "score": 65.9
+    },
+    {
+      "source_url": "https://www.microsoft.com/en-us/Investor/earnings/FY-2027-Q1/press-release-webcast",
+      "score": 65.7
+    },
+    {
+      "source_url": "https://www.wsj.com/tech/ai/nvidia-to-invest-3-billion-in-metas-equity-offering-as-they-expand-ai-partnership-e8d3850a?st=4eEQYV&reflink=desktopwebshare_permalink",
+      "score": 63.6
+    },
+    {
+      "source_url": "https://www.reuters.com/world/china/china-ai-bubble-has-already-burst-2026-10-26/",
+      "score": 63.1
+    },
+    {
+      "source_url": "https://www.reuters.com/world/china/chinas-cxmt-start-advanced-ai-memory-production-despite-poor-yields-sources-say-2026-10-28/",
+      "score": 62.5
+    },
+    {
+      "source_url": "https://www.wsj.com/finance/broadcom-ceo-intervened-to-seal-63-billion-anthropic-debt-deal-c807754f?st=f24o6c&reflink=desktopwebshare_permalink",
+      "score": 62.3
+    },
+    {
+      "source_url": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q3/2026q3-alphabet-earnings-release.pdf",
+      "score": 61.7
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-26/broadcom-arranges-63-billion-deal-to-finance-anthropic-s-chips",
+      "score": 60.3
+    },
+    {
+      "source_url": "https://www.nytimes.com/2026/10/23/opinion/ai-computer-chips-semiconductor-arizona-industry.html?unlocked_article_code=1.LVE.T4pO.KW_xY6NbyH_s&smid=nytcore-ios-share",
+      "score": 60.1
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/meta-s-25-billion-stock-sale-ended-five-times-oversubscribed",
+      "score": 58.7
+    },
+    {
+      "source_url": "https://thenewstack.io/github-7-4b-commits-september/",
+      "score": 57.2
+    },
+    {
+      "source_url": "https://www.theinformation.com/articles/anthropics-85-margin-reality-check-skeptics",
+      "score": 57.1
+    },
+    {
+      "source_url": "https://www.ft.com/content/f6ecfecd-d797-4d2c-b427-d333297949cb",
+      "score": 56.7
+    },
+    {
+      "source_url": "https://www.ft.com/content/a6c43402-719e-4295-ae5f-541edb0aeb29",
+      "score": 56.2
+    },
+    {
+      "source_url": "https://www.wsj.com/business/earnings/sk-hynix-plans-75-billion-in-shareholder-returns-after-blockbuster-earnings-f3a460b7",
+      "score": 53.8
+    },
+    {
+      "source_url": "https://www.apple.com/newsroom/2026/10/apple-introduces-the-new-14-inch-macbook-pro-with-m6/",
+      "score": 52.7
+    },
+    {
+      "source_url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/",
+      "score": 52.2
+    },
+    {
+      "source_url": "https://www.theinformation.com/articles/chipmaker-onsemi-talks-buy-startup-1-billion",
+      "score": 51.4
+    },
+    {
+      "source_url": "https://www.apple.com/newsroom/2026/10/apple-unveils-new-imac-with-m6/",
+      "score": 49
+    },
+    {
+      "source_url": "https://www.reuters.com/world/us-doj-is-inquiring-about-nvidias-purchase-hugging-face-sources-say-2026-10-28/",
+      "score": 48.9
+    },
+    {
+      "source_url": "https://www.reuters.com/business/oracle-expects-turn-cash-flow-positive-second-half-fiscal-2028-2026-10-28/",
+      "score": 48.2
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-26/anthropic-ipo-s-1-filing-offers-first-look-at-claude-maker-s-finances",
+      "score": 47.6
+    },
+    {
+      "source_url": "https://www.culpium.com/p/anthropic-s1-now-live-first-look",
+      "score": 45.4
+    },
+    {
+      "source_url": "https://openai.com/index/introducing-gpt-6-1-terra/",
+      "score": 45.3
+    },
+    {
+      "source_url": "https://minimaxir.com/2026/10/cheap-llms/",
+      "score": 44.6
+    },
+    {
+      "source_url": "https://siliconangle.com/2026/10/28/nvidia-releases-all-in-one-adaptable-nemotron-3-5-audio-transcription-and-translation-model/",
+      "score": 43.8
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-28/furiosaai-quadruples-valuation-to-2-9-billion-in-nvidia-chase",
+      "score": 43.5
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-26/intel-to-buy-israeli-startup-classiq-in-quantum-computing-push",
+      "score": 43.1
+    },
+    {
+      "source_url": "https://www.apple.com/newsroom/2026/10/apple-gives-ipad-mini-its-biggest-update-ever/",
+      "score": 42.9
+    },
+    {
+      "source_url": "https://techcrunch.com/2026/10/28/microsoft-recorded-10-billion-in-revenue-from-openai/",
+      "score": 42.8
+    },
+    {
+      "source_url": "https://asia.nikkei.com/business/technology/tech-asia/hp-and-asus-shift-some-pc-making-back-to-china-due-to-ai-driven-cost-hikes",
+      "score": 42.8
+    },
+    {
+      "source_url": "https://www.apple.com/newsroom/2026/10/apple-unveils-groundbreaking-macbook-pro-with-proled-xdr-display/",
+      "score": 42.6
+    },
+    {
+      "source_url": "https://asia.nikkei.com/business/technology/artificial-intelligence/as-ai-revives-magnetic-tape-fujifilm-plans-biggest-buildup-in-two-decades",
+      "score": 42.4
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/apple-14-inch-16-inch-macbook-pro-touch-price-is-likely-2-899-laptop-details?accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJTdWJzY3JpYmVyR2lmdGVkQXJ0aWNsZSIsImlhdCI6MTc5MzEzODg1NiwiZXhwIjoxNzkzNzQzNjU2LCJhcnRpY2xlSWQiOiJUTktaNE9UOTZPU0kwMCIsImJjb25uZWN0SWQiOiJDNEVEQ0FFMUZBMDU0MEJFQTI0QTlGMjExQzFFOTA4MCJ9.-r0-k5GENAkA0QuY_42jePcRdcwpSByLQzUz6ZPG9LI",
+      "score": 41.7
+    },
+    {
+      "source_url": "https://asia.nikkei.com/business/tech/semiconductors/india-s-chip-design-startups-struggle-with-final-commercial-hurdle",
+      "score": 41.3
+    },
+    {
+      "source_url": "https://www.wsj.com/tech/anthropic-unveils-paperwork-for-blockbuster-ipo-291a684b?st=sUdaw6&reflink=desktopwebshare_permalink",
+      "score": 41
+    },
+    {
+      "source_url": "https://www.macrumors.com/2026/10/28/mac-studio-m5-ultra-512gb-ram/",
+      "score": 40.3
+    },
+    {
+      "source_url": "https://www.nbcnews.com/tech/security/grand-theft-ai-highway-thieves-are-stealing-millions-data-center-gear-rcna603733",
+      "score": 40
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/anduril-and-qualcomm-plan-to-build-laptop-with-us-supply-chain",
+      "score": 39.6
+    },
+    {
+      "source_url": "https://techcrunch.com/2026/10/28/xreal-aura-is-a-new-wired-headset-powered-by-android-xr/",
+      "score": 39.4
+    },
+    {
+      "source_url": "https://techcrunch.com/2026/10/27/general-compute-raises-100-million-series-a-countering-the-neocloud-disaster-narrative/",
+      "score": 39.1
+    },
+    {
+      "source_url": "https://www.reuters.com/world/china/ai-chips-worth-121-million-seized-malaysia-airport-customs-authority-says-2026-10-28/",
+      "score": 38.8
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-25/ai-spending-fears-threaten-to-swamp-big-tech-s-strong-earnings",
+      "score": 38.4
+    },
+    {
+      "source_url": "https://techcrunch.com/2026/10/26/anthropics-ipo-filing-reveals-its-strategy-for-keeping-enterprise-customers-hooked/",
+      "score": 36.3
+    },
+    {
+      "source_url": "https://www.bloomberg.com/opinion/newsletters/2026-10-26/anthropic-raises-concerns",
+      "score": 35.6
+    },
+    {
+      "source_url": "https://www.theverge.com/tech/1019076/google-genie-4-ai-model",
+      "score": 35.4
+    },
+    {
+      "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+      "score": 34.5
+    },
+    {
+      "source_url": "https://www.anthropic.com/news/expanding-partnership-gsa",
+      "score": 34.4
+    },
+    {
+      "source_url": "https://www.wsj.com/tech/ai/see-how-anthropic-arrived-at-its-mind-boggling-40-trillion-market-opportunity-948c56a0?st=QmxiSy",
+      "score": 34.4
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-25/chinese-manufacturer-dongshan-raises-1-3-billion-in-hk-listing",
+      "score": 34.4
+    },
+    {
+      "source_url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/",
+      "score": 33.7
+    },
+    {
+      "source_url": "https://www.cnbc.com/2026/10/28/alphabet-googl-earnings-q3-2026.html",
+      "score": 33.2
+    },
+    {
+      "source_url": "https://www.businessinsider.com/cognition-round-of-funding-at-a-75-billion-valuation-2026-10",
+      "score": 32.6
+    },
+    {
+      "source_url": "https://www.anthropic.com/news/s1-sec",
+      "score": 32.3
+    },
+    {
+      "source_url": "https://www.macrumors.com/2026/10/26/apple-releases-ios-27-2/",
+      "score": 32.2
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/dongshan-precision-set-to-debut-after-1-3-billion-hk-listing",
+      "score": 32.2
+    },
+    {
+      "source_url": "https://venturebeat.com/technology/google-unveils-gemini-4-carbon-retaking-the-worlds-no-1-spot-on-updated-harder-benchmarks-but-access-is-limited",
+      "score": 31.2
+    },
+    {
+      "source_url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-10-26-2026/card/anthropic-s-risk-factors-include-catastrophic-ai-related-incident--aAwPiJrvIG5OHdQGAo1n",
+      "score": 30.9
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-26/microsoft-to-offer-buyouts-to-60-000-workers-in-latest-cost-cut",
+      "score": 30.4
+    },
+    {
+      "source_url": "https://www.theverge.com/tech/1019373/apple-pages-keynote-numbers-ai-chatbot-update",
+      "score": 29.5
+    },
+    {
+      "source_url": "https://www.ft.com/content/d92ede23-75c3-4549-bec2-7fa4be979786",
+      "score": 28.3
+    },
+    {
+      "source_url": "https://restofworld.org/2026/ai-tokenizer-tax-non-english-languages-cost-inequity/",
+      "score": 28.2
+    },
+    {
+      "source_url": "https://www.wired.com/story/the-inside-story-of-why-apple-finally-brought-a-touch-display-to-the-mac",
+      "score": 27.5
+    },
+    {
+      "source_url": "https://www.theverge.com/gadgets/1019554/apple-touchscreen-macbook-pro-and-tell",
+      "score": 27.3
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-28/samsung-unveils-galaxy-buds-on-clip-on-earbuds-for-229",
+      "score": 27
+    },
+    {
+      "source_url": "https://thenewstack.io/github-copilot-fusion/",
+      "score": 26.8
+    },
+    {
+      "source_url": "https://www.ft.com/content/24a35e41-2641-4cec-97f5-a974412f9952",
+      "score": 26.1
+    },
+    {
+      "source_url": "https://www.cnbc.com/2026/10/27/anthropic-cash-investments-ipo.html",
+      "score": 25.8
+    },
+    {
+      "source_url": "https://www.theverge.com/tech/1020785/microsoft-earnings-revenue-q1-2027",
+      "score": 25.8
+    },
+    {
+      "source_url": "https://www.macrumors.com/2026/10/28/apple-brings-dynamic-island-to-mac/",
+      "score": 25.7
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/robotics-lab-physical-intelligence-in-talks-for-a-20-billion-valuation",
+      "score": 25.5
+    },
+    {
+      "source_url": "https://www.reuters.com/legal/litigation/anthropics-ipo-close-look-ai-frontrunners-rapid-growth-spiraling-costs-2026-10-26/",
+      "score": 25.5
+    },
+    {
+      "source_url": "https://www.axios.com/2026/10/26/anthropic-trump-ai-safety-ipo-risks",
+      "score": 25.1
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-28/amazon-unveils-new-echo-show-16-alexa-speakers-smart-clock-and-photo-frame",
+      "score": 25
+    },
+    {
+      "source_url": "https://www.anthropic.com/research/early-progress-drug-development",
+      "score": 25
+    },
+    {
+      "source_url": "https://www.cnbc.com/2026/10/27/amazon-ai-coding-tokenmaxxing.html",
+      "score": 24.6
+    },
+    {
+      "source_url": "https://artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v5",
+      "score": 23
+    },
+    {
+      "source_url": "https://contraptions.venkateshrao.com/p/cognitive-mercantilism",
+      "score": 22.8
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-26/china-boosts-self-driving-push-with-vw-xpeng-technology-trials",
+      "score": 22.6
+    },
+    {
+      "source_url": "https://www.cnbc.com/2026/10/27/ai-political-spending-silicon-valley-election.html",
+      "score": 22.5
+    },
+    {
+      "source_url": "https://www.theverge.com/ai-artificial-intelligence/1018476/anthropic-ipo-details-s1-filed-sec",
+      "score": 22.5
+    },
+    {
+      "source_url": "https://www.washingtonpost.com/technology/2026/10/26/researchers-cybersecurity-start-up-cathedral-got-inside-anthropic/?pwapi_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWFzb24iOiJnaWZ0IiwibmJmIjoxNzkyOTg3MjAwLCJpc3MiOiJzdWJzY3JpcHRpb25zIiwiZXhwIjoxNzk0MzczMTk5LCJpYXQiOjE3OTI5ODcyMDAsImp0aSI6ImI1M2RjZmEzLThkNTItNGE3NC05ZjI4LWU1ZGJkZTIyZDFmOSIsInVybCI6Imh0dHBzOi8vd3d3Lndhc2hpbmd0b25wb3N0LmNvbS90ZWNobm9sb2d5LzIwMjYvMTAvMjYvcmVzZWFyY2hlcnMtY3liZXJzZWN1cml0eS1zdGFydC11cC1jYXRoZWRyYWwtZ290LWluc2lkZS1hbnRocm9waWMvIn0.k3b70wv6ePisrPvCYfDOPAjt5vHweVxm4rBnhcnDU-M&itid=gfta",
+      "score": 22.2
+    },
+    {
+      "source_url": "https://www.forbes.com/sites/rashishrivastava/2026/10/27/this-600-million-startup-is-helping-keep-company-secrets-away-from-ai-agents/",
+      "score": 22
+    },
+    {
+      "source_url": "https://openai.com/index/building-scientific-understanding-with-academic-communities/",
+      "score": 21.6
+    },
+    {
+      "source_url": "https://sfstandard.com/2026/10/26/anthropic-cofounder-mystery-ben-mann/",
+      "score": 21.2
+    },
+    {
+      "source_url": "https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model",
+      "score": 21.2
+    },
+    {
+      "source_url": "https://www.nytimes.com/2026/10/25/arts/music/anthropic-lawsuit-elvis-presley-songs.html?unlocked_article_code=1.LVE.Unk9.7e04-FAQ9Ei8&smid=nytcore-ios-share",
+      "score": 21
+    },
+    {
+      "source_url": "https://www.theinformation.com/articles/foundry-raises-100-million-autonomous-factories",
+      "score": 20.7
+    },
+    {
+      "source_url": "https://www.ft.com/content/01467514-66c1-4375-9906-45a47b949270",
+      "score": 20.5
+    },
+    {
+      "source_url": "https://www.nytimes.com/2026/10/27/well/ai-chatgpt-medication-epilepsy-death.html?unlocked_article_code=1.L1E.iJJI.hjmxpaYuBDhc&smid=nytcore-ios-share",
+      "score": 20.4
+    },
+    {
+      "source_url": "https://9to5mac.com/2026/10/26/apple-responds-to-reports-of-iphone-duos-inner-display-cracking/",
+      "score": 20.4
+    },
+    {
+      "source_url": "https://www.ft.com/content/e2aafede-771a-4fd0-b9fb-67c0bbb828ed",
+      "score": 19.6
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-28/ai-cybersecurity-startup-upwind-raises-at-3-8-billion-value",
+      "score": 19
+    },
+    {
+      "source_url": "https://www.reuters.com/business/world-at-work/dropbox-plans-9-workforce-cut-technology-chief-exit-2026-10-28/",
+      "score": 18.8
+    },
+    {
+      "source_url": "https://x.com/artificialanlys/status/2115265133467635877",
+      "score": 18.7
+    },
+    {
+      "source_url": "https://news.crunchbase.com/venture/california-startups-most-us-funding-2026-openai-anthropic/",
+      "score": 18.4
+    },
+    {
+      "source_url": "https://www.wsj.com/finance/regulation/elizabeth-warren-demands-answers-from-anthropic-on-existential-risks-5362f009?st=jjenAB&reflink=desktopwebshare_permalink",
+      "score": 18
+    },
+    {
+      "source_url": "https://www.nytimes.com/2026/10/25/style/marissa-mayer-ai-assistants-women.html?unlocked_article_code=1.LVE.bUTq.yuaOciiPS1zl&smid=url-share",
+      "score": 17.9
+    },
+    {
+      "source_url": "https://news.bgov.com/bloomberg-government-news/hochul-signs-bills-on-ai-risks-to-children-in-pre-election-push",
+      "score": 17.8
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-25/ray-ban-meta-audio-ai-glasses-cost-more-while-ditching-a-key-feature-review",
+      "score": 17.7
+    },
+    {
+      "source_url": "https://felixrieseberg.com/hunger-beats-tenure-advice-for-junior-engineers/",
+      "score": 17.2
+    },
+    {
+      "source_url": "https://stratechery.com/2026/the-end-of-the-internet/",
+      "score": 17.2
+    },
+    {
+      "source_url": "https://www.forbes.com/sites/annatong/2026/10/26/anthropic-founders-can-name-secret-successors/",
+      "score": 17.2
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-28/servicenow-falls-after-quarterly-sales-outlook-revives-ai-fears",
+      "score": 16.8
+    },
+    {
+      "source_url": "https://variety.com/2026/digital/news/youtube-q3-2026-ad-revenue-alphabet-google-earnings-1236933560/",
+      "score": 16.6
+    },
+    {
+      "source_url": "https://www.sfchronicle.com/bayarea/article/open-ai-engineer-indicted-for-bugging-headquarters-22497813.php",
+      "score": 16.5
+    },
+    {
+      "source_url": "https://spyglass.org/amazon-bee/",
+      "score": 16.5
+    },
+    {
+      "source_url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-10-26-2026/card/few-vcs-mentioned-in-anthropic-ipo-filing-except-spark-capital-AzO2iia3OGgCOvgbzPAt",
+      "score": 16.4
+    },
+    {
+      "source_url": "https://www.businessinsider.com/this-11-person-startup-raised-40-million-train-robots-virtual-worlds-2026-10",
+      "score": 16.2
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/microsoft-alumni-score-funding-to-build-ai-agents-for-finance",
+      "score": 15.9
+    },
+    {
+      "source_url": "https://www.ft.com/content/65a113b4-2a45-49cf-9e68-93f42151166e",
+      "score": 15.6
+    },
+    {
+      "source_url": "https://www.coindesk.com/tech/2026/10/28/google-to-preview-crypto-custody-security-system-as-ai-threats-grow",
+      "score": 15.4
+    },
+    {
+      "source_url": "https://www.wsj.com/business/retail/ebay-sales-rise-on-strength-in-collectibles-live-shopping-77cd8df4",
+      "score": 15.4
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/disruptive-closes-10-billion-megafund-for-ai-defense-startups",
+      "score": 14.8
+    },
+    {
+      "source_url": "https://www.cnbc.com/2026/10/28/jio-ipo-india-listing-.html",
+      "score": 14.5
+    },
+    {
+      "source_url": "https://www.engadget.com/2299227/meta-tamagotchi-like-ai-digital-pet-app-waddle-world/",
+      "score": 13.5
+    },
+    {
+      "source_url": "https://www.reuters.com/business/media-telecom/us-agency-approves-amazon-leos-115-billion-acquisition-globalstar-2026-10-27/",
+      "score": 13.4
+    },
+    {
+      "source_url": "https://www.npr.org/2026/10/26/nx-s1-6012820/ai-hurricane-forecast-google-deepmind-isaias",
+      "score": 13.1
+    },
+    {
+      "source_url": "https://www.ft.com/content/8bf93407-6b93-4ebb-b54b-f290ebd563e3",
+      "score": 12.8
+    },
+    {
+      "source_url": "https://www.bleepingcomputer.com/news/security/critical-http2shell-brotli-vulnerability-triggers-emergency-patches/",
+      "score": 12.8
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/fcc-warns-tp-link-its-routers-breach-power-limits-in-latest-snub",
+      "score": 11.9
+    },
+    {
+      "source_url": "https://techcrunch.com/2026/10/28/reddit-is-the-latest-platform-to-embrace-the-for-you-feed/",
+      "score": 11.3
+    },
+    {
+      "source_url": "https://www.geekwire.com/2026/seattle-startup-avante-raises-30m-to-bring-ai-agents-to-corporate-benefits-teams/",
+      "score": 11.2
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-27/alibaba-wins-challenge-to-pentagon-s-chinese-army-blacklisting",
+      "score": 11
+    },
+    {
+      "source_url": "https://fortune.com/2026/10/26/former-revolut-execs-70-million-financial-advisor-shortage/",
+      "score": 10
+    },
+    {
+      "source_url": "https://www.wired.com/review/kindle-paperwhite-kindle-colorsoft-2026/",
+      "score": 9.9
+    },
+    {
+      "source_url": "https://cybersecuritynews.com/microsoft-authenticator-flaw/",
+      "score": 9.9
+    },
+    {
+      "source_url": "https://www.politico.com/news/2026/10/28/openai-election-war-room-interference-01137690",
+      "score": 9.6
+    },
+    {
+      "source_url": "https://buildingslack.com/salesforce-part-two/",
+      "score": 9.5
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-26/autonomous-construction-firm-bedrock-hits-4-1-billion-valuation",
+      "score": 9.1
+    },
+    {
+      "source_url": "https://www.reuters.com/business/robinhood-quarterly-profit-falls-softer-crypto-activity-outweighs-robust-trading-2026-10-27/",
+      "score": 9
+    },
+    {
+      "source_url": "https://www.dcrainmaker.com/2026/10/fitbit-edge-depth-review-worth-the-upgrade.html",
+      "score": 9
+    },
+    {
+      "source_url": "https://www.wsj.com/business/retail/paypal-lifts-full-year-outlook-ceo-stresses-turnaround-plan-15cd0e2e?st=HHaBnz&reflink=desktopwebshare_permalink",
+      "score": 8.5
+    },
+    {
+      "source_url": "https://www.nytimes.com/2026/10/27/technology/proposition-40-california-billionaire-tax.html?unlocked_article_code=1.L1E.HJGf.yaAT18KafSCQ&smid=nytcore-ios-share",
+      "score": 8.5
+    },
+    {
+      "source_url": "https://techcrunch.com/2026/10/27/discord-is-making-its-public-communities-more-searchable-and-people-have-concerns/",
+      "score": 7.8
+    },
+    {
+      "source_url": "https://www.reuters.com/business/media-telecom/alleged-israeli-spy-company-heavily-targeted-starlink-users-sources-say-2026-10-27/",
+      "score": 7.2
+    },
+    {
+      "source_url": "https://www.cnet.com/tech/services-and-software/openai-chatgpt-political-deepfakes-defense-midterm-elections/",
+      "score": 6.1
+    },
+    {
+      "source_url": "https://www.wsj.com/business/hospitality/doordash-is-in-advanced-talks-to-acquire-delivery-rival-instacart-2b3d3d18?st=uZNB75",
+      "score": 4.8
+    },
+    {
+      "source_url": "https://www.anthropic.com/research/agents-judgment-calls",
+      "score": 4.8
+    },
+    {
+      "source_url": "https://www.hollywoodreporter.com/business/digital/instagram-tests-90-minute-videos-podcasters-creators-1236739929/",
+      "score": 4.8
+    },
+    {
+      "source_url": "https://www.wsj.com/business/retail/etsy-sales-rise-as-the-number-of-active-buyers-increases-01c646c9?st=eiH3p6&reflink=desktopwebshare_permalink",
+      "score": 3.9
+    },
+    {
+      "source_url": "https://www.bloomberg.com/news/articles/2026-10-26/redotpay-said-to-prepare-confidential-ipo-filing-by-year-end",
+      "score": 3.6
+    },
+    {
+      "source_url": "https://www.wired.com/story/massive-leak-exposes-41000-homeland-security-workers-including-undercover-ice-agents/",
+      "score": 3
+    },
+    {
+      "source_url": "https://www.theverge.com/tech/1020488/x-twitter-animated-hand-point-promote-posts",
+      "score": 2.9
+    },
+    {
+      "source_url": "https://www.wired.com/story/the-us-government-is-hiding-a-secret-court-ruling-about-how-it-spies-on-americans/",
+      "score": 2.5
+    },
+    {
+      "source_url": "https://www.reuters.com/legal/transactional/canadas-wealthsimple-raises-funds-c1380-billion-valuation-2026-10-27/",
+      "score": 1.8
+    },
+    {
+      "source_url": "https://www.coindesk.com/policy/2026/10/27/u-s-agency-hits-utah-with-lawsuit-to-shield-kalshi-s-ability-to-offer-betting-there",
+      "score": 1.8
+    },
+    {
+      "source_url": "https://www.reuters.com/legal/government/zillow-pay-2125-million-settle-class-action-over-failed-real-estate-venture-2026-10-28/",
+      "score": 1.5
+    },
+    {
+      "source_url": "https://www.reuters.com/technology/hacker-trying-breach-us-federal-election-commission-system-email-shows-2026-10-27/",
+      "score": 1.4
+    }
+  ]
+}

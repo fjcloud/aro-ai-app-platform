@@ -6,9 +6,11 @@ The current guide deploys a public, digest-pinned image built in advance by [Git
 
 The app now embeds 161 real Techmeme primary stories dated 26–28 October, with source snapshots and a recorded collection time. Loading needs no Techmeme request. Entry is the first US session open after the fixed 29 October 00:05 New York cutoff; valuation uses the latest available regular-market quote and its timestamp. An actual Yahoo SMH query verified that entry and an intraday quote. The repository-news browser test passed loading/export, ranking, archived-tool research, allocation, price arithmetic, frozen choices on refresh and mobile layout using explicitly synthetic model/price providers. Go race/vet, both browser suites, 42 workshop checks, 17 template checks and the guide build passed.
 
-This pass validates the newly published image on the fresh lab, the actual market-data path and the updated app through fixtures. It does not claim a new complete Dev Spaces → Tekton → Argo CD → public browser run on `ltdx6`; the complete earlier run below used the previous archive/valuation flow.
+The local Go application also loaded and ranked all 161 saved stories through the actual `ltdx6` T4 over a port-forward, with no failed scores. A fresh Chromium context checked the fixed dates, 30 visible stories, hidden import control and absence of JavaScript errors. GPU memory usage during scoring was 10,227 MiB out of 15,360 MiB. This validates the actual corpus/model path, separately from the synthetic browser research/portfolio checks.
 
-Evidence: [image publication](results/prepared-inputs/runtime-publication.json), [actual T4 cold start and scores](results/prepared-inputs/t4-cold-start.json), [real market quote](results/prepared-inputs/live-market.json), [repository-news fixture](results/prepared-inputs/saved-news-fixture.json), [fixture UI](results/prepared-inputs/saved-news-fixture.png).
+This pass does not claim a new complete Dev Spaces → Tekton → Argo CD → public browser run on `ltdx6`; the complete earlier run below used the previous archive/valuation flow.
+
+Evidence: [image publication](results/prepared-inputs/runtime-publication.json), [actual T4 cold start and scores](results/prepared-inputs/t4-cold-start.json), [all 161 articles ranked on the T4](results/prepared-inputs/repository-t4-ranking.json), [real market quote](results/prepared-inputs/live-market.json), [repository-news fixture](results/prepared-inputs/saved-news-fixture.json), [fixture UI](results/prepared-inputs/saved-news-fixture.png).
 
 ## Earlier complete ARO walkthrough
 
