@@ -14,7 +14,9 @@ d3-mini is a 4.54B-parameter community decision model from https://huggingface.c
 
 Red Hat https://www.redhat.com/en/about/press-releases/red-hat-completes-acquisition-neural-magic-fuel-optimized-generative-ai-innovation-across-hybrid-cloud[acquired Neural Magic], a leading contributor to vLLM, in January 2025.
 
-The model revision, serving source and CUDA image are pinned in `deploy/decision/runtime/Dockerfile` and the runtime registry. FP16 fits on a single 16 GB T4. Do not run another GPU model on the same card for this exercise.
+The published runtime is built from the *Red Hat AI Inference Server* image `registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5.0`, pinned by digest in `deploy/decision/runtime/Dockerfile`. It adds the pinned vLLM Semantic Router decision engine. The resulting image is built before the workshop and pinned by digest in `servingruntime.yaml`.
+
+FP16 fits on a single 16 GB T4. Do not run another GPU model on the same card for this exercise.
 
 == Check GPU discovery and the driver
 
@@ -33,11 +35,14 @@ Continue when `GPU` is `1`. A Ready node alone does not prove that its GPU drive
 
 == Deploy d3-mini
 
-The runtime image is already built and pinned. Create the model resources directly:
+OpenShift AI/KServe manages two resources: `ServingRuntime/d3-native` defines the image and startup arguments; `InferenceService/d3-mini` selects that runtime and requests one T4. A PVC keeps the downloaded model weights.
+
+Inspect their manifests, then deploy them with the CLI:
 
 [source,sh,role=execute]
 ----
-python3 scripts/prepare-developer.py
+cat deploy/decision/servingruntime.yaml
+cat deploy/decision/inferenceservice.yaml
 oc apply -k deploy/decision
 oc wait inferenceservice/d3-mini -n decision-serving --for=condition=Ready --timeout=1800s
 oc get inferenceservice,servingruntime,pvc -n decision-serving

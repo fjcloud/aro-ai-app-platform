@@ -34,10 +34,13 @@ The Signal Desk template is on its own branch: https://github.com/fjcloud/go-app
 
 == Prepare the developer's permissions
 
-Lab 1.6 prepared the namespaces and injected a scoped developer identity. Verify it from the bastion:
+Prepare the two application namespaces and inject a scoped developer identity into Dev Spaces. This helper waits for namespace security allocation, creates the limited permissions and mounts a temporary kubeconfig without printing its token.
+
+Run from the bastion before opening Dev Spaces:
 
 [source,sh,role=execute]
 ----
+python3 scripts/prepare-developer.py
 oc auth can-i create pipelineruns -n signal-desk-build \
   --as=system:serviceaccount:signal-desk-dev:workshop-developer
 ----

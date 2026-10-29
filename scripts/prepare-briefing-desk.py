@@ -45,18 +45,14 @@ def main():
     mlflow = get('mlflow', 'mlflow').get('status', {}).get('url', '').rstrip('/')
     if not mlflow.startswith('https://'):
         raise RuntimeError('Wait for the native MLflow instance to publish its HTTPS URL')
-    apply({'apiVersion': 'v1', 'kind': 'ServiceAccount', 'metadata': {'name': IDENTITY, 'namespace': APP}})
+    # Keep standalone/refresh use working; the guide applies these resources explicitly.
+    oc('apply', '-k', str(ROOT / 'deploy/briefing'))
     role = next((r for r in ('mlflow-operator-mlflow-integration', 'mlflow-integration')
                  if oc('get', 'clusterrole', r, '--ignore-not-found', '-o', 'name')), None)
     if not role:
         raise RuntimeError('MLflow integration role is unavailable')
     binding('signal-desk-mlflow', role, APP)
-    for namespace in (APP, BUILD):
-        binding('signal-desk-image-puller', 'system:image-puller', namespace)
     # No cluster-monitoring, SCC or workload-editing grant is needed by this app.
-    apply({'apiVersion': 'v1', 'kind': 'ConfigMap', 'metadata': {'name': 'signal-desk-service-ca', 'namespace': APP,
-           'annotations': {'service.beta.openshift.io/inject-cabundle': 'true'}}})
-    oc('apply', '-f', str(ROOT / 'deploy/briefing/runtime-subscription.yaml'))
     oc('wait', 'maassubscription/deepseekv4pro-signal-desk', '-n', 'models-as-a-service', '--for=condition=Ready', '--timeout=180s')
     # The key API needs an actual OpenShift user token, not a certificate-only login.
     user_token = oc('whoami', '-t')
@@ -81,8 +77,6 @@ def main():
                     'DECISION_URL': 'http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone',
                     'DECISION_MODEL': 'vllm-sr/d3-mini', 'NEWS_CORPUS': 'bundled', 'DECISION_TIMEOUT': '120s', 'MCP_PUBLIC_HOST': public_host,
                     'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT': mlflow + '/v1/traces', 'MLFLOW_EXPERIMENT_ID': experiment, 'MLFLOW_WORKSPACE': APP}})
-    apply({'apiVersion': 'v1', 'kind': 'PersistentVolumeClaim', 'metadata': {'name': 'signal-desk-data', 'namespace': APP},
-           'spec': {'accessModes': ['ReadWriteOnce'], 'storageClassName': 'managed-csi', 'resources': {'requests': {'storage': '2Gi'}}}})
     entry = json.dumps({'url': 'https://' + public_host + '/mcp', 'description': 'Read-only archived Techmeme news and ETF catalog. No prices, trades or external URLs.'})
     if oc('get', 'configmap', 'gen-ai-aa-mcp-servers', '-n', 'redhat-ods-applications', '--ignore-not-found', '-o', 'name'):
         oc('patch', 'configmap', 'gen-ai-aa-mcp-servers', '-n', 'redhat-ods-applications', '--type=merge', '-p', json.dumps({'data': {'Signal-Desk': entry}}))

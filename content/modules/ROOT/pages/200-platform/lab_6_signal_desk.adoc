@@ -23,7 +23,6 @@ From the bastion, inspect the native backend:
 oc get deployment lsd-genai-playground -n signal-desk-dev
 oc get service lsd-genai-playground-service -n signal-desk-dev
 oc get pods -n signal-desk-dev
-oc apply -f deploy/briefing/developer-responses-access.yaml
 oc get mlflow mlflow -o json | jq '{conditions:.status.conditions,url:.status.url}'
 ----
 
@@ -35,11 +34,25 @@ http://lsd-genai-playground-service.signal-desk-dev.svc.cluster.local:8321/v1/re
 model: maas-vllm-inference-1/deepseekv4pro
 ----
 
-The additional NetworkPolicy permits the Dev Spaces namespaces to reach only the native API port (8321), without editing the operator-owned policy or opening its metrics port.
+The NetworkPolicy applied below permits the Dev Spaces namespaces to reach only the native API port (8321), without editing the operator-owned policy or opening its metrics port.
 
 This is the native OpenShift AI agent backend. OpenCode uses the MaaS Chat Completions endpoint for coding; the app uses Responses for model/tool turns. Both reach the same DeepSeek deployment, with separate MaaS credentials.
 
-== Prepare runtime access
+== Create application resources
+
+Apply the manifests for the app identity, service CA, 2 GiB data volume, image-pull permissions, MaaS subscription and Dev Spaces network access:
+
+[source,sh,role=execute]
+----
+oc apply -k deploy/briefing
+oc wait maassubscription/deepseekv4pro-signal-desk -n models-as-a-service \
+  --for=condition=Ready --timeout=180s
+oc get serviceaccount,pvc -n signal-desk-dev
+----
+
+== Configure credentials and tracing
+
+Use a helper for the dynamic API calls: mint the separate runtime key, find or create the MLflow experiment, and wire their returned values into the app configuration and Playground MCP catalog.
 
 [source,sh,role=execute]
 ----
@@ -50,7 +63,7 @@ oc get secret signal-desk-model -n signal-desk-dev
 oc get pvc signal-desk-data -n signal-desk-dev
 ----
 
-The helper creates a dedicated app identity, a separate `deepseekv4pro-signal-desk` MaaS subscription/key, the `signal-desk` MLflow experiment and a 2 GiB data volume. The runtime identity gets no cluster-monitoring or workload-editing permissions. The key expires after 24 hours; rerun preparation and restart the application if the lab continues longer.
+The runtime identity gets no cluster-monitoring or workload-editing permissions. The key expires after 24 hours; rerun the helper and restart the application if the lab continues longer.
 
 The app and read-only MCP tools are public over HTTPS, with no separate Signal Desk login. Model keys remain in backend Secrets.
 
