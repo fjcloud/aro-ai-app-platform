@@ -27,4 +27,4 @@ PASS: Generated source files exist and Go build succeeds in the real workspace
 PASS: Workspace commit, pushed main and Argo CD revision match
 PASS: Application source committed with no unstaged changes
 Application: https://live-transcript-live-transcript-dev.apps.z0tudc0s.eastus.aroapp.io
-Git revision: 2dd784ef96e299a82f6fd6fd844c8281a347f62b
+Git revision: d36a88813816605c4142152aa6cf1835c216b8c0

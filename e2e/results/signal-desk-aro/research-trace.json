@@ -1,29 +1,29 @@
 {
   "passed": true,
-  "trace_id": "tr-ac1f4e539b71835ca14ed01e05203de7",
+  "trace_id": "tr-3f76b0a52613fd1b60b8b14916f6d661",
   "state": "OK",
   "spans": [
     {
       "name": "game.research",
-      "span_id": "5ijKA6AWqCg=",
+      "span_id": "HKZbRdADfH8=",
       "parent_span_id": null,
-      "start_time_unix_nano": 1793221887617171309,
-      "end_time_unix_nano": 1793221898678611442,
+      "start_time_unix_nano": 1793258186115114114,
+      "end_time_unix_nano": 1793258191918219655,
       "attributes": [
         {
           "key": "mlflow.traceRequestId",
           "value": {
-            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
           }
         }
       ]
     },
     {
       "name": "agent.game_ideas",
-      "span_id": "/hKcK4YvQE8=",
-      "parent_span_id": "5ijKA6AWqCg=",
-      "start_time_unix_nano": 1793221887647786095,
-      "end_time_unix_nano": 1793221898665472585,
+      "span_id": "yQLVTDtpG7o=",
+      "parent_span_id": "HKZbRdADfH8=",
+      "start_time_unix_nano": 1793258186137320708,
+      "end_time_unix_nano": 1793258191906564770,
       "attributes": [
         {
           "key": "mlflow.spanType",
@@ -40,7 +40,7 @@
         {
           "key": "mlflow.traceRequestId",
           "value": {
-            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
           }
         },
         {
@@ -53,10 +53,10 @@
     },
     {
       "name": "tool.read_archive",
-      "span_id": "YFQZsKicMmo=",
-      "parent_span_id": "/hKcK4YvQE8=",
-      "start_time_unix_nano": 1793221889035630470,
-      "end_time_unix_nano": 1793221889035950149,
+      "span_id": "1xT+pCd3Ris=",
+      "parent_span_id": "yQLVTDtpG7o=",
+      "start_time_unix_nano": 1793258187446165777,
+      "end_time_unix_nano": 1793258187446193077,
       "attributes": [
         {
           "key": "mlflow.spanType",
@@ -67,17 +67,17 @@
         {
           "key": "mlflow.traceRequestId",
           "value": {
-            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
           }
         }
       ]
     },
     {
       "name": "tool.search_archive",
-      "span_id": "akvuQFXI0hQ=",
-      "parent_span_id": "/hKcK4YvQE8=",
-      "start_time_unix_nano": 1793221889036327324,
-      "end_time_unix_nano": 1793221889039922287,
+      "span_id": "npymue4OzY0=",
+      "parent_span_id": "yQLVTDtpG7o=",
+      "start_time_unix_nano": 1793258187446299780,
+      "end_time_unix_nano": 1793258187449341754,
       "attributes": [
         {
           "key": "mlflow.spanType",
@@ -88,17 +88,17 @@
         {
           "key": "mlflow.traceRequestId",
           "value": {
-            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
           }
         }
       ]
     },
     {
       "name": "tool.index_universe",
-      "span_id": "ACzFCJki+rs=",
-      "parent_span_id": "/hKcK4YvQE8=",
-      "start_time_unix_nano": 1793221889040094876,
-      "end_time_unix_nano": 1793221889040101976,
+      "span_id": "TbqzJzsmWDM=",
+      "parent_span_id": "yQLVTDtpG7o=",
+      "start_time_unix_nano": 1793258187449962669,
+      "end_time_unix_nano": 1793258187449973469,
       "attributes": [
         {
           "key": "mlflow.spanType",
@@ -109,49 +109,7 @@
         {
           "key": "mlflow.traceRequestId",
           "value": {
-            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tool.search_archive",
-      "span_id": "hGFOu+Lic4o=",
-      "parent_span_id": "/hKcK4YvQE8=",
-      "start_time_unix_nano": 1793221890415028069,
-      "end_time_unix_nano": 1793221890418548624,
-      "attributes": [
-        {
-          "key": "mlflow.spanType",
-          "value": {
-            "string_value": "TOOL"
-          }
-        },
-        {
-          "key": "mlflow.traceRequestId",
-          "value": {
-            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tool.search_archive",
-      "span_id": "xDami7KQKL8=",
-      "parent_span_id": "/hKcK4YvQE8=",
-      "start_time_unix_nano": 1793221891697313540,
-      "end_time_unix_nano": 1793221891702194616,
-      "attributes": [
-        {
-          "key": "mlflow.spanType",
-          "value": {
-            "string_value": "TOOL"
-          }
-        },
-        {
-          "key": "mlflow.traceRequestId",
-          "value": {
-            "string_value": "tr-ac1f4e539b71835ca14ed01e05203de7"
+            "string_value": "tr-3f76b0a52613fd1b60b8b14916f6d661"
           }
         }
       ]
