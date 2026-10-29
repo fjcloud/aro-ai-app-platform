@@ -35,6 +35,8 @@ The platform path is: apply all operator manifests; add one D8 CPU worker and on
 
 == Maintain the workshop
 
+Prefer direct `oc`, `az` and `curl | jq` commands in the labs. Keep helpers for discovery, temporary identity/credential injection and dynamic MaaS/MLflow setup; define ordinary Kubernetes resources in `deploy/`.
+
 `make test` runs the helper and reference-app tests. `make docs` builds the guide; `make serve` previews it at http://localhost:8443.
 
 The published d3-mini image is pinned by digest in `deploy/decision/runtime-image.txt` and `servingruntime.yaml`. The `publish decision runtime` GitHub Actions workflow rebuilds it when the pinned Dockerfile changes, or on manual dispatch. It needs the repository's `REDHAT_REGISTRY_AUTH` secret for the Red Hat base image; participants only pull the public result. After validating a replacement on a T4, update both digest references together.
