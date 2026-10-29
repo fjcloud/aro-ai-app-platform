@@ -1,4 +1,4 @@
-= Lab 2.2 — Build and Ship Signal Desk
+= Lab 2.3 — Build and Ship Signal Desk
 
 Use DeepSeek in OpenCode to build the game described by `APP_CONTRACT.md`, keeping the prepared delivery scaffold. The reference supplies working API clients and replay rules so the exercise focuses on the app rather than inventing model protocols.
 
@@ -8,6 +8,8 @@ Use DeepSeek in OpenCode to build the game described by `APP_CONTRACT.md`, keepi
 *Time:* 35–45 minutes, plus the first archive import +
 *Outcome:* English app, generated/adapted with DeepSeek, built by Tekton and deployed by your own Argo CD.
 ====
+
+The model API checks in Lab 2.2 must pass before this exercise. The app uses last week’s news to freeze investment choices, then compares them with the latest completed US market session this week. Today’s incomplete session is excluded.
 
 == Step 1: Read the contract
 
@@ -23,6 +25,8 @@ opencode
 ----
 
 Expect both permissions to be `yes`. Do not give the coding model administrator credentials or ask it to change SCC/RBAC.
+
+OpenCode reads the project runbook. Press kbd:[Tab] to switch between *plan* (read-only) and *build* (writes files); use `/exit` to return to the shell.
 
 == Step 2: Plan
 

@@ -1,0 +1,77 @@
+# The CLI exercise replaces this valid release tag with this cluster's
+# oauth-proxy release digest before applying the Deployment.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: d3-api
+  namespace: decision-serving
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: d3-api
+  template:
+    metadata:
+      annotations:
+        openshift.io/required-scc: restricted-v2
+      labels:
+        app.kubernetes.io/name: d3-api
+    spec:
+      serviceAccountName: d3-api
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: oauth-proxy
+          image: registry.redhat.io/openshift4/ose-oauth-proxy-rhel9:v4.21
+          args:
+            - --provider=openshift
+            - --https-address=:8443
+            - --http-address=
+            - --upstream=http://d3-mini.decision-serving.svc.cluster.local:8080
+            - --openshift-service-account=d3-api
+            - --openshift-sar={"namespace":"decision-serving","resource":"services","resourceName":"d3-api","verb":"get"}
+            - --openshift-delegate-urls={"/":{"namespace":"decision-serving","resource":"services","name":"d3-api","verb":"get"}}
+            - --tls-cert=/etc/tls/tls.crt
+            - --tls-key=/etc/tls/tls.key
+            - --cookie-secret-file=/etc/oauth/cookie-secret
+            - --pass-access-token=false
+            - --pass-user-bearer-token=false
+            - --pass-basic-auth=false
+            - --request-logging=false
+          ports:
+            - name: https
+              containerPort: 8443
+          readinessProbe:
+            tcpSocket:
+              port: https
+          livenessProbe:
+            tcpSocket:
+              port: https
+            initialDelaySeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: serving-cert
+              mountPath: /etc/tls
+              readOnly: true
+            - name: cookie
+              mountPath: /etc/oauth
+              readOnly: true
+      volumes:
+        - name: serving-cert
+          secret:
+            secretName: d3-api-tls
+        - name: cookie
+          secret:
+            secretName: d3-api-cookie

@@ -1,4 +1,4 @@
-= Lab 1.6 — Prepare the Signal Desk Agent
+= Lab 1.8 — Prepare the Signal Desk Agent
 :page-aliases: 200-platform/lab_6_cluster_voice.adoc
 
 The decision model scores relevance. The runtime agent researches possible index exposure through *OpenShift AI's native Responses API*. Prepare that second path before the developer builds the app.
@@ -21,6 +21,7 @@ From the bastion, inspect the native backend:
 oc get deployment lsd-genai-playground -n live-transcript-dev
 oc get service lsd-genai-playground-service -n live-transcript-dev
 oc get pods -n live-transcript-dev
+oc apply -f deploy/briefing/developer-responses-access.yaml
 oc get mlflow mlflow -o json | jq '{conditions:.status.conditions,url:.status.url}'
 ----
 
@@ -31,6 +32,8 @@ The runtime application calls:
 http://lsd-genai-playground-service.live-transcript-dev.svc.cluster.local:8321/v1/responses
 model: maas-vllm-inference-1/deepseekv4pro
 ----
+
+The additional NetworkPolicy permits the Dev Spaces namespaces to reach only the native API port (8321), without editing the operator-owned policy or opening its metrics port.
 
 This is the native OpenShift AI agent backend. OpenCode uses the MaaS Chat Completions endpoint for coding; the app uses Responses for model/tool turns. Both reach the same DeepSeek deployment, with separate MaaS credentials.
 
@@ -51,7 +54,7 @@ The fixed infrastructure name remains `live-transcript` for the prepared namespa
 
 == The application contract
 
-Read `APP_CONTRACT.md` in the template. The backend owns four simple responsibilities:
+Read `APP_CONTRACT.md` in the template. The backend owns five simple responsibilities:
 
 . Collect the prior Monday–Sunday Techmeme archive and retain coverage gaps.
 . Accept a same-week manual JSON export if live Techmeme collection is blocked; ignore its model outputs and disclose imported provenance.
@@ -73,28 +76,8 @@ Git → Tekton → Argo CD → same Go app
 
 The model cannot fetch this week's prices during research. Prices are requested by deterministic Go code only after commitment. A running week is visibly provisional. Archived snippets are not full publisher articles; scoring relevance is not predicting profit. Historical replay cannot erase knowledge from model training, so this is not a blind backtest.
 
-== Test the native API before coding
+== Hand over to the developer
 
-Use the bastion, in a separate terminal, to forward the native service:
+The developer will test the authenticated d3-mini endpoint, the MaaS Chat Completions endpoint and this Responses API independently from Dev Spaces in xref:300-developer/lab_2_model_apis.adoc[Lab 2.2]. No administrator credentials or Azure keys are needed in that workspace.
 
-[source,sh,role=execute]
-----
-oc port-forward service/lsd-genai-playground-service -n live-transcript-dev \
-  18321:8321 >/tmp/responses-port-forward.log 2>&1 &
-RESPONSES_FORWARD_PID=$!
-RUNTIME_KEY=$(oc get secret signal-desk-model -n live-transcript-dev \
-  -o jsonpath='{.data.api-key}' | base64 -d)
-PROVIDER_DATA=$(jq -cn --arg key "$RUNTIME_KEY" \
-  '{"vllm_api_token":$key}')
-curl --fail-with-body -sS --retry 10 --retry-connrefused --retry-delay 2 \
-  --max-time 180 http://127.0.0.1:18321/v1/responses \
-  -H 'Content-Type: application/json' \
-  -H "X-OGX-Provider-Data: $PROVIDER_DATA" \
-  -d '{"model":"maas-vllm-inference-1/deepseekv4pro","input":"Reply with one short sentence about research relevance.","store":false}' | jq .
-unset RUNTIME_KEY PROVIDER_DATA
-kill "$RESPONSES_FORWARD_PID"
-----
-
-The key stays in the shell and server-side Secret. It never belongs in the browser, Git or an OpenCode prompt. Continue only when the native API returns a model response.
-
-Continue to *Act 2 — Developer: first day*.
+Continue to xref:300-developer/lab_1_devspace_launch.adoc[Lab 2.1 — Launch Your Dev Space].

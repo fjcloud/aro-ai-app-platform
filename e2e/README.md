@@ -2,6 +2,8 @@
 
 Follow Acts 0–3 on an assigned ARO lab: actual operator/model setup, curl + jq probes, Dev Spaces, DeepSeek/OpenCode generation, Tekton, Argo CD and the browser game. Fixture success alone is not live acceptance.
 
+The guide installs operators with `oc apply -k deploy/operators`, adds one CPU and one GPU worker, then enables instances with explicit CLI commands. The developer preflight is Lab 2.2, executed entirely from Dev Spaces.
+
 From the authenticated bastion:
 
 ```sh
@@ -12,11 +14,20 @@ python3 e2e/check-observability.py | jq .
 python3 e2e/maas-protocol.py | jq .
 ```
 
-Platform/usage/protocol probes make billable model calls. `APP_NAME` defaults to `live-transcript`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
+Verify the developer's five API command blocks verbatim, plus credential rejection and namespace permissions:
+
+```sh
+E2E_NS=your-devspaces-namespace DEV_POD=your-workspace-pod \
+  python3 e2e/check.py model-apis
+```
+
+This requires the HTTPS D3 proxy from Lab 1.6 and the Dev Spaces-to-Responses policy from Lab 1.8. It checks the pinned proxy image, restricted-v2, model readiness, two complete memo scores, both DeepSeek protocols and rejection of invalid/unauthorized tokens. Credentials and full model responses are never printed.
+
+Platform/usage/protocol/model-apis probes make billable model calls. `APP_NAME` defaults to `live-transcript`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
 
 Validate the UI with a full archived-week import, real T4 scores, an actual native Responses tool loop, a virtual allocation and subsequent-week observed prices. Verify unavailable archive IDs, incomplete-week labels and errors. Confirm an MLflow research trace and the same archive tools in the native Playground. Public app access requires OpenShift OAuth; credentials remain private. Every Chromium launch includes `--use-mock-keychain`.
 
-For the real Route browser test, save a private OpenShift browser session and model metadata from the Lab 1.4 port-forward, then run:
+For the real Route browser test, save a private OpenShift browser session and model metadata from the authenticated d3-mini probe in Lab 2.2, then run:
 
 ```sh
 APP_URL=https://your-app-route BROWSER_STATE=/private/path/login-state.json \

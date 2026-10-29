@@ -1,12 +1,12 @@
-= Lab 1.4 — Serve and Test the Decision Model
+= Lab 1.6 — Serve d3-mini
 :page-aliases: 200-platform/lab_4_whisper.adoc
 
-DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 and scores a news item's relevance to an investment memo. Before building an app, call the model directly and inspect its JSON with `jq`.
+DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 and scores a news item's relevance to an investment memo. The developer will compare it with the language model using curl + jq in Lab 2.2.
 
 [NOTE]
 ====
 *Persona:* Platform Engineer +
-*Time:* 15 minutes active; allow 25–40 minutes for the worker, driver and model download. +
+*Time:* 15 minutes active; allow time for the runtime build and model download. +
 *Requires:* Classic ARO 4.21+, cluster-admin, Azure permissions, CPU headroom and T4 capacity.
 ====
 
@@ -14,78 +14,9 @@ d3-mini is a 4.54B-parameter community decision model from https://huggingface.c
 
 The model revision, serving source and CUDA image are pinned in `deploy/decision/runtime/Dockerfile` and the preparation helper. FP16 fits on a single 16 GB T4. Do not run another GPU model on the same card for this exercise.
 
-== Inspect the cluster and worker pools
+== Check GPU discovery and the driver
 
-Run these commands in the bastion terminal, from the workshop checkout. Classic ARO adds worker pools with OpenShift MachineSets, following the https://learn.microsoft.com/en-us/azure/openshift/howto-gpu-workloads[Microsoft GPU guide]. The `az aro hcp cluster nodepool` commands belong to ARO HCP. This lab shows the actual pool definitions and CLI calls directly.
-
-[source,sh,role=execute]
-----
-source state/workshop.env
-set -o pipefail
-ARO_NAME="${ARO_CLUSTER_ID##*/}"
-INFRA=$(oc get infrastructure cluster -o jsonpath='{.status.infrastructureName}')
-REGION=$(az aro show --name "$ARO_NAME" --resource-group "$RESOURCEGROUP" \
-  --subscription "$SUBSCRIPTION" --query location -o tsv)
-
-oc get machinesets -n openshift-machine-api \
-  -o 'custom-columns=NAME:.metadata.name,SIZE:.spec.template.spec.providerSpec.value.vmSize,ZONE:.spec.template.spec.providerSpec.value.zone,DESIRED:.spec.replicas,READY:.status.readyReplicas'
-oc get pv -o 'custom-columns=CLAIM:.spec.claimRef.name,NAMESPACE:.spec.claimRef.namespace,ZONE:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values'
-----
-
-Keep the original CPU pools. If a workshop CPU or T4 pool already exists, reuse it and skip its creation block below. Confirm its VM size and replica count in the table first.
-
-=== Check Azure quota and GPU zones
-
-[source,sh,role=execute]
-----
-az vm list-usage --location "$REGION" --subscription "$SUBSCRIPTION" \
-  --query "[?name.value=='cores' || name.value=='standardDSv3Family' || contains(name.value, 'T4')].{quota:name.localizedValue,used:currentValue,limit:limit}" -o table
-az vm list-skus --location "$REGION" --subscription "$SUBSCRIPTION" \
-  --resource-type virtualMachines --size Standard_NC8as_T4_v3 --all \
-  --query '[].{size:name,zones:locationInfo[0].zones,restrictions:restrictions}' -o json | jq .
-----
-
-The SKU lookup can take a few minutes. A new D8 CPU worker needs 8 free DSv3 vCPUs; a new T4 worker needs 8 free NCasT4_v3 vCPUs. Creating both needs 16 free regional vCPUs. The chosen GPU zone must be listed and unrestricted; quota does not guarantee available VM capacity.
-
-== Step 1: Add one T4 worker
-
-Use `Standard_NC8as_T4_v3`: one 16 GB T4, 8 vCPUs and 56 GiB RAM. Set `GPU_ZONE` to an available zone from the Azure output above that also has an original CPU MachineSet. The GPU zone may differ from the Dev Spaces PVC zone.
-
-[source,sh,role=execute]
-----
-GPU_ZONE=1
-GPU_TEMPLATE=$(oc get machinesets -n openshift-machine-api -o json |
-  jq -er --arg zone "$GPU_ZONE" '
-    [.items[] | select(.spec.template.spec.providerSpec.value.zone == $zone)
-     | select(.spec.template.spec.providerSpec.value.vmSize | startswith("Standard_D"))]
-    | sort_by(.metadata.name) | .[0].metadata.name // error("No CPU template in this zone")
-  ')
-GPU_POOL="${INFRA}-gpu-t4-8-${REGION}${GPU_ZONE}"
-
-oc get machineset "$GPU_TEMPLATE" -n openshift-machine-api -o json | \
-  jq --arg name "$GPU_POOL" '
-    del(.status)
-    | .metadata = {name: $name, namespace: "openshift-machine-api",
-        labels: (.metadata.labels + {"workshop.fjcloud.io/experiment": "t4"})}
-    | .spec.replicas = 1
-    | .spec.selector.matchLabels["machine.openshift.io/cluster-api-machineset"] = $name
-    | .spec.template.metadata.labels["machine.openshift.io/cluster-api-machineset"] = $name
-    | .spec.template.spec.metadata.labels["workshop.fjcloud.io/gpu"] = "t4"
-    | .spec.template.spec.taints = [{key: "nvidia.com/gpu", value: "present", effect: "NoSchedule"}]
-    | .spec.template.spec.providerSpec.value.vmSize = "Standard_NC8as_T4_v3"
-  ' | oc create -f -
-
-oc wait machineset/"$GPU_POOL" -n openshift-machine-api \
-  --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
-oc get machines -n openshift-machine-api
-oc get nodes -l workshop.fjcloud.io/gpu=t4
-----
-
-The taint reserves the worker for workloads that explicitly tolerate `nvidia.com/gpu=present:NoSchedule`. Node readiness confirms provisioning; the NVIDIA operator in Step 2 makes the GPU available to pods. Do not substitute a four-T4 `NC64` size: requesting one GPU in a pod still incurs the cost of the entire VM.
-
-== Step 2: Check GPU discovery and the driver
-
-All operators and their instances were installed in Lab 1.1. The NVIDIA operator now configures the new T4 node.
+The operators were installed in Lab 1.1 and their instances enabled in Lab 1.3. The NVIDIA operator now configures the new T4 node.
 
 Inspect GPU discovery and the driver:
 
@@ -98,7 +29,7 @@ oc get nodes -l workshop.fjcloud.io/gpu=t4 \
 
 Continue when `GPU` is `1`. A Ready node alone does not prove that its GPU driver is ready.
 
-== Step 3: Deploy d3-mini
+== Deploy d3-mini
 
 The platform prepares the delivery namespaces and developer identity. Then Tekton builds the pinned custom runtime, caches the model and creates the KServe service:
 
@@ -119,75 +50,36 @@ Expect a Ready `d3-mini` inference service and no public model Route. The applic
 http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone
 ----
 
-A Ready GPU node does not establish model readiness. Wait for `InferenceService/Ready` before the curl tests. If Azure reports a failed VM, inspect `oc describe machine` and Machine API events; OpenShift may replace an unhealthy new machine automatically. Do not continue after the readiness timeout or add a second T4 to hide a provisioning error.
+A Ready GPU node does not establish model readiness. Wait for `InferenceService/Ready` before handing the endpoint to the developer. If Azure reports a failed VM, inspect `oc describe machine` and Machine API events; OpenShift may replace an unhealthy new machine automatically. Do not continue after the readiness timeout or add a second T4 to hide a provisioning error.
 
-== Step 4: Open a temporary local connection
 
-In the bastion terminal:
+== Give developers authenticated API access
 
-[source,sh,role=execute]
-----
-oc port-forward -n decision-serving service/d3-mini 18093:8080 \
-  >/tmp/d3-port-forward.log 2>&1 &
-D3_FORWARD_PID=$!
-D3_URL=http://127.0.0.1:18093
-curl --fail-with-body -sS --retry 10 --retry-connrefused --retry-delay 2 \
-  "$D3_URL/v1/models" | jq .
-----
-
-This forwards only to the bastion loopback interface. The browser and the application will not use this temporary URL. Expect model `vllm-sr/d3-mini`, CUDA and FP16 in the model metadata.
-
-== Step 5: Score one news item
+The native `/v1/systemone` protocol is not OpenAI Chat Completions and is not published as an OpenAI MaaS model. Keep its GPU service internal. A standard OpenShift OAuth proxy provides a separate internal HTTPS endpoint, using scoped OpenShift Bearer tokens instead of inventing a MaaS key for this protocol.
 
 [source,sh,role=execute]
 ----
-cat > /tmp/d3-score.json <<'EOF'
-{
-  "model": "vllm-sr/d3-mini",
-  "state": {
-    "investment_memo": "We invest in semiconductors and electronic components. Research material changes in chip demand, capacity, margins and supply.",
-    "source_summary": "A major chipmaker raises its revenue guidance after stronger semiconductor demand."
-  },
-  "questions": {
-    "opportunity": {
-      "type": "score",
-      "instructions": "Rate the news relevance and materiality for this fund. Both positive and negative catalysts can be important. This is not a price forecast.",
-      "criteria": [
-        "0: No connection to the fund.",
-        "1: Weak, indirect connection.",
-        "2: Relevant but limited evidence or impact.",
-        "3: Direct, concrete catalyst worth researching.",
-        "4: Direct, material, well-evidenced catalyst."
-      ],
-      "require_full_input": true
-    }
-  }
-}
-EOF
-curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
-  -H 'Content-Type: application/json' \
-  --data-binary @/tmp/d3-score.json | jq . | tee /tmp/d3-score-result.json
+oc apply -k deploy/decision/access
+COOKIE_SECRET=$(openssl rand -base64 32)
+oc create secret generic d3-api-cookie -n decision-serving \
+  --from-literal=cookie-secret="$COOKIE_SECRET" --dry-run=client -o yaml | oc apply -f -
+unset COOKIE_SECRET
+OAUTH_PROXY_IMAGE=$(oc adm release info --image-for=oauth-proxy)
+oc create --dry-run=client -f deploy/decision/access/deployment.yaml -o json | \
+  jq --arg image "$OAUTH_PROXY_IMAGE" '.spec.template.spec.containers[0].image = $image' | oc apply -f -
+oc rollout status deployment/d3-api -n decision-serving --timeout=180s
 ----
 
-Inspect the five level probabilities, the expected `score` between 0 and 4, and complete input coverage. A high score means *research relevance*, not BUY, confidence or profit. The application converts it to `/100` using `score / 4 × 100`; the language model does not supply that score.
+The developer's `workshop-developer` identity can only use the `d3-api` Service; it cannot modify the model namespace. Invalid or unauthorized tokens are rejected. The proxy uses the cluster's release image, service certificate and restricted-v2. No public model Route is created.
 
-Compare a different memo with the *same* news:
-
-[source,sh,role=execute]
+[source,text]
 ----
-jq '.state.investment_memo = "We invest in grocery retailers and consumer marketplaces. Research store sales, retail margins and merchant activity."'   /tmp/d3-score.json > /tmp/d3-retail.json
-curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
-  -H 'Content-Type: application/json' \
-  --data-binary @/tmp/d3-retail.json | jq .
-kill "$D3_FORWARD_PID"
+Developer: https://d3-api.decision-serving.svc.cluster.local:8443/v1/systemone
+App:       http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone
 ----
 
-Explain the result rather than expecting an exact number. This is a native decision API, not `/chat/completions` and not a text generator.
+The app's existing direct path is limited by NetworkPolicy to the application pods. Both endpoints use the same native request body and the same T4 model; the developer endpoint adds OpenShift authentication.
 
-== Checkpoint
+The model is visible as `d3-mini` under project `decision-serving` in OpenShift AI. Wait for Ready; a provisioned GPU alone does not prove model readiness. The developer tests both APIs in Lab 2.2 before coding.
 
-* One physical T4, d3-mini Ready, internal endpoint only.
-* Both curl calls return valid JSON displayed through `jq`.
-* You can distinguish memo relevance, confidence and investment performance.
-
-Continue to *Lab 1.5 — Hand the Keys*.
+Continue to xref:200-platform/lab_5_agents_md.adoc[Lab 1.7 — Prepare Developer Access].

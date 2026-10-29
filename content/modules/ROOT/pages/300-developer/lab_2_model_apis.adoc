@@ -1,0 +1,109 @@
+= Lab 2.2 — Test the Model APIs
+
+*Developer · Dev Spaces terminal.* Before writing the app, call each model independently with `curl`. Format every JSON response with `jq`. Keep credentials in shell variables; never paste them into OpenCode, Git or the browser app.
+
+== Two models, two jobs
+
+A language model generates text and tool calls. A *decision model* evaluates a structured question against supplied facts and a rubric. Here, d3-mini returns five probabilities and a relevance score from 0 to 4; it does not write an explanation or predict a stock return. DeepSeek later explains hypothetical index exposure using archive tools.
+
+[cols="1,2,2",options="header"]
+|===
+| Model | Credential | API
+| DeepSeek | Injected MaaS key: `$OPENAI_API_KEY` | OpenAI-compatible Chat Completions through OpenShift AI MaaS
+| d3-mini | Scoped OpenShift token: `$(oc whoami -t)` | Internal HTTPS `/v1/systemone` through the OpenShift authorization proxy
+|===
+
+The credentials are different. d3-mini is a community model on the T4, not a supported Red Hat model or an OpenAI MaaS endpoint. Its native runtime has no MaaS key API; OpenShift authenticates and authorizes developer requests to it.
+
+== Test d3-mini
+
+[source,sh,role=execute]
+----
+D3_URL=https://d3-api.decision-serving.svc.cluster.local:8443
+D3_API_KEY=$(oc whoami -t)
+SERVICE_CA=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+oc auth can-i get service/d3-api -n decision-serving
+curl --fail-with-body -sS --cacert "$SERVICE_CA" "$D3_URL/v1/models" \
+  -H "Authorization: Bearer $D3_API_KEY" | jq '{id:.data[0].id,device:.data[0].device,dtype:.data[0].dtype}'
+----
+
+Expect `yes`, model ID `d3-mini`, `device: cuda:0` and `dtype: float16`. The certificate is signed by the OpenShift service CA; do not use `curl -k`.
+
+This small synthetic news example tests the API; it is not part of the archived game corpus:
+
+[source,sh,role=execute]
+----
+cat > /tmp/d3-score.json <<'JSON'
+{
+  "model": "vllm-sr/d3-mini",
+  "state": {
+    "investment_memo": "We invest in semiconductors and electronic components. Research material changes in chip demand, capacity, margins and supply.",
+    "source_summary": "A major chipmaker raises its revenue guidance after stronger semiconductor demand."
+  },
+  "questions": {
+    "opportunity": {
+      "type": "score",
+      "instructions": "Rate relevance and materiality for this fund. Positive and negative catalysts can matter. This is not a price forecast.",
+      "criteria": [
+        "0: No connection to the fund.",
+        "1: Weak, indirect connection.",
+        "2: Relevant but limited evidence or impact.",
+        "3: Direct, concrete catalyst worth researching.",
+        "4: Direct, material, well-evidenced catalyst."
+      ],
+      "require_full_input": true
+    }
+  }
+}
+JSON
+curl --fail-with-body -sS --max-time 120 --cacert "$SERVICE_CA" \
+  "$D3_URL/v1/systemone" -H "Authorization: Bearer $D3_API_KEY" \
+  -H 'Content-Type: application/json' --data-binary @/tmp/d3-score.json | \
+  jq '{score:.answers.opportunity.score,probabilities:.answers.opportunity.probabilities,coverage:.answers.opportunity.input_coverage}'
+----
+
+Change only the fund memo and compare the same news:
+
+[source,sh,role=execute]
+----
+jq '.state.investment_memo = "We invest in grocery retailers and consumer marketplaces. Research store sales, retail margins and merchant activity."' \
+  /tmp/d3-score.json > /tmp/d3-retail.json
+curl --fail-with-body -sS --max-time 120 --cacert "$SERVICE_CA" \
+  "$D3_URL/v1/systemone" -H "Authorization: Bearer $D3_API_KEY" \
+  -H 'Content-Type: application/json' --data-binary @/tmp/d3-retail.json | \
+  jq '{score:.answers.opportunity.score,probabilities:.answers.opportunity.probabilities,coverage:.answers.opportunity.input_coverage}'
+unset D3_API_KEY
+----
+
+Explain why the memo changes relevance; do not expect an exact score. The game displays `score / 4 × 100`. A high score means *worth researching*, not BUY, confidence or probability of profit. Continue only with complete input coverage.
+
+== Test DeepSeek through MaaS
+
+The platform injects the base URL and your workshop MaaS key. No Azure account key belongs in this workspace.
+
+[source,sh,role=execute]
+----
+curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" -H 'Content-Type: application/json' \
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"In one sentence, explain why news relevance is different from expected investment return."}],"max_completion_tokens":256}' | jq '{model,answer:.choices[0].message.content,usage}'
+----
+
+Expect an actual response and measured token usage. HTTP 429 means a MaaS allowance or provider throughput limit; do not switch models or replace inference with a rule.
+
+== Test the runtime agent API
+
+The app will use the native OpenShift AI Responses service with a separate runtime key. For this developer probe, your existing workshop MaaS key also grants access to the same model:
+
+[source,sh,role=execute]
+----
+PROVIDER_DATA=$(jq -cn --arg key "$OPENAI_API_KEY" '{vllm_api_token:$key}')
+curl --fail-with-body -sS --max-time 180 \
+  http://lsd-genai-playground-service.live-transcript-dev.svc.cluster.local:8321/v1/responses \
+  -H "X-OGX-Provider-Data: $PROVIDER_DATA" -H 'Content-Type: application/json' \
+  -d '{"model":"maas-vllm-inference-1/deepseekv4pro","input":"Reply with one short sentence about evidence-based research.","store":false}' | jq '{model,status,output,usage}'
+unset PROVIDER_DATA
+----
+
+You have tested the GPU decision model, the coding LLM and the app's native agent protocol independently. The app contract supplies the fixed runtime endpoints and server-side credentials; the coding assistant must reuse them.
+
+Continue to xref:300-developer/lab_3_opencode_dev.adoc[Lab 2.3 — Build and Ship Signal Desk].

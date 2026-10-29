@@ -1,0 +1,95 @@
+# Inventory for oc wait -f only. Do not apply this file.
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "devspaces-operator",
+        "namespace": "openshift-operators"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "nfd-controller-manager",
+        "namespace": "openshift-nfd"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "gpu-operator",
+        "namespace": "nvidia-gpu-operator"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "rhods-operator",
+        "namespace": "redhat-ods-operator"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "kuadrant-operator-controller-manager",
+        "namespace": "kuadrant-system"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "openshift-lws-operator",
+        "namespace": "openshift-lws-operator"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "cert-manager",
+        "namespace": "cert-manager"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "tekton-pipelines-controller",
+        "namespace": "openshift-pipelines"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "openshift-gitops-server",
+        "namespace": "openshift-gitops"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "observability-operator",
+        "namespace": "openshift-cluster-observability-operator"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+        "name": "opentelemetry-operator-controller-manager",
+        "namespace": "openshift-opentelemetry-operator"
+      }
+    }
+  ]
+}

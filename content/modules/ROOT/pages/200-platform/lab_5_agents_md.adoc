@@ -1,4 +1,4 @@
-= Lab 1.5 — Hand the Keys
+= Lab 1.7 — Hand the Keys
 
 DeepSeek-V4 Pro is already answering. Prepare a *Dev Spaces launch URL* and the project runbook for the developer in Act 2.
 
@@ -34,7 +34,7 @@ The Signal Desk template is on its own branch: https://github.com/fjcloud/go-app
 
 == Prepare the developer's permissions
 
-Lab 1.4 prepared the namespaces and injected a scoped developer identity. Verify it from the bastion:
+Lab 1.6 prepared the namespaces and injected a scoped developer identity. Verify it from the bastion:
 
 [source,sh,role=execute]
 ----
@@ -86,7 +86,7 @@ image::cicd-gitops.png[Prompt to deployment, align="center"]
 
 == Step 2: Confirm OpenCode is wired to MaaS
 
-OpenCode is injected from the AI tool registry you applied in Lab 1.1. The *binary* comes from the platform. The platform model pin is the ConfigMap. The project and platform files both pin DeepSeek through MaaS. Lab 2.1 checks they agree.
+OpenCode is injected from the AI tool registry enabled in Lab 1.3. The *binary* comes from the platform. The platform model pin is the ConfigMap. The project and platform files both pin DeepSeek through MaaS. Lab 2.1 checks they agree.
 
 [source,sh,role=execute]
 ----
@@ -137,4 +137,4 @@ When a developer opens that URL, Dev Spaces clones the template, injects the Ope
 | ✅ Signal Desk branch and app contract in `AGENTS.md`
 |===
 
-Before switching persona, prepare the native Responses backend and tracing in *Lab 1.6: Prepare the Signal Desk Agent*.
+Before switching persona, prepare the native Responses backend and tracing in *Lab 1.8: Prepare the Signal Desk Agent*.

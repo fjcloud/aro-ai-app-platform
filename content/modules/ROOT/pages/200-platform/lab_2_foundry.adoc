@@ -1,13 +1,13 @@
-= Lab 1.2 — Publish DeepSeek on Foundry
+= Lab 1.4 — Publish DeepSeek on Foundry
 :page-aliases: 200-platform/lab_1_gpu_nodepool.adoc
 
-The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. d3-mini will run separately on one T4 in Lab 1.4 to rank news; it is not OpenCode’s coding model.
+The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. d3-mini will run separately on one T4 in Lab 1.6 to rank news; it is not OpenCode’s coding model.
 
 [NOTE]
 ====
 *Estimated time:* 15 minutes +
 *Persona:* Platform Engineer +
-*Blocking:* Lab 1.3 reads `state/foundry.env` from this lab. Stay in this shell until the curl returns a sentence.
+*Blocking:* Lab 1.5 reads `state/foundry.env` from this lab. Stay in this shell until the curl returns a sentence.
 ====
 
 [IMPORTANT]
@@ -120,10 +120,10 @@ ENDPOINT=${ENDPOINT}
 EOF
 ----
 
-A new account key can take a short time to propagate; the bounded retries cover that initial delay. Persistent HTTP 401 means you should check the account endpoint/key before continuing. The answer is in `choices[0].message.content`. `state/foundry.env` has no key. Lab 1.3 reads the key again from Azure.
+A new account key can take a short time to propagate; the bounded retries cover that initial delay. Persistent HTTP 401 means you should check the account endpoint/key before continuing. The answer is in `choices[0].message.content`. `state/foundry.env` has no key. Lab 1.5 reads the key again from Azure.
 
 == ✅ Checkpoint
 
 `state/foundry.env` exists, and the curl returned a sentence. ✓
 
-➡️ Move on to *Lab 1.3: Publish DeepSeek through MaaS*.
+➡️ Move on to *Lab 1.5: Publish DeepSeek through MaaS*.

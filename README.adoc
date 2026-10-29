@@ -31,7 +31,7 @@ Git → Tekton → Argo CD → same app
 
 Use the https://github.com/fjcloud/go-app-template/tree/feature/briefing-desk[Signal Desk template branch]. `AGENTS.md` defines delivery rules; `APP_CONTRACT.md` defines the application and fixed APIs. The working reference is `examples/briefing-desk`; model manifests are `deploy/decision`. Clone this workshop's `feature/briefing-desk` branch while the change is under review.
 
-Allow CPU headroom plus one `Standard_NC8as_T4_v3` worker. The guide shows explicit Azure quota and OpenShift MachineSet commands, tests the decision model with `curl | jq`, then builds the app through the existing GitOps path. Archived excerpts, missing coverage and incomplete-week returns stay visible. No real orders are sent.
+The platform path is: apply all operator manifests; add one D8 CPU worker and one `Standard_NC8as_T4_v3` worker with explicit MachineSet commands; enable the platform services; deploy DeepSeek and d3-mini. The developer tests authenticated D3, MaaS Chat Completions and native Responses independently from Dev Spaces with `curl | jq`, then builds the app from its contract through the existing GitOps path. Archived excerpts, missing coverage and incomplete-week returns stay visible. No real orders are sent.
 
 == Maintain the workshop
 

@@ -4,6 +4,14 @@ Build *Signal Desk*: a simple investment replay game. Collect last week's Techme
 
 You play two roles. The *platform engineer* prepares OpenShift AI, a managed DeepSeek endpoint, one local T4 decision model and the delivery tools. The *developer* uses OpenCode and a short app contract to build and ship the game. Finally, inspect model usage, agent tools and MLflow traces.
 
+== The workshop in five steps
+
+. *Platform:* apply all operator manifests with `oc`.
+. *Infrastructure:* add one CPU worker and one single-T4 worker, then enable platform instances.
+. *Models:* deploy DeepSeek on Foundry, publish it through OpenShift AI MaaS, and serve d3-mini on the T4.
+. *Developer preflight:* from Dev Spaces, explain and test each API independently with its own credential and `curl | jq`.
+. *Application:* build from `APP_CONTRACT.md`, collect last week's Techmeme news, rank it for the fund, allocate virtual money and compare with the latest completed market close this week.
+
 == What you build
 
 [source,text]
@@ -29,12 +37,12 @@ The game separates three different values: memo relevance, the user's virtual al
 |===
 | Act | Role | Labs
 | 0 — Get in | Platform Engineer | Connect to the assigned RHDP ARO environment and detect its resource group.
-| 1 — Build the platform | Platform Engineer | Install operators; publish DeepSeek through MaaS; serve d3-mini on one T4 and test it with curl + jq; prepare the app contract, native agent backend and trace access.
-| 2 — First day | Developer | Open Dev Spaces; ask DeepSeek/OpenCode to build Signal Desk from the reference and contract; ship through Tekton and Argo CD; make a small change.
+| 1 — Build the platform | Platform Engineer | Apply all operator manifests; add one D8 CPU worker and one single-T4 worker; enable platform instances; deploy DeepSeek and publish it through MaaS; serve d3-mini and prepare scoped developer access, the runtime agent and tracing.
+| 2 — First day | Developer | Open Dev Spaces; learn the decision-model contract and test both models independently with authenticated curl + jq; build Signal Desk from APP_CONTRACT.md; ship through Tekton and Argo CD; replay last week’s news against this week’s latest completed market session.
 | 3 — Observe and evaluate | Both | Compare coding, agent and GPU usage; inspect traces and exercise the same bounded tools in the Playground.
 |===
 
-Allow roughly half a day including operator installation, GPU provisioning and downloads. Run Acts 0 and 1 in the *bastion terminal*. Act 2 runs in the *Dev Spaces terminal*. Paste shell blocks into the named terminal and prompt blocks into OpenCode; use `/exit` to return to the shell. JSON responses are formatted with `jq`.
+Allow roughly half a day including operator installation, GPU provisioning and downloads. Operator installation and worker creation use explicit `oc` / `az` commands and supplied manifests. Run Acts 0 and 1 in the *bastion terminal*. Act 2 runs in the *Dev Spaces terminal*. Paste shell blocks into the named terminal and prompt blocks into OpenCode; use `/exit` to return to the shell. JSON responses are formatted with `jq`.
 
 == Prerequisites
 
