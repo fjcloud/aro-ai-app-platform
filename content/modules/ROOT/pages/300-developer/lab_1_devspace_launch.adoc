@@ -24,7 +24,7 @@ Use the URL you printed in Lab 1.7. It clones the Go app template (`go-app-templ
 
 [source,text,options=nowrap]
 ----
-https://devspaces.apps.<cluster>/#https://github.com/fjcloud/go-app-template/tree/feature/briefing-desk?ai-provider=opencodeai/opencode
+https://devspaces.apps.<cluster>/#https://github.com/fjcloud/go-app-template/tree/aro-transcription?ai-provider=opencodeai/opencode
 ----
 
 [NOTE]

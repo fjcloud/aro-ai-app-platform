@@ -71,7 +71,7 @@ Open the HTTPS app Route and sign in with OpenShift.
 ====
 Techmeme can reject requests from a cloud IP with HTTP 403. Keep live collection as the default. If it is blocked, click *Import news* and choose the facilitator's JSON news export for the *same displayed week*. The app checks the week, dates and source links, discards any uploaded scores/research, and ranks the archived facts on the T4. The UI labels the corpus as manually imported; source provenance is supplied by the file.
 
-For the 19–25 October 2026 session, a real collected export is available at https://raw.githubusercontent.com/fjcloud/aro-ai-app-platform/feature/briefing-desk/e2e/results/signal-desk-aro/news-2026-10-19.json[Download the dated news export]. Save the JSON file locally, then select it with *Import news*. Do not reuse it for another week; the app rejects mismatched dates.
+For the 19–25 October 2026 session, a real collected export is available at https://raw.githubusercontent.com/fjcloud/aro-ai-app-platform/main/e2e/results/signal-desk-aro/news-2026-10-19.json[Download the dated news export]. Save the JSON file locally, then select it with *Import news*. Do not reuse it for another week; the app rejects mismatched dates.
 
 A facilitator can prepare a new export on a network that allows Techmeme, without running either model or supplying credentials:
 

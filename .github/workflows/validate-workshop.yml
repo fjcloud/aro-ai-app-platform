@@ -2,7 +2,7 @@ name: validate workshop
 on:
   pull_request:
   push:
-    branches: [feature/cluster-voice-agentops, feature/decision-tetris, feature/orbit-checkpoint, feature/sky-control, feature/briefing-desk]
+    branches: [main, feature/cluster-voice-agentops, feature/decision-tetris, feature/orbit-checkpoint, feature/sky-control, feature/briefing-desk]
 permissions:
   contents: read
 jobs:
