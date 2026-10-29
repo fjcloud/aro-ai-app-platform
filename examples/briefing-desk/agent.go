@@ -210,6 +210,19 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 				payload["tools"] = scopedTools
 			}
 		}
+		if a.backend != "groq" && a.backend != "azure" && j.stage == "game_ideas" {
+			types := map[string]bool{}
+			for _, ev := range j.evidence {
+				types[ev.Tool] = true
+			}
+			// Native Responses must also stop gathering once the required
+			// evidence is available. Otherwise the model can repeat searches
+			// until the bounded tool budget is exhausted instead of answering.
+			if types["read_archive"] && types["search_archive"] && types["index_universe"] {
+				payload["tools"] = []any{}
+				payload["instructions"] = instructions + " All required archive evidence has been retrieved. Return the requested final JSON now, using only that evidence. No further tools are available."
+			}
+		}
 		body, _ := json.Marshal(payload)
 		raw, e := a.nativeResponse(ctx, j, body, key)
 		if e != nil {
