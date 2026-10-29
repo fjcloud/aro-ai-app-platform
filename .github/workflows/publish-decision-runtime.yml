@@ -49,7 +49,7 @@ jobs:
           docker push "$IMAGE:$GITHUB_SHA"
           docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE:$GITHUB_SHA" > runtime-image.txt
           cat runtime-image.txt >> "$GITHUB_STEP_SUMMARY"
-          gh api /user/packages/container/d3-mini-runtime --jq '{name,visibility,html_url}' > runtime-package.json
+          gh api /users/fjcloud/packages/container/d3-mini-runtime --jq '{name,visibility,html_url}' > runtime-package.json
       - uses: actions/upload-artifact@v4
         with:
           name: decision-runtime-image
