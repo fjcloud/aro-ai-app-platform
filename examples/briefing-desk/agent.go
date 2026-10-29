@@ -220,6 +220,7 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 			// until the bounded tool budget is exhausted instead of answering.
 			if types["read_archive"] && types["search_archive"] && types["index_universe"] {
 				payload["tools"] = []any{}
+				payload["text"] = map[string]any{"format": researchFinalFormat(j)}
 				payload["instructions"] = instructions + " All required archive evidence has been retrieved. Return the requested final JSON now, using only that evidence. No further tools are available."
 			}
 		}

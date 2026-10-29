@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -31,7 +32,7 @@ func TestNativeGameFinalizesAfterRequiredEvidence(t *testing.T) {
 			}})
 			return
 		}
-		if turns != 2 || len(tools) != 0 {
+		if turns != 2 || len(tools) != 0 || !strings.Contains(fmt.Sprint(in["text"]), "json_schema") {
 			t.Error("Native agent kept tools available after gathering all required evidence")
 		}
 		history, _ := json.Marshal(in["input"])
