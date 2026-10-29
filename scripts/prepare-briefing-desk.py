@@ -5,6 +5,7 @@ import importlib.util
 import json
 from pathlib import Path
 import secrets
+import time
 import urllib.error
 import urllib.request
 
@@ -49,7 +50,7 @@ def main():
         raise RuntimeError('Wait for the native MLflow instance to publish its HTTPS URL')
     apply({'apiVersion': 'v1', 'kind': 'ServiceAccount', 'metadata': {'name': IDENTITY, 'namespace': APP,
            'annotations': {'serviceaccounts.openshift.io/oauth-redirectreference.primary': json.dumps({
-               'kind': 'OAuthRedirectReference', 'apiVersion': 'v1', 'reference': {'kind': 'Route', 'name': 'live-transcript'}})}}})
+               'kind': 'OAuthRedirectReference', 'apiVersion': 'v1', 'reference': {'kind': 'Route', 'name': 'signal-desk'}})}}})
     binding('signal-desk-auth-' + APP, 'system:auth-delegator')
     role = next((r for r in ('mlflow-operator-mlflow-integration', 'mlflow-integration')
                  if oc('get', 'clusterrole', r, '--ignore-not-found', '-o', 'name')), None)
@@ -60,7 +61,7 @@ def main():
         binding('signal-desk-image-puller', 'system:image-puller', namespace)
     apply({'apiVersion': 'v1', 'kind': 'ServiceAccount', 'metadata': {'name': 'signal-desk-playground', 'namespace': APP}})
     apply({'apiVersion': 'rbac.authorization.k8s.io/v1', 'kind': 'Role', 'metadata': {'name': 'signal-desk-playground', 'namespace': APP},
-           'rules': [{'apiGroups': [''], 'resources': ['services'], 'resourceNames': ['live-transcript'], 'verbs': ['get']}]})
+           'rules': [{'apiGroups': [''], 'resources': ['services'], 'resourceNames': ['signal-desk'], 'verbs': ['get']}]})
     binding('signal-desk-playground', 'signal-desk-playground', APP, 'signal-desk-playground', 'Role')
     # No cluster-monitoring, SCC or workload-editing grant is needed by this app.
     apply({'apiVersion': 'v1', 'kind': 'ConfigMap', 'metadata': {'name': 'signal-desk-service-ca', 'namespace': APP,
@@ -73,7 +74,14 @@ def main():
         raise RuntimeError('Could not resolve the release OAuth proxy digest')
     apply({'apiVersion': 'image.openshift.io/v1', 'kind': 'ImageStream', 'metadata': {'name': 'signal-desk-oauth', 'namespace': APP},
            'spec': {'tags': [{'name': 'current', 'from': {'kind': 'DockerImage', 'name': image}, 'referencePolicy': {'type': 'Local'}}]}})
-    oc('import-image', 'signal-desk-oauth:current', '-n', APP, '--confirm')
+    for attempt in range(6):
+        try:
+            oc('import-image', 'signal-desk-oauth:current', '-n', APP, '--confirm')
+            break
+        except RuntimeError:
+            if attempt == 5:
+                raise
+            time.sleep(5)
     oc('apply', '-f', str(ROOT / 'deploy/briefing/runtime-subscription.yaml'))
     oc('wait', 'maassubscription/deepseekv4pro-signal-desk', '-n', 'models-as-a-service', '--for=condition=Ready', '--timeout=180s')
     # The key API needs an actual OpenShift user token, not a certificate-only login.
@@ -92,7 +100,7 @@ def main():
     experiment = next((str(e['experiment_id']) for e in found.get('experiments', []) if e.get('name') == 'signal-desk'), None)
     if experiment is None:
         experiment = str(request(mlflow + '/api/2.0/mlflow/experiments/create', token, {'name': 'signal-desk'}, APP)['experiment_id'])
-    public_host = 'live-transcript-' + APP + '.' + domain
+    public_host = 'signal-desk-' + APP + '.' + domain
     apply({'apiVersion': 'v1', 'kind': 'ConfigMap', 'metadata': {'name': 'signal-desk-config', 'namespace': APP},
            'data': {'AGENT_BACKEND': 'rhoai', 'AGENT_URL': 'http://lsd-genai-playground-service.' + APP + '.svc.cluster.local:8321/v1',
                     'AGENT_MODEL': 'maas-vllm-inference-1/deepseekv4pro', 'AGENT_JOB_TIMEOUT': '10m',

@@ -3,7 +3,7 @@
 You prepared two complementary model paths:
 
 * *DeepSeek on Foundry*, published through OpenShift AI MaaS, powered coding in Dev Spaces and runtime research with separate keys and quotas.
-* *d3-mini on one T4*, served through a custom native OpenShift AI/KServe runtime, ranked archived news against a fund memo. This community decision model/runtime is not a Red Hat supported inference configuration.
+* *d3-mini on one T4*, served through a custom native OpenShift AI/KServe runtime, ranked archived news against a fund memo.
 
 Signal Desk connected archived news, memo-relative relevance, hypothetical index research and a virtual portfolio with observed historical prices. Tekton built the image and Argo CD delivered the matching Git revision. The Playground exercised bounded read-only tools; MLflow showed model and tool activity.
 

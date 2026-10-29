@@ -57,7 +57,7 @@ spec:
       value: '4'
     - name: TRITON_CACHE_DIR
       value: /cache/triton
-    image: image-registry.openshift-image-registry.svc:5000/live-transcript-build/decision-runtime:latest
+    image: image-registry.openshift-image-registry.svc:5000/signal-desk-build/decision-runtime:latest
     imagePullPolicy: IfNotPresent
     livenessProbe:
       failureThreshold: 3

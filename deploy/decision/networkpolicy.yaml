@@ -13,10 +13,14 @@ spec:
   - from:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: live-transcript-dev
+          kubernetes.io/metadata.name: signal-desk-dev
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: live-transcript
+          app.kubernetes.io/name: signal-desk
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/part-of: che.eclipse.org
+          app.kubernetes.io/component: workspaces-namespace
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: decision-serving

@@ -13,7 +13,7 @@ The app has produced an investment hypothesis. Verify how it reached that hypoth
 
 In Signal Desk, open a ranked story and click *Find index ideas* (or *Research again* for a fresh trace). Read the explanation, proposed ETF exposure and risk. Note the *MLflow trace* ID below the ideas.
 
-Open MLflow from OpenShift AI, select workspace `live-transcript-dev` and experiment `signal-desk`, then find that trace. Expect `game.research`, `agent.game_ideas` and actual `tool.read_archive`, `tool.search_archive` and `tool.index_universe` spans. D3 scores appear as separate `decision.classify` traces; paper valuation appears as `game.settle`.
+Open MLflow from OpenShift AI, select workspace `signal-desk-dev` and experiment `signal-desk`, then find that trace. Expect `game.research`, `agent.game_ideas` and actual `tool.read_archive`, `tool.search_archive` and `tool.index_universe` spans. D3 scores appear as separate `decision.classify` traces; paper valuation appears as `game.settle`.
 
 Inspect model/tool durations, model identity and reported usage. An archive query and an LLM request have different latency. Traces omit keys, full source text and portfolio contents. If the trace is absent, inspect exporter configuration and MLflow workspace permissions; a visible answer alone does not prove trace export succeeded.
 
@@ -23,27 +23,62 @@ The agent should use information from the archived week only. Its tools cannot r
 
 Gen AI Playground and external MaaS models are *Technology Preview* in OpenShift AI 3.5. The app's MCP connector uses Streamable HTTP behind its OpenShift OAuth proxy.
 
-. Open the existing Playground in project `live-transcript-dev` and select *DeepSeek-V4 Pro* from MaaS.
-. In model settings, choose the *Signal Desk runtime* subscription. Coding keeps its own subscription/key.
-. Open *MCP*, select *Signal-Desk* and authorize it with the short-lived OpenShift token below. The MaaS key and the MCP token are different credentials.
-. Inspect *View tools*: `list_news`, `read_archive`, `search_archive`, `index_universe`.
-. Ask the model to inspect evidence before suggesting an index:
+=== 1. Select the model and runtime subscription
+
+Open *Red Hat OpenShift AI → Gen AI studio → Playground*. Select project `signal-desk-dev`, then open *Settings → Model*. Choose the MaaS model `maas-vllm-inference-1/deepseekv4pro` and the *Signal Desk runtime* subscription. Coding uses its own subscription.
+
+image::signal-desk-playground-model.png[Playground model settings with the Signal Desk runtime subscription]
+
+=== 2. Give the agent its instructions
+
+Open *Prompt*. Replace the default system instructions with this prompt, also available as a xref:attachment$signal-desk-agent-prompt.txt[downloadable text file]:
+
+[source,text,role=execute]
+----
+include::ROOT:attachment$signal-desk-agent-prompt.txt[]
+----
+
+image::signal-desk-playground-prompt.png[Signal Desk agent instructions in the Prompt tab]
+
+=== 3. Connect the application's tools
+
+The application must be deployed and its news loaded before this step. Open *MCP* and select *Signal-Desk*. Its URL points to the running app's `/mcp` endpoint.
+
+image::signal-desk-playground-mcp.png[Select the Signal-Desk MCP server]
+
+From the *bastion terminal*, the facilitator creates a short-lived, app-scoped token:
+
+[source,sh,role=execute]
+----
+oc create token signal-desk-playground -n signal-desk-dev --duration=15m
+----
+
+Paste it into *Access token*, click *Authorize*, wait for *Connection successful*, then click *Save*.
+
+image::signal-desk-playground-authorize.png[The MCP authorization dialog before entering a token]
+
+This token permits the connector's OAuth access check against this application's Service; it cannot read Secrets or edit workloads. It is separate from the MaaS credential. D3 needs no key. Keep tokens out of prompts, Git and screenshots. If authorization expires, create a new token and authorize again.
+
+Expect *4 tools enabled*. Click the *4 active* button (*View tools*) to inspect `list_news`, `read_archive`, `search_archive` and `index_universe`.
+
+image::signal-desk-playground-tools.png[The four read-only Signal Desk tools]
+
+=== 4. Ask a question and inspect the evidence
+
+Send this question in the chat:
 
 [source,text,role=execute]
 ----
 Use Signal-Desk tools. Search the loaded archived week for semiconductor demand. Read one returned source_id and inspect the index catalog. Explain one hypothetical index exposure for our semiconductor fund, its risk and the archive cutoff. Use only returned evidence. Do not fetch current prices, predict a profit or claim verified ETF holdings.
 ----
 
-From the *bastion terminal*, the facilitator issues an app-scoped token:
+image::signal-desk-playground-answer.png["A real Playground answer with a tool response, hypothetical exposure and risk"]
 
-[source,sh,role=execute]
-----
-oc create token signal-desk-playground -n live-transcript-dev --duration=15m
-----
+Expand *Tool response* below the answer. Verify that the agent called `search_archive`, `read_archive` and `index_universe`, and that its cited source IDs belong to returned articles. Check the archive cutoff, proposed exposure and risk. The exact answer varies; the screenshot is one real run.
 
-Paste it only into the MCP authorization dialog. It can read this application's Service for OAuth authorization; it cannot read Secrets or edit workloads. Do not paste tokens into a model prompt, Git or screenshots.
+This tests the model, instructions and MCP tools directly in OpenShift AI. The app's research button uses the same model and read-only evidence through its bounded Responses loop. To inspect the app's MLflow spans, use *Research again* in Signal Desk and follow the trace ID as described above.
 
-The news must already be loaded in Signal Desk. Empty archives should produce an explicit empty result, not invented articles. Inspect actual tool outputs in the Playground; a response with no tool call is not a successful connector test.
+Empty archives should produce an explicit empty result, not invented articles. A response with no tool call is not a successful connector test.
 
 == Check behavior
 

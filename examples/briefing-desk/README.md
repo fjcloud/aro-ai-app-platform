@@ -96,7 +96,7 @@ LIVE_MEMO_MODEL=1 go test -run TestLiveMemoScoreSensitivity -v -count=1
 
 ## OpenShift
 
-Keep the existing live-transcript app, OAuth, restricted-v2, single T4, native
+Keep the existing signal-desk app, OAuth, restricted-v2, single T4, native
 OpenShift AI Responses service and Git → Tekton → Argo CD delivery. Set
 `AGENT_BACKEND=rhoai` (the default), `AGENT_URL`, `AGENT_MODEL`, `AGENT_KEY_FILE`,
 `DECISION_URL`, `DECISION_MODEL` and `DATA_DIR`. The replacement ARO environment

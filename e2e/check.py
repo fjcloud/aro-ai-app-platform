@@ -107,7 +107,7 @@ def speech():
 
 
 def developer():
-    app = os.environ.get('APP_NAME', 'live-transcript')
+    app = os.environ.get('APP_NAME', 'signal-desk')
     ns = app + '-dev'
     deployment = resource('deployment', app, ns)
     require(deployment.get('status', {}).get('availableReplicas', 0) >= 1, 'Application available')
@@ -178,14 +178,10 @@ def model_apis():
     """Execute the documented preflight as the actual scoped workspace user."""
     ns, pod = os.environ.get('E2E_NS'), os.environ.get('DEV_POD')
     require(bool(ns and pod), 'E2E_NS and DEV_POD identify a real Dev Spaces workspace')
-    proxy = resource('deployment', 'd3-api', 'decision-serving')
-    require(proxy.get('status', {}).get('availableReplicas', 0) == 1, 'Authenticated D3 proxy is available')
-    require('@sha256:' in proxy['spec']['template']['spec']['containers'][0]['image'], 'D3 proxy uses the pinned cluster release image')
-    proxy_pods = json.loads(oc('get', 'pods', '-n', 'decision-serving', '-l', 'app.kubernetes.io/name=d3-api', '-o', 'json'))['items']
-    require(bool(proxy_pods) and all(p['metadata'].get('annotations', {}).get('openshift.io/scc') == 'restricted-v2' for p in proxy_pods), 'D3 authentication proxy runs under restricted-v2')
-    require(not json.loads(oc('get', 'routes', '-n', 'decision-serving', '-o', 'json'))['items'], 'Decision model APIs have no public Route')
-    identity = 'system:serviceaccount:live-transcript-dev:workshop-developer'
-    require(oc('auth', 'can-i', 'get', 'service/d3-api', '-n', 'decision-serving', '--as=' + identity) == 'yes', 'Developer can call the authenticated D3 Service')
+    model = resource('inferenceservice', 'd3-mini', 'decision-serving')
+    require(any(c['type'] == 'Ready' and c['status'] == 'True' for c in model.get('status', {}).get('conditions', [])), 'D3 inference service is Ready')
+    require(not json.loads(oc('get', 'routes', '-n', 'decision-serving', '-o', 'json'))['items'], 'Decision model API has no public Route')
+    identity = 'system:serviceaccount:signal-desk-dev:workshop-developer'
     for verb, kind in [('get', 'secrets'), ('patch', 'inferenceservices')]:
         denied = subprocess.run(['oc', 'auth', 'can-i', verb, kind, '-n', 'decision-serving', '--as=' + identity], text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=30)
         require(denied.returncode == 1 and denied.stdout.strip() == 'no', 'Developer cannot ' + verb + ' ' + kind + ' in the model namespace')
@@ -194,28 +190,18 @@ def model_apis():
     require(len(blocks) == 5, 'All five documented API blocks are selected')
     prefix = ['exec', pod, '-n', ns, '-c', os.environ.get('DEV_CONTAINER', 'dev'), '--', 'bash', '-c']
     raw = subprocess.check_output(['oc', *prefix, 'set -euo pipefail\n' + '\n'.join(blocks)], text=True, stderr=subprocess.DEVNULL, timeout=600).strip()
-    require(raw.startswith('yes\n'), 'The curl tests run with scoped developer model access')
-    remaining, responses, decoder = raw[4:].lstrip(), [], json.JSONDecoder()
+    remaining, responses, decoder = raw.lstrip(), [], json.JSONDecoder()
     while remaining:
         response, end = decoder.raw_decode(remaining)
         responses.append(response)
         remaining = remaining[end:].lstrip()
     require(len(responses) == 5, 'Model discovery, two memo scores, Chat Completions and Responses returned JSON')
     metadata, chips, retail, chat, native = responses
-    require(metadata['device'] == 'cuda:0' and metadata['dtype'] == 'float16', 'Developer reaches the actual T4 model over verified HTTPS')
+    require(metadata['device'] == 'cuda:0' and metadata['dtype'] == 'float16', 'Developer reaches the actual T4 model directly without a credential')
     require(chips['coverage'] == retail['coverage'] == 'complete', 'Both decision requests cover the complete input')
     require(0 <= retail['score'] < chips['score'] <= 4, 'The semiconductor example ranks higher for the semiconductor fund than the retail fund')
     require(bool(chat['answer']) and chat['usage']['total_tokens'] > 0, 'Developer MaaS key reaches DeepSeek with real token usage')
     require(native['status'] == 'completed' and native['model'] == 'maas-vllm-inference-1/deepseekv4pro' and bool(native['output']), 'Native OpenShift AI Responses is reachable from Dev Spaces')
-    negative = r"""set -euo pipefail
-D3_URL=https://d3-api.decision-serving.svc.cluster.local:8443
-SERVICE_CA=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-for credential in invalid-token "$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"; do
-  curl -sS --max-time 20 --cacert "$SERVICE_CA" -o /dev/null -w '%{http_code}\n' \
-    "$D3_URL/v1/models" -H "Authorization: Bearer $credential"
-done
-"""
-    require(oc(*prefix, negative).splitlines() == ['403', '403'], 'D3 rejects an invalid token and a valid but unauthorized workspace pod token')
     print('API checks completed without printing credentials or model responses.')
 
 

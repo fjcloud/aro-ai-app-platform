@@ -34,7 +34,7 @@ Switch OpenCode to *plan* and paste:
 
 [source,text,role=execute]
 ----
-Build Signal Desk in Go using APP_CONTRACT.md and AGENTS.md. Start from all Go files, go.mod/go.sum and web assets of the linked briefing-desk reference, including tests, native OpenShift AI Responses client, D3 scoring, archived research, MCP and tracing. Keep the prepared scaffold and technical app name live-transcript. The English UI should be one simple page: fund memo, $10,000 paper portfolio and last week's ranked Techmeme news. Explain the model endpoints, archive cutoff, portfolio freezing and actual-price settlement in your plan. No real trades, invented prices or new privileges.
+Build Signal Desk in Go using APP_CONTRACT.md and AGENTS.md. Start from all Go files, go.mod/go.sum and web assets of the linked briefing-desk reference, including tests, native OpenShift AI Responses client, D3 scoring, archived research, MCP and tracing. Keep the prepared scaffold and technical app name signal-desk. The English UI should be one simple page: fund memo, $10,000 paper portfolio and last week's ranked Techmeme news. Explain the model endpoints, archive cutoff, portfolio freezing and actual-price settlement in your plan. No real trades, invented prices or new privileges.
 ----
 
 Review the plan, especially the distinction between a relevance score and a return. The app must use the platform endpoints from its ConfigMap, not Azure credentials or a model URL guessed by the coding assistant.
@@ -52,7 +52,7 @@ The source must be clean and pushed before Tekton starts. `AGENTS.md` supplies t
 
 [IMPORTANT]
 ====
-Keep `image-registry.openshift-image-registry.svc:5000/live-transcript-build/live-transcript:latest` with `imagePullPolicy: Always`. Do not use `placeholder` or an invented image. The pipeline validates the rendered Deployment before building. Never bypass that check or grant SCCs to fix an error.
+Keep `image-registry.openshift-image-registry.svc:5000/signal-desk-build/signal-desk:latest` with `imagePullPolicy: Always`. Do not use `placeholder` or an invented image. The pipeline validates the rendered Deployment before building. Never bypass that check or grant SCCs to fix an error.
 ====
 
 == Step 4: Play one round

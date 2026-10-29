@@ -1,0 +1,13 @@
+PASS: E2E_NS and DEV_POD identify a real Dev Spaces workspace
+PASS: D3 inference service is Ready
+PASS: Decision model API has no public Route
+PASS: Developer cannot get secrets in the model namespace
+PASS: Developer cannot patch inferenceservices in the model namespace
+PASS: All five documented API blocks are selected
+PASS: Model discovery, two memo scores, Chat Completions and Responses returned JSON
+PASS: Developer reaches the actual T4 model directly without a credential
+PASS: Both decision requests cover the complete input
+PASS: The semiconductor example ranks higher for the semiconductor fund than the retail fund
+PASS: Developer MaaS key reaches DeepSeek with real token usage
+PASS: Native OpenShift AI Responses is reachable from Dev Spaces
+API checks completed without printing credentials or model responses.

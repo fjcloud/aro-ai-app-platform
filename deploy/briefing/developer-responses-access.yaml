@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: signal-desk-devspaces-responses
-  namespace: live-transcript-dev
+  namespace: signal-desk-dev
 spec:
   podSelector:
     matchLabels:

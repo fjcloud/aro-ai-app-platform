@@ -11,7 +11,7 @@ import urllib.error
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
-NS, BUILD, APP = 'decision-serving', 'live-transcript-build', 'live-transcript-dev'
+NS, BUILD, APP = 'decision-serving', 'signal-desk-build', 'signal-desk-dev'
 IMAGE = 'image-registry.openshift-image-registry.svc:5000/' + BUILD + '/decision-runtime:latest'
 MODEL_REVISION = 'a475367de0d8133a3c1a2a0dc12303d89cfa2ab4'
 

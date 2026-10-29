@@ -14,20 +14,20 @@ python3 e2e/check-observability.py | jq .
 python3 e2e/maas-protocol.py | jq .
 ```
 
-Verify the developer's five API command blocks verbatim, plus credential rejection and namespace permissions:
+Verify the developer's five API command blocks verbatim, plus model-namespace permissions:
 
 ```sh
 E2E_NS=your-devspaces-namespace DEV_POD=your-workspace-pod \
   python3 e2e/check.py model-apis
 ```
 
-This requires the HTTPS D3 proxy from Lab 1.6 and the Dev Spaces-to-Responses policy from Lab 1.8. It checks the pinned proxy image, restricted-v2, model readiness, two complete memo scores, both DeepSeek protocols and rejection of invalid/unauthorized tokens. Credentials and full model responses are never printed.
+This requires direct D3 access from Dev Spaces and the Dev Spaces-to-Responses policy from Lab 1.8. It checks model readiness, two complete memo scores, both DeepSeek protocols and scoped namespace permissions. D3 uses no credential; DeepSeek keeps its MaaS key. Credentials and full model responses are never printed.
 
-Platform/usage/protocol/model-apis probes make billable model calls. `APP_NAME` defaults to `live-transcript`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
+Platform/usage/protocol/model-apis probes make billable model calls. `APP_NAME` defaults to `signal-desk`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
 
 Validate the UI with a full archived-week import, real T4 scores, an actual native Responses tool loop, a virtual allocation and subsequent-week observed prices. Verify unavailable archive IDs, incomplete-week labels and errors. Confirm an MLflow research trace and the same archive tools in the native Playground. Public app access requires OpenShift OAuth; credentials remain private. Every Chromium launch includes `--use-mock-keychain`.
 
-For the real Route browser test, save a private OpenShift browser session and model metadata from the authenticated d3-mini probe in Lab 2.2, then run:
+For the real Route browser test, save a private OpenShift browser session and model metadata from the direct d3-mini probe in Lab 2.2, then run:
 
 ```sh
 APP_URL=https://your-app-route BROWSER_STATE=/private/path/login-state.json \
@@ -37,6 +37,16 @@ EXPECT_UPDATED_APP=true APPLICATION_REVISION=your-deployed-git-revision \
 ```
 
 The test tries direct collection first. A blocked collection fails unless an explicit import file is supplied; the report records that recovery. It never invents news, scores or prices.
+
+To repeat the native Playground test with an existing private OpenShift browser session and the short-lived token from Lab 3.2:
+
+```sh
+RHOAI_URL=https://your-rhoai-route APP_URL=https://your-app-route \
+BROWSER_STATE=/private/path/login-state.json MCP_TOKEN_FILE=/private/path/mcp-token \
+  node e2e/agentops-browser.cjs
+```
+
+It checks actual Responses MCP calls, rather than accepting a model's claim to have used tools. Set `CAPTURE_GUIDE=true` to refresh the guide screenshots from the real UI; the authorization screenshot is taken before filling the token.
 
 Local regression checks:
 

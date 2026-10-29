@@ -1,0 +1,288 @@
+{
+  "passed": true,
+  "app_url": "https://live-transcript-live-transcript-dev.apps.z0tudc0s.eastus.aroapp.io",
+  "source_revision": "d36a88813816605c4142152aa6cf1835c216b8c0",
+  "agent": "maas-vllm-inference-1/deepseekv4pro",
+  "manual_import": true,
+  "ranking_retries": 0,
+  "live_collection_error": "",
+  "at": "2026-10-29T07:16:57.867Z",
+  "live_models": true,
+  "news": 289,
+  "ranked": 289,
+  "week": {
+    "id": "2026-10-19",
+    "news_start": "2026-10-19",
+    "news_end": "2026-10-25",
+    "cutoff": "2026-10-26T04:00:00Z",
+    "market_start": "2026-10-26",
+    "market_end": "2026-10-30"
+  },
+  "unavailable_ids": [
+    "261021p29"
+  ],
+  "device": "cuda:0",
+  "dtype": "float16",
+  "article": {
+    "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
+    "score": 83.6
+  },
+  "research_attempts": 0,
+  "research_failures": [],
+  "research": {
+    "article_id": "0bf6936053a58ece62e29417",
+    "memo_version": 3,
+    "summary_hash": "8f8f96d63128f2206d1781a98a3acfa41ffc348e60aa7239642bbab46af63878",
+    "status": "done",
+    "comment": "Texas Instruments is a major analog and embedded semiconductor company whose strong Q3 beat and above-estimate Q4 guidance signal broad-based chip demand recovery, consistent with the investment memo's focus on revenue, margins, and supply dynamics. Archived evidence is limited to the earnings headline and collateral news showing capex by hyperscalers and AI chip demand, but no TI-specific segment detail or verified SMH/XLK constituent data is included. The ideas are conjectural transmission hypotheses, not price calls.",
+    "ideas": [
+      {
+        "id": "3ef68f8425ab0fbf0ae3e95b",
+        "symbol": "SMH",
+        "thesis": "Texas Instruments is a bellwether for analog and embedded processors used across industrial, automotive and consumer; its broad-based revenue acceleration and Q4 guide above estimates hint at a cyclical semiconductor recovery, which could lift the US-listed chip designer, foundry and equipment names that dominate SMH.",
+        "risk": "If TI's beat reflects company-specific share gains or inventory restocking rather than a sustained industry upturn, SMH may not benefit proportionally; also US-listed only, missing non-US suppliers.",
+        "sources": [
+          "E1",
+          "E3"
+        ]
+      },
+      {
+        "id": "6e3b6f532bfb4b55a8602e7d",
+        "symbol": "XLK",
+        "thesis": "If TI's demand uptick is driven by enterprise IT spending and AI infrastructure buildout (as hinted by concurrent Meta capex raise and Ciena optical chip demand), broader US technology companies in XLK may capture the investment cycle, albeit with less direct semiconductor exposure.",
+        "risk": "General tech index dilutes pure semi exposure; AI and capex-driven cloud spending could benefit software and services more than chip suppliers.",
+        "sources": [
+          "E1",
+          "E3"
+        ]
+      },
+      {
+        "id": "181b8fd82fe9a1595ee7eb32",
+        "symbol": "QQQ",
+        "thesis": "TI's earnings strength and the concurrent increase in mega-cap cloud capex (Meta, Google) suggest a correlated AI-driven demand environment; QQQ offers indirect exposure to the semiconductor ecosystem through large cloud spenders and the secular demand pull for chips, though it is a diluted, non-specialist proxy.",
+        "risk": "Nasdaq-100 has substantial weight in mega-cap consumer platforms with no direct chip demand linkage; TI's improvement may be too small to move an index dominated by non-semi names.",
+        "sources": [
+          "E1",
+          "E3"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "E1",
+        "tool": "read_archive",
+        "url": "https://www.techmeme.com/261021/h2355",
+        "retrieved": "2026-10-29T07:16:27Z",
+        "data": {
+          "coverage": "Manually imported archived facts. Source dates and URLs are supplied by the import, not independently re-fetched.",
+          "excerpt": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
+          "published_day": "2026-10-21",
+          "snapshot_as_of": "2026-10-22T03:55:00Z",
+          "source_url": "https://www.bloomberg.com/news/articles/2026-10-21/texas-instruments-forecast-tops-estimates-after-demand-picks-up",
+          "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est."
+        }
+      },
+      {
+        "id": "E2",
+        "tool": "search_archive",
+        "url": "https://www.techmeme.com/",
+        "retrieved": "2026-10-29T07:16:27Z",
+        "data": {
+          "coverage": "Search of this archived week only; no live web or current market data.",
+          "cutoff": "2026-10-26T04:00:00Z",
+          "matches": [
+            {
+              "as_of": "2026-10-21T14:01:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Google, Temasek, and Bain: online spending in SE Asia to rise ~17% YoY to $368B in 2026 despite economic headwinds, as businesses harness AI to spur spending",
+              "source_id": "8afb828fa08a8dde4c119f2d",
+              "title": "Google, Temasek, and Bain: online spending in SE Asia to rise ~17% YoY to $368B in 2026 despite economic headwinds, as businesses harness AI to spur spending"
+            },
+            {
+              "as_of": "2026-10-24T16:01:00Z",
+              "day": "2026-10-24",
+              "excerpt": "Ciena CEO Gary Smith is ‘suitably paranoid,’ but optimistic — The historic telecommunications crash of 2001 is burned indelibly …",
+              "source_id": "eca7d60d98e7686046747f89",
+              "title": "An interview with Ciena CEO Gary Smith, a veteran of the 2001 telecoms crash, on AI demand outpacing supply for Ciena's optical networking chips, and more"
+            },
+            {
+              "as_of": "2026-10-26T03:55:00Z",
+              "day": "2026-10-25",
+              "excerpt": "This spring, Mike Mathews, who leads the global digital infrastructure practice at insurance broker Marsh …",
+              "source_id": "4a3de5fc22b987faf6c120a4",
+              "title": "Data center tenants now demand $5M+ a day in late-delivery fees, up from $1M this spring, spawning new “delay-in-delivery” coverage from brokers like Marsh"
+            },
+            {
+              "as_of": "2026-10-22T16:00:00Z",
+              "day": "2026-10-22",
+              "excerpt": "Barclays to Cut 5,000 Jobs as AI Starts to Create Efficiency — Video Player is loading. — Unmute — Current Time 0:00 Loaded: 69.77% Playback Rate",
+              "source_id": "c9481d9112c85b8aee08f02c",
+              "title": "Barclays plans to cut 5,000 jobs, or ~5% of its workforce, by the end of 2026 as part of AI-driven cost cutting, with ~60% coming from support and developers"
+            },
+            {
+              "as_of": "2026-10-21T14:01:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Memo: Nscale CEO Josh Payne says it has “more than $100B in contracted revenue”; sources say it still plans to list by the end of 2026 at a $30B-$35B valuation",
+              "source_id": "c90c539937ef5999e2eca832",
+              "title": "Memo: Nscale CEO Josh Payne says it has “more than $100B in contracted revenue”; sources say it still plans to list by the end of 2026 at a $30B-$35B valuation"
+            },
+            {
+              "as_of": "2026-10-21T21:35:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Meta expects its 2026 capex to be $135B-$145B, vs. $130B-$145B previously, and forecasts Q4 revenue of $73B-$76B, vs. $73.6B est.; META jumps 3%+ after hours",
+              "source_id": "33292f8f0da089b47b4aef1f",
+              "title": "Meta expects its 2026 capex to be $135B-$145B, vs. $130B-$145B previously, and forecasts Q4 revenue of $73B-$76B, vs. $73.6B est.; META jumps 3%+ after hours"
+            },
+            {
+              "as_of": "2026-10-22T03:55:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
+              "source_id": "0bf6936053a58ece62e29417",
+              "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est."
+            },
+            {
+              "as_of": "2026-10-21T14:01:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Founder of OpenEvidence chatbot says two-thirds of US physicians use the ad-powered tool, prompting a debate about patient care",
+              "source_id": "a0b02677c0b2fd59aad2b999",
+              "title": "OpenEvidence says nearly two-thirds of ~1M US physicians use its AI search engine; a source says it is on track to generate $400M-$500M in 2026 ad revenue"
+            },
+            {
+              "as_of": "2026-10-23T16:00:00Z",
+              "day": "2026-10-23",
+              "excerpt": "New company backed by Anthropic and UK buyout group Hg will advise companies on how to deploy AI",
+              "source_id": "beb5563dba6eb1a393dcf062",
+              "title": "Sources: Anthropic and London-based PE firm Hg agree to launch a consultancy by the end of 2026 to embed AI consultants and engineers into European businesses"
+            },
+            {
+              "as_of": "2026-10-23T16:00:00Z",
+              "day": "2026-10-23",
+              "excerpt": "What I learned from touring Intel's most advanced fab and talking to its leadership. — I spent two days touring Intel's …",
+              "source_id": "7e393ff2f4213ba3970bfa14",
+              "title": "An interview with Intel's leadership, including CTO Pushkar Ranade, on AI chip demand, lessons from 10nm, whether Intel can catch up to TSMC, Terafab, and more"
+            },
+            {
+              "as_of": "2026-10-21T16:01:00Z",
+              "day": "2026-10-21",
+              "excerpt": "Today, Calif.io, Wiz, OpenAI and Quarkslab disclosed two vulnerabilities in PHP, tracked as CVE-2026-109618 and CVE-2026-109619 and known as php2shell.",
+              "source_id": "debf8a22c2166e6e03f7d8eb",
+              "title": "Cloudflare says it deployed WAF mitigations for all free and paid tier customers to combat two PHP flaws by default, about nine hours ahead of public disclosure"
+            },
+            {
+              "as_of": "2026-10-21T03:55:00Z",
+              "day": "2026-10-20",
+              "excerpt": "In a new draft prospectus viewed by the Journal, the AI giant disclosed an $80.7 billion net loss for the first half of 2026 and a long list of risk factors",
+              "source_id": "813c952695823f1f116169a4",
+              "title": "Anthropic's IPO prospectus: H1 2026 revenue of $16.3B, ~20% from two customers, vs. $1.1B in H1 2025, and an $80.7B net loss driven by accounting charges"
+            },
+            {
+              "as_of": "2026-10-21T03:55:00Z",
+              "day": "2026-10-20",
+              "excerpt": "GPT-6.1 Sol and GPT-6 Astra · Internal deployments — Discovered: Oct 3, 2026 (Sol); Oct 6, 2026 (Astra) — Summary",
+              "source_id": "a915273234ce6f2e2568b684",
+              "title": "OpenAI says two agents, one GPT-6.1 Sol and one GPT-6 Astra, weakened misalignment monitoring while making requested changes during two internal coding tasks"
+            },
+            {
+              "as_of": "2026-10-20T16:00:00Z",
+              "day": "2026-10-20",
+              "excerpt": "Analysis: London fell from 7th to last place out of 18 European capitals for median mobile download speed from 2021 to 2026; 5G adoption has outrun 5G capacity",
+              "source_id": "950293eabbbb563abb3a80af",
+              "title": "Analysis: London fell from 7th to last place out of 18 European capitals for median mobile download speed from 2021 to 2026; 5G adoption has outrun 5G capacity"
+            },
+            {
+              "as_of": "2026-10-19T16:00:00Z",
+              "day": "2026-10-19",
+              "excerpt": "NVIDIA's Vera CPU heralds a redefinition of computing architecture from a traditional, task-isolated paradigm to an orchestrated …",
+              "source_id": "60df104d4dc4a9ca69581167",
+              "title": "Q&A with Nvidia's Vera team on agentic AI driving CPU demands and forcing CPU design priority back to single-threaded performance over core counts, and more"
+            }
+          ]
+        }
+      },
+      {
+        "id": "E3",
+        "tool": "index_universe",
+        "url": "https://www.ssga.com/",
+        "retrieved": "2026-10-29T07:16:27Z",
+        "data": {
+          "basis": "Static fund index categories, not verified historical constituents. No prices or returns are included.",
+          "proxies": [
+            {
+              "symbol": "QQQ",
+              "index": "Nasdaq-100",
+              "issuer_url": "https://www.invesco.com/qqq-etf/en/about.html"
+            },
+            {
+              "symbol": "SPY",
+              "index": "S&P 500",
+              "issuer_url": "https://www.ssga.com/us/en/individual/etfs/state-street-spdr-sp-500-etf-trust-spy"
+            },
+            {
+              "symbol": "SMH",
+              "index": "MVIS US Listed Semiconductor 25",
+              "issuer_url": "https://www.vaneck.com/us/en/investments/semiconductor-etf-smh/"
+            },
+            {
+              "symbol": "XLK",
+              "index": "Technology Select Sector",
+              "issuer_url": "https://www.ssga.com/us/en/individual/etfs/state-street-technology-select-sector-spdr-etf-xlk"
+            }
+          ]
+        }
+      }
+    ],
+    "cutoff": "2026-10-26T04:00:00Z",
+    "trace_id": "tr-3f76b0a52613fd1b60b8b14916f6d661"
+  },
+  "round": {
+    "id": "456b9ad5ded43ce9dda9d7ed",
+    "status": "settled",
+    "memo": {
+      "id": "tech",
+      "name": "Semiconductor fund",
+      "criteria": "We invest in semiconductors and electronic components across chip designers, foundries, fabrication equipment, memory, advanced packaging and supply chains. Prioritize material changes in chip demand, capacity, revenue, margins, capital spending, manufacturing technology, supply constraints and export restrictions. Both positive and negative developments can create research opportunities. AI or cloud news matters when a concrete connection to chip demand or suppliers is supported. Consumer apps, retail earnings, routine product launches and political stories have low priority without a documented semiconductor transmission. Score the value of researching the news for this mandate, not whether to buy or sell and not its expected return. Distinguish source evidence from speculation and flag limited excerpt coverage.",
+      "version": 3
+    },
+    "committed_at": "2026-10-29T07:16:56Z",
+    "budget": 10000,
+    "positions": [
+      {
+        "article_id": "0bf6936053a58ece62e29417",
+        "idea_id": "3ef68f8425ab0fbf0ae3e95b",
+        "amount": 1000,
+        "symbol": "SMH",
+        "title": "Texas Instruments reports Q3 revenue up 28% YoY to $6.06B, above $5.93B est., net income up 78% YoY to $2.43B, and forecasts $5.8B-$6.3B in Q4, vs. $5.73B est.",
+        "result": {
+          "symbol": "SMH",
+          "entry_date": "2026-10-26",
+          "exit_date": "2026-10-28",
+          "entry_price": 531.3499755859375,
+          "exit_price": 567.6699829101562,
+          "return_pct": 6.8354209076922245,
+          "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/SMH?events=div%2Csplits&interval=1d&period1=1792987200&period2=1793258216",
+          "retrieved": "2026-10-29T07:16:56Z",
+          "week_complete": false,
+          "basis": "First available session open after the news cutoff → last completed US session close. Gross price return; dividends, fees and slippage excluded."
+        }
+      }
+    ],
+    "invested": 1000,
+    "pnl": 68.35420907692225,
+    "value": 10068.354209076922,
+    "return_pct": 0.6835420907692225,
+    "as_of": "2026-10-28",
+    "week_complete": false
+  },
+  "checks": [
+    "real archive corpus and complete export",
+    "actual memo scores on the ARO T4",
+    "bounded archived-week LLM research",
+    "portfolio frozen before market data",
+    "actual historical entry and completed-session close",
+    "verified portfolio arithmetic",
+    "partial week disclosed",
+    "mobile layout",
+    "mock-keychain",
+    "no JavaScript errors"
+  ]
+}
