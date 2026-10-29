@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
-      DOCKER_CONFIG: ${{ runner.temp }}/runtime-docker
       REDHAT_REGISTRY_AUTH: ${{ secrets.REDHAT_REGISTRY_AUTH }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       IMAGE: ghcr.io/fjcloud/d3-mini-runtime
@@ -27,6 +26,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          export DOCKER_CONFIG="$RUNNER_TEMP/runtime-docker"
+          printf 'DOCKER_CONFIG=%s\n' "$DOCKER_CONFIG" >> "$GITHUB_ENV"
           test -n "$REDHAT_REGISTRY_AUTH"
           mkdir -p "$DOCKER_CONFIG"
           chmod 700 "$DOCKER_CONFIG"
@@ -58,4 +59,4 @@ jobs:
             runtime-package.json
       - name: Remove registry credentials
         if: always()
-        run: rm -rf "$DOCKER_CONFIG"
+        run: rm -rf "${DOCKER_CONFIG:-$RUNNER_TEMP/runtime-docker}"
