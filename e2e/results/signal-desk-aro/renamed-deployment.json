@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "at": "2026-10-29T09:37:39.754567+00:00",
+  "workspace": "signal-desk-dev",
+  "trace_id": "tr-65658b02964816ab0d31a5acaa2eabd0",
+  "state": "OK",
+  "spans": [
+    "game.research",
+    "agent.game_ideas",
+    "tool.read_archive",
+    "tool.search_archive",
+    "tool.index_universe"
+  ],
+  "source_revision": "03d70d9e529a72364e1860201ecca3946a76fa3d",
+  "news": 289,
+  "ranked": 289,
+  "ranking": "preserved actual T4 scores; not freshly re-scored during the rename",
+  "research": "fresh native Responses tool loop in the renamed application",
+  "app_url": "https://signal-desk-signal-desk-dev.apps.z0tudc0s.eastus.aroapp.io"
+}

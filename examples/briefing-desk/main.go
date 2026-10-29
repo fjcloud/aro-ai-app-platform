@@ -590,7 +590,7 @@ func main() {
 			log.Fatal(e)
 		}
 	}
-	a, e := newAgent(env("AGENT_URL", "http://lsd-genai-playground-service.live-transcript-dev.svc.cluster.local:8321/v1"), env("AGENT_MODEL", "maas-vllm-inference-1/deepseekv4pro"), env("AGENT_KEY_FILE", "/etc/model/api-key"))
+	a, e := newAgent(env("AGENT_URL", "http://lsd-genai-playground-service.signal-desk-dev.svc.cluster.local:8321/v1"), env("AGENT_MODEL", "maas-vllm-inference-1/deepseekv4pro"), env("AGENT_KEY_FILE", "/etc/model/api-key"))
 	if e != nil {
 		log.Fatal(e)
 	}

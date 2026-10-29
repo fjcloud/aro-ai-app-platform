@@ -12,15 +12,17 @@ The decision model scores relevance. The runtime agent researches possible index
 
 == Create the native Playground backend
 
-Open *Red Hat OpenShift AI → Gen AI studio → AI asset endpoints*. Select project `live-transcript-dev`, choose the MaaS *DeepSeek-V4 Pro* model and *Add to playground*. Create the Playground and wait for its backend to be ready. Keep the model registered from MaaS; do not create a second Foundry endpoint or paste the Azure account key.
+Open *Red Hat OpenShift AI → Gen AI studio → AI asset endpoints*. Select project `signal-desk-dev`, choose the MaaS *DeepSeek-V4 Pro* model and *Add to playground*. Create the Playground and wait for its backend to be ready. Keep the model registered from MaaS; do not create a second Foundry endpoint or paste the Azure account key.
+
+image::signal-desk-playground-create.png[Create the Playground with the MaaS DeepSeek model in the Signal Desk project]
 
 From the bastion, inspect the native backend:
 
 [source,sh,role=execute]
 ----
-oc get deployment lsd-genai-playground -n live-transcript-dev
-oc get service lsd-genai-playground-service -n live-transcript-dev
-oc get pods -n live-transcript-dev
+oc get deployment lsd-genai-playground -n signal-desk-dev
+oc get service lsd-genai-playground-service -n signal-desk-dev
+oc get pods -n signal-desk-dev
 oc apply -f deploy/briefing/developer-responses-access.yaml
 oc get mlflow mlflow -o json | jq '{conditions:.status.conditions,url:.status.url}'
 ----
@@ -29,7 +31,7 @@ The runtime application calls:
 
 [source,text]
 ----
-http://lsd-genai-playground-service.live-transcript-dev.svc.cluster.local:8321/v1/responses
+http://lsd-genai-playground-service.signal-desk-dev.svc.cluster.local:8321/v1/responses
 model: maas-vllm-inference-1/deepseekv4pro
 ----
 
@@ -42,15 +44,15 @@ This is the native OpenShift AI agent backend. OpenCode uses the MaaS Chat Compl
 [source,sh,role=execute]
 ----
 python3 scripts/prepare-briefing-desk.py
-oc get serviceaccount signal-desk -n live-transcript-dev
-oc get configmap signal-desk-config -n live-transcript-dev -o json | jq .data
-oc get secret signal-desk-model signal-desk-oauth -n live-transcript-dev
-oc get pvc signal-desk-data -n live-transcript-dev
+oc get serviceaccount signal-desk -n signal-desk-dev
+oc get configmap signal-desk-config -n signal-desk-dev -o json | jq .data
+oc get secret signal-desk-model signal-desk-oauth -n signal-desk-dev
+oc get pvc signal-desk-data -n signal-desk-dev
 ----
 
 The helper creates a dedicated app identity, an OpenShift OAuth proxy, a separate `deepseekv4pro-signal-desk` MaaS subscription/key, the `signal-desk` MLflow experiment and a 2 GiB data volume. The runtime identity gets no cluster-monitoring or workload-editing permissions. The key expires after 24 hours; rerun preparation and restart the application if the lab continues longer.
 
-The fixed infrastructure name remains `live-transcript` for the prepared namespaces, registry image and pipeline. The exercise and browser UI are *Signal Desk*. Do not rename the delivery scaffold while generating the app.
+The application is *Signal Desk*: `signal-desk-dev` hosts the app and agent, and `signal-desk-build` hosts its build pipeline and images. Keep these names when generating the app.
 
 == The application contract
 
@@ -78,6 +80,6 @@ The model cannot fetch this week's prices during research. Prices are requested 
 
 == Hand over to the developer
 
-The developer will test the authenticated d3-mini endpoint, the MaaS Chat Completions endpoint and this Responses API independently from Dev Spaces in xref:300-developer/lab_2_model_apis.adoc[Lab 2.2]. No administrator credentials or Azure keys are needed in that workspace.
+The developer will test the direct d3-mini endpoint, the MaaS Chat Completions endpoint and this Responses API independently from Dev Spaces in xref:300-developer/lab_2_model_apis.adoc[Lab 2.2]. No administrator credentials or Azure keys are needed in that workspace.
 
 Continue to xref:300-developer/lab_1_devspace_launch.adoc[Lab 2.1 — Launch Your Dev Space].

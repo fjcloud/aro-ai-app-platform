@@ -1,14 +1,14 @@
-= Lab 1.7 — Hand the Keys
+= Lab 1.7 — Prepare Developer Access
 
-DeepSeek-V4 Pro is already answering. Prepare a *Dev Spaces launch URL* and the project runbook for the developer in Act 2.
+DeepSeek-V4 Pro is already answering. Prepare the scoped developer access and project runbook for the developer in Act 2.
 
-The Signal Desk template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-transcription[fjcloud/go-app-template].
+The Signal Desk template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-signal-desk[fjcloud/go-app-template].
 
 [NOTE]
 ====
 *Estimated time:* 10 minutes +
 *Persona:* Platform Engineer +
-*Deliverable:* You have read `AGENTS.md`. You can paste the Dev Spaces URL to Act 2.
+*Deliverable:* The developer identity, template and model configuration are ready.
 ====
 
 == What the developer actually gets
@@ -38,8 +38,8 @@ Lab 1.6 prepared the namespaces and injected a scoped developer identity. Verify
 
 [source,sh,role=execute]
 ----
-oc auth can-i create pipelineruns -n live-transcript-build \
-  --as=system:serviceaccount:live-transcript-dev:workshop-developer
+oc auth can-i create pipelineruns -n signal-desk-build \
+  --as=system:serviceaccount:signal-desk-dev:workshop-developer
 ----
 
 The developer can build and deploy in the two application namespaces. They cannot create namespaces, change SCCs or create cluster-wide bindings. Image-pull permission is prepared here, not by the model. The Pipelines operator supplies its standard, non-privileged build service account permissions.
@@ -52,7 +52,7 @@ Clone only if you want it on disk. On a shared workshop cluster you can also ope
 
 [source,sh,role=execute]
 ----
-git clone --depth 1 --branch aro-transcription https://github.com/fjcloud/go-app-template "$HOME/signal-desk-template"
+git clone --depth 1 --branch aro-signal-desk https://github.com/fjcloud/go-app-template "$HOME/signal-desk-template"
 wc -l "$HOME/signal-desk-template/AGENTS.md"
 cat "$HOME/signal-desk-template/AGENTS.md"
 cat "$HOME/signal-desk-template/APP_CONTRACT.md"
@@ -96,25 +96,6 @@ oc get configmap opencode-workspace-config -n openshift-operators \
 
 You should see `baseURL` `{env:OPENAI_BASE_URL}`, Bearer authentication, provider name `DeepSeek-V4 Pro`, model id `deepseekv4pro`, and `"model": "deepseek/deepseekv4pro"`.
 
-== Step 3: Copy the developer launch URL
-
-[source,sh,role=execute]
-----
-DEVSPACES_URL=$(oc get checluster -A -o jsonpath='{.items[0].status.cheURL}')
-if [[ -z "$DEVSPACES_URL" ]]; then
-  DEVSPACES_URL="https://$(oc get route devspaces -n openshift-operators \
-    -o jsonpath='{.spec.host}')"
-fi
-TEMPLATE_URL="https://github.com/fjcloud/go-app-template/tree/aro-transcription"
-
-echo "============================================"
-echo " Participant workspace URL:"
-echo "  $DEVSPACES_URL/#$TEMPLATE_URL?ai-provider=opencodeai/opencode"
-echo "============================================"
-----
-
-When a developer opens that URL, Dev Spaces clones the template, injects the OpenCode binary, installs the ephemeral Git client, and opens VS Code in the browser. Lab 2.1 points the project at DeepSeek-V4 Pro. `AGENTS.md` is the runbook, including the weekly news, D3 scoring, archived research and paper-investment contract.
-
 == Developer handoff ready
 
 [cols="1,2", options="header"]
@@ -125,7 +106,7 @@ When a developer opens that URL, Dev Spaces clones the template, injects the Ope
 | ✅ Global Standard, published through OpenShift AI MaaS
 
 | Dev Spaces
-| ✅ Launch URL ready to paste
+| ✅ Active; launch starts in Lab 2.1
 
 | MaaS model and workspace secret
 | ✅ `OPENAI_BASE_URL` points to `https://maas.<apps-domain>/v1`

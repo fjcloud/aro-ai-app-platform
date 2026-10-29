@@ -6,7 +6,7 @@ Welcome to Act 2. You are now the *Developer*. Everything you need — editor, t
 ====
 *Estimated time:* 10 minutes +
 *Persona:* Developer +
-*What you need:* The launch URL from Lab 1.7 and your cluster login
+*What you need:* The platform prepared in Act 1 and your cluster login
 ====
 
 == What is OpenShift Dev Spaces?
@@ -20,12 +20,16 @@ OpenShift Dev Spaces provides *cloud-based developer workspaces* — VS Code-com
 
 == Get the Dev Spaces URL
 
-Use the URL you printed in Lab 1.7. It clones the Go app template (`go-app-template`) — not this workshop repo — and creates a workspace from its `devfile.yaml`:
+The models and runtime agent backend are now ready. In the *bastion terminal*, generate the workspace launch link:
 
-[source,text,options=nowrap]
+[source,sh,role=execute]
 ----
-https://devspaces.apps.<cluster>/#https://github.com/fjcloud/go-app-template/tree/aro-transcription?ai-provider=opencodeai/opencode
+DEVSPACES_URL=$(oc get checluster devspaces -n openshift-operators -o jsonpath='{.status.cheURL}')
+TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-signal-desk
+printf '%s/#%s?ai-provider=opencodeai/opencode\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL"
 ----
+
+Open the printed link in your browser. It clones the Signal Desk template and creates the workspace from its `devfile.yaml`.
 
 [NOTE]
 ====

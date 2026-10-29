@@ -33,6 +33,8 @@ def prepare(app):
     for ns in (build, dev):
         m = metadata(ns)
         m['labels'] = {'workshop.fjcloud.io/app': app}
+        if ns == dev:
+            m['labels']['opendatahub.io/dashboard'] = 'true'
         apply({'apiVersion': 'v1', 'kind': 'Namespace', 'metadata': m})
     # Let OpenShift allocate UID/MCS first. Pre-setting supplemental-groups on a
     # new namespace makes the allocator skip its other security annotations.
@@ -99,7 +101,7 @@ def prepare(app):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--app-name', default='live-transcript')
+    parser.add_argument('--app-name', default='signal-desk')
     args = parser.parse_args()
     try:
         prepare(args.app_name)

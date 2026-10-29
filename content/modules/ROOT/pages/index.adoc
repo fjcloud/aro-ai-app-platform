@@ -9,7 +9,7 @@ You play two roles. The *platform engineer* prepares OpenShift AI, a managed Dee
 . *Platform:* apply all operator manifests with `oc`.
 . *Infrastructure:* add one CPU worker and one single-T4 worker, then enable platform instances.
 . *Models:* deploy DeepSeek on Foundry, publish it through OpenShift AI MaaS, and serve d3-mini on the T4.
-. *Developer preflight:* from Dev Spaces, explain and test each API independently with its own credential and `curl | jq`.
+. *Developer preflight:* from Dev Spaces, explain and test each API independently with `curl | jq`, using the MaaS key for DeepSeek.
 . *Application:* build from `APP_CONTRACT.md`, collect last week's Techmeme news, rank it for the fund, allocate virtual money and compare with the latest completed market close this week.
 
 == What you build
@@ -27,7 +27,7 @@ Playground → MCP → same archive tools      Agent → MLflow traces
 Git → Tekton → Argo CD → same Go app
 ----
 
-*DeepSeek* generates code and researches hypothetical index ideas, through separate MaaS keys. *d3-mini* is a small community model that scores relevance without generating prose. It is served by a pinned custom native runtime on OpenShift AI/KServe; it is not a RedHatAI model or a supported Red Hat AI Inference runtime. No microphone or speech model is needed for this exercise.
+*DeepSeek* generates code and researches hypothetical index ideas, through separate MaaS keys. *d3-mini* is a small community model that scores relevance without generating prose. It is served by a pinned native runtime on OpenShift AI/KServe.
 
 The game separates three different values: memo relevance, the user's virtual allocation and observed historical performance. It never sends a real order. While this week is running, results remain provisional. This educational replay does not establish predictive performance or eliminate knowledge learned during model training.
 
@@ -38,7 +38,7 @@ The game separates three different values: memo relevance, the user's virtual al
 | Act | Role | Labs
 | 0 — Get in | Platform Engineer | Connect to the assigned RHDP ARO environment and detect its resource group.
 | 1 — Build the platform | Platform Engineer | Apply all operator manifests; add one D8 CPU worker and one single-T4 worker; enable platform instances; deploy DeepSeek and publish it through MaaS; serve d3-mini and prepare scoped developer access, the runtime agent and tracing.
-| 2 — First day | Developer | Open Dev Spaces; learn the decision-model contract and test both models independently with authenticated curl + jq; build Signal Desk from APP_CONTRACT.md; ship through Tekton and Argo CD; replay last week’s news against this week’s latest completed market session.
+| 2 — First day | Developer | Open Dev Spaces; learn the decision-model contract and test both models independently with curl + jq; build Signal Desk from APP_CONTRACT.md; ship through Tekton and Argo CD; replay last week’s news against this week’s latest completed market session.
 | 3 — Observe and evaluate | Both | Compare coding, agent and GPU usage; inspect traces and exercise the same bounded tools in the Playground.
 |===
 
