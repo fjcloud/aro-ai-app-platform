@@ -7,11 +7,11 @@ Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platf
 . Prepare and assign an RHDP environment with a ready classic ARO cluster, OpenShift 4.21 or later, and a browser terminal. An Azure Blank Environment alone does not include these.
 . Open https://fjcloud.github.io/cloud-terminal-pages/[Cloud Terminal], select *Azure · AI developer platform on ARO*, and enter the *workshop ID, assigned email, and workshop password*.
 . The launcher retrieves the assigned Showroom URL. Shared links contain only the guide and workshop ID; each participant signs in separately.
-. Follow Act 0 to log in to the existing cluster, clone the repository, and run `make onboard`.
+. Follow Act 0 to clone the repository and run `make onboard` to sign in to the existing cluster.
 
 Platform labs prepare OpenShift AI, DeepSeek on Foundry through MaaS, and one T4 running the community d3-mini native decision runtime. Developers use OpenCode to build *Signal Desk*: rank last week's Techmeme news for a fund, research hypothetical index exposure and replay a $10,000 virtual portfolio against this week's observed prices. Playground MCP and MLflow make the agent's evidence and calls visible.
 
-`make onboard` detects the resource group containing the connected ARO resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
+`make onboard` signs in using the existing ARO credentials retrieved from Azure, then detects the resource group containing that resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
 
 Use one assigned cluster per participant. On a shared cluster, the facilitator prepares the platform once and isolates each app’s namespaces and access.
 

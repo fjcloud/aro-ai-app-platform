@@ -2,7 +2,7 @@
 .PHONY: help onboard docs serve test test-terminal
 
 help:
-	@echo "make onboard  Check access to the assigned workshop environment."
+	@echo "make onboard  Sign in and check the assigned workshop environment."
 	@echo "make docs     Build the workshop guide."
 	@echo "make serve    Build and serve the guide on http://localhost:8443."
 	@echo "make test     Run local regression checks."
