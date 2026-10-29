@@ -124,8 +124,10 @@ func (f *fetcher) getLimit(ctx context.Context, raw string, limit int64) ([]byte
 		return nil, "", "", fmt.Errorf("Public source returned HTTP %d", res.StatusCode)
 	}
 	b, e := io.ReadAll(io.LimitReader(res.Body, limit+1))
-	if e != nil { return nil, "", "", errors.New("Public source response could not be read; check connection and retry") }
- if int64(len(b)) > limit {
+	if e != nil {
+		return nil, "", "", errors.New("Public source response could not be read; check connection and retry")
+	}
+	if int64(len(b)) > limit {
 		return nil, "", "", errors.New("Source exceeds the retrieval size limit")
 	}
 	return b, res.Request.URL.String(), res.Header.Get("Content-Type"), nil
