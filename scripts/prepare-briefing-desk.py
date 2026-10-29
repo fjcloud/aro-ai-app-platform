@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""Platform setup: Signal Desk identity, native Responses, OAuth, MaaS and MLflow."""
-import base64
+"""Platform setup: Signal Desk identity, native Responses, MaaS and MLflow."""
 import importlib.util
 import json
 from pathlib import Path
-import secrets
-import time
 import urllib.error
 import urllib.request
 
@@ -48,10 +45,7 @@ def main():
     mlflow = get('mlflow', 'mlflow').get('status', {}).get('url', '').rstrip('/')
     if not mlflow.startswith('https://'):
         raise RuntimeError('Wait for the native MLflow instance to publish its HTTPS URL')
-    apply({'apiVersion': 'v1', 'kind': 'ServiceAccount', 'metadata': {'name': IDENTITY, 'namespace': APP,
-           'annotations': {'serviceaccounts.openshift.io/oauth-redirectreference.primary': json.dumps({
-               'kind': 'OAuthRedirectReference', 'apiVersion': 'v1', 'reference': {'kind': 'Route', 'name': 'signal-desk'}})}}})
-    binding('signal-desk-auth-' + APP, 'system:auth-delegator')
+    apply({'apiVersion': 'v1', 'kind': 'ServiceAccount', 'metadata': {'name': IDENTITY, 'namespace': APP}})
     role = next((r for r in ('mlflow-operator-mlflow-integration', 'mlflow-integration')
                  if oc('get', 'clusterrole', r, '--ignore-not-found', '-o', 'name')), None)
     if not role:
@@ -59,29 +53,9 @@ def main():
     binding('signal-desk-mlflow', role, APP)
     for namespace in (APP, BUILD):
         binding('signal-desk-image-puller', 'system:image-puller', namespace)
-    apply({'apiVersion': 'v1', 'kind': 'ServiceAccount', 'metadata': {'name': 'signal-desk-playground', 'namespace': APP}})
-    apply({'apiVersion': 'rbac.authorization.k8s.io/v1', 'kind': 'Role', 'metadata': {'name': 'signal-desk-playground', 'namespace': APP},
-           'rules': [{'apiGroups': [''], 'resources': ['services'], 'resourceNames': ['signal-desk'], 'verbs': ['get']}]})
-    binding('signal-desk-playground', 'signal-desk-playground', APP, 'signal-desk-playground', 'Role')
     # No cluster-monitoring, SCC or workload-editing grant is needed by this app.
     apply({'apiVersion': 'v1', 'kind': 'ConfigMap', 'metadata': {'name': 'signal-desk-service-ca', 'namespace': APP,
            'annotations': {'service.beta.openshift.io/inject-cabundle': 'true'}}})
-    if not oc('get', 'secret', 'signal-desk-oauth', '-n', APP, '--ignore-not-found', '-o', 'name'):
-        apply({'apiVersion': 'v1', 'kind': 'Secret', 'metadata': {'name': 'signal-desk-oauth', 'namespace': APP},
-               'stringData': {'cookie-secret': base64.b64encode(secrets.token_bytes(32)).decode()}})
-    image = oc('adm', 'release', 'info', '--image-for=oauth-proxy')
-    if '@sha256:' not in image:
-        raise RuntimeError('Could not resolve the release OAuth proxy digest')
-    apply({'apiVersion': 'image.openshift.io/v1', 'kind': 'ImageStream', 'metadata': {'name': 'signal-desk-oauth', 'namespace': APP},
-           'spec': {'tags': [{'name': 'current', 'from': {'kind': 'DockerImage', 'name': image}, 'referencePolicy': {'type': 'Local'}}]}})
-    for attempt in range(6):
-        try:
-            oc('import-image', 'signal-desk-oauth:current', '-n', APP, '--confirm')
-            break
-        except RuntimeError:
-            if attempt == 5:
-                raise
-            time.sleep(5)
     oc('apply', '-f', str(ROOT / 'deploy/briefing/runtime-subscription.yaml'))
     oc('wait', 'maassubscription/deepseekv4pro-signal-desk', '-n', 'models-as-a-service', '--for=condition=Ready', '--timeout=180s')
     # The key API needs an actual OpenShift user token, not a certificate-only login.
@@ -114,7 +88,7 @@ def main():
         oc('patch', 'configmap', 'gen-ai-aa-mcp-servers', '-n', 'redhat-ods-applications', '--type=merge', '-p', json.dumps({'data': {'Signal-Desk': entry}}))
     else:
         apply({'apiVersion': 'v1', 'kind': 'ConfigMap', 'metadata': {'name': 'gen-ai-aa-mcp-servers', 'namespace': 'redhat-ods-applications'}, 'data': {'Signal-Desk': entry}})
-    print('Signal Desk prepared: native Responses, internal D3, OAuth, storage and MLflow. No keys printed.')
+    print('Signal Desk prepared: native Responses, internal D3, public HTTPS app/MCP, storage and MLflow. No keys printed.')
     print('Runtime MaaS key expires after 24h; rerun preparation and restart the app to refresh it.')
 
 

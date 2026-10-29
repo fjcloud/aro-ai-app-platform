@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "at": "2026-10-29T10:27:17.740486+00:00",
+  "app_url": "https://signal-desk-signal-desk-dev.apps.z0tudc0s.eastus.aroapp.io",
+  "source_revision": "e403d6bb79441b6108f63e5b9188d702fd8d791d",
+  "app_authentication": "none",
+  "browser_replay": "fresh browser context without saved state or cookies",
+  "news": 289,
+  "ranked": 289,
+  "fresh_research": {
+    "status": "done",
+    "tools": [
+      "index_universe",
+      "read_archive",
+      "search_archive"
+    ],
+    "trace_id": "tr-4083662360fd27228a345071abbe9034",
+    "duration_seconds": 11.77
+  },
+  "mlflow": {
+    "workspace": "signal-desk-dev",
+    "state": "OK",
+    "spans": [
+      "game.research",
+      "agent.game_ideas",
+      "tool.read_archive",
+      "tool.index_universe",
+      "tool.search_archive"
+    ]
+  }
+}

@@ -45,7 +45,7 @@ Switch to *build* in the same session:
 
 [source,text,role=execute]
 ----
-Implement the plan and deploy using AGENTS.md. Preserve all existing scaffold files, OAuth, restricted-v2 and the exact internal registry image. Run Go tests and the local build. Commit and push the complete source, wait for Tekton to succeed and verify the image tag before creating Argo CD delivery. Wait for the matching Git revision to be Synced / Healthy and the Deployment rollout. Print the app and Argo CD URLs.
+Implement the plan and deploy using AGENTS.md. Preserve all existing scaffold files, HTTPS Route, restricted-v2 and the exact internal registry image. Run Go tests and the local build. Commit and push the complete source, wait for Tekton to succeed and verify the image tag before creating Argo CD delivery. Wait for the matching Git revision to be Synced / Healthy and the Deployment rollout. Print the app and Argo CD URLs.
 ----
 
 The source must be clean and pushed before Tekton starts. `AGENTS.md` supplies the Dockerfile and complete Git → Tekton → Argo CD procedure. A local build or an old healthy revision is not a successful deployment.
@@ -95,7 +95,7 @@ Ask OpenCode, in *build* mode:
 
 [source,text,role=execute]
 ----
-Add a simple “High relevance only” checkbox above the news list. When selected, show only current memo scores of at least 70/100 and display the filtered count; uncheck to restore all news. Keep the checkbox visible when zero stories match and give it a stable accessible name. Keep the archived corpus export, saved portfolio, scoring, agent tools, OAuth and replay rules unchanged. Test it, commit and push, then rebuild and deploy with AGENTS.md. Wait for the new Git revision and rollout before reporting success.
+Add a simple “High relevance only” checkbox above the news list. When selected, show only current memo scores of at least 70/100 and display the filtered count; uncheck to restore all news. Keep the checkbox visible when zero stories match and give it a stable accessible name. Keep the archived corpus export, saved portfolio, scoring, agent tools, HTTPS and replay rules unchanged. Test it, commit and push, then rebuild and deploy with AGENTS.md. Wait for the new Git revision and rollout before reporting success.
 ----
 
 Verify the new UI on the Route. In the Dev Spaces terminal:

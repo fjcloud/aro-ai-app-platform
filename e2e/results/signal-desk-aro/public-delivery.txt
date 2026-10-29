@@ -1,0 +1,31 @@
+PASS: Application available
+PASS: Personal Argo CD Application Synced / Healthy
+PASS: Real Tekton PipelineRuns exist
+PASS: Latest Tekton build Succeeded
+PASS: HTTPS edge Route redirects HTTP
+PASS: Public HTTPS health endpoint
+PASS: Signal Desk UI is public without credentials or redirects
+PASS: Game API is public without credentials
+PASS: Public MCP discovers exactly the four read-only tools without a token
+PASS: Shipped update includes the relevance filter
+PASS: Deployment uses the app image from its build namespace
+PASS: Mutable latest tag is always pulled
+PASS: Successful Tekton target matches the deployed image
+PASS: Resource requests and limits match AGENTS.md
+PASS: Liveness and readiness probes reach the app directly over HTTP
+PASS: Dedicated runtime identity
+PASS: Go backend listens on the Service port
+PASS: One app container without an authentication proxy
+PASS: Deployment uses portable restricted pod security
+PASS: Container drops all capabilities and privilege escalation
+PASS: Application admitted under restricted-v2 SCC
+PASS: Build tasks isolated in Linux user namespaces
+PASS: No privileged build container or privilege escalation
+PASS: Running application matches the newly built image digest
+PASS: Both E2E_NS and DEV_POD supplied
+PASS: Workspace is clean: all application changes match the committed delivery
+PASS: Generated source files exist and Go build succeeds in the real workspace
+PASS: Workspace commit, pushed main and Argo CD revision match
+PASS: Application source committed with no unstaged changes
+Application: https://signal-desk-signal-desk-dev.apps.z0tudc0s.eastus.aroapp.io
+Git revision: e403d6bb79441b6108f63e5b9188d702fd8d791d

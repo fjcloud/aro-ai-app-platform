@@ -25,12 +25,12 @@ This requires direct D3 access from Dev Spaces and the Dev Spaces-to-Responses p
 
 Platform/usage/protocol/model-apis probes make billable model calls. `APP_NAME` defaults to `signal-desk`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
 
-Validate the UI with a full archived-week import, real T4 scores, an actual native Responses tool loop, a virtual allocation and subsequent-week observed prices. Verify unavailable archive IDs, incomplete-week labels and errors. Confirm an MLflow research trace and the same archive tools in the native Playground. Public app access requires OpenShift OAuth; credentials remain private. Every Chromium launch includes `--use-mock-keychain`.
+Validate the UI with a full archived-week import, real T4 scores, an actual native Responses tool loop, a virtual allocation and subsequent-week observed prices. Verify unavailable archive IDs, incomplete-week labels and errors. Confirm an MLflow research trace and the same archive tools in the native Playground. The app and read-only MCP endpoint are public over HTTPS; model keys remain in backend Secrets. Participants share the workshop state. Every Chromium launch includes `--use-mock-keychain`.
 
-For the real Route browser test, save a private OpenShift browser session and model metadata from the direct d3-mini probe in Lab 2.2, then run:
+For the public Route browser test, save model metadata from the direct d3-mini probe in Lab 2.2, then run with a fresh browser context:
 
 ```sh
-APP_URL=https://your-app-route BROWSER_STATE=/private/path/login-state.json \
+APP_URL=https://your-app-route \
 D3_METADATA=/private/path/d3-models.json NEWS_IMPORT_FILE=/path/to/current-week-news.json \
 EXPECT_UPDATED_APP=true APPLICATION_REVISION=your-deployed-git-revision \
   node e2e/briefing-desk-aro.cjs
@@ -38,15 +38,15 @@ EXPECT_UPDATED_APP=true APPLICATION_REVISION=your-deployed-git-revision \
 
 The test tries direct collection first. A blocked collection fails unless an explicit import file is supplied; the report records that recovery. It never invents news, scores or prices.
 
-To repeat the native Playground test with an existing private OpenShift browser session and the short-lived token from Lab 3.2:
+To repeat the native Playground test with an existing private OpenShift AI browser session:
 
 ```sh
 RHOAI_URL=https://your-rhoai-route APP_URL=https://your-app-route \
-BROWSER_STATE=/private/path/login-state.json MCP_TOKEN_FILE=/private/path/mcp-token \
+BROWSER_STATE=/private/path/login-state.json \
   node e2e/agentops-browser.cjs
 ```
 
-It checks actual Responses MCP calls, rather than accepting a model's claim to have used tools. Set `CAPTURE_GUIDE=true` to refresh the guide screenshots from the real UI; the authorization screenshot is taken before filling the token.
+It checks actual Responses MCP calls, rather than accepting a model's claim to have used tools. Set `CAPTURE_GUIDE=true` to refresh the guide screenshots from the real UI. Signal Desk and its MCP connector require no token.
 
 Local regression checks:
 
