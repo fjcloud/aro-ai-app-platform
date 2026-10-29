@@ -37,10 +37,11 @@ Continue when `GPU` is `1`. A Ready node alone does not prove that its GPU drive
 
 OpenShift AI/KServe manages two resources: `ServingRuntime/d3-native` defines the image and startup arguments; `InferenceService/d3-mini` selects that runtime and requests one T4. A PVC keeps the downloaded model weights.
 
-Inspect their manifests, then deploy them with the CLI:
+Update the workshop checkout before applying the model manifests, then inspect and deploy them with the CLI:
 
 [source,sh,role=execute]
 ----
+git pull --ff-only
 cat deploy/decision/servingruntime.yaml
 cat deploy/decision/inferenceservice.yaml
 oc apply -k deploy/decision
