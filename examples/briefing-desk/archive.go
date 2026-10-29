@@ -21,12 +21,13 @@ import (
 )
 
 type replayWeek struct {
-	ID          string `json:"id"`
-	NewsStart   string `json:"news_start"`
-	NewsEnd     string `json:"news_end"`
-	Cutoff      string `json:"cutoff"`
-	MarketStart string `json:"market_start"`
-	MarketEnd   string `json:"market_end"`
+	ID            string `json:"id"`
+	NewsStart     string `json:"news_start"`
+	NewsEnd       string `json:"news_end"`
+	Cutoff        string `json:"cutoff"`
+	MarketStart   string `json:"market_start"`
+	MarketEnd     string `json:"market_end"`
+	ValuationMode string `json:"valuation_mode,omitempty"`
 }
 
 func lastNewsWeek(now time.Time) replayWeek {
@@ -34,7 +35,19 @@ func lastNewsWeek(now time.Time) replayWeek {
 	n := now.In(loc)
 	day := time.Date(n.Year(), n.Month(), n.Day(), 0, 0, 0, 0, loc)
 	monday := day.AddDate(0, 0, -(int(day.Weekday())+6)%7)
-	return replayWeek{monday.AddDate(0, 0, -7).Format("2006-01-02"), monday.AddDate(0, 0, -7).Format("2006-01-02"), monday.AddDate(0, 0, -1).Format("2006-01-02"), monday.UTC().Format(time.RFC3339), monday.Format("2006-01-02"), monday.AddDate(0, 0, 4).Format("2006-01-02")}
+	return replayWeek{ID: monday.AddDate(0, 0, -7).Format("2006-01-02"), NewsStart: monday.AddDate(0, 0, -7).Format("2006-01-02"), NewsEnd: monday.AddDate(0, 0, -1).Format("2006-01-02"), Cutoff: monday.UTC().Format(time.RFC3339), MarketStart: monday.Format("2006-01-02"), MarketEnd: monday.AddDate(0, 0, 4).Format("2006-01-02")}
+}
+
+func currentNewsWeek(now time.Time) (replayWeek, error) {
+	loc, _ := time.LoadLocation("America/New_York")
+	n := now.In(loc)
+	today := time.Date(n.Year(), n.Month(), n.Day(), 0, 0, 0, 0, loc)
+	monday := today.AddDate(0, 0, -(int(today.Weekday())+6)%7)
+	if today.Equal(monday) {
+		return replayWeek{}, errors.New("No completed news day is available in this week yet")
+	}
+	start, end := monday.Format("2006-01-02"), today.AddDate(0, 0, -1).Format("2006-01-02")
+	return replayWeek{ID: start + "_" + end, NewsStart: start, NewsEnd: end, Cutoff: today.Add(5 * time.Minute).UTC().Format(time.RFC3339), MarketStart: today.Format("2006-01-02"), ValuationMode: "latest"}, nil
 }
 
 type archivedStory struct {
@@ -177,13 +190,21 @@ func (f *fetcher) archiveWeek(ctx context.Context, cache string, week replayWeek
 	out := archiveManifest{Week: week, Stories: []archivedStory{}, SnapshotURLs: []string{}, Missing: []string{}, Coverage: "Techmeme primary headline IDs from historical snapshots, deduplicated by primary publisher URL. Related discussion links are not separate primary headlines. Unavailable IDs are listed explicitly."}
 	loc, _ := time.LoadLocation("America/New_York")
 	start, _ := time.ParseInLocation("2006-01-02", week.NewsStart, loc)
+	end, err := time.ParseInLocation("2006-01-02", week.NewsEnd, loc)
+	if err != nil || end.Before(start) || end.After(start.AddDate(0, 0, 6)) {
+		return out, errors.New("News snapshots must cover between one and seven days")
+	}
+	days := 0
+	for day := start; !day.After(end); day = day.AddDate(0, 0, 1) {
+		days++
+	}
 	pages := []string{}
-	for d := 0; d < 7; d++ {
+	for d := 0; d < days; d++ {
 		for _, hour := range []string{"1200", "2355"} {
 			pages = append(pages, "https://www.techmeme.com/"+start.AddDate(0, 0, d).Format("060102")+"/h"+hour)
 		}
 	}
-	pages = append(pages, "https://www.techmeme.com/"+start.AddDate(0, 0, 7).Format("060102")+"/h0000")
+	pages = append(pages, "https://www.techmeme.com/"+start.AddDate(0, 0, days).Format("060102")+"/h0000")
 	found := map[string]archivedStory{}
 	var mu sync.Mutex
 	fetchPages := func(urls []string, strict bool) error {
@@ -230,7 +251,7 @@ func (f *fetcher) archiveWeek(ctx context.Context, cache string, week replayWeek
 		return nil
 	}
 	if note != nil {
-		note("Reading historical Techmeme snapshots for all seven days")
+		note(fmt.Sprintf("Reading dated Techmeme snapshots for %d completed days", days))
 	}
 	if e := fetchPages(pages, true); e != nil {
 		return out, e
@@ -244,7 +265,7 @@ func (f *fetcher) archiveWeek(ctx context.Context, cache string, week replayWeek
 		}
 	}
 	missing := []string{}
-	for d := 0; d < 7; d++ {
+	for d := 0; d < days; d++ {
 		prefix := start.AddDate(0, 0, d).Format("060102")
 		max := maximum[prefix]
 		if max == 0 || max > 200 {

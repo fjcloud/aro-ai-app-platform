@@ -5,11 +5,11 @@ Use DeepSeek in OpenCode to build the game described by `APP_CONTRACT.md`, keepi
 [NOTE]
 ====
 *Persona:* Developer +
-*Time:* 35–45 minutes, plus the first archive import +
+*Time:* 35–45 minutes, plus the first scoring pass +
 *Outcome:* English app, generated/adapted with DeepSeek, built by Tekton and deployed by your own Argo CD.
 ====
 
-The model API checks in Lab 2.2 must pass before this exercise. The app uses last week’s news to freeze investment choices, then compares them with the latest completed US market session this week. Today’s incomplete session is excluded.
+The model API checks in Lab 2.2 must pass before this exercise. The repository includes a fixed Techmeme snapshot for 26–28 October 2026. The app scores these saved articles, freezes virtual investments, then compares the first market open after the snapshot cutoff with the latest available market quote. Quotes are timestamped and may be delayed.
 
 == Step 1: Read the contract
 
@@ -34,7 +34,7 @@ Switch OpenCode to *plan* and paste:
 
 [source,text,role=execute]
 ----
-Build Signal Desk in Go using APP_CONTRACT.md and AGENTS.md. Start from all Go files, go.mod/go.sum and web assets of the linked briefing-desk reference, including tests, native OpenShift AI Responses client, D3 scoring, archived research, MCP and tracing. Keep the prepared scaffold and technical app name signal-desk. The English UI should be one simple page: fund memo, $10,000 paper portfolio and last week's ranked Techmeme news. Explain the model endpoints, archive cutoff, portfolio freezing and actual-price settlement in your plan. No real trades, invented prices or new privileges.
+Build Signal Desk in Go using APP_CONTRACT.md and AGENTS.md. Start from all Go files, go.mod/go.sum, web assets and news/techmeme.json of the linked briefing-desk reference, including tests, native OpenShift AI Responses client, D3 scoring, archived research, MCP and tracing. Keep the prepared scaffold and technical app name signal-desk. The English UI should be one simple page: fund memo, $10,000 paper portfolio and the repository's ranked Techmeme snapshot. Explain the model endpoints, archive cutoff, portfolio freezing and timestamped current-market comparison in your plan. No real trades, invented prices or new privileges.
 ----
 
 Review the plan, especially the distinction between a relevance score and a return. The app must use the platform endpoints from its ConfigMap, not Azure credentials or a model URL guessed by the coding assistant.
@@ -57,35 +57,19 @@ Keep `image-registry.openshift-image-registry.svc:5000/signal-desk-build/signal-
 
 == Step 4: Play one round
 
-Open the HTTPS app Route and sign in with OpenShift.
+Open the public HTTPS app Route.
 
 . Read the default semiconductor fund memo; expand it if you want to change the fund.
-. Click *Load last week's news*. The first run downloads seven days of primary Techmeme stories, then scores them on the single T4. Wait for the ranked count to reach the imported count. Saved snapshots and scores are reused on subsequent loads.
-. Click *Export the news* and check the week, collected stories and unavailable archive IDs. A missing item must be disclosed; archived excerpts are not full publisher pages.
+. Click *Load saved news*. The app reads the JSON bundled from the repository and ranks its 161 articles on the T4. No Techmeme download or manual import is required.
+. Check the displayed news dates and collection provenance. *Export the news* includes the saved sources and scores; these are headlines and short excerpts, not full publisher articles.
 . Open an interesting story and click *Find index ideas*. Expect a hypothetical thesis and risk for supported ETF proxies. A high relevance score alone is not a BUY instruction.
 . Add a virtual amount to one or more ideas. Stay within $10,000. No return should be revealed yet.
-. Click *Reveal this week's result*. The complete portfolio freezes before historical prices are requested. Inspect entry/exit dates and the price-data source.
-. If the current week is unfinished, check *Week in progress*. *Update result* may refresh prices without changing choices. *Play again* starts a fresh budget and retains the previous round.
+. Click *Compare with today’s market*. The complete portfolio freezes before market prices are requested. Inspect entry/exit dates and the price-data source.
+. Check the quote timestamp. *Update result* fetches the latest available price without changing choices. *Play again* starts a fresh budget and retains the previous round.
 
-[TIP]
-====
-Techmeme can reject requests from a cloud IP with HTTP 403. Keep live collection as the default. If it is blocked, click *Import news* and choose the facilitator's JSON news export for the *same displayed week*. The app checks the week, dates and source links, discards any uploaded scores/research, and ranks the archived facts on the T4. The UI labels the corpus as manually imported; source provenance is supplied by the file.
+The fixed input is https://github.com/fjcloud/aro-ai-app-platform/blob/main/examples/briefing-desk/news/techmeme.json[news/techmeme.json]. Its news cutoff is 29 October at 00:05 New York time; entry is the first US session open afterward. Valuation uses the latest available regular-market quote, including an intraday quote. Before opening, on weekends or holidays, its actual timestamp shows which session it belongs to.
 
-For the 19–25 October 2026 session, a real collected export is available at https://raw.githubusercontent.com/fjcloud/aro-ai-app-platform/main/e2e/results/signal-desk-aro/news-2026-10-19.json[Download the dated news export]. Save the JSON file locally, then select it with *Import news*. Do not reuse it for another week; the app rejects mismatched dates.
-
-A facilitator can prepare a new export on a network that allows Techmeme, without running either model or supplying credentials:
-
-[source,sh]
-----
-cd examples/briefing-desk
-set -o pipefail
-go run . export-news | jq . > techmeme-news.json
-----
-
-Share the resulting file with participants. No proxy or automatic substitute feed is used. The export includes unavailable archive IDs; it is not a full-text publisher archive.
-====
-
-The entry is the first available US session open after the news week; valuation is the last completed US session close this week. Before the first completed session, prices are unavailable and the app must say so. No simulated/random prices or full-week profit claims are acceptable. Returns exclude dividends, fees and slippage.
+The same saved news can be replayed in later workshops. Only market data is refreshed. This is an educational retrospective comparison; returns exclude dividends, fees and slippage.
 
 If a model, archive or price provider is unavailable, the UI must show the error and preserve progress. Do not replace inference with a keyword rule or invented output.
 

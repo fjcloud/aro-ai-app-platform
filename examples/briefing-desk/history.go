@@ -20,6 +20,8 @@ type historicalReturn struct {
 	Retrieved    string  `json:"retrieved"`
 	WeekComplete bool    `json:"week_complete"`
 	Basis        string  `json:"basis"`
+	QuoteTime    string  `json:"quote_time,omitempty"`
+	PriceType    string  `json:"price_type,omitempty"`
 }
 type dailyBar struct {
 	At          time.Time
@@ -74,7 +76,47 @@ func historicalResult(symbol string, bars []dailyBar, splitDates []int64, week r
 			return historicalReturn{}, errors.New("A stock split occurs in the holding period; this simple price-only game cannot settle it")
 		}
 	}
-	return historicalReturn{symbol, first.At.In(loc).Format("2006-01-02"), last.At.In(loc).Format("2006-01-02"), *first.Open, *last.Close, (*last.Close / *first.Open - 1) * 100, raw, stamp(), !now.Before(end.Add(16*time.Hour + 5*time.Minute)), "First available session open after the news cutoff → last completed US session close. Gross price return; dividends, fees and slippage excluded."}, nil
+	return historicalReturn{Symbol: symbol, EntryDate: first.At.In(loc).Format("2006-01-02"), ExitDate: last.At.In(loc).Format("2006-01-02"), EntryPrice: *first.Open, ExitPrice: *last.Close, ReturnPct: (*last.Close / *first.Open - 1) * 100, SourceURL: raw, Retrieved: stamp(), WeekComplete: !now.Before(end.Add(16*time.Hour + 5*time.Minute)), Basis: "First available session open after the news cutoff → last completed US session close. Gross price return; dividends, fees and slippage excluded."}, nil
+}
+
+func latestMarketResult(symbol string, bars []dailyBar, splits []int64, week replayWeek, now time.Time, price *float64, quoteAt int64, raw string) (historicalReturn, error) {
+	loc, _ := time.LoadLocation("America/New_York")
+	start, err := time.ParseInLocation("2006-01-02", week.MarketStart, loc)
+	if err != nil {
+		return historicalReturn{}, err
+	}
+	cutoff, err := time.Parse(time.RFC3339, week.Cutoff)
+	if err != nil {
+		return historicalReturn{}, errors.New("The entry session must follow the news cutoff")
+	}
+	quoteTime := time.Unix(quoteAt, 0)
+	if price == nil || !finitePositive(*price) || quoteTime.Before(cutoff) || quoteTime.After(now) {
+		return historicalReturn{}, errors.New("No valid market quote is available after the archive cutoff yet")
+	}
+	var first *dailyBar
+	var previous int64
+	for i := range bars {
+		b := &bars[i]
+		if b.At.Unix() <= previous {
+			return historicalReturn{}, errors.New("Historical sessions are duplicated or unordered")
+		}
+		previous = b.At.Unix()
+		if first == nil && !b.At.Before(start) && !b.At.After(quoteTime) {
+			first = b
+		}
+	}
+	if first == nil || first.Open == nil || !finitePositive(*first.Open) {
+		return historicalReturn{}, errors.New("The entry session has no valid opening price")
+	}
+	if first.At.Before(cutoff) {
+		return historicalReturn{}, errors.New("The entry session precedes the news cutoff")
+	}
+	for _, at := range splits {
+		if at >= first.At.Unix() && at <= quoteAt {
+			return historicalReturn{}, errors.New("A stock split occurs in the holding period; this simple price-only game cannot settle it")
+		}
+	}
+	return historicalReturn{Symbol: symbol, EntryDate: first.At.In(loc).Format("2006-01-02"), ExitDate: quoteTime.In(loc).Format("2006-01-02"), EntryPrice: *first.Open, ExitPrice: *price, ReturnPct: (*price / *first.Open - 1) * 100, SourceURL: raw, Retrieved: stamp(), QuoteTime: quoteTime.UTC().Format(time.RFC3339), PriceType: "latest available quote (may be delayed)", Basis: "First US session open after the fixed news cutoff → latest available regular-market quote. Intraday and delayed quotes are timestamped. Gross price return; dividends, fees and slippage excluded."}, nil
 }
 func (f *fetcher) weekReturn(ctx context.Context, symbol string, week replayWeek, now time.Time) (historicalReturn, error) {
 	known := false
@@ -91,6 +133,7 @@ func (f *fetcher) weekReturn(ctx context.Context, symbol string, week replayWeek
 	}
 	q := url.Values{"interval": {"1d"}, "period1": {strconv.FormatInt(start.Unix(), 10)}, "period2": {strconv.FormatInt(now.Unix(), 10)}, "events": {"div,splits"}}
 	raw := "https://query1.finance.yahoo.com/v8/finance/chart/" + symbol + "?" + q.Encode()
+	requestStarted := time.Now()
 	b, _, _, e := f.get(ctx, raw)
 	if e != nil {
 		return historicalReturn{}, e
@@ -99,8 +142,10 @@ func (f *fetcher) weekReturn(ctx context.Context, symbol string, week replayWeek
 		Chart struct {
 			Result []struct {
 				Meta struct {
-					Symbol   string `json:"symbol"`
-					Currency string `json:"currency"`
+					Symbol   string   `json:"symbol"`
+					Currency string   `json:"currency"`
+					Price    *float64 `json:"regularMarketPrice"`
+					Time     int64    `json:"regularMarketTime"`
 				} `json:"meta"`
 				Timestamp  []int64 `json:"timestamp"`
 				Indicators struct {
@@ -135,6 +180,9 @@ func (f *fetcher) weekReturn(ctx context.Context, symbol string, week replayWeek
 	splits := []int64{}
 	for _, v := range v.Events.Splits {
 		splits = append(splits, v.Date)
+	}
+	if week.ValuationMode == "latest" {
+		return latestMarketResult(symbol, bars, splits, week, now.Add(time.Since(requestStarted)), v.Meta.Price, v.Meta.Time, raw)
 	}
 	return historicalResult(symbol, bars, splits, week, now, raw)
 }

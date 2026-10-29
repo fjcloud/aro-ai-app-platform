@@ -1,5 +1,19 @@
 # Signal Desk: ARO end-to-end validation
 
+## Prepared runtime and repository news — 29 October 2026
+
+The current guide deploys a public, digest-pinned image built in advance by [GitHub Actions](https://github.com/fjcloud/aro-ai-app-platform/actions/runs/40888536498). Anonymous image access passed. On the fresh `ltdx6` lab, `oc apply -k deploy/decision` created the cache, ServingRuntime and InferenceService without a Tekton build or app-pipeline PVC. Cold start took about seven minutes, including the image pull and the pinned model download. The InferenceService became Ready, with one T4, `cuda:0`, FP16 and restricted-v2. The documented synthetic chipmaker example scored 3.254/4 for semiconductors and 0.221/4 for retail, both with complete input coverage. The earlier Pending runtime pipeline was cancelled after its prebuilt replacement was deployed.
+
+The app now embeds 161 real Techmeme primary stories dated 26–28 October, with source snapshots and a recorded collection time. Loading needs no Techmeme request. Entry is the first US session open after the fixed 29 October 00:05 New York cutoff; valuation uses the latest available regular-market quote and its timestamp. An actual Yahoo SMH query verified that entry and an intraday quote. The repository-news browser test passed loading/export, ranking, archived-tool research, allocation, price arithmetic, frozen choices on refresh and mobile layout using explicitly synthetic model/price providers. Go race/vet, both browser suites, 42 workshop checks, 17 template checks and the guide build passed.
+
+The local Go application also loaded and ranked all 161 saved stories through the actual `ltdx6` T4 over a port-forward, with no failed scores. A fresh Chromium context checked the fixed dates, 30 visible stories, hidden import control and absence of JavaScript errors. GPU memory usage during scoring was 10,227 MiB out of 15,360 MiB. This validates the actual corpus/model path, separately from the synthetic browser research/portfolio checks.
+
+This pass does not claim a new complete Dev Spaces → Tekton → Argo CD → public browser run on `ltdx6`; the complete earlier run below used the previous archive/valuation flow.
+
+Evidence: [image publication](results/prepared-inputs/runtime-publication.json), [actual T4 cold start and scores](results/prepared-inputs/t4-cold-start.json), [all 161 articles ranked on the T4](results/prepared-inputs/repository-t4-ranking.json), [real market quote](results/prepared-inputs/live-market.json), [repository-news fixture](results/prepared-inputs/saved-news-fixture.json), [fixture UI](results/prepared-inputs/saved-news-fixture.png).
+
+## Earlier complete ARO walkthrough
+
 Validated on the assigned `lvdw8` ARO lab on 28–29 October 2026 (OpenShift 4.21.22). The public application, rather than a local proxy, passed the browser replay.
 
 - **Platform:** installed the workshop operators, CPU worker and one `Standard_NC8as_T4_v3` GPU worker. Native d3-mini reports `cuda:0`, FP16, with one 16 GB T4. The documented curl probes, formatted with jq, scored the same news differently for semiconductor and retail memos.

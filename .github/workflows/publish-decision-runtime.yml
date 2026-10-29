@@ -1,0 +1,62 @@
+name: publish decision runtime
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - deploy/decision/runtime/Dockerfile
+      - .github/workflows/publish-decision-runtime.yml
+permissions:
+  contents: read
+  packages: write
+concurrency:
+  group: decision-runtime-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      REDHAT_REGISTRY_AUTH: ${{ secrets.REDHAT_REGISTRY_AUTH }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      IMAGE: ghcr.io/fjcloud/d3-mini-runtime
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate registries
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DOCKER_CONFIG="$RUNNER_TEMP/runtime-docker"
+          printf 'DOCKER_CONFIG=%s\n' "$DOCKER_CONFIG" >> "$GITHUB_ENV"
+          test -n "$REDHAT_REGISTRY_AUTH"
+          mkdir -p "$DOCKER_CONFIG"
+          chmod 700 "$DOCKER_CONFIG"
+          printf '%s' "$REDHAT_REGISTRY_AUTH" > "$DOCKER_CONFIG/config.json"
+          chmod 600 "$DOCKER_CONFIG/config.json"
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+      - name: Build the pinned runtime
+        run: |
+          docker build --platform linux/amd64 \
+            --label org.opencontainers.image.source=https://github.com/fjcloud/aro-ai-app-platform \
+            --label org.opencontainers.image.revision="$GITHUB_SHA" \
+            --label org.opencontainers.image.description='Signal Desk d3-mini native runtime for one T4' \
+            -t "$IMAGE:$GITHUB_SHA" deploy/decision/runtime
+      - name: Check the runtime without a GPU
+        run: |
+          docker run --rm --entrypoint python3 "$IMAGE:$GITHUB_SHA" \
+            -c 'from importlib.metadata import version; import vllm_srun.cli; print("Runtime import passed; torch=" + version("torch"))'
+      - name: Push and record the immutable image
+        run: |
+          docker push "$IMAGE:$GITHUB_SHA"
+          docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE:$GITHUB_SHA" > runtime-image.txt
+          cat runtime-image.txt >> "$GITHUB_STEP_SUMMARY"
+          gh api /users/fjcloud/packages/container/d3-mini-runtime --jq '{name,visibility,html_url}' > runtime-package.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: decision-runtime-image
+          path: |
+            runtime-image.txt
+            runtime-package.json
+      - name: Remove registry credentials
+        if: always()
+        run: rm -rf "${DOCKER_CONFIG:-$RUNNER_TEMP/runtime-docker}"

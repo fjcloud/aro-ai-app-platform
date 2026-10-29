@@ -79,7 +79,7 @@ def main():
            'data': {'AGENT_BACKEND': 'rhoai', 'AGENT_URL': 'http://lsd-genai-playground-service.' + APP + '.svc.cluster.local:8321/v1',
                     'AGENT_MODEL': 'maas-vllm-inference-1/deepseekv4pro', 'AGENT_JOB_TIMEOUT': '10m',
                     'DECISION_URL': 'http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone',
-                    'DECISION_MODEL': 'vllm-sr/d3-mini', 'DECISION_TIMEOUT': '120s', 'MCP_PUBLIC_HOST': public_host,
+                    'DECISION_MODEL': 'vllm-sr/d3-mini', 'NEWS_CORPUS': 'bundled', 'DECISION_TIMEOUT': '120s', 'MCP_PUBLIC_HOST': public_host,
                     'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT': mlflow + '/v1/traces', 'MLFLOW_EXPERIMENT_ID': experiment, 'MLFLOW_WORKSPACE': APP}})
     apply({'apiVersion': 'v1', 'kind': 'PersistentVolumeClaim', 'metadata': {'name': 'signal-desk-data', 'namespace': APP},
            'spec': {'accessModes': ['ReadWriteOnce'], 'storageClassName': 'managed-csi', 'resources': {'requests': {'storage': '2Gi'}}}})

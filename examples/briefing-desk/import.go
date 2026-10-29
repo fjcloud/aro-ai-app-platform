@@ -16,9 +16,10 @@ import (
 var importedSnapshotPath = regexp.MustCompile(`^/(\d{6})/(?:h\d{4}|p\d+)$`)
 
 type importedCorpus struct {
-	Week    replayWeek `json:"week"`
-	Missing []string   `json:"unavailable_ids"`
-	News    []struct {
+	Week       replayWeek `json:"week"`
+	CapturedAt string     `json:"captured_at,omitempty"`
+	Missing    []string   `json:"unavailable_ids"`
+	News       []struct {
 		URL    string `json:"url"`
 		Source struct {
 			Published  string `json:"published"`
@@ -135,14 +136,22 @@ func (s *server) importGameWeek(w http.ResponseWriter, r *http.Request) {
 
 // Facilitators can prepare an import on an allowed network without model access.
 func exportNews(w io.Writer) error {
-	cache, e := os.MkdirTemp("", "signal-desk-archive-")
+	cache := env("NEWS_EXPORT_CACHE", "")
+	if cache == "" {
+		var e error
+		cache, e = os.MkdirTemp("", "signal-desk-archive-")
+		if e != nil {
+			return e
+		}
+		defer os.RemoveAll(cache)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	week, e := currentNewsWeek(time.Now())
 	if e != nil {
 		return e
 	}
-	defer os.RemoveAll(cache)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
-	defer cancel()
-	manifest, e := newFetcher().archiveWeek(ctx, cache, lastNewsWeek(time.Now()), func(s string) { fmt.Fprintln(os.Stderr, s) })
+	manifest, e := newFetcher().archiveWeek(ctx, cache, week, func(s string) { fmt.Fprintln(os.Stderr, s) })
 	if e != nil {
 		return e
 	}
@@ -152,5 +161,5 @@ func exportNews(w io.Writer) error {
 	}
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
-	return enc.Encode(map[string]any{"week": manifest.Week, "coverage": manifest.Coverage, "unavailable_ids": manifest.Missing, "news": news})
+	return enc.Encode(map[string]any{"week": manifest.Week, "captured_at": stamp(), "coverage": manifest.Coverage, "unavailable_ids": manifest.Missing, "news": news})
 }

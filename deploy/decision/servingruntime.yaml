@@ -25,7 +25,6 @@ spec:
     - float16
     - --cache-dir
     - /cache/hub
-    - --offline
     - --threads
     - '4'
     - --host
@@ -52,12 +51,12 @@ spec:
     - name: XDG_CACHE_HOME
       value: /cache/xdg
     - name: HF_HUB_OFFLINE
-      value: '1'
+      value: '0'
     - name: OMP_NUM_THREADS
       value: '4'
     - name: TRITON_CACHE_DIR
       value: /cache/triton
-    image: image-registry.openshift-image-registry.svc:5000/signal-desk-build/decision-runtime:latest
+    image: ghcr.io/fjcloud/d3-mini-runtime@sha256:bfde28f35d78b1f4ced10bf2ddff7f1e7d030459ce0938ec65620c1d51daa411
     imagePullPolicy: IfNotPresent
     livenessProbe:
       failureThreshold: 3
@@ -91,7 +90,7 @@ spec:
       seccompProfile:
         type: RuntimeDefault
     startupProbe:
-      failureThreshold: 90
+      failureThreshold: 180
       httpGet:
         path: /health/live
         port: 8080

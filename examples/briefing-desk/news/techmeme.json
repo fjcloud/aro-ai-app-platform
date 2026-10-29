@@ -1,0 +1,2109 @@
+{
+  "captured_at": "2026-10-29T14:14:28Z",
+  "coverage": "Techmeme primary headline IDs from historical snapshots, deduplicated by primary publisher URL. Related discussion links are not separate primary headlines. Unavailable IDs are listed explicitly.",
+  "news": [
+    {
+      "source": {
+        "archive_id": "261026p1",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "A look at Toyota's robotics expansion, including its Walden spinoff and a $6.4B annual plan to deploy 400K factory robots, as it competes with Tesla and China",
+        "tldr": "A look at Toyota's robotics expansion, including its Walden spinoff and a $6.4B annual plan to deploy 400K factory robots, as it competes with Tesla and China"
+      },
+      "url": "https://www.ft.com/content/8bf93407-6b93-4ebb-b54b-f290ebd563e3"
+    },
+    {
+      "source": {
+        "archive_id": "261026p10",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "A look at OpenAI's and Anthropic's aggressive price cuts from June through September, driven by low switching costs and pricing pressure from open-weight models",
+        "tldr": "Let's look at a quick timeline of the major LLM model announcements from both OpenAI and Anthropic over the past few months."
+      },
+      "url": "https://minimaxir.com/2026/10/cheap-llms/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p11",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Volkswagen's China unit and Xpeng secure approvals to trial autonomous driving systems on public roads in China; VW is testing Level 3 and Xpeng Level 4",
+        "tldr": "Volkswagen's China unit and Xpeng secure approvals to trial autonomous driving systems on public roads in China; VW is testing Level 3 and Xpeng Level 4"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-26/china-boosts-self-driving-push-with-vw-xpeng-technology-trials"
+    },
+    {
+      "source": {
+        "archive_id": "261026p12",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Modern AI panic reflects “cognitive mercantilism”, a zero-sum worldview where intelligence is a scarce, dangerous supply-side resource that elites must manage",
+        "tldr": "Modern AI panic reflects “cognitive mercantilism”, a zero-sum worldview where intelligence is a scarce, dangerous supply-side resource that elites must manage"
+      },
+      "url": "https://contraptions.venkateshrao.com/p/cognitive-mercantilism"
+    },
+    {
+      "source": {
+        "archive_id": "261026p13",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Ray-Ban Meta Audio glasses review: no camera is a bonus for some, good audio quality, and Meta AI works well, but lingering privacy concerns and fairly pricey",
+        "tldr": "Ray-Ban Meta Audio glasses review: no camera is a bonus for some, good audio quality, and Meta AI works well, but lingering privacy concerns and fairly pricey"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-25/ray-ban-meta-audio-ai-glasses-cost-more-while-ditching-a-key-feature-review"
+    },
+    {
+      "source": {
+        "archive_id": "261026p14",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "The public internet model is dying from too much content, algorithmic aggregators, and vulnerabilities found with AI, and that may bring new possibilities",
+        "tldr": "It was the summer of 2003, just weeks before I was set to move to Taiwan, that I decided to create a blog to document my journey."
+      },
+      "url": "https://stratechery.com/2026/the-end-of-the-internet/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p15",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Meta plans to raise $95B to finance its AI infrastructure, including $35B in public equity offerings, backed by cornerstone investors Nvidia, AMD, and Broadcom",
+        "tldr": "Chipmakers Nvidia, AMD and Broadcom will act as cornerstone investors — Meta is planning to raise $95bn …"
+      },
+      "url": "https://www.ft.com/content/94e5a0ae-874d-447a-bbfc-cd465a1a7555"
+    },
+    {
+      "source": {
+        "archive_id": "261026p16",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Cathedral, a months-old cybersecurity startup founded by ex-DOGE staffers, says it breached Anthropic's internal systems in under 12 hours using AI agents",
+        "tldr": "The start-up firm Cathedral has told makers of the Claude chatbot that its researchers were able to quickly penetrate sensitive systems, a report reviewed by The Post shows."
+      },
+      "url": "https://www.washingtonpost.com/technology/2026/10/26/researchers-cybersecurity-start-up-cathedral-got-inside-anthropic/?pwapi_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWFzb24iOiJnaWZ0IiwibmJmIjoxNzkyOTg3MjAwLCJpc3MiOiJzdWJzY3JpcHRpb25zIiwiZXhwIjoxNzk0MzczMTk5LCJpYXQiOjE3OTI5ODcyMDAsImp0aSI6ImI1M2RjZmEzLThkNTItNGE3NC05ZjI4LWU1ZGJkZTIyZDFmOSIsInVybCI6Imh0dHBzOi8vd3d3Lndhc2hpbmd0b25wb3N0LmNvbS90ZWNobm9sb2d5LzIwMjYvMTAvMjYvcmVzZWFyY2hlcnMtY3liZXJzZWN1cml0eS1zdGFydC11cC1jYXRoZWRyYWwtZ290LWluc2lkZS1hbnRocm9waWMvIn0.k3b70wv6ePisrPvCYfDOPAjt5vHweVxm4rBnhcnDU-M\u0026itid=gfta"
+    },
+    {
+      "source": {
+        "archive_id": "261026p17",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "California startups have raised a record $385B across seed to growth rounds so far in 2026, or 75%+ of all US startup funding; early and seed stage raised ~$62B",
+        "tldr": "California startups have raised a record $385B across seed to growth rounds so far in 2026, or 75%+ of all US startup funding; early and seed stage raised ~$62B"
+      },
+      "url": "https://news.crunchbase.com/venture/california-startups-most-us-funding-2026-openai-anthropic/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p18",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Google DeepMind's AI hurricane forecasting model outperformed conventional models by accurately predicting that Hurricane Isaias would make landfall in Florida",
+        "tldr": "Google DeepMind's AI hurricane forecasting model outperformed conventional models by accurately predicting that Hurricane Isaias would make landfall in Florida"
+      },
+      "url": "https://www.npr.org/2026/10/26/nx-s1-6012820/ai-hurricane-forecast-google-deepmind-isaias"
+    },
+    {
+      "source": {
+        "archive_id": "261026p19",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Apple unveils a redesigned iPad mini with an 8.5-inch OLED display, an A20 Pro, a nano-texture display option, and IP67 water resistance, for $699+ from Nov. 6",
+        "tldr": "Featuring a stunning OLED display in an even thinner and lighter design, a huge leap in performance, faster wireless connectivity, and water and dust resistance"
+      },
+      "url": "https://www.apple.com/newsroom/2026/10/apple-gives-ipad-mini-its-biggest-update-ever/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p2",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Amazon Bee Frontier review: a simple $75 AI wearable that excels at always-on listening, summarizing conversations, and suggesting follow-up actions",
+        "tldr": "Amazon Bee Frontier review: a simple $75 AI wearable that excels at always-on listening, summarizing conversations, and suggesting follow-up actions"
+      },
+      "url": "https://spyglass.org/amazon-bee/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p20",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic files for an IPO on the Nasdaq under the symbol ANT; the number of Class A shares to be offered and the price range is yet to be determined",
+        "tldr": "Today, Anthropic, PBC filed a registration statement on Form S-1 with the U.S. Securities and Exchange Commission relating …"
+      },
+      "url": "https://www.anthropic.com/news/s1-sec"
+    },
+    {
+      "source": {
+        "archive_id": "261026p21",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic's co-founders say they “believe that AI is one of the most consequential technologies in human history”, detail its scientific potential, and more",
+        "tldr": "We believe that Al is one of the most consequential technologies in human history. If managed well …"
+      },
+      "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
+    },
+    {
+      "source": {
+        "archive_id": "261026p22",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic S-1: an $80.7B net loss on revenue of $16.3B in H1 2026, up from a $13B net loss on revenue of $1.2B in H1 2025, and a net revenue retention of 900%",
+        "tldr": "Anthropic PBC filed for an IPO, warning its technology carried existential risks even as it moved a step closer …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-26/anthropic-ipo-s-1-filing-offers-first-look-at-claude-maker-s-finances"
+    },
+    {
+      "source": {
+        "archive_id": "261026p23",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic S-1: of its $80.7B net loss in H1 2026, nearly $9B came from computing power and infrastructure, and it has nearly $800B in commitments over 10 years",
+        "tldr": "240,000-word prospectus lays out explosive growth alongside steep losses and daunting risk factors"
+      },
+      "url": "https://www.ft.com/content/f6ecfecd-d797-4d2c-b427-d333297949cb"
+    },
+    {
+      "source": {
+        "archive_id": "261026p24",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "S-1: Anthropic outlines its mission to revolutionize sectors like medicine and warns its corporate behavior may diverge from traditional profit-maximization",
+        "tldr": "S-1: Anthropic outlines its mission to revolutionize sectors like medicine and warns its corporate behavior may diverge from traditional profit-maximization"
+      },
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1018476/anthropic-ipo-details-s1-filed-sec"
+    },
+    {
+      "source": {
+        "archive_id": "261026p25",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "SpaceX agrees to a ~$40B equipment finance lease with Apollo to fund purchases of Nvidia GPUs for its AI initiatives, set to close before the end of 2026",
+        "tldr": "SpaceX agrees to a ~$40B equipment finance lease with Apollo to fund purchases of Nvidia GPUs for its AI initiatives, set to close before the end of 2026"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-26/spacex-agrees-to-40-billion-chip-financing-deal-with-apollo"
+    },
+    {
+      "source": {
+        "archive_id": "261026p26",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic S-1: post-IPO governance will retain Public Benefit Corporation status, giving its seven co-founders 50.1% voting control via a single Class F share",
+        "tldr": "Anthropic S-1: post-IPO governance will retain Public Benefit Corporation status, giving its seven co-founders 50.1% voting control via a single Class F share"
+      },
+      "url": "https://www.reuters.com/legal/litigation/anthropics-ipo-close-look-ai-frontrunners-rapid-growth-spiraling-costs-2026-10-26/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p27",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic's S-1 lists 94 pages of risk factors and warns that the “scale of harm” from a “catastrophic” AI incident might mean it is unable to obtain insurance",
+        "tldr": "94 pages — Nearly a quarter of Anthropic's S1, or 94 pages, was dedicated to risk factors …"
+      },
+      "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-10-26-2026/card/anthropic-s-risk-factors-include-catastrophic-ai-related-incident--aAwPiJrvIG5OHdQGAo1n"
+    },
+    {
+      "source": {
+        "archive_id": "261026p28",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Sources: Anthropic is aiming to go public the week of November 16 and could raise ~$100B at a $1.5T to $2T valuation, after initially preparing for October",
+        "tldr": "Sources: Anthropic is aiming to go public the week of November 16 and could raise ~$100B at a $1.5T to $2T valuation, after initially preparing for October"
+      },
+      "url": "https://www.wsj.com/tech/anthropic-unveils-paperwork-for-blockbuster-ipo-291a684b?st=sUdaw6\u0026reflink=desktopwebshare_permalink"
+    },
+    {
+      "source": {
+        "archive_id": "261026p29",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "S-1: Anthropic warns prospective investors that its AI safety and advocacy stances risk disproportionate and selective targeting from the Trump administration",
+        "tldr": "S-1: Anthropic warns prospective investors that its AI safety and advocacy stances risk disproportionate and selective targeting from the Trump administration"
+      },
+      "url": "https://www.axios.com/2026/10/26/anthropic-trump-ai-safety-ipo-risks"
+    },
+    {
+      "source": {
+        "archive_id": "261026p3",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "India's chip design startups near production with government support, but low volumes, high fab costs, and supply chain bottlenecks hinder commercialization",
+        "tldr": "India's chip design startups near production with government support, but low volumes, high fab costs, and supply chain bottlenecks hinder commercialization"
+      },
+      "url": "https://asia.nikkei.com/business/tech/semiconductors/india-s-chip-design-startups-struggle-with-final-commercial-hurdle"
+    },
+    {
+      "source": {
+        "archive_id": "261026p30",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Instagram is testing Features, a new long-form horizontal video format of up to 90 minutes aimed at podcasters, comedians, and other creators, in the US",
+        "tldr": "Instagram is testing Features, a new long-form horizontal video format of up to 90 minutes aimed at podcasters, comedians, and other creators, in the US"
+      },
+      "url": "https://www.hollywoodreporter.com/business/digital/instagram-tests-90-minute-videos-podcasters-creators-1236739929/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p31",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Bedrock Robotics, which makes driverless excavators and other autonomous construction machines, raised a $600M Series C at a $4.1B valuation",
+        "tldr": "Bedrock Robotics Inc., a startup making driverless excavators and other autonomous construction machines, hit a $4.1 billion valuation in its latest funding round."
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-26/autonomous-construction-firm-bedrock-hits-4-1-billion-valuation"
+    },
+    {
+      "source": {
+        "archive_id": "261026p32",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Microsoft offers buyouts to ~60K workers at VP level and below across teams in the US, Canada, India, and the UK; its headcount at the end of June was 223K",
+        "tldr": "Microsoft Corp. will offer buyouts to about 60,000 workers, part of the company's efforts to trim costs and retool its workforce for the artificial intelligence era."
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-26/microsoft-to-offer-buyouts-to-60-000-workers-in-latest-cost-cut"
+    },
+    {
+      "source": {
+        "archive_id": "261026p33",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Nevis, which uses AI to automate paperwork for financial advisors, raised a $70M Series B led by EQT Ventures, a source says at a $500M valuation",
+        "tldr": "Nevis, which uses AI to automate paperwork for financial advisors, raised a $70M Series B led by EQT Ventures, a source says at a $500M valuation"
+      },
+      "url": "https://fortune.com/2026/10/26/former-revolut-execs-70-million-financial-advisor-shortage/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p34",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Few VC firms are mentioned in Anthropic's S-1, except Spark, which invested ~$800M across six rounds and whose GP Yasmin Razavi is the sole VC on its board",
+        "tldr": "Few VC firms are mentioned in Anthropic's S-1, except Spark, which invested ~$800M across six rounds and whose GP Yasmin Razavi is the sole VC on its board"
+      },
+      "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-10-26-2026/card/few-vcs-mentioned-in-anthropic-ipo-filing-except-spark-capital-AzO2iia3OGgCOvgbzPAt"
+    },
+    {
+      "source": {
+        "archive_id": "261026p35",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Microsoft and others push out emergency patches for a critical flaw in Brotli, the C decoder library built into Node.js, that could allow remote code execution",
+        "tldr": "Microsoft and others push out emergency patches for a critical flaw in Brotli, the C decoder library built into Node.js, that could allow remote code execution"
+      },
+      "url": "https://www.bleepingcomputer.com/news/security/critical-http2shell-brotli-vulnerability-triggers-emergency-patches/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p36",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "S-1: as of September 30, Anthropic had 11,900+ customers spending $100,000+ annually, 1,900+ customers spending $1M+, and ~250 customers spending $10M+",
+        "tldr": "S-1: as of September 30, Anthropic had 11,900+ customers spending $100,000+ annually, 1,900+ customers spending $1M+, and ~250 customers spending $10M+"
+      },
+      "url": "https://techcrunch.com/2026/10/26/anthropics-ipo-filing-reveals-its-strategy-for-keeping-enterprise-customers-hooked/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p37",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Apple says it is “aware of an issue impacting the inner display on a small number” of iPhone Duos and affected users can contact AppleCare for a replacement",
+        "tldr": "Over the weekend, a handful of iPhone Duo users reported that their inner display had cracked along the hinge."
+      },
+      "url": "https://9to5mac.com/2026/10/26/apple-responds-to-reports-of-iphone-duos-inner-display-cracking/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p38",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Cohere says during an evaluation Qwen3.8-Flash-Next inventoried its host machine and tried to upload a probe file to an Alibaba Cloud storage bucket in Beijing",
+        "tldr": "For nearly two years, one comforting idea has shaped how companies and government contractors adopt open-weight AI models that anyone can download and run."
+      },
+      "url": "https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model"
+    },
+    {
+      "source": {
+        "archive_id": "261026p39",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic S-1: it spent just $482M on capex in H1 2026, leasing most of its compute, and its capex is almost entirely outsourced via $782B in lease obligations",
+        "tldr": "Anthropic S-1: it spent just $482M on capex in H1 2026, leasing most of its compute, and its capex is almost entirely outsourced via $782B in lease obligations"
+      },
+      "url": "https://www.culpium.com/p/anthropic-s1-now-live-first-look"
+    },
+    {
+      "source": {
+        "archive_id": "261026p4",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "A profile of former Google VP and Yahoo CEO Marissa Mayer, whose startup Dazzle is building an AI assistant to help normal people tackle mundane tasks visually",
+        "tldr": "A profile of former Google VP and Yahoo CEO Marissa Mayer, whose startup Dazzle is building an AI assistant to help normal people tackle mundane tasks visually"
+      },
+      "url": "https://www.nytimes.com/2026/10/25/style/marissa-mayer-ai-assistants-women.html?unlocked_article_code=1.LVE.bUTq.yuaOciiPS1zl\u0026smid=url-share"
+    },
+    {
+      "source": {
+        "archive_id": "261026p40",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "OpenAI releases GPT-6.1 Terra, touting “fast and capable computer use at scale” and clearer, more natural writing, priced at $1/1M input and $5/1M output tokens",
+        "tldr": "Delivering fast and capable computer use at scale — , a fast, efficient model that combines detailed visual reasoning …"
+      },
+      "url": "https://openai.com/index/introducing-gpt-6-1-terra/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p41",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic's S-1 shows a governance structure that suits a fun quirky little mission-driven worker cooperative that needs to raise billions as a public company",
+        "tldr": "Also share classes and fake polls. — Happy Anthropic S-1 day — Here's the draft prospectus for Anthropic PBC's initial public offering."
+      },
+      "url": "https://www.bloomberg.com/opinion/newsletters/2026-10-26/anthropic-raises-concerns"
+    },
+    {
+      "source": {
+        "archive_id": "261026p42",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Apple debuts iOS 27.2, with Siri AI enhancements for recalling past conversations, understanding more personal context, supporting five more languages, and more",
+        "tldr": "Apple today released iOS 27.2 and iPadOS 27.2, the first major updates to the iOS 27 and iPadOS 27 operating systems that came …"
+      },
+      "url": "https://www.macrumors.com/2026/10/26/apple-releases-ios-27-2/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p43",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Sources: DoorDash is in advanced talks to acquire Instacart, and the deal could be finalized as soon as this week and could value Instacart at ~$17B",
+        "tldr": "Deal could be completed as soon as this week, people familiar with the matter say — DoorDash is in advanced talks to acquire food …"
+      },
+      "url": "https://www.wsj.com/business/hospitality/doordash-is-in-advanced-talks-to-acquire-delivery-rival-instacart-2b3d3d18?st=uZNB75"
+    },
+    {
+      "source": {
+        "archive_id": "261026p44",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Sources: Hong Kong-based stablecoin payments startup RedotPay plans a US IPO filing by year-end and is in talks for a pre-IPO round at a $4B to $5B valuation",
+        "tldr": "Sources: Hong Kong-based stablecoin payments startup RedotPay plans a US IPO filing by year-end and is in talks for a pre-IPO round at a $4B to $5B valuation"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-26/redotpay-said-to-prepare-confidential-ipo-filing-by-year-end"
+    },
+    {
+      "source": {
+        "archive_id": "261026p45",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Anthropic's IPO outlines an unusual succession plan: confidential, ranked lists of up to 10 successors per co-founder, subject to approval from five co-founders",
+        "tldr": "Anthropic's IPO outlines an unusual succession plan: confidential, ranked lists of up to 10 successors per co-founder, subject to approval from five co-founders"
+      },
+      "url": "https://www.forbes.com/sites/annatong/2026/10/26/anthropic-founders-can-name-secret-successors/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p46",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Intel agrees to acquire Tel Aviv-based quantum computing startup Classiq; Classiq has raised more than $200M in funding and has about 130 employees",
+        "tldr": "Intel Corp. agreed to buy Israeli startup Classiq Technologies Ltd. as part of a push to capitalize on quantum computing, a still-nascent field that is seeking commercial applications."
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-26/intel-to-buy-israeli-startup-classiq-in-quantum-computing-push"
+    },
+    {
+      "source": {
+        "archive_id": "261026p47",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Broadcom arranges a $63B deal with BofA, Blackstone, Citi, and Morgan Stanley to finance the purchase of chips for Anthropic via a new special purpose vehicle",
+        "tldr": "Chipmaker Broadcom Inc. has arranged a $63 billion deal with Bank of America Corp., Blackstone Inc., Citigroup Inc. and Morgan Stanley …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-26/broadcom-arranges-63-billion-deal-to-finance-anthropic-s-chips"
+    },
+    {
+      "source": {
+        "archive_id": "261026p48",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "OpenAI announces three breakthroughs in computer science, math, and physics, including that the Exponential Time Hypothesis, a longstanding conjecture, is false",
+        "tldr": "We are announcing three new discoveries in mathematics, computer science, and physics about harmonic analysis, complexity theory, and quantum field theory."
+      },
+      "url": "https://openai.com/index/building-scientific-understanding-with-academic-communities/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p49",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Fitbit Edge review: notable upgrade over the Charge 6 for GPS and heart rate, Google Health app is an improvement, but lacks software polish and NFC payments",
+        "tldr": "Fitbit Edge review: notable upgrade over the Charge 6 for GPS and heart rate, Google Health app is an improvement, but lacks software polish and NFC payments"
+      },
+      "url": "https://www.dcrainmaker.com/2026/10/fitbit-edge-depth-review-worth-the-upgrade.html"
+    },
+    {
+      "source": {
+        "archive_id": "261026p5",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Inside Slack's Salesforce culture clash: Benioff didn't use Slack and had ~1 hour with CEO Butterfield pre-deal; Butterfield quit after a Davos will.i.am panel",
+        "tldr": "I needed a keyboard. — I stood at my reserved desk on the 7th floor of Salesforce's tower in Vancouver around 9am."
+      },
+      "url": "https://buildingslack.com/salesforce-part-two/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p50",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Ahead of US midterms, ChatGPT draws images “depicting election interference or that may discourage voting” in a cartoon style, ignoring photorealism requests",
+        "tldr": "Ahead of US midterms, ChatGPT draws images “depicting election interference or that may discourage voting” in a cartoon style, ignoring photorealism requests"
+      },
+      "url": "https://www.cnet.com/tech/services-and-software/openai-chatgpt-political-deepfakes-defense-midterm-elections/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p51",
+        "archive_url": "https://www.techmeme.com/261026/h2355",
+        "archived_at": "2026-10-27T03:55:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "China's Star 50 index of AI and chip leaders is down by 40% in under four months, losing ~$480B in market value; chipmaker CXMT is down ~25% in the past month",
+        "tldr": "China's Star 50 index of AI and chip leaders is down by 40% in under four months, losing ~$480B in market value; chipmaker CXMT is down ~25% in the past month"
+      },
+      "url": "https://www.reuters.com/world/china/china-ai-bubble-has-already-burst-2026-10-26/"
+    },
+    {
+      "source": {
+        "archive_id": "261026p6",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Alphabet, Amazon, and Microsoft are expected to report double-digit gains in revenue this week, as investors grow impatient with AI capex and seek returns",
+        "tldr": "Alphabet, Amazon, and Microsoft are expected to report double-digit gains in revenue this week, as investors grow impatient with AI capex and seek returns"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-25/ai-spending-fears-threaten-to-swamp-big-tech-s-strong-earnings"
+    },
+    {
+      "source": {
+        "archive_id": "261026p7",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Elvis Presley's music owners sue Anthropic for allegedly using 274 songs to train its models, seeking $41M+; Anthropic says it disagrees and will defend itself",
+        "tldr": "The $41 million lawsuit contends that the A.I. company used Presley's music to train its models without permission."
+      },
+      "url": "https://www.nytimes.com/2026/10/25/arts/music/anthropic-lawsuit-elvis-presley-songs.html?unlocked_article_code=1.LVE.Unk9.7e04-FAQ9Ei8\u0026smid=nytcore-ios-share"
+    },
+    {
+      "source": {
+        "archive_id": "261026p8",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "Filing: Chinese PCB maker Dongshan raised ~$1.3B in Hong Kong's biggest IPO in nearly two months, pricing shares at ~$11, or 35% below its Friday Shenzhen close",
+        "tldr": "Filing: Chinese PCB maker Dongshan raised ~$1.3B in Hong Kong's biggest IPO in nearly two months, pricing shares at ~$11, or 35% below its Friday Shenzhen close"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-25/chinese-manufacturer-dongshan-raises-1-3-billion-in-hk-listing"
+    },
+    {
+      "source": {
+        "archive_id": "261026p9",
+        "archive_url": "https://www.techmeme.com/261026/h1200",
+        "archived_at": "2026-10-26T16:00:00Z",
+        "published": "2026-10-26"
+      },
+      "summary": {
+        "title": "A look at TSMC's first plant in Phoenix that has achieved chip output rates comparable to its Taiwan facilities, as its Taiwanese engineers teach US workers",
+        "tldr": "On July 5 the Northwest Chinese Baptist Church in Phoenix opened its weekly Mandarin service with a verse from the Old Testament."
+      },
+      "url": "https://www.nytimes.com/2026/10/23/opinion/ai-computer-chips-semiconductor-arizona-industry.html?unlocked_article_code=1.LVE.T4pO.KW_xY6NbyH_s\u0026smid=nytcore-ios-share"
+    },
+    {
+      "source": {
+        "archive_id": "261027p1",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Experts: since June, $100M+ in US data center freight has been stolen; in two successful heists, robbers struck escorts protecting trucks hauling $10M+ in goods",
+        "tldr": "Trucking, supply chain and security industry veterans detailed to NBC News how thieves staged dramatic robberies as part of the growing theft of tech equipment."
+      },
+      "url": "https://www.nbcnews.com/tech/security/grand-theft-ai-highway-thieves-are-stealing-millions-data-center-gear-rcna603733"
+    },
+    {
+      "source": {
+        "archive_id": "261027p10",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Hyphenate, which develops reinforcement-learning-driven AI agents to automate corporate finance tasks, raised a $45M Series A, taking its total funding to $54M",
+        "tldr": "Hyphenate Inc. has raised $45 million in a funding round led by Nexus Venture Partners, securing capital for an effort …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/microsoft-alumni-score-funding-to-build-ai-agents-for-finance"
+    },
+    {
+      "source": {
+        "archive_id": "261027p11",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "PayPal reports Q3 revenue up 2% YoY to $8.58B, below $8.71B est., TPV up 6% to $487.14B, and raises full-year adjusted EPS guidance to ~$5.60, above $5.39 est.",
+        "tldr": "PayPal reports Q3 revenue up 2% YoY to $8.58B, below $8.71B est., TPV up 6% to $487.14B, and raises full-year adjusted EPS guidance to ~$5.60, above $5.39 est."
+      },
+      "url": "https://www.wsj.com/business/retail/paypal-lifts-full-year-outlook-ceo-stresses-turnaround-plan-15cd0e2e?st=HHaBnz\u0026reflink=desktopwebshare_permalink"
+    },
+    {
+      "source": {
+        "archive_id": "261027p12",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Sources: Trend Micro's TrendAI found Israeli adtech company Discover-Tech heavily targeted Starlink users in 100+ countries, likely to geolocate or surveil them",
+        "tldr": "Experts at a digital defense firm recently found that an Israeli ad tech company was heavily targeting users …"
+      },
+      "url": "https://www.reuters.com/business/media-telecom/alleged-israeli-spy-company-heavily-targeted-starlink-users-sources-say-2026-10-27/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p13",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Study: non-English languages can consume far more AI tokens, with the most expensive language using 1.5x to 5x more than the cheapest, causing a “tokenizer tax”",
+        "tldr": "Some languages require far more tokens for AI models to process, raising costs and reducing context for the people who use them."
+      },
+      "url": "https://restofworld.org/2026/ai-tokenizer-tax-non-english-languages-cost-inequity/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p14",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "The FCC warns TP-Link that three of its routers violate power limits, which could bring more bans, and it may have submitted “false or incorrect information”",
+        "tldr": "The FCC warns TP-Link that three of its routers violate power limits, which could bring more bans, and it may have submitted “false or incorrect information”"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/fcc-warns-tp-link-its-routers-breach-power-limits-in-latest-snub"
+    },
+    {
+      "source": {
+        "archive_id": "261027p15",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Apple unveils a 14\" MacBook Pro with an M6, which has a 12-core CPU and a 12-core GPU, 16GB or 32GB of unified memory, and Wi-Fi 7, for $1,999+ from November 6",
+        "tldr": "Supercharged by M6, the 14-inch MacBook Pro features incredible performance and next-level AI capabilities, enhanced connectivity …"
+      },
+      "url": "https://www.apple.com/newsroom/2026/10/apple-introduces-the-new-14-inch-macbook-pro-with-m6/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p16",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Apple updates the 24-inch iMac with an M6, which has up to a 12-core CPU and up to a 12-core GPU, and a dual 16-core Neural Engine, for $1,499+ from November 6",
+        "tldr": "With blazing-fast performance, enhanced connectivity, Siri AI, and macOS 27, all in a stunning design in seven vibrant colors, the world's best all-in-one gets even better"
+      },
+      "url": "https://www.apple.com/newsroom/2026/10/apple-unveils-new-imac-with-m6/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p17",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Anduril and Qualcomm unveil BlueChip, a line of laptops designed and assembled in the US for defense and government; Anduril will begin taking orders in 2027",
+        "tldr": "Defense tech startup Anduril Industries Inc. has joined forces with chipmaker Qualcomm Inc. to produce laptops that are designed …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/anduril-and-qualcomm-plan-to-build-laptop-with-us-supply-chain"
+    },
+    {
+      "source": {
+        "archive_id": "261027p18",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Neocloud General Compute, which specializes in bare-metal infrastructure, raised a $100M Series A led by Blackbird and Abstract at an $800M post-money valuation",
+        "tldr": "CoreWeave, a publicly traded neocloud that rents out computing power for AI, has seen its stock price fall to a 12-month low …"
+      },
+      "url": "https://techcrunch.com/2026/10/27/general-compute-raises-100-million-series-a-countering-the-neocloud-disaster-narrative/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p19",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Dallas-based Disruptive raised $10B to invest in AI, defense, and software, doubling its AUM, and pivots from single-deal SPVs to a discretionary fund structure",
+        "tldr": "The Dallas-based firm plans to back 10 later-stage companies with $1 billion each. — Disruptive, a 15-year-old investment firm based …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/disruptive-closes-10-billion-megafund-for-ai-defense-startups"
+    },
+    {
+      "source": {
+        "archive_id": "261027p2",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Microsoft patches a severe flaw in its Android Authenticator app that could let untrusted apps impersonate Microsoft apps and obtain delegated account tokens",
+        "tldr": "Microsoft patched high-severity flaw CVE-2026-80097 (CVSS 8.6) in Authenticator for Android, allowing malicious apps …"
+      },
+      "url": "https://cybersecuritynews.com/microsoft-authenticator-flaw/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p20",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Apple adds a beta AI assistant built on Apple's and OpenAI's models to Keynote, Pages, Numbers, and Logic Pro, plus MCP support to Keynote, Pages, and Numbers",
+        "tldr": "The new AI assistant can draft and restructure content in Pages, while organizing data in Numbers."
+      },
+      "url": "https://www.theverge.com/tech/1019373/apple-pages-keynote-numbers-ai-chatbot-update"
+    },
+    {
+      "source": {
+        "archive_id": "261027p21",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "London-based Machenta, which is building an AI model that can teach robots new physical tasks after seeing them performed just once, raised a $40M seed",
+        "tldr": "London-based Machenta, which is building an AI model that can teach robots new physical tasks after seeing them performed just once, raised a $40M seed"
+      },
+      "url": "https://www.businessinsider.com/this-11-person-startup-raised-40-million-train-robots-virtual-worlds-2026-10"
+    },
+    {
+      "source": {
+        "archive_id": "261027p22",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Anthropic's S-1 shows an 85% gross margin in H1 from running its models, a reality check for skeptics who said pay-as-you-go model sales wouldn't be profitable",
+        "tldr": "When Anthropic on Monday dropped its long-awaited initial public offering prospectus filing, a lot of the details …"
+      },
+      "url": "https://www.theinformation.com/articles/anthropics-85-margin-reality-check-skeptics"
+    },
+    {
+      "source": {
+        "archive_id": "261027p23",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Google DeepMind launches Genie 4, a world model powered by Gemini 3.8 Flash designed to generate interactive AI simulations, in preview first to trusted testers",
+        "tldr": "The Genie 4 world model offers more realism and can create audio to accompany its interactive worlds."
+      },
+      "url": "https://www.theverge.com/tech/1019076/google-genie-4-ai-model"
+    },
+    {
+      "source": {
+        "archive_id": "261027p24",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Oracle adds ChatGPT and Codex to its app stack and expands Oracle Cloud Infrastructure lineup with Google TPUs, OpenAI's Jalapeño chip, and Cerebras hardware",
+        "tldr": "Oracle adds ChatGPT and Codex to its app stack and expands Oracle Cloud Infrastructure lineup with Google TPUs, OpenAI's Jalapeño chip, and Cerebras hardware"
+      },
+      "url": "https://www.cnbc.com/2026/10/27/oracle-openai-chatgpt-codex-google-tpus.html"
+    },
+    {
+      "source": {
+        "archive_id": "261027p25",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Avante, which builds an AI platform to help companies manage employee healthcare and other benefits, raised a $30M Series A, following a $10M seed in 2024",
+        "tldr": "Avante, which builds an AI platform to help companies manage employee healthcare and other benefits, raised a $30M Series A, following a $10M seed in 2024"
+      },
+      "url": "https://www.geekwire.com/2026/seattle-startup-avante-raises-30m-to-bring-ai-agents-to-corporate-benefits-teams/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p26",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "GM plans to switch from the NYSE to Nasdaq on November 17 as part of its push under Tesla veteran Sterling Anderson to use AI to speed up its development cycle",
+        "tldr": "GM plans to switch from the NYSE to Nasdaq on November 17 as part of its push under Tesla veteran Sterling Anderson to use AI to speed up its development cycle"
+      },
+      "url": "https://www.ft.com/content/01467514-66c1-4375-9906-45a47b949270"
+    },
+    {
+      "source": {
+        "archive_id": "261027p27",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Memo: Amazon says measuring AI adoption solely by token usage or code generation is “deeply flawed,” as it discourages staff from tokenmaxxing",
+        "tldr": "Amazon laid out its AI usage guidelines for software engineers in a memo to staffers, and discouraged employees from turning to …"
+      },
+      "url": "https://www.cnbc.com/2026/10/27/amazon-ai-coding-tokenmaxxing.html"
+    },
+    {
+      "source": {
+        "archive_id": "261027p28",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Sources: Meta's $25B share sale was oversubscribed 5x as it seeks $98B for AI spending; the 15 largest investors in the sale accounted for ~70% of shares",
+        "tldr": "Sources: Meta's $25B share sale was oversubscribed 5x as it seeks $98B for AI spending; the 15 largest investors in the sale accounted for ~70% of shares"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/meta-s-25-billion-stock-sale-ended-five-times-oversubscribed"
+    },
+    {
+      "source": {
+        "archive_id": "261027p29",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Sources: AI robotics startup Physical Intelligence is in talks to raise $1B+ led by Avenir and Lux Capital at a ~$20B valuation, up from $11.5B earlier in 2026",
+        "tldr": "Physical Intelligence, a startup developing artificial intelligence software to power robots for real-world tasks …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/robotics-lab-physical-intelligence-in-talks-for-a-20-billion-valuation"
+    },
+    {
+      "source": {
+        "archive_id": "261027p3",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Nvidia and Meta expand their Muse partnership, including Meta deploying more Vera Rubin and Vera CPUs; Nvidia will invest $3B in Meta's planned equity fundraise",
+        "tldr": "Investment comes as Facebook's parent seeks up to $95 billion via stock offerings — Nvidia and Meta Platforms are expanding …"
+      },
+      "url": "https://www.wsj.com/tech/ai/nvidia-to-invest-3-billion-in-metas-equity-offering-as-they-expand-ai-partnership-e8d3850a?st=4eEQYV\u0026reflink=desktopwebshare_permalink"
+    },
+    {
+      "source": {
+        "archive_id": "261027p30",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Robinhood reports Q3 revenue up 12% YoY to $1.42B, in line with est., crypto revenue down 55% to $120M, and profit down 14% to $476M; HOOD drops 7%+ after hours",
+        "tldr": "Robinhood Markets (HOOD.O) reported a drop in third-quarter profit on Tuesday as slower cryptocurrency trading weighed on growth …"
+      },
+      "url": "https://www.reuters.com/business/robinhood-quarterly-profit-falls-softer-crypto-activity-outweighs-robust-trading-2026-10-27/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p31",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Anthropic details early drug development work with six partners and says it has acquired Mithril, a one-person company working on muscular dystrophy",
+        "tldr": "There are many opportunities to speed up drug development, even beyond the most commonly discussed applications of AI, like proposing initial designs for new molecules."
+      },
+      "url": "https://www.anthropic.com/research/early-progress-drug-development"
+    },
+    {
+      "source": {
+        "archive_id": "261027p32",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Discord says it will let public-channel messages from servers listed in Server Discovery appear in web search from mid-December; admins and members can opt out",
+        "tldr": "Discord announced on Tuesday it will make some conversations in its public servers searchable and easier to find on the internet."
+      },
+      "url": "https://techcrunch.com/2026/10/27/discord-is-making-its-public-communities-more-searchable-and-people-have-concerns/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p33",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Source: Apple has discussed charging $2,899 for the 14-inch MacBook Pro with an OLED XDR touch screen and M5 Pro chip, $400 more than the current M5 Pro model",
+        "tldr": "Apple Inc., after successfully betting this month that consumers are willing to pay $2,000 or more for a foldable iPhone …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/apple-14-inch-16-inch-macbook-pro-touch-price-is-likely-2-899-laptop-details?accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJTdWJzY3JpYmVyR2lmdGVkQXJ0aWNsZSIsImlhdCI6MTc5MzEzODg1NiwiZXhwIjoxNzkzNzQzNjU2LCJhcnRpY2xlSWQiOiJUTktaNE9UOTZPU0kwMCIsImJjb25uZWN0SWQiOiJDNEVEQ0FFMUZBMDU0MEJFQTI0QTlGMjExQzFFOTA4MCJ9.-r0-k5GENAkA0QuY_42jePcRdcwpSByLQzUz6ZPG9LI"
+    },
+    {
+      "source": {
+        "archive_id": "261027p34",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "NXP reports Q3 revenue up 19% YoY to $3.79B, vs. $3.76B est., and forecasts Q4 revenue below estimates; NXPI drops 7%+ after hours",
+        "tldr": "NXP reports Q3 revenue up 19% YoY to $3.79B, vs. $3.76B est., and forecasts Q4 revenue below estimates; NXPI drops 7%+ after hours"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/nxp-shares-slide-after-chipmaker-gives-tepid-revenue-forecast"
+    },
+    {
+      "source": {
+        "archive_id": "261027p35",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Infisical, which helps companies use AI agents without handing over their private credentials, raised a $40M Series B led by Elad Gil at a $600M valuation",
+        "tldr": "Infisical is helping companies like Airbus and Volkswagen use agents without handing over their private credentials."
+      },
+      "url": "https://www.forbes.com/sites/rashishrivastava/2026/10/27/this-600-million-startup-is-helping-keep-company-secrets-away-from-ai-agents/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p36",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Anthropic expands its US GSA partnership to give federal, state, local, tribal, and territorial governments a 40% discount on Claude, estimated to save $1B",
+        "tldr": "We are expanding our partnership with the General Services Administration (GSA) through a new agreement that gives government partners …"
+      },
+      "url": "https://www.anthropic.com/news/expanding-partnership-gsa"
+    },
+    {
+      "source": {
+        "archive_id": "261027p37",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "SK Hynix reports Q3 revenue up 328% YoY to ~$78.8B, vs. ~$74.07B est., and operating profit up 632% to ~$62.76B, vs. ~$57.78B est.",
+        "tldr": "South Korean chipmaker SK Hynix on Wednesday posted a record high quarterly profit, sharply beating estimates, and announced over $25 billion in dividends and buybacks …"
+      },
+      "url": "https://www.cnbc.com/2026/10/28/sk-hynix-third-quarter-profit.html"
+    },
+    {
+      "source": {
+        "archive_id": "261027p38",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "An Anthropic hiring manager says he stopped giving coding interviews because Claude is better at them and tells junior engineers that “hunger beats tenure”",
+        "tldr": "This month, I laid the traditional coding interview to rest. As a hiring manager at Anthropic, I stopped asking candidates to do them."
+      },
+      "url": "https://felixrieseberg.com/hunger-beats-tenure-advice-for-junior-engineers/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p39",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Source: OpenAI, a major Nvidia customer, plans to buy Google's TPUs; a job listing shows it seeks an engineer to “lead the optimization” of its models on TPUs",
+        "tldr": "OpenAI plans to buy Google's AI chips, according to a person familiar with the matter, in a boost for a rising competitor to OpenAI backer Nvidia."
+      },
+      "url": "https://www.theinformation.com/articles/openai-longtime-nvidia-customer-plans-buy-googles-ai-chips"
+    },
+    {
+      "source": {
+        "archive_id": "261027p4",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Sources: Broadcom CEO Hock Tan held 11th-hour talks and agreed to higher rates and loan guarantees to secure bank participation in the $63B Anthropic debt deal",
+        "tldr": "The deal, announced on Monday, is the biggest ever to raise money for AI infrastructure — Hock Tan was running out of patience."
+      },
+      "url": "https://www.wsj.com/finance/broadcom-ceo-intervened-to-seal-63-billion-anthropic-debt-deal-c807754f?st=f24o6c\u0026reflink=desktopwebshare_permalink"
+    },
+    {
+      "source": {
+        "archive_id": "261027p40",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Toronto-based fintech Wealthsimple raised up to CA$425M led by GIC at a post-money valuation of CA$13.8B, up from CA$10B in 2025",
+        "tldr": "Toronto-based fintech Wealthsimple raised up to CA$425M led by GIC at a post-money valuation of CA$13.8B, up from CA$10B in 2025"
+      },
+      "url": "https://www.reuters.com/legal/transactional/canadas-wealthsimple-raises-funds-c1380-billion-valuation-2026-10-27/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p41",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "AMD says it will invest $1B in Meta's equity offering, its first Helios rackscale systems are installed at Meta, and its EPYC CPUs power Meta's Muse AI agent",
+        "tldr": "Nvidia and Advanced Micro Devices have said they will invest a total of $4 billion in Meta after the social media …"
+      },
+      "url": "https://www.cnbc.com/2026/10/27/nvidia-invest-meta.html"
+    },
+    {
+      "source": {
+        "archive_id": "261027p42",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "SK Hynix plans to return $22B+ in dividends and ~$15B in buybacks to shareholders, on top of its ~$30B buyback program completed in August",
+        "tldr": "SK Hynix plans to return $22B+ in dividends and ~$15B in buybacks to shareholders, on top of its ~$30B buyback program completed in August"
+      },
+      "url": "https://www.wsj.com/business/earnings/sk-hynix-plans-75-billion-in-shareholder-returns-after-blockbuster-earnings-f3a460b7"
+    },
+    {
+      "source": {
+        "archive_id": "261027p43",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Letter: two Democratic senators allege the Trump administration withheld a secret FISC ruling on search filters that let analysts access Americans' messages",
+        "tldr": "Two US senators say the Trump administration is breaking the law by withholding the FISA court decision while it presses Congress …"
+      },
+      "url": "https://www.wired.com/story/the-us-government-is-hiding-a-secret-court-ruling-about-how-it-spies-on-americans/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p44",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Sources: chipmaker Onsemi is in talks to acquire 16-year-old chip startup Ferric for ~$1B; PitchBook: Ferric last raised a $32.1M Series C in December 2024",
+        "tldr": "Semiconductor component maker Onsemi has been discussing an acquisition of 16-year-old chip startup Ferric for close to $1 billion …"
+      },
+      "url": "https://www.theinformation.com/articles/chipmaker-onsemi-talks-buy-startup-1-billion"
+    },
+    {
+      "source": {
+        "archive_id": "261027p45",
+        "archive_url": "https://www.techmeme.com/261027/h2355",
+        "archived_at": "2026-10-28T03:55:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "The US FCC approves Amazon Leo's $11.5B acquisition of Globalstar, giving Amazon access to Globalstar's 24 satellites and mobile satellite spectrum",
+        "tldr": "The Federal Communications Commission said on Tuesday it approved Amazon (AMZN.O) Leo's $11.5 billion deal to acquire Globalstar (GSAT.O) …"
+      },
+      "url": "https://www.reuters.com/business/media-telecom/us-agency-approves-amazon-leos-115-billion-acquisition-globalstar-2026-10-27/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p5",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "S-1: Anthropic spent ~$2.50 on compute and infrastructure for every $1 of revenue in Q1 2025, falling to under 50 cents in Q2 2026, as it seeks profitability",
+        "tldr": "Prospectus details AI lab's ‘mission’, $800bn data centre commitments and extraordinary governance structure"
+      },
+      "url": "https://www.ft.com/content/a6c43402-719e-4295-ae5f-541edb0aeb29"
+    },
+    {
+      "source": {
+        "archive_id": "261027p6",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "A US federal judge orders the Trump administration to halt a ban prohibiting the Pentagon from doing business with companies lobbying for Alibaba",
+        "tldr": "A US federal judge orders the Trump administration to halt a ban prohibiting the Pentagon from doing business with companies lobbying for Alibaba"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/alibaba-wins-challenge-to-pentagon-s-chinese-army-blacklisting"
+    },
+    {
+      "source": {
+        "archive_id": "261027p7",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Sources: UK stealth AI startup 22one, which is building law enforcement tools, hit a nearly $400M valuation after raising funds from Sequoia, Lux, and others",
+        "tldr": "Sources: UK stealth AI startup 22one, which is building law enforcement tools, hit a nearly $400M valuation after raising funds from Sequoia, Lux, and others"
+      },
+      "url": "https://www.ft.com/content/65a113b4-2a45-49cf-9e68-93f42151166e"
+    },
+    {
+      "source": {
+        "archive_id": "261027p8",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Anthropic's S-1 excludes Labs co-lead Ben Mann from its “Continuing Founders” and Founder LLC; Anthropic says “it's still fair to refer to him as a co-founder”",
+        "tldr": "On Oct. 14, Anthropic announced the opening of its first Singapore office and said “cofounder Ben Mann” …"
+      },
+      "url": "https://sfstandard.com/2026/10/26/anthropic-cofounder-mystery-ben-mann/"
+    },
+    {
+      "source": {
+        "archive_id": "261027p9",
+        "archive_url": "https://www.techmeme.com/261027/h1200",
+        "archived_at": "2026-10-27T16:02:00Z",
+        "published": "2026-10-27"
+      },
+      "summary": {
+        "title": "Analysis: AI political groups have spent $78.5M on US federal candidates during the 2026 cycle; AI accelerationists spent $34M and safeguard-focused groups $39M",
+        "tldr": "Analysis: AI political groups have spent $78.5M on US federal candidates during the 2026 cycle; AI accelerationists spent $34M and safeguard-focused groups $39M"
+      },
+      "url": "https://www.cnbc.com/2026/10/27/ai-political-spending-silicon-valley-election.html"
+    },
+    {
+      "source": {
+        "archive_id": "261028p1",
+        "archive_url": "https://www.techmeme.com/261028/p1",
+        "archived_at": "2026-10-28T04:10:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Sources: HP, Asus, and Acer are shifting some PC production from Thailand and Vietnam back to China amid rising component costs; Dell is mulling a similar move",
+        "tldr": "TAIPEI — Leading PC makers, including HP of the U.S. and Asus and Acer of Taiwan, are combating soaring component costs by shifting …"
+      },
+      "url": "https://asia.nikkei.com/business/technology/tech-asia/hp-and-asus-shift-some-pc-making-back-to-china-due-to-ai-driven-cost-hikes"
+    },
+    {
+      "source": {
+        "archive_id": "261028p10",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "How Silicon Valley billionaires raised $333M+ to try to defeat a 5% California wealth tax; Patrick Collison's $33M is his most serious campaign engagement yet",
+        "tldr": "Every Tuesday for the last few months, two dozen of the world's richest people or their advisers hop onto a conference call and plan for war."
+      },
+      "url": "https://www.nytimes.com/2026/10/27/technology/proposition-40-california-billionaire-tax.html?unlocked_article_code=1.L1E.HJGf.yaAT18KafSCQ\u0026smid=nytcore-ios-share"
+    },
+    {
+      "source": {
+        "archive_id": "261028p11",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "S-1: Anthropic had $112.4B in cash and $19.3B in short-term investments on June 30, surpassing every non-bank US company except Berkshire Hathaway and Alphabet",
+        "tldr": "S-1: Anthropic had $112.4B in cash and $19.3B in short-term investments on June 30, surpassing every non-bank US company except Berkshire Hathaway and Alphabet"
+      },
+      "url": "https://www.cnbc.com/2026/10/27/anthropic-cash-investments-ipo.html"
+    },
+    {
+      "source": {
+        "archive_id": "261028p12",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Lawsuit: the parents of a 31-year-old say OpenAI's GPT-4o guided her through an aggressive tapering plan off epilepsy meds, leading to her death in February",
+        "tldr": "The chatbot helped a woman taper off a lifesaving drug and hide the plan from her doctors. — 1.3k"
+      },
+      "url": "https://www.nytimes.com/2026/10/27/well/ai-chatgpt-medication-epilepsy-death.html?unlocked_article_code=1.L1E.iJJI.hjmxpaYuBDhc\u0026smid=nytcore-ios-share"
+    },
+    {
+      "source": {
+        "archive_id": "261028p13",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Research: professional analysts followed AI agents' randomly assigned “leans” on subjective analytical decisions 86% of the time; 77% used the agents' arguments",
+        "tldr": "Amaç Herdağdelen, Hailey Joren, Alex Tamkin — When experts hand their work to an AI agent …"
+      },
+      "url": "https://www.anthropic.com/research/agents-judgment-calls"
+    },
+    {
+      "source": {
+        "archive_id": "261028p14",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Malaysia says it seized ~$12.11M worth of AI chips this month, as authorities close in on a syndicate suspected of smuggling through the country's main airport",
+        "tldr": "Malaysia says it seized ~$12.11M worth of AI chips this month, as authorities close in on a syndicate suspected of smuggling through the country's main airport"
+      },
+      "url": "https://www.reuters.com/world/china/ai-chips-worth-121-million-seized-malaysia-airport-customs-authority-says-2026-10-28/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p15",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Letter: Senator Elizabeth Warren asks Dario Amodei for “exhaustive responses” to four pages of questions by November 3 regarding existential risks in its S-1",
+        "tldr": "The Democratic senator told the AI giant to answer four pages of questions about its IPO filing by Nov. 3"
+      },
+      "url": "https://www.wsj.com/finance/regulation/elizabeth-warren-demands-answers-from-anthropic-on-existential-risks-5362f009?st=jjenAB\u0026reflink=desktopwebshare_permalink"
+    },
+    {
+      "source": {
+        "archive_id": "261028p16",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Email: a hacker attack forced the FEC to temporarily take its filing system offline around 10pm ET on Monday, blocking groups from submitting reports",
+        "tldr": "The US Federal Election Commission's website was targeted by a hacker or hackers, according to an email seen by Reuters …"
+      },
+      "url": "https://www.reuters.com/technology/hacker-trying-breach-us-federal-election-commission-system-email-shows-2026-10-27/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p17",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "How the UK's Slough, a town on the borders of west London, became the largest data center hub in Europe, hosting 40+ facilities, as locals seek more benefits",
+        "tldr": "How the UK's Slough, a town on the borders of west London, became the largest data center hub in Europe, hosting 40+ facilities, as locals seek more benefits"
+      },
+      "url": "https://www.ft.com/content/d92ede23-75c3-4549-bec2-7fa4be979786"
+    },
+    {
+      "source": {
+        "archive_id": "261028p18",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "AI and cloud cybersecurity startup Upwind Security raised $400M led by Bessemer at a $3.8B valuation, up from $1.5B in January, for $830M in total funding",
+        "tldr": "Upwind Security, a San Francisco-based startup offering cybersecurity for artificial intelligence and cloud applications …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/ai-cybersecurity-startup-upwind-raises-at-3-8-billion-value"
+    },
+    {
+      "source": {
+        "archive_id": "261028p19",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "A US federal grand jury indicts OpenAI engineer and Saudi national Abdulrahman “Abdul” Alfozan on a felony charge of interception of oral communications",
+        "tldr": "A US federal grand jury indicts OpenAI engineer and Saudi national Abdulrahman “Abdul” Alfozan on a felony charge of interception of oral communications"
+      },
+      "url": "https://www.sfchronicle.com/bayarea/article/open-ai-engineer-indicted-for-bugging-headquarters-22497813.php"
+    },
+    {
+      "source": {
+        "archive_id": "261028p2",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Anthropic's S-1 implies a $40T+ annual TAM based on knowledge work's economic value in 2025, topping SpaceX's $28.5T estimate, without explicitly naming TAM",
+        "tldr": "Anthropic's S-1 implies a $40T+ annual TAM based on knowledge work's economic value in 2025, topping SpaceX's $28.5T estimate, without explicitly naming TAM"
+      },
+      "url": "https://www.wsj.com/tech/ai/see-how-anthropic-arrived-at-its-mind-boggling-40-trillion-market-opportunity-948c56a0?st=QmxiSy"
+    },
+    {
+      "source": {
+        "archive_id": "261028p20",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Sources: Anthropic's seven cofounders remain extremely influential and personally tight; Daniela Amodei, who runs operations, is seen as a good balance to Dario",
+        "tldr": "Anthropic's seven billionaire co-founders are set to gain collective control over one of the world's biggest companies following …"
+      },
+      "url": "https://www.ft.com/content/24a35e41-2641-4cec-97f5-a974412f9952"
+    },
+    {
+      "source": {
+        "archive_id": "261028p21",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Chinese AI chipmaker Moore Threads reports Q3 revenue up 1,774% YoY to ~$240M and a ~$7.4M net profit; Moore is building a domestic 100K-GPU cluster with JD.com",
+        "tldr": "Chinese AI chipmaker Moore Threads reports Q3 revenue up 1,774% YoY to ~$240M and a ~$7.4M net profit; Moore is building a domestic 100K-GPU cluster with JD.com"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/moore-threads-sales-surge-nearly-1-800-on-ai-hardware-demand"
+    },
+    {
+      "source": {
+        "archive_id": "261028p22",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Meta quietly launched Waddle World, a Tamagotchi-like, AI pet-rearing game, in the Philippines in September, calling it a “daily journal disguised as a pet”",
+        "tldr": "But it's only available in the Philippines for now. — Looks like a big part of Meta's AI strategy is to rely on …"
+      },
+      "url": "https://www.engadget.com/2299227/meta-tamagotchi-like-ai-digital-pet-app-waddle-world/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p23",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Amazon unveils the $500 Echo Show 16, the $200 Echo Time alarm, and the $200+ Alexa Photo Frame, raises smart speaker prices, and previews Alexa Home Map",
+        "tldr": "With its latest devices, including a smart bedside alarm clock, Amazon looks to cement Alexa's presence in every room of the home"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/amazon-unveils-new-echo-show-16-alexa-speakers-smart-clock-and-photo-frame"
+    },
+    {
+      "source": {
+        "archive_id": "261028p24",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Etsy reports Q3 revenue up 11% YoY to $692.5M, above $668M est., net income of $853.5M after selling Depop, and gross merchandise sales up 9% YoY to $2.65B",
+        "tldr": "Etsy reports Q3 revenue up 11% YoY to $692.5M, above $668M est., net income of $853.5M after selling Depop, and gross merchandise sales up 9% YoY to $2.65B"
+      },
+      "url": "https://www.wsj.com/business/retail/etsy-sales-rise-as-the-number-of-active-buyers-increases-01c646c9?st=eiH3p6\u0026reflink=desktopwebshare_permalink"
+    },
+    {
+      "source": {
+        "archive_id": "261028p25",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Samsung unveils the $229 Galaxy Buds On, its first open-fit, C-shaped cuff earbuds to compete with Sony and Bose, designed with AI's help, shipping November 6",
+        "tldr": "Samsung Electronics Co. unveiled its first pair of cuff-style earbuds, adding to a growing category that includes products from Sony Group Corp. …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/samsung-unveils-galaxy-buds-on-clip-on-earbuds-for-229"
+    },
+    {
+      "source": {
+        "archive_id": "261028p26",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Google unveils Google Multi-Party Compute (MPC), a digital-asset custody and security service in private preview, set for commercial availability in early 2027",
+        "tldr": "Google to showcase a new security system designed to help banks and other financial institutions safeguard and move cryptocurrencies …"
+      },
+      "url": "https://www.coindesk.com/tech/2026/10/28/google-to-preview-crypto-custody-security-system-as-ai-threats-grow"
+    },
+    {
+      "source": {
+        "archive_id": "261028p27",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Artificial Analysis launches the Intelligence Index v5, with new coding and science benchmarks, built on private datasets; Claude Opus 5.5 (max) leads at 58",
+        "tldr": "Announcing Artificial Analysis Intelligence Index v5, featuring 2 new benchmarks and 3 upgrades. For the first time, the majority of the Index is built on private datasets The Artificial Analysis Intelligence Index is our composite measure of model capabilities across tasks reflecting real-world u..."
+      },
+      "url": "https://x.com/artificialanlys/status/2115265133467635877"
+    },
+    {
+      "source": {
+        "archive_id": "261028p28",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Amazon Kindle Paperwhite and Kindle Colorsoft review: premium feel, lightweight, nice colors, and snappy performance, but expensive after price increases",
+        "tldr": "The latest generation of Kindle's 7-inch e-readers have a new look and new accessories. But are they worth the upgrade given Amazon's new Kindle prices?"
+      },
+      "url": "https://www.wired.com/review/kindle-paperwhite-kindle-colorsoft-2026/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p29",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Chinese PCB maker Dongshan rises on its Hong Kong debut, after raising ~$1.3B in an IPO, below its $3B goal, at a $30B valuation, amid a tricky IPO market",
+        "tldr": "Suzhou Dongshan Precision Manufacturing Co. shares erased an opening slide to trade higher in their first day of trading in Hong Kong …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-27/dongshan-precision-set-to-debut-after-1-3-billion-hk-listing"
+    },
+    {
+      "source": {
+        "archive_id": "261028p3",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Sources: Fujifilm plans to increase magnetic tape production capacity fivefold to meet AI-driven storage demand, its biggest production expansion in ~20 years",
+        "tldr": "Sources: Fujifilm plans to increase magnetic tape production capacity fivefold to meet AI-driven storage demand, its biggest production expansion in ~20 years"
+      },
+      "url": "https://asia.nikkei.com/business/technology/artificial-intelligence/as-ai-revives-magnetic-tape-fujifilm-plans-biggest-buildup-in-two-decades"
+    },
+    {
+      "source": {
+        "archive_id": "261028p30",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "X adds an intrusive promotional animation of an arm reaching across the screen to direct users to a “promote” post button, targeting verified and Premium users",
+        "tldr": "You have to hand it to X's latest promotional gimmick.﻿ — After Elon Musk warned that …"
+      },
+      "url": "https://www.theverge.com/tech/1020488/x-twitter-animated-hand-point-promote-posts"
+    },
+    {
+      "source": {
+        "archive_id": "261028p31",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Dropbox plans to cut ~6% of its staff, or ~200 jobs, costing $27M to $33M in severance and related costs, and says CTO Ali Dasdan will step down on November 18",
+        "tldr": "Dropbox plans to cut ~6% of its staff, or ~200 jobs, costing $27M to $33M in severance and related costs, and says CTO Ali Dasdan will step down on November 18"
+      },
+      "url": "https://www.reuters.com/business/world-at-work/dropbox-plans-9-workforce-cut-technology-chief-exit-2026-10-28/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p32",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Foundry, a manufacturing-as-a-service startup that builds factories with robots powered by physical AI models, raised a $100M Series A led by Marlinspike",
+        "tldr": "Large companies have learned over the past couple years that they can get more mileage out of AI agents by rethinking their processes from scratch …"
+      },
+      "url": "https://www.theinformation.com/articles/foundry-raises-100-million-autonomous-factories"
+    },
+    {
+      "source": {
+        "archive_id": "261028p33",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Nvidia debuts Nemotron 3.5 Transcribe, an open-weight model for multilingual audio transcription and translation, and Granary v2, its open-source speech dataset",
+        "tldr": "Nvidia Corp. today released a leaderboard-winning open artificial intelligence model for multilingual audio transcription and translation …"
+      },
+      "url": "https://siliconangle.com/2026/10/28/nvidia-releases-all-in-one-adaptable-nemotron-3-5-audio-transcription-and-translation-model/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p34",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "OpenAI says it's launching an election “war room” ahead of the US midterms to identify potential spread of misinfo or other efforts to disrupt the elections",
+        "tldr": "OpenAI is standing up an election “war room” ahead of the midterms, the company exclusively told Decoded by POLITICO."
+      },
+      "url": "https://www.politico.com/news/2026/10/28/openai-election-war-room-interference-01137690"
+    },
+    {
+      "source": {
+        "archive_id": "261028p35",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Reddit rolls out a dual-feed homepage, with For You and Following feeds, joining TikTok, Instagram, and others in offering a For You feed",
+        "tldr": "Reddit is the latest social platform to adopt the “For You” feed popularized by TikTok. The company announced on Wednesday that users will now see two options …"
+      },
+      "url": "https://techcrunch.com/2026/10/28/reddit-is-the-latest-platform-to-embrace-the-for-you-feed/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p36",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "GitHub says Copilot Fusion, which handles model selection and orchestration, is now generally available, releases the GitHub Copilot app, and more",
+        "tldr": "GitHub has debuted GitHub Copilot Fusion, a new system that handles model selection and orchestration for coding tasks so developers don't have to."
+      },
+      "url": "https://thenewstack.io/github-copilot-fusion/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p37",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "GitHub says it's seeing 7.4B commits per month, up from 2.9B in August, and has added 4M CPU cores and 160PB of storage in 2026 so far to support this growth",
+        "tldr": "GitHub says it's seeing 7.4B commits per month, up from 2.9B in August, and has added 4M CPU cores and 160PB of storage in 2026 so far to support this growth"
+      },
+      "url": "https://thenewstack.io/github-7-4b-commits-september/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p38",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Google unveils Gemini 4 Carbon, its “strongest model with state-of-the-art cybersecurity” capabilities, ranked #1 on Artificial Analysis' new Intelligence Index",
+        "tldr": "Gemini 4 Carbon is our strongest model with state-of-the-art cybersecurity and long horizon capabilities."
+      },
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p39",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Apple debuts a touchscreen MacBook Pro with a PROLED XDR tandem OLED display, light-up logo, M5 Pro or M5 Max; the 14\" model starts at $2,899, the 16\" at $3,399",
+        "tldr": "The world's best pro laptop now features an industry-leading tandem OLED display, an intuitive Touch experience …"
+      },
+      "url": "https://www.apple.com/newsroom/2026/10/apple-unveils-groundbreaking-macbook-pro-with-proled-xdr-display/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p4",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Jio Platforms, India's largest telecom and digital services company, jumps 21.4% in its trading debut, after raising ~$3.2B in the country's largest-ever IPO",
+        "tldr": "Jio Platforms' shares rose 21.4% on their trading debut Wednesday after a record initial public offering that was lapped up by retail as well as institutional investors."
+      },
+      "url": "https://www.cnbc.com/2026/10/28/jio-ipo-india-listing-.html"
+    },
+    {
+      "source": {
+        "archive_id": "261028p40",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "John Ternus says the Mac is “first and foremost” a device “built around the trackpad and keyboard”, but sometimes “it's comfortable and handy to have touch”",
+        "tldr": "An exclusive early look at Apple's new touchscreen MacBook Pro—the computer Apple said would never happen."
+      },
+      "url": "https://www.wired.com/story/the-inside-story-of-why-apple-finally-brought-a-touch-display-to-the-mac"
+    },
+    {
+      "source": {
+        "archive_id": "261028p41",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Apple says the touchscreen MacBook Pro has a “newly designed hinge” for stability and an “enhanced six-speaker” system; the 14\" model is 3lb and the 16\" is 4lb",
+        "tldr": "Apple says the touchscreen MacBook Pro has a “newly designed hinge” for stability and an “enhanced six-speaker” system; the 14\" model is 3lb and the 16\" is 4lb"
+      },
+      "url": "https://www.theverge.com/gadgets/1019554/apple-touchscreen-macbook-pro-and-tell"
+    },
+    {
+      "source": {
+        "archive_id": "261028p42",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Apple's touchscreen MacBook Pro is the first Mac with the Dynamic Island, offering similar functionality to the iPhone; the Dynamic Island launched in 2022",
+        "tldr": "Apple's touchscreen MacBook Pro is the first Mac with the Dynamic Island, offering similar functionality to the iPhone; the Dynamic Island launched in 2022"
+      },
+      "url": "https://www.macrumors.com/2026/10/28/apple-brings-dynamic-island-to-mac/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p43",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Google and Xreal launch the Xreal Aura wired XR glasses, with Android XR and a puck with Snapdragon Reality Elite, for $1,099+ through December, then $1,279+",
+        "tldr": "At the Android Developer Summit on Wednesday, Google's smart glasses partner Xreal launched its new Xreal Aura wired smart glasses …"
+      },
+      "url": "https://techcrunch.com/2026/10/28/xreal-aura-is-a-new-wired-headset-powered-by-android-xr/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p44",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Artificial Analysis unveils the Intelligence Index v5 with new coding and science benchmarks; 60% of the Index is based on private test sets or held-out answers",
+        "tldr": "The Artificial Analysis Intelligence Index is our composite measure of model capabilities across tasks reflecting real-world usage today. v5 …"
+      },
+      "url": "https://artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v5"
+    },
+    {
+      "source": {
+        "archive_id": "261028p45",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Apple adds a 512GB RAM configuration for the Mac Studio with the M5 Ultra chip, starting at $22,299; the M5 Max model maxes out at 128GB of RAM",
+        "tldr": "Apple adds a 512GB RAM configuration for the Mac Studio with the M5 Ultra chip, starting at $22,299; the M5 Max model maxes out at 128GB of RAM"
+      },
+      "url": "https://www.macrumors.com/2026/10/28/mac-studio-m5-ultra-512gb-ram/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p46",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "NY Gov. Kathy Hochul signs bills banning AI chatbots from using “unsafe features” for minors and requiring security features in internet-connected baby monitors",
+        "tldr": "New York Gov. Kathy Hochul signed two bills further curbing artificial intelligence risks for children …"
+      },
+      "url": "https://news.bgov.com/bloomberg-government-news/hochul-signs-bills-on-ai-risks-to-children-in-pre-election-push"
+    },
+    {
+      "source": {
+        "archive_id": "261028p47",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Oracle pledges to limit new financing to $20B through FY 2030, expects free cash flow to turn positive in H2 FY 2028 and top $30B in FY 2029; ORCL jumps 11%+",
+        "tldr": "Oracle said it expects capital spending to peak this fiscal year and next as it builds more cloud capacity, but pledged to raise …"
+      },
+      "url": "https://www.reuters.com/business/oracle-expects-turn-cash-flow-positive-second-half-fiscal-2028-2026-10-28/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p48",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Microsoft reports Q1 revenue up 19% YoY to $92.28B, vs. $90.69B est., Azure revenue up 48% to $33.17B, vs. $32.32B est., and net income up 32% to $36.63B",
+        "tldr": "REDMOND, Wash. — October 28, 2026 — Microsoft Corp. today announced the following results for the quarter ended September 30, 2026 …"
+      },
+      "url": "https://www.microsoft.com/en-us/Investor/earnings/FY-2027-Q1/press-release-webcast"
+    },
+    {
+      "source": {
+        "archive_id": "261028p49",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Alphabet reports Q3 revenue up 25% YoY to $127.58B, vs. $128.22B est., Google Cloud revenue up 103% to $30.7B, vs. $28.7B est.; GOOG drops 9%+ after hours",
+        "tldr": "MOUNTAIN VIEW, Calif. - October 28, 2026 - Alphabet Inc. (NASDAQ: GOOG, GOOGL) today announced financial results for the quarter ended September 30, 2026."
+      },
+      "url": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q3/2026q3-alphabet-earnings-release.pdf"
+    },
+    {
+      "source": {
+        "archive_id": "261028p5",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Sources: CXMT plans to start HBM3E production despite yields of just 20% to 30%; its HBM3E performance is closer to that of SK Hynix's previous-gen HBM3 chips",
+        "tldr": "Sources: CXMT plans to start HBM3E production despite yields of just 20% to 30%; its HBM3E performance is closer to that of SK Hynix's previous-gen HBM3 chips"
+      },
+      "url": "https://www.reuters.com/world/china/chinas-cxmt-start-advanced-ai-memory-production-despite-poor-yields-sources-say-2026-10-28/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p50",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Alphabet reports Q3 YouTube ad revenue up 9% YoY to $11.2B, below estimates, and Google ad revenue up 11% to $82.01B, below $83.6B est.",
+        "tldr": "Alphabet reports Q3 YouTube ad revenue up 9% YoY to $11.2B, below estimates, and Google ad revenue up 11% to $82.01B, below $83.6B est."
+      },
+      "url": "https://variety.com/2026/digital/news/youtube-q3-2026-ad-revenue-alphabet-google-earnings-1236933560/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p51",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Microsoft reports Q1 capex of $45.2B, up from $34.9B a year earlier and below its own $50B projection, and free cash flow of $18.6B, vs. $8.54B est. by analysts",
+        "tldr": "Microsoft reports Q1 capex of $45.2B, up from $34.9B a year earlier and below its own $50B projection, and free cash flow of $18.6B, vs. $8.54B est. by analysts"
+      },
+      "url": "https://www.reuters.com/business/retail-consumer/microsoft-beats-quarterly-cloud-revenue-estimates-2026-10-28/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p52",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "ServiceNow reports Q3 subscription revenue up 21% YoY to $3.99B, forecasts Q4 current remaining performance obligations below est.; NOW drops 15%+ after hours",
+        "tldr": "ServiceNow Inc. shares plunged after the company gave an outlook for quarterly subscription sales that met analysts' estimates …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/servicenow-falls-after-quarterly-sales-outlook-revives-ai-fears"
+    },
+    {
+      "source": {
+        "archive_id": "261028p53",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Filing: Microsoft recorded $10B in revenue from OpenAI in Q1, nearly 11% of its total quarterly revenue, and has $7.2B in outstanding receivables from OpenAI",
+        "tldr": "Filing: Microsoft recorded $10B in revenue from OpenAI in Q1, nearly 11% of its total quarterly revenue, and has $7.2B in outstanding receivables from OpenAI"
+      },
+      "url": "https://techcrunch.com/2026/10/28/microsoft-recorded-10-billion-in-revenue-from-openai/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p54",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "eBay reports Q3 revenue up 14% YoY to $3.21B, above $3.12B est., and GMV up 15% to $23.17B, above $22.32B est.; EBAY jumps 4%+ after hours",
+        "tldr": "eBay reports Q3 revenue up 14% YoY to $3.21B, above $3.12B est., and GMV up 15% to $23.17B, above $22.32B est.; EBAY jumps 4%+ after hours"
+      },
+      "url": "https://www.wsj.com/business/retail/ebay-sales-rise-on-strength-in-collectibles-live-shopping-77cd8df4"
+    },
+    {
+      "source": {
+        "archive_id": "261028p55",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Sources: Marvell is in advanced talks to buy data center optics maker Lumentum, whose market value is ~$83B; the deal could be announced as soon as next week",
+        "tldr": "Marvell Technology Inc. is in advanced talks to buy data center optics maker Lumentum Holdings Inc., according to people familiar with the matter …"
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/marvell-is-said-to-near-deal-for-lumentum-in-ai-related-megadeal"
+    },
+    {
+      "source": {
+        "archive_id": "261028p56",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Alphabet reports Q3 negative free cash flow of $9.07B, worse than expected, capex of $51.36B, vs. $55.09B est., and keeps its FY capex forecast at $195B-$205B",
+        "tldr": "Alphabet shares slumped more than 10% after the search giant reported a drop in free cash flow during the third quarter …"
+      },
+      "url": "https://www.cnbc.com/2026/10/28/alphabet-googl-earnings-q3-2026.html"
+    },
+    {
+      "source": {
+        "archive_id": "261028p57",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Sources: the US DOJ has inquired about the impact of Nvidia's Hugging Face deal on AI competition, as antitrust enforcers continue to probe Nvidia's conduct",
+        "tldr": "The US Department of Justice has made inquiries about how Nvidia's (NVDA.O) $12.93 billion deal to buy open-source platform Hugging Face …"
+      },
+      "url": "https://www.reuters.com/world/us-doj-is-inquiring-about-nvidias-purchase-hugging-face-sources-say-2026-10-28/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p58",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Seoul-based AI chip startup FuriosaAI raised a $620M Series D at a $2.9B valuation, up from $735M in 2025; South Korea's National Growth Fund contributed $280M",
+        "tldr": "South Korean AI chip startup FuriosaAI quadrupled its valuation to $2.9 billion in a fresh funding round, bolstering its bid to challenge the likes of Nvidia Corp."
+      },
+      "url": "https://www.bloomberg.com/news/articles/2026-10-28/furiosaai-quadruples-valuation-to-2-9-billion-in-nvidia-chase"
+    },
+    {
+      "source": {
+        "archive_id": "261028p59",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Sources: AI coding startup Cognition weighs a new funding round before year's end after receiving offers valuing it at $70B-$80B, up from $48B in September",
+        "tldr": "Just weeks after announcing a new round of funding at a $48 billion valuation, AI coding startup Cognition is fielding new investor interest at a much higher price."
+      },
+      "url": "https://www.businessinsider.com/cognition-round-of-funding-at-a-75-billion-valuation-2026-10"
+    },
+    {
+      "source": {
+        "archive_id": "261028p6",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Industry insiders say PCBs and chip substrates are key supply constraints for consumer electronics makers, as AI demand increasingly eats up production capacity",
+        "tldr": "Industry insiders say PCBs and chip substrates are key supply constraints for consumer electronics makers, as AI demand increasingly eats up production capacity"
+      },
+      "url": "https://asia.nikkei.com/spotlight/supply-chain/ai-boom-sparks-circuit-board-crunch-across-global-tech-supply-chain"
+    },
+    {
+      "source": {
+        "archive_id": "261028p60",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Zillow agrees to pay $212.5M to settle an investor class action over its failed Zillow Offers home-flipping venture, after SCOTUS refused to hear its appeal",
+        "tldr": "Zillow (ZG.O) said on Wednesday it will pay $212.5 million in cash to settle a class action accusing the online real estate marketplace …"
+      },
+      "url": "https://www.reuters.com/legal/government/zillow-pay-2125-million-settle-class-action-over-failed-real-estate-venture-2026-10-28/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p61",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Microsoft reports Q1 Xbox hardware revenue down 14% YoY, Xbox content and services revenue down 2%, and Windows OEM and Devices revenue down 22%",
+        "tldr": "Microsoft reports Q1 Xbox hardware revenue down 14% YoY, Xbox content and services revenue down 2%, and Windows OEM and Devices revenue down 22%"
+      },
+      "url": "https://www.theverge.com/tech/1020785/microsoft-earnings-revenue-q1-2027"
+    },
+    {
+      "source": {
+        "archive_id": "261028p62",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "The personal data of 41,000+ DHS employees and contractors, including CBP and ICE agents, leaks online after hackers claim they breached DHS' Okta login system",
+        "tldr": "The leaked records include the locations of ICE and CBP facilities, workers' cell phone numbers, and the members of groups tied …"
+      },
+      "url": "https://www.wired.com/story/massive-leak-exposes-41000-homeland-security-workers-including-undercover-ice-agents/"
+    },
+    {
+      "source": {
+        "archive_id": "261028p63",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Google is rolling out Gemini 4 Carbon to selected cybersecurity defenders through Fairwind at $2/1M input and $10/1M output tokens, rising to $4 and $20 later",
+        "tldr": "Google is rolling out Gemini 4 Carbon to selected cybersecurity defenders through Fairwind at $2/1M input and $10/1M output tokens, rising to $4 and $20 later"
+      },
+      "url": "https://venturebeat.com/technology/google-unveils-gemini-4-carbon-retaking-the-worlds-no-1-spot-on-updated-harder-benchmarks-but-access-is-limited"
+    },
+    {
+      "source": {
+        "archive_id": "261028p64",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Samsung reports Q3 revenue up 127% YoY to a record ~$146.3B and a record operating profit up 783% to ~$80.5B, both roughly in line with estimates",
+        "tldr": "Samsung Electronics reported third-quarter earnings on Thursday, with operating profit broadly in line with analysts' estimates"
+      },
+      "url": "https://www.cnbc.com/2026/10/29/samsung-electronics-third-quarter-earnings.html"
+    },
+    {
+      "source": {
+        "archive_id": "261028p65",
+        "archive_url": "https://www.techmeme.com/261028/h2355",
+        "archived_at": "2026-10-29T03:55:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "How surging demand from AI hyperscalers has quintupled flash memory prices and shifted market and negotiating power from Apple to suppliers like Kioxia",
+        "tldr": "The iPhone maker for years bullied flash-storage makers into steep discounts—until AI hyperscalers bid up prices and gobbled up supply"
+      },
+      "url": "https://www.wsj.com/tech/apple-iphone-memory-chips-ai-c0084cc9?st=jB9Xwc\u0026reflink=desktopwebshare_permalink"
+    },
+    {
+      "source": {
+        "archive_id": "261028p7",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "Sources: TPG is in talks to acquire UK-based Ark Data Centres, which operates 27 data centers in the UK and Belgium, from Elliott Management at a ~$5B valuation",
+        "tldr": "Sources: TPG is in talks to acquire UK-based Ark Data Centres, which operates 27 data centers in the UK and Belgium, from Elliott Management at a ~$5B valuation"
+      },
+      "url": "https://www.ft.com/content/e2aafede-771a-4fd0-b9fb-67c0bbb828ed"
+    },
+    {
+      "source": {
+        "archive_id": "261028p8",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "SK Hynix expects memory shortages to persist through at least 2030; the company has long-term deals with 14 major buyers for 50%+ of its output in 2027 and 2028",
+        "tldr": "SK Hynix expects memory shortages to persist through at least 2030; the company has long-term deals with 14 major buyers for 50%+ of its output in 2027 and 2028"
+      },
+      "url": "https://www.theregister.com/systems/2026/10/28/sk-hynix-says-memory-shortages-to-persist-until-2030/5305887"
+    },
+    {
+      "source": {
+        "archive_id": "261028p9",
+        "archive_url": "https://www.techmeme.com/261028/h1200",
+        "archived_at": "2026-10-28T16:00:00Z",
+        "published": "2026-10-28"
+      },
+      "summary": {
+        "title": "The CFTC files a legal challenge to block Utah's attempt to restrict prediction market betting, asserting it is the sole US regulator of prediction markets",
+        "tldr": "The U.S. agency that oversees derivatives has filed a federal legal challenge to halt Utah's attempt to stop prediction market betting in its state …"
+      },
+      "url": "https://www.coindesk.com/policy/2026/10/27/u-s-agency-hits-utah-with-lawsuit-to-shield-kalshi-s-ability-to-offer-betting-there"
+    }
+  ],
+  "unavailable_ids": [],
+  "week": {
+    "id": "2026-10-26_2026-10-28",
+    "news_start": "2026-10-26",
+    "news_end": "2026-10-28",
+    "cutoff": "2026-10-29T04:05:00Z",
+    "market_start": "2026-10-29",
+    "market_end": "",
+    "valuation_mode": "latest"
+  }
+}

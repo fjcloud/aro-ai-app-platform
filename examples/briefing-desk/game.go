@@ -80,6 +80,14 @@ func (s *server) initGame() {
 	s.gameMu.Lock()
 	defer s.gameMu.Unlock()
 	week := lastNewsWeek(s.currentTime())
+	if usesBundledNews() && !s.preview {
+		manifest, err := bundledCorpus()
+		if err != nil {
+			s.game = gameState{Week: week, Status: "failed", Error: err.Error(), Proposals: map[string]gameProposal{}, Round: newPaperRound()}
+			return
+		}
+		week = manifest.Week
+	}
 	s.game = gameState{Week: week, Status: "empty", Proposals: map[string]gameProposal{}, Round: newPaperRound()}
 	if b, e := os.ReadFile(s.gameFile()); e == nil {
 		json.Unmarshal(b, &s.game)
@@ -133,6 +141,19 @@ func (s *server) loadGameWeek() {
 	week := s.game.Week
 	s.gameMu.Unlock()
 	note := func(text string) { s.gameMu.Lock(); s.game.Message = text; s.saveGame(); s.gameMu.Unlock() }
+	if usesBundledNews() {
+		manifest, err := bundledCorpus()
+		if err != nil {
+			s.gameMu.Lock()
+			s.game.Status = "failed"
+			s.game.Error = err.Error()
+			s.saveGame()
+			s.gameMu.Unlock()
+			return
+		}
+		s.rankGameManifest(ctx, manifest)
+		return
+	}
 	cache := filepath.Join(s.store.dir, "archive-cache", week.ID)
 	manifest, e := s.agent.fetch.archiveWeek(ctx, cache, week, note)
 	if e != nil {
@@ -294,13 +315,18 @@ func (s *server) settleRound(roundID string) {
 	}
 	if failure == nil {
 		round.PnL = 0
+		round.AsOf = ""
 		round.Complete = true
 		for i, position := range round.Positions {
 			r := data[position.Symbol]
 			round.Positions[i].Result = &r
 			round.PnL += position.Amount * r.ReturnPct / 100
-			if round.AsOf == "" || r.ExitDate < round.AsOf {
-				round.AsOf = r.ExitDate
+			asOf := r.ExitDate
+			if r.QuoteTime != "" {
+				asOf = r.QuoteTime
+			}
+			if round.AsOf == "" || asOf < round.AsOf {
+				round.AsOf = asOf
 			}
 			round.Complete = round.Complete && r.WeekComplete
 		}
