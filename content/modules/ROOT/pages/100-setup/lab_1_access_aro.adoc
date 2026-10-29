@@ -17,22 +17,16 @@ Your assigned RHDP environment already contains an ARO cluster and a bastion wit
 
 The guide opens beside the existing terminal. Use *Open in new tab* and the environment's supplied access details if the terminal does not appear or requires a login. RHDP controls the environment's lifetime.
 
-== Log in
+== Check Azure access
 
-Use the Azure identity and OpenShift access instructions supplied with this environment. Do not replace its cluster credentials or create another ARO cluster. If `oc` is not logged in, open the existing cluster console and use *Copy login command* from your user menu.
+The bastion is already configured for the assigned environment.
 
 [source,sh,role=execute]
 ----
 az account show --query '{subscription:id, identity:user.name}' --output table
-oc whoami
-oc get nodes
-oc auth can-i '*' '*' --all-namespaces
-oc whoami --show-console
 ----
 
-The permission check must return `yes` and the workers must be Ready. The platform operators require a compatible OpenShift version; the facilitator must validate the chosen RHDP environment before distributing access.
-
-== Clone the workshop
+== Clone and connect
 
 [source,sh,role=execute]
 ----
@@ -40,9 +34,10 @@ cd "$HOME"
 git clone --branch main https://github.com/fjcloud/aro-ai-app-platform.git
 cd aro-ai-app-platform
 make onboard
+oc whoami
 ----
 
-The check reads the existing Azure and cluster identities and worker readiness. It also matches the connected cluster’s API URL to its Azure ARO resource and saves the subscription, resource group name and resource group ID in `state/workshop.env`. This local file contains no credentials. Keep this directory for later commands.
+`make onboard` finds the existing ARO resource, retrieves its administrator credentials from Azure and runs `oc login` automatically. It checks permissions, OpenShift version and worker readiness, then saves the resource group and subscription in `state/workshop.env`. Credentials are neither printed nor saved in this file. Keep this directory for later commands.
 
 Load the detected values; there is no resource group name or ID to type:
 
@@ -59,6 +54,7 @@ Keep the OpenShift browser credentials from the RHDP assignment for Act 2. The c
 == Checkpoint
 
 * [x] Existing ARO cluster accessible with cluster-admin permissions
+* [x] Bastion signed in through `oc login`
 * [x] Workers Ready
 * [x] Azure identity and assigned resource group available
 * [x] Workshop repository cloned

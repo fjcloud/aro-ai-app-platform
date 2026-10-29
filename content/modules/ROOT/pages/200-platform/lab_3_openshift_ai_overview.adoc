@@ -57,7 +57,7 @@ Inspect `deploy/coding/external-model.yaml`: the client model is `deepseekv4pro`
 
 == Step 3: Give Dev Spaces a MaaS key
 
-The bastion must use an OpenShift user token, as described in Act 0. A certificate-only `system:admin` login cannot supply the token for the MaaS key API.
+Act 0 signs the bastion in automatically. If the session has expired, run `make onboard` again before creating the key.
 
 [source,sh,role=execute]
 ----

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Discover the connected ARO cluster's resource group using read-only CLI calls."""
+"""Discover the connected ARO resource; optionally log in using its Azure credentials."""
 import argparse
 import json
 from pathlib import Path
@@ -50,13 +50,41 @@ def discover(read=read_json):
             "RESOURCEGROUP_ID": group["id"], "ARO_CLUSTER_ID": cluster_id}
 
 
+def login(values, read=read_json, run=subprocess.run):
+    credentials = read("az", "aro", "list-credentials",
+                       "--name", values["ARO_CLUSTER_ID"].rsplit("/", 1)[-1],
+                       "--resource-group", values["RESOURCEGROUP"],
+                       "--subscription", values["SUBSCRIPTION"], "-o", "json")
+    username = credentials.get("kubeadminUsername")
+    password = credentials.get("kubeadminPassword")
+    if not isinstance(username, str) or not username or not isinstance(password, str) or not password:
+        raise ValueError("Azure returned no ARO administrator credentials.")
+    server = run(["oc", "whoami", "--show-server"], capture_output=True, text=True, timeout=30)
+    if server.returncode or endpoint(server.stdout.strip()) is None:
+        raise ValueError("Could not identify the existing ARO API server.")
+    # Capture diagnostics: subprocess errors must never print a command containing the password.
+    try:
+        result = run(["oc", "login", "--server", server.stdout.strip(),
+                      "--username", username, "--password", password],
+                     capture_output=True, text=True, timeout=120)
+    except subprocess.SubprocessError:
+        raise ValueError("ARO login failed. Check Azure access and the assigned cluster credentials.") from None
+    if result.returncode:
+        raise ValueError("ARO login failed. Check Azure access and the assigned cluster credentials.")
+    print("Signed in to the existing ARO cluster.")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path,
                         default=Path(__file__).resolve().parents[1] / "state/workshop.env")
+    parser.add_argument("--login", action="store_true",
+                        help="Sign in with the ARO administrator credentials retrieved from Azure")
     args = parser.parse_args()
     try:
         values = discover()
+        if args.login:
+            login(values)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         temporary = args.output.with_suffix(".env.tmp")
         temporary.write_text("# Discovered from the connected ARO cluster; no credentials.\n" +

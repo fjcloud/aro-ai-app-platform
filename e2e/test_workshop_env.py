@@ -1,8 +1,11 @@
 """Resource-group selection regression checks; no Azure account required."""
 import copy
+import contextlib
 import importlib.util
+import io
 from pathlib import Path
 import unittest
+import subprocess
 
 
 spec = importlib.util.spec_from_file_location(
@@ -92,6 +95,60 @@ class ResourceGroupDiscovery(unittest.TestCase):
         self.clusters[0]["apiserverProfile"]["url"] = "https://api.example.test"
         with self.assertRaisesRegex(ValueError, "found 0"):
             workshop_env.discover(self.read)
+
+
+class AROLogin(unittest.TestCase):
+    def setUp(self):
+        self.values = {"SUBSCRIPTION": SUBSCRIPTION, "RESOURCEGROUP": "openenv-test",
+                       "ARO_CLUSTER_ID": CLUSTER_ID}
+        self.credentials = {"kubeadminUsername": "kubeadmin", "kubeadminPassword": "private-test-password"}
+        self.calls = []
+
+    def read(self, *command):
+        self.calls.append(list(command))
+        return self.credentials
+
+    def run_cli(self, command, **kwargs):
+        self.calls.append(command)
+        if command == ['oc', 'whoami', '--show-server']:
+            return subprocess.CompletedProcess(command, 0, 'https://api.example.test:6443\n', '')
+        return subprocess.CompletedProcess(command, 0, 'private-test-password', '')
+
+    def test_login_uses_credentials_from_the_matched_aro_resource(self):
+        original = self.values.copy()
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            workshop_env.login(self.values, self.read, self.run_cli)
+        self.assertEqual(self.calls[0], ['az', 'aro', 'list-credentials', '--name', 'lab',
+                                        '--resource-group', 'openenv-test', '--subscription', SUBSCRIPTION, '-o', 'json'])
+        self.assertEqual(self.calls[-1], ['oc', 'login', '--server', 'https://api.example.test:6443',
+                                        '--username', 'kubeadmin', '--password', 'private-test-password'])
+        self.assertNotIn('private-test-password', output.getvalue())
+        self.assertEqual(self.values, original)
+
+    def test_missing_credentials_stop_before_oc_login(self):
+        self.credentials.pop('kubeadminPassword')
+        with self.assertRaisesRegex(ValueError, 'no ARO administrator credentials'):
+            workshop_env.login(self.values, self.read, self.run_cli)
+        self.assertEqual(len(self.calls), 1)
+
+    def test_login_failure_does_not_expose_password_or_raw_diagnostics(self):
+        def fail(command, **kwargs):
+            if command[:2] == ['oc', 'login']:
+                return subprocess.CompletedProcess(command, 1, '', 'private-test-password')
+            return self.run_cli(command, **kwargs)
+        with self.assertRaises(ValueError) as caught:
+            workshop_env.login(self.values, self.read, fail)
+        self.assertNotIn('private-test-password', str(caught.exception))
+
+    def test_login_timeout_does_not_include_password_arguments(self):
+        def timeout(command, **kwargs):
+            if command[:2] == ['oc', 'login']:
+                raise subprocess.TimeoutExpired(command, 120)
+            return self.run_cli(command, **kwargs)
+        with self.assertRaises(ValueError) as caught:
+            workshop_env.login(self.values, self.read, timeout)
+        self.assertNotIn('private-test-password', str(caught.exception))
 
 
 if __name__ == "__main__":

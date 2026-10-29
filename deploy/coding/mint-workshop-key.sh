@@ -12,12 +12,14 @@ SECRET_NAME="${SECRET_NAME:-ai-provider-openai-api-key}"
 MAAS_SUBSCRIPTION="${MAAS_SUBSCRIPTION:-deepseekv4pro-workshop}"
 KEY_NAME="${KEY_NAME:-workshop-opencode}"
 
+if ! TOKEN="$(oc whoami -t 2>/dev/null)" || [[ -z "$TOKEN" ]]; then
+  echo 'Run make onboard to sign in to ARO, then rerun this script.' >&2
+  exit 1
+fi
+
 MAAS_HOST="${MAAS_HOST:-$(workshop_maas_host)}"
 MAAS_API_URL="https://${MAAS_HOST}"
 OPENAI_BASE_URL="${MAAS_API_URL}/v1"
-
-TOKEN="$(oc whoami -t)"
-[[ -n "$TOKEN" ]] || { echo "Log oc in with an OpenShift user token before minting a MaaS key." >&2; exit 1; }
 
 echo "Minting MaaS key '${KEY_NAME}' on ${MAAS_API_URL} (subscription=${MAAS_SUBSCRIPTION})"
 
