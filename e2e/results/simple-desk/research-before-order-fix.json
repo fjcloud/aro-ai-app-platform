@@ -1,0 +1,14 @@
+{
+  "status": "failed",
+  "error": "Research tool budget exhausted",
+  "trace_id": "tr-f69c96a06761d8eb59080e4391b5b31f",
+  "tools": [
+    "read_archive",
+    "search_archive",
+    "read_archive",
+    "read_archive",
+    "read_archive",
+    "read_archive"
+  ],
+  "fix": "Offer only the next required evidence tool: archive read, archive search and two distinct company lookups, then schema-only synthesis."
+}

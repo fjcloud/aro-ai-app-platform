@@ -16,10 +16,16 @@ import (
 func companyFixture() *fetcher {
 	f := newFetcher()
 	f.client.Transport = roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		if r.URL.Hostname() == "www.bing.com" {
+			return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(`<rss><channel><item><title>Fixture semiconductor catalyst</title><link>https://fixture.example/web</link><pubDate>Wed, 21 Oct 2026 12:00:00 GMT</pubDate><description>Fixture dated memory demand and supplier context.</description></item></channel></rss>`)), Request: r}, nil
+		}
+		if r.URL.Hostname() == "fixture.example" {
+			return &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": []string{"text/html"}}, Body: io.NopCloser(strings.NewReader(`<html><head><meta property="article:published_time" content="2026-10-21T12:00:00Z"></head><body>` + strings.Repeat("Fixture memory demand evidence. ", 20) + `</body></html>`)), Request: r}, nil
+		}
 		if r.URL.Path != "/v1/finance/search" {
 			return nil, fmt.Errorf("Unexpected request: %s", r.URL.Path)
 		}
-		body := `{"quotes":[{"symbol":"NVDA","longname":"NVIDIA Corporation","exchDisp":"NASDAQ","quoteType":"EQUITY","regularMarketPrice":999999},{"symbol":"AMD","longname":"Advanced Micro Devices","exchDisp":"NASDAQ","quoteType":"EQUITY"},{"symbol":"005930.KS","longname":"Samsung Electronics","exchDisp":"KRX","quoteType":"EQUITY"},{"symbol":"QQQ","longname":"Invesco QQQ Trust","quoteType":"ETF"},{"symbol":"SMNG","longname":"Samsung Group ETF","quoteType":"EQUITY"},{"symbol":"^GSPC","longname":"S&P 500","quoteType":"INDEX"}]}`
+		body := `{"quotes":[{"symbol":"NVDA","longname":"NVIDIA Corporation","exchDisp":"NASDAQ","quoteType":"EQUITY","regularMarketPrice":999999},{"symbol":"NVDA.TO","longname":"NVIDIA Corporation","exchDisp":"Toronto","quoteType":"EQUITY"},{"symbol":"AMD","longname":"Advanced Micro Devices","exchDisp":"NASDAQ","quoteType":"EQUITY"},{"symbol":"005930.KS","longname":"Samsung Electronics","exchDisp":"KRX","quoteType":"EQUITY"},{"symbol":"QQQ","longname":"Invesco QQQ Trust","quoteType":"ETF"},{"symbol":"SMNG","longname":"Samsung Group ETF","quoteType":"EQUITY"},{"symbol":"^GSPC","longname":"S&P 500","quoteType":"INDEX"}]}`
 		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body)), Request: r}, nil
 	})
 	return f
@@ -31,7 +37,7 @@ func TestCompanyLookupExcludesFundsAndNeverReturnsPrices(t *testing.T) {
 		t.Fatal(items, err)
 	}
 	b, _ := json.Marshal(items)
-	for _, bad := range []string{"QQQ", "SMNG", "GSPC", "regularMarketPrice", "999999"} {
+	for _, bad := range []string{"NVDA.TO", "QQQ", "SMNG", "GSPC", "regularMarketPrice", "999999"} {
 		if strings.Contains(string(b), bad) {
 			t.Fatal("Fund, index or price leaked into issuer research", bad)
 		}
@@ -58,7 +64,7 @@ func TestStockIdeasAreBoundToLookedUpCompaniesAndArchivedEvidence(t *testing.T) 
 				turn++
 				if turn == 1 {
 					calls := []any{}
-					for i, c := range []struct{ name, args string }{{"read_archive", `{"source_id":"original"}`}, {"search_archive", `{"query":"chip"}`}, {"search_companies", `{"query":"Nvidia"}`}, {"search_companies", `{"query":"Samsung"}`}} {
+					for i, c := range []struct{ name, args string }{{"read_archive", `{"source_id":"original"}`}, {"search_archive", `{"query":"chip"}`}, {"search_web", `{"query":"Nvidia demand"}`}, {"read_web", `{"source_id":"` + webSourceID("https://fixture.example/web", lastNewsWeek(fixtureTime()).Cutoff) + `"}`}, {"search_companies", `{"query":"Nvidia"}`}, {"search_companies", `{"query":"Samsung"}`}} {
 						calls = append(calls, map[string]string{"type": "function_call", "name": c.name, "call_id": fmt.Sprint(i), "arguments": c.args})
 					}
 					reply(w, 200, map[string]any{"status": "completed", "output": calls})

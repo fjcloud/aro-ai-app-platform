@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 type company struct {
@@ -44,12 +45,13 @@ func (f *fetcher) searchCompanies(ctx context.Context, query string) ([]company,
 	}
 	out := []company{}
 	seen := map[string]bool{}
+	issuers := map[string]bool{}
 	for _, item := range result.Quotes {
 		name := item.LongName
 		if name == "" {
 			name = item.ShortName
 		}
-		if item.Type != "EQUITY" || fundName.MatchString(name+" "+item.ShortName) || !equitySymbol.MatchString(item.Symbol) || seen[item.Symbol] || name == "" {
+		if item.Type != "EQUITY" || fundName.MatchString(name+" "+item.ShortName) || !equitySymbol.MatchString(item.Symbol) || seen[item.Symbol] || issuers[companyKey(name)] || name == "" {
 			continue
 		}
 		exchange := item.Exchange
@@ -58,6 +60,7 @@ func (f *fetcher) searchCompanies(ctx context.Context, query string) ([]company,
 		}
 		out = append(out, company{Symbol: item.Symbol, Name: name, Exchange: exchange})
 		seen[item.Symbol] = true
+		issuers[companyKey(name)] = true
 		if len(out) == 10 {
 			break
 		}
@@ -70,5 +73,40 @@ func (j *agentJob) stockEvidenceReady() bool {
 	for _, e := range j.evidence {
 		types[e.Tool] = true
 	}
-	return types["read_archive"] && types["search_archive"] && len(j.companyQueries) >= 2
+	return types["read_archive"] && types["search_archive"] && j.webAttempts > 0 && (len(j.webRefs) == 0 || j.webReads > 0) && len(j.companyQueries) >= 2
+}
+
+// A second exchange listing of one issuer is not another business opportunity.
+func companyKey(name string) string {
+	return strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsNumber(r) {
+			return unicode.ToLower(r)
+		}
+		return -1
+	}, name)
+}
+
+// Search already returns the saved excerpts. Preserve budget for company lookup
+// instead of repeatedly reading the same facts before collecting the identities.
+func (j *agentJob) nextStockTool() string {
+	types := map[string]bool{}
+	for _, e := range j.evidence {
+		types[e.Tool] = true
+	}
+	if !types["read_archive"] {
+		return "read_archive"
+	}
+	if !types["search_archive"] {
+		return "search_archive"
+	}
+	if j.webAttempts == 0 {
+		return "search_web"
+	}
+	if len(j.webRefs) > 0 && j.webReads == 0 {
+		return "read_web"
+	}
+	if len(j.companyQueries) < 2 {
+		return "search_companies"
+	}
+	return ""
 }

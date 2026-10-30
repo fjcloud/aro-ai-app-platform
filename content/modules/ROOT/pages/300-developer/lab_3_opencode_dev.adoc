@@ -34,7 +34,7 @@ Switch OpenCode to *plan* and paste:
 
 [source,text,role=execute]
 ----
-Build Signal Desk in Go using APP_CONTRACT.md and AGENTS.md. Start from all Go files, go.mod/go.sum, web assets and news/techmeme.json of the linked briefing-desk reference, including tests, native OpenShift AI Responses client, D3 scoring, archived research, MCP and tracing. Keep the prepared scaffold and technical app name signal-desk. The English UI should be one simple page: fund memo, $10,000 paper portfolio and the repository's ranked Techmeme snapshot. Explain the model endpoints, archive cutoff, portfolio freezing and timestamped current-market comparison in your plan. No real trades, invented prices or new privileges.
+Build Signal Desk in Go using APP_CONTRACT.md and AGENTS.md. Start from all Go files, go.mod/go.sum, web assets, skills/ and news/techmeme.json of the linked briefing-desk reference, including tests, native OpenShift AI Responses client, D3 scoring, archived research, MCP and tracing. Keep the prepared scaffold and technical app name signal-desk. The English UI should be one simple page: three ranked stories initially, compact company choices, a $10,000 paper result and collapsible memo/sources. Explain the model endpoints, archive cutoff, portfolio freezing and timestamped current-market comparison in your plan. No real trades, invented prices or new privileges.
 ----
 
 Review the plan, especially the distinction between a relevance score and a return. The app must use the platform endpoints from its ConfigMap, not Azure credentials or a model URL guessed by the coding assistant.
@@ -60,12 +60,13 @@ Keep `image-registry.openshift-image-registry.svc:5000/signal-desk-build/signal-
 Open the public HTTPS app Route.
 
 . Read the default semiconductor fund memo; expand it if you want to change the fund.
-. Click *Load saved news*. The app reads the JSON bundled from the repository and ranks its 161 articles on the T4. No Techmeme download or manual import is required.
-. Check the displayed news dates and collection provenance. *Export the news* includes the saved sources and scores; these are headlines and short excerpts, not full publisher articles.
+. Expand *News & sources* and click *Load saved news*. The app reads the JSON bundled from the repository and ranks its 161 articles on the T4. No Techmeme download or manual import is required.
+. Check the displayed news dates and collection provenance. *Export news* includes the saved sources and scores; these are headlines and short excerpts, not full publisher articles.
 . Open an interesting story and click *Find stock opportunities*. Expect a hypothetical thesis and risk for verified company shares, including supported suppliers, customers or competitors. A high relevance score alone is not a BUY instruction.
+. Check *View MLflow trace*: it opens this research in the prepared workspace and experiment.
 . Add a virtual amount to one or more ideas. Stay within $10,000. No return should be revealed yet.
-. Click *Compare with today’s market*. The complete portfolio freezes before market prices are requested. Inspect entry/exit dates and the price-data source.
-. Check the quote timestamp. *Update result* fetches the latest available price without changing choices. *Play again* starts a fresh budget and retains the previous round.
+. Click *Reveal result*. The complete portfolio freezes before market prices are requested. Expand *Prices & calculation* to inspect entry/exit dates and the price-data source.
+. Check the quote timestamp. *Update result* fetches the latest available price without changing choices. *Try another story* starts a fresh budget and retains the previous round.
 
 The fixed input is https://github.com/fjcloud/aro-ai-app-platform/blob/main/examples/briefing-desk/news/techmeme.json[news/techmeme.json]. Its news cutoff is 29 October at 00:05 New York time; entry is each stock exchange’s first session open afterward. Foreign share prices are converted to the USD paper fund using explicit FX references. Valuation uses the latest available regular-market quote, including an intraday quote. Before opening, on weekends or holidays, its actual timestamp shows which session it belongs to.
 
@@ -79,7 +80,7 @@ Ask OpenCode, in *build* mode:
 
 [source,text,role=execute]
 ----
-Add a simple “High relevance only” checkbox above the news list. When selected, show only current memo scores of at least 70/100 and display the filtered count; uncheck to restore all news. Keep the checkbox visible when zero stories match and give it a stable accessible name. Keep the archived corpus export, saved portfolio, scoring, agent tools, HTTPS and replay rules unchanged. Test it, commit and push, then rebuild and deploy with AGENTS.md. Wait for the new Git revision and rollout before reporting success.
+Remember the existing “High relevance only” preference in browser localStorage. Restore it when the page reloads, including when no stories match. Keep the initial three-story view, the filtered count and the checkbox’s accessible name. Keep the archived corpus export, saved portfolio, scoring, agent tools, HTTPS and replay rules unchanged. Test it, commit and push, then rebuild and deploy with AGENTS.md. Wait for the new Git revision and rollout before reporting success.
 ----
 
 Verify the new UI on the Route. In the Dev Spaces terminal:

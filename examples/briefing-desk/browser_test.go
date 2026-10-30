@@ -29,6 +29,9 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 	if os.Getenv("BROWSER_E2E") != "1" {
 		t.Skip("opt-in Playwright integration")
 	}
+	t.Setenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT", "https://mlflow.fixture.example/mlflow/v1/traces")
+	t.Setenv("MLFLOW_EXPERIMENT_ID", "1")
+	t.Setenv("MLFLOW_WORKSPACE", "signal-desk-dev")
 	const scope = "LOCAL VALIDATION: model and data fixtures, no live inference"
 	key := filepath.Join(t.TempDir(), "key")
 	os.WriteFile(key, []byte("fixture-key"), 0600)
@@ -46,6 +49,7 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 		json.Unmarshal(body.Input[0], &first)
 		count := 0
 		var source source
+		var webID string
 		for _, raw := range body.Input {
 			var v struct {
 				Type   string `json:"type"`
@@ -59,6 +63,13 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 					Data json.RawMessage `json:"data"`
 				}
 				json.Unmarshal([]byte(v.Output), &e)
+				if e.Tool == "search_web" {
+					var result webSearchResult
+					json.Unmarshal(e.Data, &result)
+					if len(result.Sources) > 0 {
+						webID = result.Sources[0].ID
+					}
+				}
 				if e.Tool == "read_article" {
 					json.Unmarshal(e.Data, &source)
 				}
@@ -81,9 +92,15 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 				call("search_archive", `{"query":"chip"}`)
 				return
 			case 2:
-				call("search_companies", `{"query":"Nvidia"}`)
+				call("search_web", `{"query":"memory demand"}`)
 				return
 			case 3:
+				call("read_web", `{"source_id":"`+webID+`"}`)
+				return
+			case 4:
+				call("search_companies", `{"query":"Nvidia"}`)
+				return
+			case 5:
 				call("search_companies", `{"query":"AMD"}`)
 				return
 			}
@@ -187,6 +204,9 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 				body += fmt.Sprintf(`<item><title>Fixture %s chip story</title><link>https://www.techmeme.com/fixture/%s#story</link><description>&lt;a href="https://fixture.example/%s"&gt;Fixture %s chip story&lt;/a&gt;</description><pubDate>%s</pubDate></item>`, name, name, name, name, time.Now().Format(time.RFC1123Z))
 			}
 			body += `</channel></rss>`
+		case r.URL.Hostname() == "www.bing.com":
+			typ = "application/rss+xml"
+			body = `<rss><channel><item><title>Fixture memory catalyst</title><link>https://fixture.example/web</link><pubDate>Wed, 21 Oct 2026 12:00:00 GMT</pubDate><description>Fixture dated memory demand and supplier context.</description></item></channel></rss>`
 		case r.URL.Path == "/v1/finance/search":
 			typ = "application/json"
 			body = `{"quotes":[{"symbol":"NVDA","longname":"NVIDIA Corporation","exchDisp":"NASDAQ","quoteType":"EQUITY"},{"symbol":"AMD","longname":"Advanced Micro Devices","exchDisp":"NASDAQ","quoteType":"EQUITY"}]}`

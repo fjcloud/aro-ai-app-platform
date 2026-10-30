@@ -35,7 +35,7 @@ func TestMCPArchiveCatalogAndToolRestrictions(t *testing.T) {
 	}
 	defer session.Close()
 	list, err := session.ListTools(ctx, nil)
-	if err != nil || len(list.Tools) != 4 {
+	if err != nil || len(list.Tools) != 6 {
 		t.Fatal(list, err)
 	}
 	for _, tc := range []struct {
@@ -45,6 +45,9 @@ func TestMCPArchiveCatalogAndToolRestrictions(t *testing.T) {
 	}{
 		{"list_news", map[string]any{}, false}, {"read_archive", map[string]any{"source_id": d.ID}, false},
 		{"search_archive", map[string]any{"query": "semiconductor"}, false}, {"search_companies", map[string]any{"query": "Samsung"}, false},
+		{"search_web", map[string]any{"query": "chip demand"}, false},
+		{"read_web", map[string]any{"source_id": webSourceID("https://fixture.example/web", s.game.Week.Cutoff)}, false},
+		{"read_web", map[string]any{"source_id": "https://attacker.example"}, true},
 		{"index_universe", map[string]any{}, true},
 		{"read_archive", map[string]any{"source_id": "https://attacker.example"}, true},
 		{"search_archive", map[string]any{"query": "chips", "url": "http://attacker"}, true},

@@ -1,0 +1,10 @@
+{
+  "status": "incomplete",
+  "reason": {
+    "reason": "max_iterations_exceeded"
+  },
+  "mcp_calls": 21,
+  "model": "maas-vllm-inference-1/deepseekv4pro",
+  "response_id": "resp_62a993be-9cd8-4575-a400-64154aa8c4e3",
+  "note": "The native Playground free research loop exceeded its iteration limit. Component probes now request one tool; the app uses a forced, bounded evidence protocol."
+}

@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "live_models": false,
+  "scope": "Explicit fixture providers through real Go handlers and browser",
+  "news": 21,
+  "checks": [
+    "all seven archive days",
+    "manual file import with model results ignored",
+    "memo edit re-scoring",
+    "historical company research",
+    "portfolio choices hidden from market results before commit",
+    "two investments",
+    "positive and negative stock returns",
+    "budget and immutable round",
+    "no intraday/future valuation",
+    "week-in-progress label",
+    "full news export",
+    "mobile layout",
+    "mock-keychain",
+    "no JavaScript errors"
+  ]
+}

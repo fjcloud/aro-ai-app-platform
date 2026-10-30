@@ -25,31 +25,36 @@ await screenshot(page,'mcp');
 await page.getByRole('checkbox').check();
 const connection=page.getByTestId('mcp-server-success-modal');
 await expect(connection).toBeVisible({timeout:60000});
-await expect(connection).toContainText('4 out of 4 tools are active.');
+await expect(connection).toContainText('6 out of 6 tools are active.');
 await expect(page.getByTestId('mcp-token-input')).toBeHidden();
 await screenshot(page,'connected');
 await connection.getByTestId('modal-submit-button').click();
-await expect(page.getByRole('button',{name:'View tools for Signal-Desk',exact:true})).toContainText('4 active',{timeout:30000});
+await expect(page.getByRole('button',{name:'View tools for Signal-Desk',exact:true})).toContainText('6 active',{timeout:30000});
 await expect(page.getByTestId('mcp-token-input')).toBeHidden();
 console.log('Public MCP connected without a token.');
 
 const tools=page.getByRole('button',{name:/View tools/i});
 if(await tools.count()){
- await tools.click();for(const name of ['list_news','read_archive','search_archive','search_companies'])await expect(page.getByRole('dialog').getByText(name,{exact:true})).toBeVisible({timeout:15000});await screenshot(page,'tools');
+ await tools.click();for(const name of ['list_news','read_archive','search_archive','search_web','read_web','search_companies'])await expect(page.getByRole('dialog').getByText(name,{exact:true})).toBeVisible({timeout:15000});await screenshot(page,'tools');
 
  const dialog=page.getByRole('dialog');if(await dialog.count())await dialog.getByRole('button',{name:'Close',exact:true}).first().click();else await page.keyboard.press('Escape');
 }
-const stream=page.waitForResponse(r=>r.url().includes('/lsd/responses')&&r.request().method()==='POST',{timeout:180000});
-await page.getByTestId('chatbot-message-bar').fill('Search the archived week for semiconductor demand. Read one source, look up the named company and a possible supplier, customer or competitor, then explain one hypothetical company stock opportunity, its risk and the archive cutoff. Use the tools.');
-await page.getByTestId('chatbot-message-bar').press('Enter');
-const response=await stream;assert.equal(response.status(),200);const raw=await response.text();
-const events=raw.split('\n').filter(s=>s.startsWith('data: {')).map(s=>JSON.parse(s.slice(6))),done=events.find(e=>e.type==='response.completed')?.response;
-assert.equal(done?.status,'completed');const calls=done.output.filter(x=>x.type==='mcp_call');
-const names=[...new Set(calls.map(x=>x.name))];for(const name of ['search_archive','read_archive','search_companies'])assert.ok(names.includes(name),'Missing actual tool '+name);
+const probes=[{tool:'search_web',question:'Use the search_web tool exactly once with query "SK Hynix memory demand". Summarize two returned eligible headlines and their dates. Stop after this one tool call.'}];
+const names=[],responses=[];let actualModel='';
+for(const probe of probes){
+ const stream=page.waitForResponse(r=>r.url().includes('/lsd/responses')&&r.request().method()==='POST',{timeout:180000});
+ await page.getByTestId('chatbot-message-bar').fill(probe.question);await page.getByTestId('chatbot-message-bar').press('Enter');
+ const response=await stream;assert.equal(response.status(),200);const raw=await response.text();if(process.env.RESPONSE_DEBUG_FILE)fs.writeFileSync(process.env.RESPONSE_DEBUG_FILE,raw,{mode:0o600});
+ const events=raw.split('\n').filter(s=>s.startsWith('data: {')).map(s=>JSON.parse(s.slice(6))),done=events.findLast(e=>e.type==='response.completed')?.response;
+ if(!done&&process.env.RESPONSE_DEBUG_FILE)fs.writeFileSync(process.env.RESPONSE_DEBUG_FILE,raw,{mode:0o600});
+ assert.equal(done?.status,'completed');assert.equal(done.model,'maas-vllm-inference-1/deepseekv4pro');actualModel=done.model;const calls=done.output.filter(x=>x.type==='mcp_call');
+ assert.equal(calls.length,1,'Component probe must execute exactly one tool');assert.equal(calls[0].name,probe.tool);assert.ok(!calls[0].error);
+ names.push(probe.tool);responses.push(done.id);
+}
 await page.waitForTimeout(1000);await page.getByRole('tab',{name:'Model',exact:true}).click();
 await screenshot(page,'answer');
 
-const result={passed:true,project:namespace,model:done.model,status:done.status,response_id:done.id,tools:names,mcp_authentication:'none',at:new Date().toISOString()};
-fs.writeFileSync(root+'/e2e/results/company-opportunities/playground-current.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+const result={passed:true,project:namespace,model:actualModel,status:'completed',response_ids:responses,tools:names,mcp_authentication:'none',at:new Date().toISOString()};
+fs.writeFileSync(root+'/e2e/results/simple-desk/playground-current.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 
 }finally{await browser.close()}})().catch(e=>{console.error(e.stack);process.exitCode=1});

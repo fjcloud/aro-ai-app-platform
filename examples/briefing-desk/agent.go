@@ -27,6 +27,9 @@ type agent struct {
 	readBudget           int
 }
 type agentJob struct {
+	webAttempts    int
+	webReads       int
+	webRefs        map[string]webSource
 	companies      map[string]company
 	companyQueries map[string]bool
 	archiveDocs    map[string]document
@@ -118,6 +121,8 @@ func stringProp(description string) map[string]string {
 }
 func toolSpecs() []toolSpec {
 	return []toolSpec{
+		{"search_web", "Search public web news before the saved information cutoff. Returns dated sources and stable source IDs; newer or undated results are excluded. Dates come from the search index, not an independently archived page.", schema(map[string]any{"query": stringProp("Company and catalyst keywords, e.g. SK Hynix memory demand")}, "query")},
+		{"read_web", "Read a source_id returned by search_web. Only publisher text with eligible date metadata is used; otherwise the dated search excerpt is returned with its coverage limitation. Never accepts an arbitrary URL.", schema(map[string]any{"source_id": stringProp("An exact source_id returned by search_web")}, "source_id")},
 		{"read_archive", "Read a source from the archived game week. Use original for the selected news or a source_id returned by search_archive. Never fetch live publisher pages.", schema(map[string]any{"source_id": stringProp("original or an archived source ID")}, "source_id")},
 		{"search_archive", "Search only the pre-cutoff headlines/excerpts in the loaded game week. No current news or prices.", schema(map[string]any{"query": stringProp("Two to five topic words")}, "query")},
 		{"search_companies", "Look up a company name or ticker. Returns individual listed equities only, with verified names and exchanges; never prices, ETFs, indices or news. Reference data is current, not historical company fundamentals. Search at least two distinct company names to investigate the direct stock and its ecosystem.", schema(map[string]any{"query": stringProp("One company name or stock ticker")}, "query")},
@@ -145,7 +150,7 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 		allowed = map[string]bool{"get_headlines": true}
 	}
 	if j.stage == "game_ideas" {
-		allowed = map[string]bool{"read_archive": true, "search_archive": true, "search_companies": true}
+		allowed = map[string]bool{"read_archive": true, "search_archive": true, "search_companies": true, "search_web": true, "read_web": true}
 	}
 	if j.stage == "investigate" {
 		allowed = map[string]bool{"read_article": true, "search_news": true, "market_snapshot": true, "sec_filings": true, "ecb_fx": true}
@@ -165,7 +170,11 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 	} else {
 		j.note("agent", "OpenShift AI agent is running", 0)
 	}
-	for turn := 0; turn < 7; turn++ {
+	maxCalls := 6
+	if j.stage == "game_ideas" {
+		maxCalls = 8
+	}
+	for turn := 0; turn < maxCalls+1; turn++ {
 		payload := map[string]any{"model": a.model, "input": history, "instructions": instructions, "tools": tools, "reasoning": map[string]any{"effort": "none"}, "max_output_tokens": 2400, "store": false, "stream": false}
 		if a.backend == "groq" || a.backend == "azure" {
 			if a.backend == "groq" {
@@ -224,8 +233,26 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 				payload["tool_choice"] = "required"
 			}
 		}
+		if j.stage == "game_ideas" && !j.stockEvidenceReady() {
+			next := j.nextStockTool()
+			payload["instructions"] = instructions + " The only permitted next tool is " + next + ". Call it once now; do not call any other tool in this turn."
+			payload["parallel_tool_calls"] = false
+			if a.backend != "groq" && a.backend != "azure" {
+				payload["tool_choice"] = map[string]string{"type": "function", "name": next}
+			}
+			// All providers get the same evidence protocol, with LLM-selected
+			// search terms and candidates, followed by schema-only synthesis.
+			for _, spec := range toolSpecs() {
+				if spec.name == next {
+					payload["tools"] = []any{map[string]any{"type": "function", "name": spec.name, "description": spec.description, "parameters": spec.input}}
+					break
+				}
+			}
+		}
 		body, _ := json.Marshal(payload)
-		raw, e := a.nativeResponse(ctx, j, body, key)
+		callCtx, callSpan := startResearchCall(ctx, j, a.model, a.backendName(), turn+1, payload)
+		raw, e := a.nativeResponse(callCtx, j, body, key)
+		finishResearchCall(callSpan, j, raw, e)
 		if e != nil {
 			return e
 		}
@@ -259,10 +286,10 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 			}
 			if v.Type == "function_call" {
 				called = true
-				if !allowed[v.Name] || v.CallID == "" || len(v.Arguments) > 4096 {
+				if !allowed[v.Name] || (j.stage == "game_ideas" && v.Name != j.nextStockTool()) || v.CallID == "" || len(v.Arguments) > 4096 {
 					return errors.New("Agent requested an unsupported tool")
 				}
-				if j.calls >= 6 {
+				if j.calls >= maxCalls {
 					return errors.New("Research tool budget exhausted")
 				}
 				j.calls++
@@ -271,18 +298,35 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 				toolCtx, toolSpan := otel.Tracer("briefing-desk").Start(ctx, "tool."+v.Name)
 				toolSpan.SetAttributes(attribute.String("mlflow.spanType", "TOOL"))
 				data, sourceURL, toolErr := a.runTool(toolCtx, j, v.Name, json.RawMessage(v.Arguments))
-				toolSpan.End()
+				if j.stage == "game_ideas" {
+					setTraceJSON(toolSpan, "mlflow.spanInputs", json.RawMessage(v.Arguments))
+				}
 				var output []byte
+				var traceOutput []byte
 				if toolErr != nil {
 					j.note("tool_error", v.Name+": "+toolErr.Error(), time.Since(started).Milliseconds())
 					output, _ = json.Marshal(map[string]string{"error": toolErr.Error()})
+					if j.stage == "game_ideas" {
+						markTraceError(toolSpan, toolErr)
+					}
 				} else {
 					b, _ := json.Marshal(data)
 					ev := evidence{ID: fmt.Sprintf("E%d", len(j.evidence)+1), Tool: v.Name, URL: sourceURL, Retrieved: stamp(), Data: b}
 					j.evidence = append(j.evidence, ev)
+					traceOutput, _ = json.Marshal(ev)
+					// Excluded URLs can disclose later events in their paths.
+					// Keep the complete search audit in MLflow, not the model input.
+					ev.Data, _ = json.Marshal(modelToolResult(v.Name, data))
 					output, _ = json.Marshal(ev)
 					j.note("tool", v.Name+" completed · "+ev.ID, time.Since(started).Milliseconds())
 				}
+				if j.stage == "game_ideas" {
+					if traceOutput == nil {
+						traceOutput = output
+					}
+					setTraceJSON(toolSpan, "mlflow.spanOutputs", json.RawMessage(traceOutput))
+				}
+				toolSpan.End()
 				history = append(history, item, map[string]any{"type": "function_call_output", "call_id": v.CallID, "output": string(output)})
 			} else if v.Type == "message" {
 				for _, c := range v.Content {

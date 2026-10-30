@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "scope": "Fresh research from the deployed public app",
+  "trace_id": "tr-83edf629c347cf4212f18fd1701af36e",
+  "trace_url": "https://rh-ai.apps.n79j08n7.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-83edf629c347cf4212f18fd1701af36e&workspace=signal-desk-dev",
+  "state": "OK",
+  "tool_spans": [
+    "tool.read_archive",
+    "tool.search_archive",
+    "tool.search_web",
+    "tool.read_web",
+    "tool.search_companies",
+    "tool.search_companies"
+  ],
+  "llm_turns": 7,
+  "all_tools_and_model_turns_have_inputs_outputs": true,
+  "model_credential_absent": true,
+  "dated_web_sources": 6,
+  "rejected_web_results": 2,
+  "cutoff": "2026-10-29T04:05:00Z"
+}

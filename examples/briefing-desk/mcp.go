@@ -10,6 +10,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 // The Playground exposes the same archived evidence as the game agent, never prices.
@@ -30,11 +31,11 @@ func (s *server) archiveTool(ctx context.Context, name string, raw json.RawMessa
 		if args.SourceID != "" || args.Query != "" {
 			return nil, errors.New("This tool takes no arguments")
 		}
-	} else if name == "read_archive" {
+	} else if name == "read_archive" || name == "read_web" {
 		if args.SourceID == "" || args.Query != "" {
 			return nil, errors.New("Use a source_id returned by list_news or search_archive")
 		}
-	} else if name == "search_archive" || name == "search_companies" {
+	} else if name == "search_archive" || name == "search_companies" || name == "search_web" {
 		if args.SourceID != "" || args.Query == "" {
 			return nil, errors.New("Use a short query")
 		}
@@ -62,7 +63,17 @@ func (s *server) archiveTool(ctx context.Context, name string, raw json.RawMessa
 			j.archiveDocs[d.ID] = d
 		}
 	}
+	if name == "read_web" {
+		ref, ok := s.cachedWebSource(args.SourceID, week.Cutoff)
+		if !ok {
+			return nil, errors.New("Unknown or expired web source_id; search_web again")
+		}
+		j.webRefs = map[string]webSource{args.SourceID: ref}
+	}
 	result, _, err := s.agent.runGameTool(ctx, j, name, args.SourceID, args.Query)
+	if err == nil && name == "search_web" {
+		s.cacheWebSources(result.(webSearchResult))
+	}
 	return result, err
 }
 func (s *server) mcpHandler() http.Handler {
@@ -70,7 +81,7 @@ func (s *server) mcpHandler() http.Handler {
 	destructive := false
 	defs := []mcp.Tool{{Name: "list_news", Description: "List source IDs and headlines from the loaded historical news week.", InputSchema: map[string]any{"type": "object", "properties": map[string]any{}, "additionalProperties": false}}}
 	for _, spec := range toolSpecs() {
-		if spec.name == "read_archive" || spec.name == "search_archive" || spec.name == "search_companies" {
+		if spec.name == "read_archive" || spec.name == "search_archive" || spec.name == "search_companies" || spec.name == "search_web" || spec.name == "read_web" {
 			description := spec.description
 			if spec.name == "read_archive" {
 				description = "Read an archived source_id returned by list_news or search_archive. No current web access."
@@ -79,17 +90,22 @@ func (s *server) mcpHandler() http.Handler {
 		}
 	}
 	for _, def := range defs {
-		openWorld := def.Name == "search_companies"
+		openWorld := def.Name == "search_companies" || def.Name == "search_web" || def.Name == "read_web"
 		def.Annotations = &mcp.ToolAnnotations{ReadOnlyHint: true, DestructiveHint: &destructive, IdempotentHint: true, OpenWorldHint: &openWorld}
 		name := def.Name
 		srv.AddTool(&def, func(ctx context.Context, req *mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 			ctx, span := otel.Tracer("briefing-desk").Start(ctx, "mcp."+name)
 			defer span.End()
+			span.SetAttributes(attribute.String("mlflow.spanType", "TOOL"))
+			setTraceJSON(span, "mlflow.spanInputs", req.Params.Arguments)
 			result, err := s.archiveTool(ctx, name, req.Params.Arguments)
 			if err != nil {
+				markTraceError(span, err)
+				setTraceJSON(span, "mlflow.spanOutputs", map[string]string{"error": err.Error()})
 				return &mcp.CallToolResult{IsError: true, Content: []mcp.Content{&mcp.TextContent{Text: err.Error()}}}, nil
 			}
-			b, _ := json.Marshal(result)
+			setTraceJSON(span, "mlflow.spanOutputs", result)
+			b, _ := json.Marshal(modelToolResult(name, result))
 			return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: string(b)}}}, nil
 		})
 	}
