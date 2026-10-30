@@ -23,7 +23,7 @@ curl --fail-with-body -sS --max-time 180 \
   jq '{model,usage,answer:.choices[0].message.content}'
 ----
 
-Next, in *Signal Desk*, load/rank the news or change the memo to generate D3 activity. Open one story and click *Find index ideas* to generate runtime agent traffic. Record the time of each action. Reusing a cached score or idea creates no new inference request.
+Next, in *Signal Desk*, load/rank the news or change the memo to generate D3 activity. Open one story and click *Find stock opportunities* to generate runtime agent traffic. Record the time of each action. Reusing a cached score or idea creates no new inference request.
 
 Wait 2–3 minutes for scraping on a fresh lab. Use *last hour* in the OpenShift console's *Observe → Dashboards → Workshop AI — ARO*. Lab 1.1 enabled MaaS telemetry and Lab 1.6 added the D3 ServiceMonitor; no separate Grafana is needed.
 

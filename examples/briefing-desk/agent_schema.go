@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 // Match the application's existing validators, without relying on prose prompts
 // to keep the provider's final response in the expected shape.
 func researchFinalFormat(j *agentJob) map[string]any {
@@ -19,8 +21,18 @@ func researchFinalFormat(j *agentJob) map[string]any {
 		for _, e := range j.evidence {
 			ids = append(ids, e.ID)
 		}
-		idea := schema(map[string]any{"symbol": enum([]string{"QQQ", "SPY", "SMH", "XLK"}), "thesis": text(20, 600), "risk": text(10, 400), "sources": array(enum(ids), 1, 6)}, "symbol", "thesis", "risk", "sources")
-		shape = schema(map[string]any{"comment": text(10, 700), "ideas": array(idea, 0, 3)}, "comment", "ideas")
+		symbols := []string{}
+		for symbol := range j.companies {
+			symbols = append(symbols, symbol)
+		}
+		sort.Strings(symbols)
+		maxIdeas := 3
+		if len(symbols) == 0 {
+			symbols = []string{""}
+			maxIdeas = 0
+		}
+		idea := schema(map[string]any{"symbol": enum(symbols), "relationship": enum([]string{"direct", "supplier", "customer", "competitor"}), "thesis": text(20, 600), "risk": text(10, 400), "sources": array(enum(ids), 1, 6)}, "symbol", "relationship", "thesis", "risk", "sources")
+		shape = schema(map[string]any{"comment": text(10, 700), "ideas": array(idea, 0, maxIdeas)}, "comment", "ideas")
 	case "memo_reason":
 		shape = schema(map[string]any{"reason": text(20, 700), "point_ids": array(map[string]any{"type": "string", "pattern": "^P[1-5]$"}, 1, 5)}, "reason", "point_ids")
 	case "collect":

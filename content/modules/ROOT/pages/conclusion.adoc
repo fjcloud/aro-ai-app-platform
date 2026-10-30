@@ -18,4 +18,4 @@ MaaS token usage and GPU utilization are different measurements. Foundry charges
 * Change the fund memo and compare rankings for the same archived corpus.
 * Compare agent hypotheses with realized outcomes, including losses and missing data.
 * Use MLflow to compare tool choices, latency and failures after a prompt change.
-* Extend the index catalog or historical source only with source validation and explicit accounting assumptions.
+* Extend the company lookup or historical source only with source validation and explicit accounting assumptions.

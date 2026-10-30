@@ -1,12 +1,12 @@
 # Signal Desk
 
-A simple paper-investment game: **saved news → fund relevance → index ideas → virtual investment → latest market price**.
+A simple paper-investment game: **saved news → fund relevance → company stock opportunities → virtual investment → latest market price**.
 
 1. Edit the fund memo (semiconductors/components by default).
 2. Load the 161 dated Techmeme articles embedded from `news/techmeme.json`. No live news download or manual import is needed; retain the collection provenance and source links.
-3. Open a ranked story. DeepSeek compares archived news and proposes up to three long-only ETF index proxies: QQQ, SPY, SMH or XLK.
+3. Open a ranked story. DeepSeek compares archived news and proposes up to three individual company stocks: the named business and supported suppliers, customers or competitors. Each ticker is resolved by company lookup; ETFs and indices are excluded.
 4. Allocate the **$10,000 virtual budget**, then reveal the result. The entire portfolio is saved and frozen before market prices are requested.
-5. Compare the first US session open after the fixed news cutoff with the latest available regular-market quote. Intraday and delayed prices include their actual timestamp. Play again to start another round.
+5. Compare the first session open on each stock’s exchange after the fixed news cutoff with the latest available regular-market quote. Intraday and delayed prices include their actual timestamp. Play again to start another round.
 
 The interface has one column: memo, paper fund and ranked news. Thirty stories are shown initially; Show more reveals the rest. No live orders are sent.
 
@@ -14,7 +14,7 @@ d3-mini supplies the actual memo relevance score: `100 × expected ordinal level
 
 News uses archived Techmeme headlines/excerpts, without fetching today's publisher pages. Imports use daily snapshots, backfill missing primary post IDs, deduplicate publisher URLs and disclose unavailable IDs. This does not include every related discussion link or guarantee full publisher-text coverage.
 
-Game research can only read/search the saved news period and consult a fixed index catalog. It cannot call current web or price tools. This remains a historical educational replay: model training knowledge is not erased, so it is not a blind or calibrated backtest. Entry prices and the latest regular-market quote come from Yahoo Finance. Returns are gross price-only, excluding dividends, fees and slippage; unavailable data is reported rather than invented.
+Game research reads/searches the saved news period and looks up current company identities without prices. It checks the named firm and another possible supplier, customer or competitor; each proposal identifies the relationship, catalyst, evidence and risk. It cannot read live publisher pages or call price tools. This remains a historical educational replay: model training knowledge is not erased, so it is not a blind or calibrated backtest. Entry prices and the latest regular-market quote come from Yahoo Finance. Foreign shares use timestamped FX conversion to the USD paper budget; the entry FX reference must be known by stock entry. Returns exclude dividends, fees and slippage; unavailable data is reported rather than invented.
 
 ## Local development
 

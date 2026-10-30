@@ -47,3 +47,4 @@ jobs:
           path: |
             e2e/results/weekly-game/
             e2e/results/prepared-inputs/
+            e2e/results/company-opportunities/

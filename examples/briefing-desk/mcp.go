@@ -26,7 +26,7 @@ func (s *server) archiveTool(ctx context.Context, name string, raw json.RawMessa
 	if err := dec.Decode(&args); err != nil || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
 		return nil, errors.New("Invalid archive tool arguments")
 	}
-	if name == "list_news" || name == "index_universe" {
+	if name == "list_news" {
 		if args.SourceID != "" || args.Query != "" {
 			return nil, errors.New("This tool takes no arguments")
 		}
@@ -34,7 +34,7 @@ func (s *server) archiveTool(ctx context.Context, name string, raw json.RawMessa
 		if args.SourceID == "" || args.Query != "" {
 			return nil, errors.New("Use a source_id returned by list_news or search_archive")
 		}
-	} else if name == "search_archive" {
+	} else if name == "search_archive" || name == "search_companies" {
 		if args.SourceID != "" || args.Query == "" {
 			return nil, errors.New("Use a short query")
 		}
@@ -62,15 +62,15 @@ func (s *server) archiveTool(ctx context.Context, name string, raw json.RawMessa
 			j.archiveDocs[d.ID] = d
 		}
 	}
-	result, _, err := s.agent.runGameTool(j, name, args.SourceID, args.Query)
+	result, _, err := s.agent.runGameTool(ctx, j, name, args.SourceID, args.Query)
 	return result, err
 }
 func (s *server) mcpHandler() http.Handler {
 	srv := mcp.NewServer(&mcp.Implementation{Name: "signal-desk", Version: "1.0.0"}, nil)
-	destructive, openWorld := false, false
+	destructive := false
 	defs := []mcp.Tool{{Name: "list_news", Description: "List source IDs and headlines from the loaded historical news week.", InputSchema: map[string]any{"type": "object", "properties": map[string]any{}, "additionalProperties": false}}}
 	for _, spec := range toolSpecs() {
-		if spec.name == "read_archive" || spec.name == "search_archive" || spec.name == "index_universe" {
+		if spec.name == "read_archive" || spec.name == "search_archive" || spec.name == "search_companies" {
 			description := spec.description
 			if spec.name == "read_archive" {
 				description = "Read an archived source_id returned by list_news or search_archive. No current web access."
@@ -79,6 +79,7 @@ func (s *server) mcpHandler() http.Handler {
 		}
 	}
 	for _, def := range defs {
+		openWorld := def.Name == "search_companies"
 		def.Annotations = &mcp.ToolAnnotations{ReadOnlyHint: true, DestructiveHint: &destructive, IdempotentHint: true, OpenWorldHint: &openWorld}
 		name := def.Name
 		srv.AddTool(&def, func(ctx context.Context, req *mcp.CallToolRequest) (*mcp.CallToolResult, error) {

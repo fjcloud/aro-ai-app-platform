@@ -11,13 +11,13 @@ The app has produced an investment hypothesis. Verify how it reached that hypoth
 
 == Follow one research request
 
-In Signal Desk, open a ranked story and click *Find index ideas* (or *Research again* for a fresh trace). Read the explanation, proposed ETF exposure and risk. Note the *MLflow trace* ID below the ideas.
+In Signal Desk, open a ranked story and click *Find stock opportunities* (or *Research again* for a fresh trace). Read the explanation, proposed company, business relationship and risk. Note the *MLflow trace* ID below the ideas.
 
-Open MLflow from OpenShift AI, select workspace `signal-desk-dev` and experiment `signal-desk`, then find that trace. Expect `game.research`, `agent.game_ideas` and actual `tool.read_archive`, `tool.search_archive` and `tool.index_universe` spans. D3 scores appear as separate `decision.classify` traces; paper valuation appears as `game.settle`.
+Open MLflow from OpenShift AI, select workspace `signal-desk-dev` and experiment `signal-desk`, then find that trace. Expect `game.research`, `agent.game_ideas` and actual `tool.read_archive`, `tool.search_archive` and `tool.search_companies` spans. D3 scores appear as separate `decision.classify` traces; paper valuation appears as `game.settle`.
 
 Inspect model/tool durations, model identity and reported usage. An archive query and an LLM request have different latency. Traces omit keys, full source text and portfolio contents. If the trace is absent, inspect exporter configuration and MLflow workspace permissions; a visible answer alone does not prove trace export succeeded.
 
-The agent should use information from the archived week only. Its tools cannot read current publisher pages or this week's prices. The static catalog describes index categories; it does not verify historical ETF constituents. Any suggested exposure is hypothetical.
+The agent uses archived news facts. Company lookup returns current names, tickers and exchanges, without prices or historical fundamentals. Its tools cannot read current publisher pages or this week's prices. News facts stay within the saved cutoff; proposed business links and benefits remain hypotheses unless supported by the archived sources.
 
 == Exercise the same evidence in the Playground
 
@@ -50,7 +50,7 @@ The four tools connect directly without an authorization dialog or token. In *Co
 
 image::signal-desk-playground-connected.png[Public MCP connection with four active tools and no token]
 
-Expect *4 tools enabled*. Click the *4 active* button (*View tools*) to inspect `list_news`, `read_archive`, `search_archive` and `index_universe`.
+Expect *4 tools enabled*. Click the *4 active* button (*View tools*) to inspect `list_news`, `read_archive`, `search_archive` and `search_companies`.
 
 image::signal-desk-playground-tools.png[The four read-only Signal Desk tools]
 
@@ -60,12 +60,12 @@ Send this question in the chat:
 
 [source,text,role=execute]
 ----
-Use Signal-Desk tools. Search the loaded archived week for semiconductor demand. Read one returned source_id and inspect the index catalog. Explain one hypothetical index exposure for our semiconductor fund, its risk and the archive cutoff. Use only returned evidence. Do not fetch current prices, predict a profit or claim verified ETF holdings.
+Use Signal-Desk tools. Search the loaded archived week for semiconductor demand. Read one returned source_id and inspect the company lookup. Explain one hypothetical company stock exposure for our semiconductor fund, its risk and the archive cutoff. Use only returned evidence. Do not fetch current prices, predict a profit or assume related stocks must move together.
 ----
 
 image::signal-desk-playground-answer.png["A real Playground answer with a tool response, hypothetical exposure and risk"]
 
-Expand *Tool response* below the answer. Verify that the agent called `search_archive`, `read_archive` and `index_universe`, and that its cited source IDs belong to returned articles. Check the archive cutoff, proposed exposure and risk. The exact answer varies; the screenshot is one real run.
+Expand *Tool response* below the answer. Verify that the agent called `search_archive`, `read_archive` and `search_companies`, and that its cited source IDs belong to returned articles. Check the archive cutoff, proposed company, relationship and risk. The exact answer varies; the screenshot is one real run.
 
 This tests the model, instructions and MCP tools directly in OpenShift AI. The app's research button uses the same model and read-only evidence through its bounded Responses loop. To inspect the app's MLflow spans, use *Research again* in Signal Desk and follow the trace ID as described above.
 
@@ -78,8 +78,8 @@ Empty archives should produce an explicit empty result, not invented articles. A
 | Test | Expected behavior
 | Search semiconductor news | Returned IDs belong to the loaded archived week and include source dates.
 | Read one returned ID | Actual archived headline/excerpt; no current publisher enrichment.
-| Compare ETF exposure | Supported catalog symbol, hypothetical transmission and explicit risk.
-| Ask for this week's best-performing ETF before commitment | No price/return tool exists; no claim of observed future performance.
+| Compare company opportunities | Verified company ticker, direct/supplier/customer/competitor relationship, sourced catalyst and explicit risk.
+| Ask for this week's best-performing stock before commitment | No price/return tool exists; no claim of observed future performance.
 | Ask for an arbitrary URL, shell command or order | No such tool executes.
 | Unknown source ID or extra tool argument | Validation error, no caller-selected URL fetch.
 | Model/source/price unavailable | Visible error; no heuristic score, fabricated source or random price.

@@ -4,7 +4,7 @@
 
 == Two models, two jobs
 
-A language model generates text and tool calls. A *decision model* evaluates a structured question against supplied facts and a rubric. Here, d3-mini returns five probabilities and a relevance score from 0 to 4; it does not write an explanation or predict a stock return. DeepSeek later explains hypothetical index exposure using archive tools.
+A language model generates text and tool calls. A *decision model* evaluates a structured question against supplied facts and a rubric. Here, d3-mini returns five probabilities and a relevance score from 0 to 4; it does not write an explanation or predict a stock return. DeepSeek later explains hypothetical company stock exposure using archive tools.
 
 [cols="1,2,2",options="header"]
 |===

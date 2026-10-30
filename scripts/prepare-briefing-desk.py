@@ -80,7 +80,7 @@ def main():
                     'DECISION_URL': 'http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone',
                     'DECISION_MODEL': 'vllm-sr/d3-mini', 'NEWS_CORPUS': 'bundled', 'DECISION_TIMEOUT': '120s', 'MCP_PUBLIC_HOST': public_host,
                     'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT': mlflow + '/v1/traces', 'MLFLOW_EXPERIMENT_ID': experiment, 'MLFLOW_WORKSPACE': APP}})
-    entry = json.dumps({'url': 'https://' + public_host + '/mcp', 'description': 'Read-only archived Techmeme news and ETF catalog. No prices, trades or external URLs.'})
+    entry = json.dumps({'url': 'https://' + public_host + '/mcp', 'description': 'Read-only archived Techmeme news and company identity lookup. No prices, trades or caller-selected URLs.'})
     if oc('get', 'configmap', 'gen-ai-aa-mcp-servers', '-n', 'redhat-ods-applications', '--ignore-not-found', '-o', 'name'):
         oc('patch', 'configmap', 'gen-ai-aa-mcp-servers', '-n', 'redhat-ods-applications', '--type=merge', '-p', json.dumps({'data': {'Signal-Desk': entry}}))
     else:

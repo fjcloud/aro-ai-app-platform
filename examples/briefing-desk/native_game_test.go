@@ -28,7 +28,8 @@ func TestNativeGameFinalizesAfterRequiredEvidence(t *testing.T) {
 			reply(w, 200, map[string]any{"status": "completed", "output": []any{
 				map[string]string{"type": "function_call", "name": "read_archive", "call_id": "read", "arguments": `{"source_id":"original"}`},
 				map[string]string{"type": "function_call", "name": "search_archive", "call_id": "search", "arguments": `{"query":"semiconductor demand"}`},
-				map[string]string{"type": "function_call", "name": "index_universe", "call_id": "catalog", "arguments": `{}`},
+				map[string]string{"type": "function_call", "name": "search_companies", "call_id": "issuer", "arguments": `{"query":"Nvidia"}`},
+				map[string]string{"type": "function_call", "name": "search_companies", "call_id": "ecosystem", "arguments": `{"query":"AMD"}`},
 			}})
 			return
 		}
@@ -36,7 +37,7 @@ func TestNativeGameFinalizesAfterRequiredEvidence(t *testing.T) {
 			t.Error("Native agent kept tools available after gathering all required evidence")
 		}
 		history, _ := json.Marshal(in["input"])
-		for _, evidence := range []string{"function_call_output", "Archived chip demand", "Static fund index categories"} {
+		for _, evidence := range []string{"function_call_output", "Archived chip demand", "Current company identity metadata"} {
 			if !strings.Contains(string(history), evidence) {
 				t.Errorf("Missing actual evidence in synthesis: %s", evidence)
 			}
@@ -52,10 +53,11 @@ func TestNativeGameFinalizesAfterRequiredEvidence(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	a.fetch = companyFixture()
 	week := lastNewsWeek(fixtureTime())
 	d := document{ID: "original-id", URL: "https://example.com/chips", GameWeek: week.ID, Summary: summary{Title: "Archived chip demand", TLDR: "A real archived source excerpt for this fixture."}, Source: source{ArchivedAt: "2026-10-22T12:00:00Z", ArchiveURL: "https://www.techmeme.com/261022/h0800", Published: "2026-10-22"}}
 	result, err := a.gameIdeas(context.Background(), d, defaults()[0], []document{d}, week)
-	if err != nil || turns != 2 || len(result.Evidence) != 3 || len(result.Ideas) != 0 {
+	if err != nil || turns != 2 || len(result.Evidence) != 4 || len(result.Ideas) != 0 {
 		t.Fatalf("Native synthesis did not finish from actual evidence: turns=%d evidence=%d err=%v", turns, len(result.Evidence), err)
 	}
 }
