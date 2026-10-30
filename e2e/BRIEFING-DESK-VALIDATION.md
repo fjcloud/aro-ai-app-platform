@@ -1,5 +1,15 @@
 # Signal Desk: ARO end-to-end validation
 
+## Native agent backend through the CLI — 30 October 2026
+
+On the assigned `8z97s` lab, UI creation produced a Ready Playground in `ai-tenants`; the app expected its backend in `signal-desk-dev`, where no Deployment or Service existed. The guide now creates the native `OGXServer`, configuration and cluster-derived MaaS endpoint explicitly with CLI commands. The operator deploys its Red Hat OGX image. Dashboard discovery labels let the Playground open that prepared backend without provisioning it through the UI.
+
+The CLI resources passed server-side validation and readiness/rollout waits in `signal-desk-dev`. The runtime setup then created its separate MaaS key, app ConfigMap, MCP catalog entry and MLflow experiment. A real native Responses request called `workshop_probe`, accepted its function output and completed the next turn through DeepSeek. In a fresh Chromium context, the Playground discovered the CLI-created backend, selected the Signal Desk runtime subscription and returned the requested marker. No UI creation was used. Every browser launch used `--use-mock-keychain`.
+
+The backend uses local SQLite/FAISS storage for this workshop; its session history is temporary. The app's news and portfolio volume remains separate. Its Pending state before app deployment is expected with the cluster's `WaitForFirstConsumer` StorageClass. The 43 helper checks, guide build and platform shell syntax passed. This validates backend creation and model calls; it is not a complete app delivery or live MCP acceptance run on this new lab.
+
+Evidence: [native function-call round trip](results/native-agent-cli/responses.json), [actual Playground answer](results/native-agent-cli/playground.json), [Playground UI](results/native-agent-cli/playground.png).
+
 ## Prepared runtime and repository news — 29 October 2026
 
 The current guide deploys a public, digest-pinned image built in advance by [GitHub Actions](https://github.com/fjcloud/aro-ai-app-platform/actions/runs/40888536498). Anonymous image access passed. On the fresh `ltdx6` lab, `oc apply -k deploy/decision` created the cache, ServingRuntime and InferenceService without a Tekton build or app-pipeline PVC. Cold start took about seven minutes, including the image pull and the pinned model download. The InferenceService became Ready, with one T4, `cuda:0`, FP16 and restricted-v2. The documented synthetic chipmaker example scored 3.254/4 for semiconductors and 0.221/4 for retail, both with complete input coverage. The earlier Pending runtime pipeline was cancelled after its prebuilt replacement was deployed.

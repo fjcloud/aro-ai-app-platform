@@ -1,0 +1,52 @@
+apiVersion: ogx.io/v1beta1
+kind: OGXServer
+metadata:
+  name: lsd-genai-playground
+  namespace: signal-desk-dev
+  # Let the Playground discover the backend created with the CLI.
+  labels:
+    opendatahub.io/dashboard: 'true'
+  annotations:
+    openshift.io/display-name: lsd-genai-playground
+spec:
+  distribution:
+    name: rh
+  network:
+    port: 8321
+  workload:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: '2'
+        memory: 4Gi
+    overrides:
+      command:
+      - /bin/sh
+      - -c
+      - ogx run /etc/ogx/config.yaml --insecure
+      env:
+      - name: HF_HUB_OFFLINE
+        value: '1'
+      - name: TRANSFORMERS_OFFLINE
+        value: '1'
+      - name: MAAS_URL
+        valueFrom:
+          configMapKeyRef:
+            name: signal-desk-agent-endpoint
+            key: MAAS_URL
+      - name: SENTENCE_TRANSFORMERS_HOME
+        value: /opt/app-root/.cache/huggingface/hub
+      - name: FAISS_STORE_DIR
+        value: /.ogx/faiss
+      - name: VLLM_TLS_VERIFY
+        value: 'false'
+      - name: OGX_CONFIG_DIR
+        value: /.ogx
+      - name: HF_DATASETS_OFFLINE
+        value: '1'
+  overrideConfig:
+    name: llama-stack-config
+    key: config.yaml

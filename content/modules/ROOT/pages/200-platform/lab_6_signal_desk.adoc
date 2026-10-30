@@ -10,21 +10,31 @@ The decision model scores relevance. The runtime agent researches possible index
 *Outcome:* Fixed model endpoints, separate runtime key, app identity, storage and trace experiment.
 ====
 
-== Create the native Playground backend
+== Deploy the native Responses backend
 
-Open *Red Hat OpenShift AI → Gen AI studio → AI asset endpoints*. Select project `signal-desk-dev`, choose the MaaS *DeepSeek-V4 Pro* model and *Add to playground*. Create the Playground and wait for its backend to be ready. Keep the model registered from MaaS; do not create a second Foundry endpoint or paste the Azure account key.
+Create https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/html/working_with_ogx/deploying-ogx-server_rag[`OGXServer/lsd-genai-playground`] explicitly in `signal-desk-dev`. The OpenShift AI operator creates its Deployment and Service using the Red Hat OGX image. The configuration points to the existing MaaS DeepSeek model; it contains no model key.
 
-image::signal-desk-playground-create.png[Create the Playground with the MaaS DeepSeek model in the Signal Desk project]
-
-From the bastion, inspect the native backend:
+From the bastion, update the checkout and apply the backend resources:
 
 [source,sh,role=execute]
 ----
+git pull --ff-only
+MAAS_URL="https://maas.$(oc get ingress.config.openshift.io cluster -o jsonpath='{.spec.domain}')/v1"
+oc create configmap signal-desk-agent-endpoint -n signal-desk-dev \
+  --from-literal=MAAS_URL="$MAAS_URL" --dry-run=client -o yaml | oc apply -f -
+oc apply -k deploy/briefing/agent
+oc wait ogxserver/lsd-genai-playground -n signal-desk-dev \
+  --for=jsonpath='{.status.phase}'=Ready --timeout=600s
+oc rollout status deployment/lsd-genai-playground -n signal-desk-dev --timeout=600s
 oc get deployment lsd-genai-playground -n signal-desk-dev
 oc get service lsd-genai-playground-service -n signal-desk-dev
 oc get pods -n signal-desk-dev
 oc get mlflow mlflow -o json | jq '{conditions:.status.conditions,url:.status.url}'
 ----
+
+Continue only when the backend is Ready in `signal-desk-dev`. A Playground created in another project does not provide the application endpoint. The first Red Hat image pull can take several minutes; inspect `oc describe ogxserver lsd-genai-playground -n signal-desk-dev` and pod events if a wait times out.
+
+The bundled configuration uses local SQLite/FAISS storage; Playground session history is temporary. The app's saved news and paper portfolio use their own persistent volume below. OpenShift AI's Playground is used later to test the prepared agent, not to provision it.
 
 The runtime application calls:
 
@@ -63,7 +73,7 @@ oc get secret signal-desk-model -n signal-desk-dev
 oc get pvc signal-desk-data -n signal-desk-dev
 ----
 
-The runtime identity gets no cluster-monitoring or workload-editing permissions. The key expires after 24 hours; rerun the helper and restart the application if the lab continues longer.
+The runtime identity gets no cluster-monitoring or workload-editing permissions. The key expires after 24 hours; rerun the helper and restart the application if the lab continues longer. A `Pending` app data PVC is expected before deployment: `managed-csi` waits for its first consuming pod.
 
 The app and read-only MCP tools are public over HTTPS, with no separate Signal Desk login. Model keys remain in backend Secrets.
 

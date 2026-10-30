@@ -4,6 +4,15 @@ Follow Acts 0–3 on an assigned ARO lab: actual operator/model setup, curl + jq
 
 The guide installs operators with `oc apply -k deploy/operators`, adds one CPU and one GPU worker, then enables instances with explicit CLI commands. The developer preflight is Lab 2.2, executed entirely from Dev Spaces.
 
+Lab 1.8 creates the native `OGXServer` with `oc apply -k deploy/briefing/agent` in `signal-desk-dev`, after creating its cluster-derived MaaS endpoint ConfigMap. Wait for the OGX resource and Deployment; a Ready Playground in another namespace is not the application backend. The UI is used only for testing the prepared model and MCP tools.
+
+To check that the Playground discovers the CLI-created backend and answers with the runtime subscription, before the app is built:
+
+```sh
+RHOAI_URL=https://your-rhoai-route BROWSER_STATE=/private/path/login-state.json \
+  node e2e/native-agent-browser.cjs
+```
+
 From the authenticated bastion:
 
 ```sh

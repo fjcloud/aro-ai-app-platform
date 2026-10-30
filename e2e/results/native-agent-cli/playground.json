@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "project": "signal-desk-dev",
+  "backend_created_by": "CLI OGXServer",
+  "ui_creation_used": false,
+  "live_model": true,
+  "model": "maas-vllm-inference-1/deepseekv4pro",
+  "subscription": "Signal Desk runtime",
+  "response_status": "completed",
+  "marker_verified": true,
+  "at": "2026-10-30T10:54:15.487Z"
+}
