@@ -1,0 +1,327 @@
+{
+  "passed": true,
+  "app_url": "https://signal-desk-signal-desk-dev.apps.n79j08n7.eastus.aroapp.io",
+  "source_revision": "78751d08ffc6023e94e2e63145e6255c007fd9f1",
+  "agent": "maas-vllm-inference-1/deepseekv4pro",
+  "repository_snapshot": true,
+  "manual_import": false,
+  "ranking_retries": 0,
+  "live_collection_error": "",
+  "at": "2026-10-30T12:54:19.650Z",
+  "live_models": true,
+  "news": 161,
+  "ranked": 161,
+  "week": {
+    "id": "2026-10-26_2026-10-28",
+    "news_start": "2026-10-26",
+    "news_end": "2026-10-28",
+    "cutoff": "2026-10-29T04:05:00Z",
+    "market_start": "2026-10-29",
+    "market_end": "",
+    "valuation_mode": "latest"
+  },
+  "unavailable_ids": [],
+  "device": "cuda:0",
+  "dtype": "float16",
+  "article": {
+    "title": "SK Hynix reports Q3 revenue up 328% YoY to ~$78.8B, vs. ~$74.07B est., and operating profit up 632% to ~$62.76B, vs. ~$57.78B est.",
+    "score": 82.4
+  },
+  "research_attempts": 1,
+  "research_failures": [],
+  "research": {
+    "article_id": "7c375c3f8f6ac4b3763c48ac",
+    "memo_version": 3,
+    "summary_hash": "0ab0051d1ecf917086f6b71c647c79ced6552b3f3e4b80c4dd5541780725b3d1",
+    "status": "done",
+    "comment": "E1 provides the core news: SK Hynix posted YoY revenue +328% and operating profit +632%, beating estimates. The mandate covers semiconductor and electronic components, prioritizing material changes in chip demand, capacity, revenue, margins, and manufacturing technology. The Q3 beat signals extraordinary demand and pricing power in memory, an important chip segment. E2 matches reveal related context: Samsung Electronics reported similarly exceptional Q3 results; an article details how AI hyperscaler demand has quintupled flash memory prices and shifted negotiating power from Apple to memory suppliers. The HBM and flash demand drivers are documented in that E2 excerpt. From company lookups, 8",
+    "ideas": [
+      {
+        "id": "1d61a74f99aeffd7d6a1f0f3",
+        "symbol": "SKHY",
+        "company": "SK hynix Inc.",
+        "exchange": "NASDAQ",
+        "relationship": "direct",
+        "thesis": "SK Hynix, a memory chipmaker, reported Q3 revenue and operating profit sharply above estimates (E1). The beat, together with the separate report that AI hyperscaler flash demand has quintupled prices (E2), provides a documented potential catalyst tied to sustained memory demand and pricing. SK Hynix's announced over $25B in dividends and buybacks (E1, E2) further signals management confidence.",
+        "risk": "The Q3 results and shareholder return program are widely publicized; the stock may already reflect the beat. The press cannot determine when information was priced in.",
+        "sources": [
+          "E1",
+          "E2"
+        ]
+      },
+      {
+        "id": "e723acc64338f840a31cd84e",
+        "symbol": "SSNLF",
+        "company": "Samsung Electronics Co., Ltd.",
+        "exchange": "OTC Markets",
+        "relationship": "competitor",
+        "thesis": "Samsung Electronics (E2 record: Q3 record revenue +127% YoY, record operating profit +783%, roughly in line with estimates) is a major competitor in memory. The same AI-driven flash pricing dynamics documented in E2 apply to Samsung's memory business, providing a thematic catalyst. Samsung could benefit from the secular memory upcycle, though the text does not confirm HBM market share splits.",
+        "risk": "Samsung's Q3 results were broadly in line with estimates (E2), so its beat magnitude is less extreme than SK Hynix's and the news may have different pricing dynamics. Earnings were already reported.",
+        "sources": [
+          "E2"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "E1",
+        "tool": "read_archive",
+        "url": "https://www.techmeme.com/261027/h2355",
+        "retrieved": "2026-10-30T12:54:06Z",
+        "data": {
+          "coverage": "Archived Techmeme headline/excerpt only. Publisher page was not fetched.",
+          "excerpt": "South Korean chipmaker SK Hynix on Wednesday posted a record high quarterly profit, sharply beating estimates, and announced over $25 billion in dividends and buybacks …",
+          "published_day": "2026-10-27",
+          "snapshot_as_of": "2026-10-28T03:55:00Z",
+          "source_url": "https://www.cnbc.com/2026/10/28/sk-hynix-third-quarter-profit.html",
+          "title": "SK Hynix reports Q3 revenue up 328% YoY to ~$78.8B, vs. ~$74.07B est., and operating profit up 632% to ~$62.76B, vs. ~$57.78B est."
+        }
+      },
+      {
+        "id": "E2",
+        "tool": "search_archive",
+        "url": "https://www.techmeme.com/",
+        "retrieved": "2026-10-30T12:54:06Z",
+        "data": {
+          "coverage": "Search of this archived week only; no live web or current market data.",
+          "cutoff": "2026-10-29T04:05:00Z",
+          "matches": [
+            {
+              "as_of": "2026-10-29T03:55:00Z",
+              "day": "2026-10-28",
+              "excerpt": "Alphabet reports Q3 YouTube ad revenue up 9% YoY to $11.2B, below estimates, and Google ad revenue up 11% to $82.01B, below $83.6B est.",
+              "source_id": "72dd12cdf7d09137149a6de9",
+              "title": "Alphabet reports Q3 YouTube ad revenue up 9% YoY to $11.2B, below estimates, and Google ad revenue up 11% to $82.01B, below $83.6B est."
+            },
+            {
+              "as_of": "2026-10-26T16:00:00Z",
+              "day": "2026-10-26",
+              "excerpt": "Alphabet, Amazon, and Microsoft are expected to report double-digit gains in revenue this week, as investors grow impatient with AI capex and seek returns",
+              "source_id": "6e1c78945d3572a9580d3ee7",
+              "title": "Alphabet, Amazon, and Microsoft are expected to report double-digit gains in revenue this week, as investors grow impatient with AI capex and seek returns"
+            },
+            {
+              "as_of": "2026-10-29T03:55:00Z",
+              "day": "2026-10-28",
+              "excerpt": "REDMOND, Wash. — October 28, 2026 — Microsoft Corp. today announced the following results for the quarter ended September 30, 2026 …",
+              "source_id": "4beeaa0fe1e1711799cca00e",
+              "title": "Microsoft reports Q1 revenue up 19% YoY to $92.28B, vs. $90.69B est., Azure revenue up 48% to $33.17B, vs. $32.32B est., and net income up 32% to $36.63B"
+            },
+            {
+              "as_of": "2026-10-28T16:00:00Z",
+              "day": "2026-10-28",
+              "excerpt": "Etsy reports Q3 revenue up 11% YoY to $692.5M, above $668M est., net income of $853.5M after selling Depop, and gross merchandise sales up 9% YoY to $2.65B",
+              "source_id": "821f143c31a409e83c6d89d5",
+              "title": "Etsy reports Q3 revenue up 11% YoY to $692.5M, above $668M est., net income of $853.5M after selling Depop, and gross merchandise sales up 9% YoY to $2.65B"
+            },
+            {
+              "as_of": "2026-10-29T03:55:00Z",
+              "day": "2026-10-28",
+              "excerpt": "The iPhone maker for years bullied flash-storage makers into steep discounts—until AI hyperscalers bid up prices and gobbled up supply",
+              "source_id": "375311fa37d1fc95f8e025a3",
+              "title": "How surging demand from AI hyperscalers has quintupled flash memory prices and shifted market and negotiating power from Apple to suppliers like Kioxia"
+            },
+            {
+              "as_of": "2026-10-29T03:55:00Z",
+              "day": "2026-10-28",
+              "excerpt": "Samsung Electronics reported third-quarter earnings on Thursday, with operating profit broadly in line with analysts' estimates",
+              "source_id": "d3e6c7279e10f5069b18ea70",
+              "title": "Samsung reports Q3 revenue up 127% YoY to a record ~$146.3B and a record operating profit up 783% to ~$80.5B, both roughly in line with estimates"
+            },
+            {
+              "as_of": "2026-10-26T16:00:00Z",
+              "day": "2026-10-26",
+              "excerpt": "S-1: Anthropic outlines its mission to revolutionize sectors like medicine and warns its corporate behavior may diverge from traditional profit-maximization",
+              "source_id": "0f9f7751e6b975dfaf5463e0",
+              "title": "S-1: Anthropic outlines its mission to revolutionize sectors like medicine and warns its corporate behavior may diverge from traditional profit-maximization"
+            },
+            {
+              "as_of": "2026-10-28T03:55:00Z",
+              "day": "2026-10-27",
+              "excerpt": "NXP reports Q3 revenue up 19% YoY to $3.79B, vs. $3.76B est., and forecasts Q4 revenue below estimates; NXPI drops 7%+ after hours",
+              "source_id": "97e3bcfb93d077756ef8af04",
+              "title": "NXP reports Q3 revenue up 19% YoY to $3.79B, vs. $3.76B est., and forecasts Q4 revenue below estimates; NXPI drops 7%+ after hours"
+            },
+            {
+              "as_of": "2026-10-29T03:55:00Z",
+              "day": "2026-10-28",
+              "excerpt": "Filing: Microsoft recorded $10B in revenue from OpenAI in Q1, nearly 11% of its total quarterly revenue, and has $7.2B in outstanding receivables from OpenAI",
+              "source_id": "a892e8f47db6c997e9b789aa",
+              "title": "Filing: Microsoft recorded $10B in revenue from OpenAI in Q1, nearly 11% of its total quarterly revenue, and has $7.2B in outstanding receivables from OpenAI"
+            },
+            {
+              "as_of": "2026-10-29T03:55:00Z",
+              "day": "2026-10-28",
+              "excerpt": "Microsoft reports Q1 Xbox hardware revenue down 14% YoY, Xbox content and services revenue down 2%, and Windows OEM and Devices revenue down 22%",
+              "source_id": "bc0be18400427a51c1d5ddd4",
+              "title": "Microsoft reports Q1 Xbox hardware revenue down 14% YoY, Xbox content and services revenue down 2%, and Windows OEM and Devices revenue down 22%"
+            },
+            {
+              "as_of": "2026-10-29T03:55:00Z",
+              "day": "2026-10-28",
+              "excerpt": "MOUNTAIN VIEW, Calif. - October 28, 2026 - Alphabet Inc. (NASDAQ: GOOG, GOOGL) today announced financial results for the quarter ended September 30, 2026.",
+              "source_id": "98fded2b573a0c7886b41123",
+              "title": "Alphabet reports Q3 revenue up 25% YoY to $127.58B, vs. $128.22B est., Google Cloud revenue up 103% to $30.7B, vs. $28.7B est.; GOOG drops 9%+ after hours"
+            },
+            {
+              "as_of": "2026-10-27T16:02:00Z",
+              "day": "2026-10-27",
+              "excerpt": "PayPal reports Q3 revenue up 2% YoY to $8.58B, below $8.71B est., TPV up 6% to $487.14B, and raises full-year adjusted EPS guidance to ~$5.60, above $5.39 est.",
+              "source_id": "2eb9e8cb68f7cc9c6138121c",
+              "title": "PayPal reports Q3 revenue up 2% YoY to $8.58B, below $8.71B est., TPV up 6% to $487.14B, and raises full-year adjusted EPS guidance to ~$5.60, above $5.39 est."
+            },
+            {
+              "as_of": "2026-10-27T16:02:00Z",
+              "day": "2026-10-27",
+              "excerpt": "When Anthropic on Monday dropped its long-awaited initial public offering prospectus filing, a lot of the details …",
+              "source_id": "1ce739ac5125e0629f6db526",
+              "title": "Anthropic's S-1 shows an 85% gross margin in H1 from running its models, a reality check for skeptics who said pay-as-you-go model sales wouldn't be profitable"
+            },
+            {
+              "as_of": "2026-10-29T03:55:00Z",
+              "day": "2026-10-28",
+              "excerpt": "ServiceNow Inc. shares plunged after the company gave an outlook for quarterly subscription sales that met analysts' estimates …",
+              "source_id": "a78f30f30b3386d4a0d36301",
+              "title": "ServiceNow reports Q3 subscription revenue up 21% YoY to $3.99B, forecasts Q4 current remaining performance obligations below est.; NOW drops 15%+ after hours"
+            },
+            {
+              "as_of": "2026-10-28T03:55:00Z",
+              "day": "2026-10-27",
+              "excerpt": "SK Hynix plans to return $22B+ in dividends and ~$15B in buybacks to shareholders, on top of its ~$30B buyback program completed in August",
+              "source_id": "7e68241f7b1653fa4843652d",
+              "title": "SK Hynix plans to return $22B+ in dividends and ~$15B in buybacks to shareholders, on top of its ~$30B buyback program completed in August"
+            }
+          ]
+        }
+      },
+      {
+        "id": "E3",
+        "tool": "search_companies",
+        "url": "https://query1.finance.yahoo.com/v1/finance/search?newsCount=0&q=SK+Hynix&quotesCount=10",
+        "retrieved": "2026-10-30T12:54:07Z",
+        "data": {
+          "basis": "Current company identity metadata only. Individual equities; no ETFs, indices, prices, fundamentals or returns. Business relationships must be supported separately by the archived sources.",
+          "companies": [
+            {
+              "symbol": "SKHY",
+              "name": "SK hynix Inc.",
+              "exchange": "NASDAQ"
+            },
+            {
+              "symbol": "000660.KS",
+              "name": "SK hynix Inc.",
+              "exchange": "Korea"
+            },
+            {
+              "symbol": "HY9H.F",
+              "name": "SK hynix Inc.",
+              "exchange": "Frankfurt"
+            }
+          ]
+        }
+      },
+      {
+        "id": "E4",
+        "tool": "search_companies",
+        "url": "https://query1.finance.yahoo.com/v1/finance/search?newsCount=0&q=Samsung+Electronics&quotesCount=10",
+        "retrieved": "2026-10-30T12:54:08Z",
+        "data": {
+          "basis": "Current company identity metadata only. Individual equities; no ETFs, indices, prices, fundamentals or returns. Business relationships must be supported separately by the archived sources.",
+          "companies": [
+            {
+              "symbol": "005930.KS",
+              "name": "Samsung Electronics Co., Ltd.",
+              "exchange": "Korea"
+            },
+            {
+              "symbol": "SMSN.IL",
+              "name": "Samsung Electronics Co., Ltd.",
+              "exchange": "International Orderbook - London"
+            },
+            {
+              "symbol": "SSNLF",
+              "name": "Samsung Electronics Co., Ltd.",
+              "exchange": "OTC Markets"
+            },
+            {
+              "symbol": "005935.KS",
+              "name": "Samsung Electronics Co., Ltd.",
+              "exchange": "Korea"
+            },
+            {
+              "symbol": "SSUN.F",
+              "name": "Samsung Electronics Co., Ltd.",
+              "exchange": "Frankfurt"
+            },
+            {
+              "symbol": "SMSD.IL",
+              "name": "Samsung Electronics Co., Ltd.",
+              "exchange": "International Orderbook - London"
+            }
+          ]
+        }
+      }
+    ],
+    "cutoff": "2026-10-29T04:05:00Z",
+    "trace_id": "tr-68572a2f27ca5496944535407529c188"
+  },
+  "round": {
+    "id": "151df2f35295df4396a6db9a",
+    "status": "settled",
+    "memo": {
+      "id": "tech",
+      "name": "Semiconductor fund",
+      "criteria": "We invest in semiconductors and electronic components across chip designers, foundries, fabrication equipment, memory, advanced packaging and supply chains. Prioritize material changes in chip demand, capacity, revenue, margins, capital spending, manufacturing technology, supply constraints and export restrictions. Both positive and negative developments can create research opportunities. AI or cloud news matters when a concrete connection to chip demand or suppliers is supported. Consumer apps, retail earnings, routine product launches and political stories have low priority without a documented semiconductor transmission. Score the value of researching the news for this mandate, not whether to buy or sell and not its expected return. Distinguish source evidence from speculation and flag limited excerpt coverage.",
+      "version": 3
+    },
+    "committed_at": "2026-10-30T12:54:17Z",
+    "budget": 10000,
+    "positions": [
+      {
+        "article_id": "7c375c3f8f6ac4b3763c48ac",
+        "idea_id": "1d61a74f99aeffd7d6a1f0f3",
+        "amount": 1000,
+        "symbol": "SKHY",
+        "company": "SK hynix Inc.",
+        "title": "SK Hynix reports Q3 revenue up 328% YoY to ~$78.8B, vs. ~$74.07B est., and operating profit up 632% to ~$62.76B, vs. ~$57.78B est.",
+        "result": {
+          "symbol": "SKHY",
+          "entry_date": "2026-10-29",
+          "exit_date": "2026-10-29",
+          "entry_price": 163.4499969482422,
+          "exit_price": 162.09,
+          "return_pct": -0.8320568820033958,
+          "source_url": "https://query1.finance.yahoo.com/v8/finance/chart/SKHY?events=div%2Csplits&interval=1d&period1=1792555500&period2=1793364857",
+          "retrieved": "2026-10-30T12:54:17Z",
+          "week_complete": false,
+          "basis": "First exchange session open after the fixed news cutoff → latest available regular-market quote. Intraday and delayed quotes are timestamped. Gross USD return; dividends, fees and slippage excluded.",
+          "quote_time": "2026-10-29T20:00:01Z",
+          "price_type": "latest available quote (may be delayed)",
+          "currency": "USD",
+          "exchange_timezone": "America/New_York",
+          "entry_time": "2026-10-29T13:30:00Z",
+          "fx_entry_usd_per_unit": 1,
+          "fx_exit_usd_per_unit": 1
+        }
+      }
+    ],
+    "invested": 1000,
+    "pnl": -8.320568820033959,
+    "value": 9991.679431179966,
+    "return_pct": -0.08320568820033958,
+    "as_of": "2026-10-29T20:00:01Z",
+    "week_complete": false
+  },
+  "checks": [
+    "real archive corpus and complete export",
+    "actual memo scores on the ARO T4",
+    "bounded archived-week LLM research",
+    "portfolio frozen before market data",
+    "actual historical entry and timestamped latest quote",
+    "verified portfolio arithmetic",
+    "actual quote timestamp disclosed",
+    "mobile layout",
+    "mock-keychain",
+    "no JavaScript errors"
+  ]
+}

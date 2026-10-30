@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "at": "2026-10-30T12:53:41.275009+00:00",
+  "source_revision": "78751d08ffc6023e94e2e63145e6255c007fd9f1",
+  "pipeline": "build-app-2gt2z",
+  "pipeline_succeeded": true,
+  "argo_sync": "Synced",
+  "argo_health": "Healthy",
+  "running_digest": "sha256:727b1e35551f0563258b04ba828704c7c0503216661ce9448152bfd32a7c7d09",
+  "scc": "restricted-v2",
+  "service_account": "signal-desk",
+  "containers": 1,
+  "app_url": "https://signal-desk-signal-desk-dev.apps.n79j08n7.eastus.aroapp.io",
+  "scoped_workspace_tests": "go test -race ./... and go vet ./... passed",
+  "reused_news_scores": 161
+}

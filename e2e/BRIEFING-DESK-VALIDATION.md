@@ -1,5 +1,19 @@
 # Signal Desk: ARO end-to-end validation
 
+## Individual company opportunities — 30 October 2026
+
+On the assigned `8z97s` lab, the existing app was updated from its scoped Dev Spaces identity, tested, committed and pushed to personal Git. Tekton `build-app-2gt2z` succeeded; Argo CD was Synced/Healthy at `78751d08ffc6023e94e2e63145e6255c007fd9f1`. After restart, the running digest matched the new image stream. The single app container uses its prepared ServiceAccount and restricted-v2. The generated **High relevance only** filter and delivery scaffold were preserved; this update did not regenerate the app with OpenCode.
+
+A fresh unauthenticated browser passed the complete company-share game with all 161 saved stories and their existing actual T4 scores. Those scores were reused, not recomputed during this update. Fresh native DeepSeek research on the SK Hynix earnings story called `read_archive`, `search_archive` and two distinct `search_companies` queries. It proposed SK Hynix and Samsung as a direct business and competitor, with cited archived catalysts and risks. A $1,000 virtual SK Hynix position was frozen before price access; its timestamped Yahoo valuation returned −$8.32. Export, the relevance filter, portfolio arithmetic, reset and mobile layout passed without JavaScript errors. Earlier ETF proposal/portfolio files remain stored but are excluded from the new equities state.
+
+Separate real market probes verified NVIDIA and Samsung’s Korean ordinary share `005930.KS`, including its first exchange opening after the cutoff and explicit KRW/USD conversion. Unit checks reject ETF/index suggestions, invented tickers, missing archive citations and invalid FX. Browser fixtures remain explicitly synthetic model/price checks. Go race/vet, both browser fixtures, 43 workshop checks, 17 template checks and the guide build passed.
+
+The native OpenShift AI Playground connected to the public MCP endpoint without a token. Its completed response contains actual `search_archive`, `read_archive` and `search_companies` calls. The six guide screenshots were refreshed from that run. MLflow returned the app research trace in state OK, including both company lookup spans. Every Chromium launch used `--use-mock-keychain`.
+
+Company lookup verifies current identity metadata, not historical fundamentals or business relationships. Proposed benefits remain hypotheses; related companies need not move together. This is an educational replay, and the information cutoff does not erase model training knowledge. Returns include FX where applicable and exclude dividends, fees and slippage.
+
+Evidence: [delivery](results/company-opportunities/delivery.json), [actual browser replay](results/company-opportunities/replay.json), [app UI](results/company-opportunities/replay.png), [NVIDIA and Samsung market probes](results/company-opportunities/live-market.json), [native Playground calls](results/company-opportunities/playground-current.json), [MLflow spans](results/company-opportunities/mlflow.json), [repository-news fixture](results/company-opportunities/saved-news-fixture.json), [archived-week fixture](results/company-opportunities/archived-week-fixture.json).
+
 ## Native agent backend through the CLI — 30 October 2026
 
 On the assigned `8z97s` lab, UI creation produced a Ready Playground in `ai-tenants`; the app expected its backend in `signal-desk-dev`, where no Deployment or Service existed. The guide now creates the native `OGXServer`, configuration and cluster-derived MaaS endpoint explicitly with CLI commands. The operator deploys its Red Hat OGX image. Dashboard discovery labels let the Playground open that prepared backend without provisioning it through the UI.

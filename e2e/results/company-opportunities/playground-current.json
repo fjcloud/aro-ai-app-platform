@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "project": "signal-desk-dev",
+  "model": "maas-vllm-inference-1/deepseekv4pro",
+  "status": "completed",
+  "response_id": "resp_94846591-a528-465a-9f5f-71d69421e9e3",
+  "tools": [
+    "search_archive",
+    "read_archive",
+    "search_companies"
+  ],
+  "mcp_authentication": "none",
+  "at": "2026-10-30T12:54:25.490Z"
+}
