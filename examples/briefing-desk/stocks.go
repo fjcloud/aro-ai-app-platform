@@ -85,3 +85,22 @@ func companyKey(name string) string {
 		return -1
 	}, name)
 }
+
+// Search already returns the saved excerpts. Preserve budget for company lookup
+// instead of repeatedly reading the same facts before collecting the identities.
+func (j *agentJob) nextStockTool() string {
+	types := map[string]bool{}
+	for _, e := range j.evidence {
+		types[e.Tool] = true
+	}
+	if !types["read_archive"] {
+		return "read_archive"
+	}
+	if !types["search_archive"] {
+		return "search_archive"
+	}
+	if len(j.companyQueries) < 2 {
+		return "search_companies"
+	}
+	return ""
+}

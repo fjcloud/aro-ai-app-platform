@@ -224,6 +224,17 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 				payload["tool_choice"] = "required"
 			}
 		}
+		if j.stage == "game_ideas" && !j.stockEvidenceReady() {
+			next := j.nextStockTool()
+			// All providers get the same evidence protocol, with LLM-selected
+			// search terms and candidates, followed by schema-only synthesis.
+			for _, spec := range toolSpecs() {
+				if spec.name == next {
+					payload["tools"] = []any{map[string]any{"type": "function", "name": spec.name, "description": spec.description, "parameters": spec.input}}
+					break
+				}
+			}
+		}
 		body, _ := json.Marshal(payload)
 		raw, e := a.nativeResponse(ctx, j, body, key)
 		if e != nil {
@@ -259,7 +270,7 @@ func (a *agent) respond(ctx context.Context, j *agentJob, prompt string, out any
 			}
 			if v.Type == "function_call" {
 				called = true
-				if !allowed[v.Name] || v.CallID == "" || len(v.Arguments) > 4096 {
+				if !allowed[v.Name] || (j.stage == "game_ideas" && v.Name != j.nextStockTool()) || v.CallID == "" || len(v.Arguments) > 4096 {
 					return errors.New("Agent requested an unsupported tool")
 				}
 				if j.calls >= 6 {
