@@ -19,7 +19,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
   const d=s.documents[0],row=page.locator('.story[data-id="'+d.id+'"]');await row.locator('.headline').click();
   await row.getByRole('button',{name:'Find stock opportunities',exact:true}).click();
   await expect.poll(async()=>{s=await state();return s.game.proposals[d.id]?.status},{timeout:30000}).toBe('done');
-  assert.deepEqual([...new Set(s.game.proposals[d.id].evidence.map(e=>e.tool))].sort(),['read_archive','search_archive','search_companies']);
+  assert.deepEqual([...new Set(s.game.proposals[d.id].evidence.map(e=>e.tool))].sort(),['read_archive','read_web','search_archive','search_companies','search_web']);
   await expect(row.locator('.trace-link')).toHaveAttribute('href',/selectedEvaluationId=tr-/);await expect(row.locator('.research-details').first()).not.toHaveAttribute('open','');
   await row.locator('.stake-input').fill('1000');await row.getByRole('button',{name:'Add to portfolio',exact:true}).click();
   await expect(page.locator('#reveal')).toHaveText('Reveal result');

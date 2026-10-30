@@ -13,13 +13,15 @@ The app has produced an investment hypothesis. Verify how it reached that hypoth
 
 In Signal Desk, open a ranked story and click *Find stock opportunities* (or *Research again* for a fresh trace). Read the explanation, proposed company, business relationship and risk. Click *View MLflow trace* to open that exact research and its graph. Expand *Show reasoning & sources* for the full explanation and finance skill provenance. *Research again* is inside that section.
 
-The link selects workspace `signal-desk-dev`, experiment `signal-desk` and the trace automatically. Open *Details & Timeline* and its *Graph* to follow the calls. Expect `game.research`, `agent.game_ideas` and actual `tool.read_archive`, `tool.search_archive` and `tool.search_companies` spans. D3 scores appear as separate `decision.classify` traces; paper valuation appears as `game.settle`.
+The link selects workspace `signal-desk-dev`, experiment `signal-desk` and the trace automatically. Open *Details & Timeline* and its *Graph* to follow the calls. Expect `game.research`, `agent.game_ideas` and actual `tool.read_archive`, `tool.search_archive`, `tool.search_web`, `tool.read_web` and `tool.search_companies` spans, separated by `llm.research.*` calls. D3 scores appear as separate `decision.classify` traces; paper valuation appears as `game.settle`.
 
 For a new research, check the root span attributes `research.skill.name` and `research.skill.upstream_revision`: they identify the bundled Anthropic idea-generation adaptation actually supplied to DeepSeek. The skill adds a method, not training or new market data.
 
+Select each tool node and inspect *Inputs / Outputs*: search queries, source IDs, eligible sources, excluded results and their reasons, publisher coverage/errors and actual excerpts. Each `llm.research.*` node shows the request payload and visible model response, including function calls and the final answer. Provider headers, keys and hidden reasoning blocks are excluded. Search results excluded by date are retained in the audit, not sent back to the model.
+
 Inspect model/tool durations, model identity and reported usage. An archive query and an LLM request have different latency. Traces omit keys, full source text and portfolio contents. If the trace is absent, inspect exporter configuration and MLflow workspace permissions; a visible answer alone does not prove trace export succeeded.
 
-The agent uses archived news facts. Company lookup returns current names, tickers and exchanges, without prices or historical fundamentals. Its tools cannot read current publisher pages or this week's prices. News facts stay within the saved cutoff; proposed business links and benefits remain hypotheses unless supported by the archived sources.
+The agent uses archived news and public web sources dated at or before the saved cutoff. Company lookup returns current names, tickers and exchanges, without prices or historical fundamentals. Web search rejects undated and newer results. Publisher text is used only with eligible publication/modification metadata; blocked, changed or undated pages use the explicitly dated search excerpt. Neither a search-index date nor a current fetch proves that the page is an unchanged historical snapshot. There is no market-price tool. News facts stay within the saved cutoff; proposed business links and benefits remain hypotheses unless supported by the archived sources.
 
 == Exercise the same evidence in the Playground
 
@@ -48,13 +50,13 @@ The application must be deployed and its news loaded before this step. Open *MCP
 
 image::signal-desk-playground-mcp.png[Select the Signal-Desk MCP server]
 
-The four tools connect directly without an authorization dialog or token. In *Connection successful*, confirm *4 out of 4 tools are active*, then click *Save*. The Playground itself still uses your OpenShift AI session and the selected MaaS subscription.
+The six tools connect directly without an authorization dialog or token. In *Connection successful*, confirm *6 out of 6 tools are active*, then click *Save*. The Playground itself still uses your OpenShift AI session and the selected MaaS subscription.
 
-image::signal-desk-playground-connected.png[Public MCP connection with four active tools and no token]
+image::signal-desk-playground-connected.png[Public MCP connection with six active tools and no token]
 
-Expect *4 tools enabled*. Click the *4 active* button (*View tools*) to inspect `list_news`, `read_archive`, `search_archive` and `search_companies`.
+Expect *6 tools enabled*. Click the *6 active* button (*View tools*) to inspect `list_news`, `read_archive`, `search_archive`, `search_web`, `read_web` and `search_companies`.
 
-image::signal-desk-playground-tools.png[The four read-only Signal Desk tools]
+image::signal-desk-playground-tools.png[The six read-only Signal Desk tools]
 
 === 4. Ask a question and inspect the evidence
 
@@ -62,12 +64,12 @@ Send this question in the chat:
 
 [source,text,role=execute]
 ----
-Use Signal-Desk tools. Search the loaded archived week for semiconductor demand. Read one returned source_id and inspect the company lookup. Explain one hypothetical company stock exposure for our semiconductor fund, its risk and the archive cutoff. Use only returned evidence. Do not fetch current prices, predict a profit or assume related stocks must move together.
+Use Signal-Desk tools. Search the loaded archived week for semiconductor demand. Read one returned source_id. Search the public web for related reporting dated before the saved cutoff, then read one returned web source_id. Inspect the company lookup. Explain one hypothetical company stock exposure for our semiconductor fund, its risk and the archive cutoff. Use only returned evidence. Do not fetch current prices, predict a profit or assume related stocks must move together.
 ----
 
 image::signal-desk-playground-answer.png["A real Playground answer with a tool response, hypothetical exposure and risk"]
 
-Expand *Tool response* below the answer. Verify that the agent called `search_archive`, `read_archive` and `search_companies`, and that its cited source IDs belong to returned articles. Check the archive cutoff, proposed company, relationship and risk. The exact answer varies; the screenshot is one real run.
+Expand *Tool response* below the answer. Verify that the agent called `search_archive`, `read_archive`, `search_web`, `read_web` and `search_companies`, and that its cited source IDs belong to returned articles. Check the archive cutoff, proposed company, relationship and risk. The exact answer varies; the screenshot is one real run.
 
 This tests the model, instructions and MCP tools directly in OpenShift AI. The app's research button uses the same model and read-only evidence through its bounded Responses loop. To inspect the app's MLflow spans, use *Research again* in Signal Desk and open its direct trace link as described above.
 

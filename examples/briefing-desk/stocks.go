@@ -73,7 +73,7 @@ func (j *agentJob) stockEvidenceReady() bool {
 	for _, e := range j.evidence {
 		types[e.Tool] = true
 	}
-	return types["read_archive"] && types["search_archive"] && len(j.companyQueries) >= 2
+	return types["read_archive"] && types["search_archive"] && j.webAttempts > 0 && (len(j.webRefs) == 0 || j.webReads > 0) && len(j.companyQueries) >= 2
 }
 
 // A second exchange listing of one issuer is not another business opportunity.
@@ -98,6 +98,12 @@ func (j *agentJob) nextStockTool() string {
 	}
 	if !types["search_archive"] {
 		return "search_archive"
+	}
+	if j.webAttempts == 0 {
+		return "search_web"
+	}
+	if len(j.webRefs) > 0 && j.webReads == 0 {
+		return "read_web"
 	}
 	if len(j.companyQueries) < 2 {
 		return "search_companies"

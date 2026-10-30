@@ -34,7 +34,7 @@ This requires direct D3 access from Dev Spaces and the Dev Spaces-to-Responses p
 
 Platform/usage/protocol/model-apis probes make billable model calls. `APP_NAME` defaults to `signal-desk`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
 
-Validate the UI with the fixed repository news corpus, real T4 scores, an actual native Responses tool loop, verified individual company shares, a virtual allocation and the latest timestamped market quote. Research must connect archived facts to the named company or supported suppliers, customers or competitors; ETFs and indices are excluded. For foreign shares, verify the exchange-local entry time and the USD return including the disclosed FX rates. Verify that entry follows the fixed news cutoff and that refreshing the quote cannot change the portfolio. Confirm an MLflow research trace and the same archive tools in the native Playground. The app and read-only MCP endpoint are public over HTTPS; model keys remain in backend Secrets. Participants share the workshop state. Every Chromium launch includes `--use-mock-keychain`.
+Validate the UI with the fixed repository news corpus, real T4 scores, an actual native Responses tool loop, verified individual company shares, a virtual allocation and the latest timestamped market quote. Research must connect archived facts to the named company or supported suppliers, customers or competitors; ETFs and indices are excluded. For foreign shares, verify the exchange-local entry time and the USD return including the disclosed FX rates. Verify that entry follows the fixed news cutoff and that refreshing the quote cannot change the portfolio. Confirm an MLflow research trace and the same archive, dated-web and company tools in the native Playground. The app and read-only MCP endpoint are public over HTTPS; model keys remain in backend Secrets. Participants share the workshop state. Every Chromium launch includes `--use-mock-keychain`.
 
 For the public Route browser test, save model metadata from the direct d3-mini probe in Lab 2.2, then run with a fresh browser context:
 
@@ -57,6 +57,15 @@ BROWSER_STATE=/private/path/login-state.json \
 
 It checks actual Responses MCP calls, rather than accepting a model's claim to have used tools. Set `CAPTURE_GUIDE=true` to refresh the guide screenshots from the real UI. Signal Desk and its MCP connector require no token.
 
+After a fresh skill-assisted research on one of the first three stories, validate the app's direct MLflow link with the existing private cluster session:
+
+```sh
+APP_URL=https://your-app-route BROWSER_STATE=/private/path/login-state.json \
+  node e2e/trace-link-browser.cjs
+```
+
+This clicks the actual link and checks the exact trace, workspace and native agent/tool graph.
+
 Local regression checks:
 
 ```sh
@@ -65,7 +74,7 @@ make test-terminal
 make docs
 ```
 
-The browser fixtures check the initial three-story view, progressive disclosure and a workspace-scoped MLflow trace link. Live acceptance must open that exact link and inspect its graph, then verify the finance skill source/version on a fresh research trace. Cached older research is not evidence of skill use.
+The browser fixtures check the initial three-story view, progressive disclosure and a workspace-scoped MLflow trace link. Live acceptance must open that exact link and inspect its graph, then verify the finance skill source/version on a fresh research trace. Tool and LLM nodes must have actual Inputs / Outputs, with dated web sources and rejected-date reasons, without a model credential. Cached older research is not evidence of skill use.
 
 The browser fixture test covers seven archive days, memo changes, native agent research, two investments with positive/negative returns, immutable portfolio choices, exports and mobile layout. Go tests also cover MCP discovery, strict tool arguments, archive boundaries, source safety and completed-session valuation.
 

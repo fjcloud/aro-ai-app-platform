@@ -307,6 +307,7 @@ func (s *server) proposeGame(docID string) {
 	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "game.research")
 	defer span.End()
 	span.SetAttributes(attribute.String("research.skill.name", "finance-idea-generation"), attribute.String("research.skill.upstream_revision", financeSkillRevision), attribute.String("research.skill.source", financeSkillSource))
+	setTraceJSON(span, "mlflow.spanInputs", map[string]any{"article_id": d.ID, "news_title": d.Summary.Title, "fund": p.Name, "information_cutoff": s.game.Week.Cutoff, "skill": activeFinanceSkill()})
 	proposal, e := s.agent.gameIdeas(ctx, d, p, s.gameDocuments(), s.game.Week)
 	proposal.TraceID = "tr-" + span.SpanContext().TraceID().String()
 	skill := activeFinanceSkill()
@@ -315,7 +316,9 @@ func (s *server) proposeGame(docID string) {
 	if e != nil {
 		proposal.Status = "failed"
 		proposal.Error = e.Error()
+		markTraceError(span, e)
 	}
+	setTraceJSON(span, "mlflow.spanOutputs", map[string]any{"status": proposal.Status, "comment": proposal.Comment, "ideas": proposal.Ideas, "evidence_count": len(proposal.Evidence), "error": proposal.Error})
 	s.gameMu.Lock()
 	s.game.Proposals[docID] = proposal
 	s.saveGame()

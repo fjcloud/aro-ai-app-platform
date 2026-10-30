@@ -24,18 +24,20 @@ func TestNativeGameFinalizesAfterRequiredEvidence(t *testing.T) {
 		steps := []struct{ name, args string }{
 			{"read_archive", `{"source_id":"original"}`},
 			{"search_archive", `{"query":"semiconductor demand"}`},
+			{"search_web", `{"query":"chip demand"}`},
+			{"read_web", `{"source_id":"` + webSourceID("https://fixture.example/web", lastNewsWeek(fixtureTime()).Cutoff) + `"}`},
 			{"search_companies", `{"query":"Nvidia"}`},
 			{"search_companies", `{"query":"AMD"}`},
 		}
 		if turns <= len(steps) {
 			step := steps[turns-1]
-			if len(tools) != 1 || tools[0].(map[string]any)["name"] != step.name || in["tool_choice"] != "required" {
+			if len(tools) != 1 || tools[0].(map[string]any)["name"] != step.name || in["tool_choice"].(map[string]any)["name"] != step.name {
 				t.Errorf("Unbounded or out-of-order evidence step %d: %v", turns, tools)
 			}
 			reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]string{"type": "function_call", "name": step.name, "call_id": fmt.Sprint(turns), "arguments": step.args}}})
 			return
 		}
-		if turns != 5 || len(tools) != 0 || !strings.Contains(fmt.Sprint(in["text"]), "json_schema") {
+		if turns != 7 || len(tools) != 0 || !strings.Contains(fmt.Sprint(in["text"]), "json_schema") {
 			t.Error("Native agent kept tools after required evidence")
 		}
 		history, _ := json.Marshal(in["input"])
@@ -59,7 +61,7 @@ func TestNativeGameFinalizesAfterRequiredEvidence(t *testing.T) {
 	week := lastNewsWeek(fixtureTime())
 	d := document{ID: "original-id", URL: "https://example.com/chips", GameWeek: week.ID, Summary: summary{Title: "Archived chip demand", TLDR: "A real archived source excerpt for this fixture."}, Source: source{ArchivedAt: "2026-10-22T12:00:00Z", ArchiveURL: "https://www.techmeme.com/261022/h0800", Published: "2026-10-22"}}
 	result, err := a.gameIdeas(context.Background(), d, defaults()[0], []document{d}, week)
-	if err != nil || turns != 5 || len(result.Evidence) != 4 || len(result.Ideas) != 0 {
+	if err != nil || turns != 7 || len(result.Evidence) != 6 || len(result.Ideas) != 0 {
 		t.Fatalf("Native synthesis did not finish from actual evidence: turns=%d evidence=%d err=%v", turns, len(result.Evidence), err)
 	}
 }

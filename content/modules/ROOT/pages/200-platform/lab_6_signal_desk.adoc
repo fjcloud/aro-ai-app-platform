@@ -93,7 +93,7 @@ Read `APP_CONTRACT.md` in the template. The backend owns five simple responsibil
 ----
 Repository news JSON → Go app → d3-mini /v1/systemone → relevance /100
                        └→ OpenShift AI /v1/responses → DeepSeek / MaaS
-                               ↕ read_archive / search_archive / search_companies
+                               ↕ archived news / dated web search / company lookup
 
 Browser → $10,000 paper allocation → freeze → latest market quote → result
 Playground → public MCP /mcp → the same read-only archive/catalog

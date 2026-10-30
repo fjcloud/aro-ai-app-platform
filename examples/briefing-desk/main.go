@@ -30,6 +30,8 @@ type scanState struct {
 	Events []event `json:"events"`
 }
 type server struct {
+	webMu                        sync.Mutex
+	webSources                   map[string]cachedWebSource
 	clock                        func() time.Time
 	gameMu                       sync.Mutex
 	game                         gameState
