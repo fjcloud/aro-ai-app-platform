@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-30T13:51:05Z",
+  "comment": "SK Hynix delivered a record quarter with 328% YoY revenue growth and 632% YoY operating-profit growth, well above consensus. The archived excerpts tie this directly to AI-driven high-bandwidth memory (HBM) demand. Archived source E2_5f0f6cf3 reports the company expects memory shortages to persist past 2030 and has pre-sold over 50% of its 2027\u201328 output to 14 major buyers, which supports a durable demand thesis. External web excerpts confirm the AI-infrastructure link but are limited to publisher metadata and excerpt-only coverage \u2014 no full article text was fetched. The value chain extends beyond the direct beneficiary: AI memory demand is also bidding up NAND/flash (E2_375311fa) and constip",
+  "ideas": [
+    {
+      "id": "706dfdbd529fd3eeba1530be",
+      "symbol": "SKHY",
+      "company": "SK hynix Inc.",
+      "exchange": "NASDAQ",
+      "relationship": "direct",
+      "thesis": "SK Hynix posted record Q3 revenue and profit driven by AI memory demand, and the company has pre-sold over 50% of its 2027\u201328 output, indicating a durable demand pipeline.",
+      "risk": "The stock jumped ~8% on the news; the record quarter and long-term supply agreements may already be reflected in the price.",
+      "sources": [
+        "E1",
+        "E2",
+        "E4",
+        "E5"
+      ]
+    },
+    {
+      "id": "32ccbe12a9b97d9814c2b216",
+      "symbol": "NVDA",
+      "company": "NVIDIA Corporation",
+      "exchange": "NASDAQ",
+      "relationship": "customer",
+      "thesis": "SK Hynix\u2019s HBM is a critical component in NVIDIA\u2019s AI GPUs; record HBM demand and multi-year supply commitments signal strong, sustained GPU production volumes.",
+      "risk": "NVIDIA\u2019s own revenue may already price in HBM procurement; the earnings beat at its supplier does not guarantee further GPU upside.",
+      "sources": [
+        "E1",
+        "E2",
+        "E6"
+      ]
+    }
+  ],
+  "passed": true,
+  "scope": "Proposed-source validation in the existing app pod; not public deployment",
+  "tools": [
+    "read_archive",
+    "search_archive",
+    "search_web",
+    "read_web",
+    "search_companies",
+    "search_companies"
+  ],
+  "trace_id": "tr-09def1cd4e27a1608c706290a10df41f",
+  "trace_url": "https://rh-ai.apps.n79j08n7.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-09def1cd4e27a1608c706290a10df41f&workspace=signal-desk-dev"
+}

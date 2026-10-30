@@ -1,0 +1,19 @@
+{
+  "accepted_before_fix": true,
+  "problem": "Two exchange listings of SK hynix were treated as different issuers; the second thesis described Samsung. Lookup now returns one listing per issuer, and final validation rejects repeated issuers.",
+  "trace_id": "tr-6d94311768c34e28f2f3353d2253ce94",
+  "ideas": [
+    {
+      "company": "SK hynix Inc.",
+      "symbol": "SKHY",
+      "relationship": "direct",
+      "thesis": "SK Hynix posted record Q3 revenue +328% YoY and op profit +632%, with management guiding memory shortages through 2030 and 14 major buyers locking over half of 2027-2028 output (E1, E3)."
+    },
+    {
+      "company": "SK hynix Inc.",
+      "symbol": "000660.KS",
+      "relationship": "competitor",
+      "thesis": "Samsung also reported record Q3 revenue and operating profit driven by memory, reinforcing that AI\u2011fueled demand is broad\u2011based across the HBM and memory market (E4)."
+    }
+  ]
+}

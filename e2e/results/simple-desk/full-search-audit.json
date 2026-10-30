@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "scope": "Proposed-source live trace, not public app deployment",
+  "trace_id": "tr-09def1cd4e27a1608c706290a10df41f",
+  "trace_url": "https://rh-ai.apps.n79j08n7.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-09def1cd4e27a1608c706290a10df41f&workspace=signal-desk-dev",
+  "state": "OK",
+  "tool_spans": [
+    "tool.read_archive",
+    "tool.search_archive",
+    "tool.search_web",
+    "tool.read_web",
+    "tool.search_companies",
+    "tool.search_companies"
+  ],
+  "llm_turns": 7,
+  "all_tools_and_model_turns_have_inputs_outputs": true,
+  "model_credential_absent": true,
+  "dated_web_sources": 6,
+  "rejected_web_results": 2,
+  "cutoff": "2026-10-29T04:05:00Z"
+}

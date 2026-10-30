@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "at": "2026-10-30T14:06:23.178Z",
+  "trace_id": "tr-83edf629c347cf4212f18fd1701af36e",
+  "trace_url": "https://rh-ai.apps.n79j08n7.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-83edf629c347cf4212f18fd1701af36e&workspace=signal-desk-dev",
+  "skill": {
+    "name": "finance-idea-generation",
+    "source_url": "https://github.com/anthropics/financial-services/blob/60565064557ca77b12f62aa7877f365d111c129d/plugins/vertical-plugins/equity-research/skills/idea-generation/SKILL.md",
+    "upstream_revision": "60565064557ca77b12f62aa7877f365d111c129d"
+  },
+  "checks": [
+    "actual app link opens a new tab",
+    "exact trace and workspace",
+    "native MLflow graph with agent and tools",
+    "mock-keychain"
+  ]
+}

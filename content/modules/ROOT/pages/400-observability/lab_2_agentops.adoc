@@ -42,7 +42,7 @@ Open *Prompt*. Replace the default system instructions with this prompt, also av
 include::ROOT:attachment$signal-desk-agent-prompt.txt[]
 ----
 
-image::signal-desk-playground-prompt.png[Signal Desk agent instructions in the Prompt tab]
+image::signal-desk-playground-prompt.png[Playground component-test instructions in the Prompt tab]
 
 === 3. Connect the application's tools
 
@@ -60,16 +60,18 @@ image::signal-desk-playground-tools.png[The six read-only Signal Desk tools]
 
 === 4. Ask a question and inspect the evidence
 
-Send this question in the chat:
+The Playground validates one component at a time. Its native loop does not enforce the app’s staged tool protocol. Use the supplied short system prompt and start with this single-tool probe:
 
 [source,text,role=execute]
 ----
-Use Signal-Desk tools. Search the loaded archived week for semiconductor demand. Read one returned source_id. Search the public web for related reporting dated before the saved cutoff, then read one returned web source_id. Inspect the company lookup. Explain one hypothetical company stock exposure for our semiconductor fund, its risk and the archive cutoff. Use only returned evidence. Do not fetch current prices, predict a profit or assume related stocks must move together.
+Use the search_web tool exactly once with query "SK Hynix memory demand". Summarize two returned eligible headlines and their dates. Stop after this one tool call.
 ----
 
-image::signal-desk-playground-answer.png["A real Playground answer with a tool response, hypothetical exposure and risk"]
+For another component probe, start a new chat and request `search_archive` or `search_companies` once. Keep the full research workflow in the application, where tool order and limits are enforced.
 
-Expand *Tool response* below the answer. Verify that the agent called `search_archive`, `read_archive`, `search_web`, `read_web` and `search_companies`, and that its cited source IDs belong to returned articles. Check the archive cutoff, proposed company, relationship and risk. The exact answer varies; the screenshot is one real run.
+image::signal-desk-playground-answer.png["A real Playground response to a single-tool component probe"]
+
+Expand *Tool response* below each answer. Verify the actual requested call, source IDs, date cutoff and company identity. These probes establish model/MCP connectivity. The complete app research, including page reads, finance skill and final hypothesis, is validated through its direct MLflow trace.
 
 This tests the model, instructions and MCP tools directly in OpenShift AI. The app's research button uses the same model and read-only evidence through its bounded Responses loop. To inspect the app's MLflow spans, use *Research again* in Signal Desk and open its direct trace link as described above.
 
