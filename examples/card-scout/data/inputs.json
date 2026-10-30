@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "snapshot_at": "2026-10-30T15:30:47.498665+00:00",
+  "shuffle_seed": 20261030,
+  "items": [
+    {
+      "id": "item-001",
+      "image_url": "https://assets.tcgdex.net/en/swsh/swsh1/60/high.png",
+      "image_sha256": "e44b1f619206a34f9bdd2e289f84aef0cf591e3a4b0f155f593e34681c4fd742"
+    },
+    {
+      "id": "item-002",
+      "image_url": "https://assets.tcgdex.net/en/swsh/swsh1/52/high.png",
+      "image_sha256": "c901bc947cd2d9a9579725428ecc68718d85300b166be4fae2065bd4ecac8e96"
+    },
+    {
+      "id": "item-003",
+      "image_url": "https://assets.tcgdex.net/en/xy/xy1/8/high.png",
+      "image_sha256": "9473ec65772ba182fb37cbc8e6635817ba480a22d5308549a71f275eef8f3c7e"
+    },
+    {
+      "id": "item-004",
+      "image_url": "https://assets.tcgdex.net/en/xy/xy1/58/high.png",
+      "image_sha256": "599ae8b8ce5cdf912589bba13459c9d6c9ce0183cbd326889bc368cce2bc58a7"
+    },
+    {
+      "id": "item-005",
+      "image_url": "https://assets.tcgdex.net/en/base/base1/46/high.png",
+      "image_sha256": "6fdcdb23ec4d60c59b6420c0d09fdaef19cf3f5905e3093aaa440c53e1337d94"
+    },
+    {
+      "id": "item-006",
+      "image_url": "https://assets.tcgdex.net/en/bw/bw1/90/high.png",
+      "image_sha256": "e7a3f9945c5ff5755618d971b03a9b7f077a5c449f7cf473cd47f00ddab30946"
+    },
+    {
+      "id": "item-007",
+      "image_url": "https://assets.tcgdex.net/en/sv/sv01/063/high.png",
+      "image_sha256": "0a816dcb73a0b16814f928fc505e8721cae1dc64a12cf9a13b2c90d403878a0e"
+    },
+    {
+      "id": "item-008",
+      "image_url": "https://assets.tcgdex.net/en/xy/xy1/21/high.png",
+      "image_sha256": "350514bfcc3fb2ce1e669728d73c8029b959b854b37875df519a7f5672199a86"
+    },
+    {
+      "id": "item-009",
+      "image_url": "https://assets.tcgdex.net/en/ex/ex1/47/high.png",
+      "image_sha256": "3c574d38810e0c68fa346d8f769382bc39889860ad16ae002b4bb66e0152efea"
+    },
+    {
+      "id": "item-010",
+      "image_url": "https://assets.tcgdex.net/en/ex/ex1/55/high.png",
+      "image_sha256": "1ef768a95592b21518af54e1950149d8692f366efb31fc791e3c67fdc5050146"
+    },
+    {
+      "id": "item-011",
+      "image_url": "https://assets.tcgdex.net/en/sv/sv01/052/high.png",
+      "image_sha256": "b848f71e8324a86f1e758d6adb046acda0c74d848613a3a970988652944c37ba"
+    },
+    {
+      "id": "item-012",
+      "image_url": "https://assets.tcgdex.net/en/xy/xy1/93/high.png",
+      "image_sha256": "323ffa6b0a3f3b9b5de7aba4dffe21d6b93c9374a8a3b87370b7e44fcc6d1e8c"
+    },
+    {
+      "id": "item-013",
+      "image_url": "https://assets.tcgdex.net/en/base/base1/27/high.png",
+      "image_sha256": "f3296830a809aee358475a66ba35df77c64312c3beea777b3f459fddd5483310"
+    },
+    {
+      "id": "item-014",
+      "image_url": "https://assets.tcgdex.net/en/sm/sm1/23/high.png",
+      "image_sha256": "de85005cfb076fc2d6a9942a3f4b32fc16c53a4ee4e8836106182b4c56dfa58b"
+    },
+    {
+      "id": "item-015",
+      "image_url": "https://assets.tcgdex.net/en/xy/xy1/98/high.png",
+      "image_sha256": "e22bfde39a7c03a408c5d07da35ce39146d5a068a5192c08165a3344740753f0"
+    },
+    {
+      "id": "item-016",
+      "image_url": "https://assets.tcgdex.net/en/sm/sm1/77/high.png",
+      "image_sha256": "db537cbcde9feaa0255e3669ec31a6d603cd87e9bcb1cdc038194d1e7793f71d"
+    },
+    {
+      "id": "item-017",
+      "image_url": "https://assets.tcgdex.net/en/bw/bw1/50/high.png",
+      "image_sha256": "61a1ecde1d002a41948b69fc0950183ecb29cc8b053e7ce6d1a53a68164190df"
+    },
+    {
+      "id": "item-018",
+      "image_url": "https://assets.tcgdex.net/en/dp/dp1/87/high.png",
+      "image_sha256": "e3b6c2aeb74d3c3696d38fcc717aea3f7c730854e9e339fd4225a7f96a38ed1f"
+    },
+    {
+      "id": "item-019",
+      "image_url": "https://assets.tcgdex.net/en/bw/bw1/62/high.png",
+      "image_sha256": "c3471d8390f6eaf5b13eb001eb9021b8ae96e63f523c15cbe5e67908e8e3a450"
+    },
+    {
+      "id": "item-020",
+      "image_url": "https://assets.tcgdex.net/en/dp/dp1/59/high.png",
+      "image_sha256": "8ec94d05f696b33c38326fe3b1678c70b94377e0a3ebf7a987057904b93032f9"
+    },
+    {
+      "id": "item-021",
+      "image_url": "https://assets.tcgdex.net/en/sm/sm1/57/high.png",
+      "image_sha256": "554fdc65fa0aa32733f42b12c03aa186ce9937eec24c040b8a2e4fb630b479c1"
+    },
+    {
+      "id": "item-022",
+      "image_url": "https://assets.tcgdex.net/en/sv/sv01/129/high.png",
+      "image_sha256": "982ec2d17333377fb473eaa4169db262e512b29eecd5d5a2c12beccffd3f4e2e"
+    },
+    {
+      "id": "item-023",
+      "image_url": "https://assets.tcgdex.net/en/sv/sv01/026/high.png",
+      "image_sha256": "bbde315c2cc071b65149026b57f2c7de7f8a2a419ec9dfefa1cbbae3209d5378"
+    },
+    {
+      "id": "item-024",
+      "image_url": "https://assets.tcgdex.net/en/dp/dp1/100/high.png",
+      "image_sha256": "08b7fd17f19051b0b8795e5f76852393fc2772277a02e99be06789df098c54e7"
+    },
+    {
+      "id": "item-025",
+      "image_url": "https://assets.tcgdex.net/en/swsh/swsh1/115/high.png",
+      "image_sha256": "2732e51b507c69770a08043f704c5f36d8ca8a4a6183b4ab796d133a66dacdb9"
+    },
+    {
+      "id": "item-026",
+      "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+      "image_sha256": "759ceafdb4b8d637dfcfe673cf672bc3c472354a3b2e7e0835d9cdcacd8d195d"
+    },
+    {
+      "id": "item-027",
+      "image_url": "https://assets.tcgdex.net/en/bw/bw1/57/high.png",
+      "image_sha256": "83e55c789c90666c80d49f250daae8e0027e7b6c06bb65e72951b25dca7ef1cd"
+    },
+    {
+      "id": "item-028",
+      "image_url": "https://assets.tcgdex.net/en/ex/ex1/99/high.png",
+      "image_sha256": "88e05fe77178417e4aef54f5d560652957d5c677bb9d45a529f7bb2ea568d55b"
+    },
+    {
+      "id": "item-029",
+      "image_url": "https://assets.tcgdex.net/en/swsh/swsh1/93/high.png",
+      "image_sha256": "b1aa023cd90652f1e6c090aa345614d80dfc0d4e2a67c6cc00ed07bb4e892c19"
+    },
+    {
+      "id": "item-030",
+      "image_url": "https://assets.tcgdex.net/en/base/base1/73/high.png",
+      "image_sha256": "76c706d5e6918f19e2e8b72b1c252435fedeb94edc0be12d8bcd5015a9847b9a"
+    },
+    {
+      "id": "item-031",
+      "image_url": "https://huggingface.co/vllm-sr/d3-mini/resolve/df99bf4ca4418bc6908ee68e9b7479af1f3b8800/assets/example-receipt.png",
+      "image_sha256": "b9dbb8b103bacd45f1de824d844a3c07b81d57cb1a7466712ef060ad7dcb3926"
+    },
+    {
+      "id": "item-032",
+      "image_url": "https://assets.tcgdex.net/en/base/base1/63/high.png",
+      "image_sha256": "0e26ea92b61b76765daf64d939d5103a67be823c6d96a4fdd990d71a327b76fd"
+    },
+    {
+      "id": "item-033",
+      "image_url": "https://assets.tcgdex.net/en/base/base1/15/high.png",
+      "image_sha256": "f3ace97c761784edfc985a85e96c39a93a162231baa77c5ffd736aab96790381"
+    },
+    {
+      "id": "item-034",
+      "image_url": "https://assets.tcgdex.net/en/ex/ex1/16/high.png",
+      "image_sha256": "baed78b274bb61e0acb507e40b943c992924e1b59cdb20ce3525ca41735de9dc"
+    },
+    {
+      "id": "item-035",
+      "image_url": "https://images.ygoprodeck.com/images/cards/89631139.jpg",
+      "image_sha256": "d638d67b9c24b3a26000848758589b158ba3cf8d2ed310dae90ace1c35156058"
+    },
+    {
+      "id": "item-036",
+      "image_url": "https://assets.tcgdex.net/en/ex/ex1/37/high.png",
+      "image_sha256": "521d5ae2844894e8c8b917b9cf6e26d876ed4781f50872774f85aa2b814cab7c"
+    },
+    {
+      "id": "item-037",
+      "image_url": "https://assets.tcgdex.net/en/sv/sv01/190/high.png",
+      "image_sha256": "77669543ab7cce8de09cdc2d06dd0d98e4962419e8fe274a01c3bd89f6c703b3"
+    },
+    {
+      "id": "item-038",
+      "image_url": "https://assets.tcgdex.net/en/bw/bw1/36/high.png",
+      "image_sha256": "172511146a087f1551695743b94248364f930c7b097043c59e511f1fcf934878"
+    },
+    {
+      "id": "item-039",
+      "image_url": "https://assets.tcgdex.net/en/sv/sv01/201/high.png",
+      "image_sha256": "5501ed11a4c7bdc7f535c38851131fbaad40752c3d5fa351cec3e609f30818cd"
+    },
+    {
+      "id": "item-040",
+      "image_url": "https://assets.tcgdex.net/en/ex/ex1/73/high.png",
+      "image_sha256": "2d1192c4b29ff099440e67920fffa55a41d5ef200633b5d6f0546ed100f95f47"
+    },
+    {
+      "id": "item-041",
+      "image_url": "https://assets.tcgdex.net/en/dp/dp1/6/high.png",
+      "image_sha256": "00f743670635eb69849d23a063ffeb836b3a5da9670bb4b924d97e1d392ea4dc"
+    },
+    {
+      "id": "item-042",
+      "image_url": "https://assets.tcgdex.net/en/swsh/swsh1/78/high.png",
+      "image_sha256": "11ee7cfe1f1cf5d1da1dc8a9007283b762ed1dc522a6e95f0e5bf2d41a53b53f"
+    },
+    {
+      "id": "item-043",
+      "image_url": "https://assets.tcgdex.net/en/dp/dp1/24/high.png",
+      "image_sha256": "88ec6f9104fec27d7042c513269c3d438bc2b6a679267419f5f81ebd12ffefbd"
+    },
+    {
+      "id": "item-044",
+      "image_url": "https://assets.tcgdex.net/en/swsh/swsh1/38/high.png",
+      "image_sha256": "d38f8df27193af135ab0b92e3f5d86486784288491353370aa8ff1670d30412a"
+    },
+    {
+      "id": "item-045",
+      "image_url": "https://assets.tcgdex.net/en/sm/sm1/95/high.png",
+      "image_sha256": "cb0ebf30d3f02e5798c09482c2e6b865898218650fe2c56ca1f2e82b69cbf552"
+    },
+    {
+      "id": "item-046",
+      "image_url": "https://assets.tcgdex.net/en/base/base1/32/high.png",
+      "image_sha256": "d2a8f3da3377c012b81cff6a29255c7395da1d7ff002906542a701199823d1e2"
+    },
+    {
+      "id": "item-047",
+      "image_url": "https://assets.tcgdex.net/en/xy/xy1/74/high.png",
+      "image_sha256": "32b26680f62f6e35ed42bc39c34a036956735a82b22f548b8efd7b020034c6fe"
+    },
+    {
+      "id": "item-048",
+      "image_url": "https://assets.tcgdex.net/en/bw/bw1/17/high.png",
+      "image_sha256": "0dd8a96f7b127c09c5d6660c1828244ac88d4cf3114a1e0083cc6ff9cbe73608"
+    },
+    {
+      "id": "item-049",
+      "image_url": "https://assets.tcgdex.net/en/sm/sm1/15/high.png",
+      "image_sha256": "d01dabae161c5c9091f93c6f1d544fbd9959fc795e8a63d9c56a961b3e365b90"
+    },
+    {
+      "id": "item-050",
+      "image_url": "https://assets.tcgdex.net/en/dp/dp1/64/high.png",
+      "image_sha256": "b11997d2a53c12fc3da47a512cbe660fa16b634e1af46b6351776fdf56af590e"
+    },
+    {
+      "id": "item-051",
+      "image_url": "https://assets.tcgdex.net/en/sm/sm1/41/high.png",
+      "image_sha256": "b152b4de367aba0bd9856963d0334378659e7ace35f0d3865834305086621be9"
+    }
+  ]
+}

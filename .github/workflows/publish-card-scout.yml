@@ -1,0 +1,46 @@
+name: publish card scout platform
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, feature/card-scout]
+    paths:
+      - examples/card-scout/**
+      - .github/workflows/publish-card-scout.yml
+permissions:
+  contents: read
+  packages: write
+concurrency:
+  group: card-scout-platform-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      # Reuse the workshop's public runtime package; GPU and CPU images have
+      # different tags and immutable digests.
+      IMAGE: ghcr.io/fjcloud/d3-mini-runtime
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate the workshop registry
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+      - name: Build the prepared service and fixed image dataset
+        run: |
+          docker build --platform linux/amd64 \
+            --label org.opencontainers.image.source=https://github.com/fjcloud/aro-ai-app-platform \
+            --label org.opencontainers.image.revision="$GITHUB_SHA" \
+            --label org.opencontainers.image.description='Card Scout platform: mixed-era dataset, T4 analysis, native agent MCP and MLflow' \
+            -t "$IMAGE:card-scout-$GITHUB_SHA" examples/card-scout
+      - name: Validate platform behavior without model calls
+        run: docker run --rm "$IMAGE:card-scout-$GITHUB_SHA" python -m unittest discover -p 'test_*.py'
+      - name: Push the immutable image
+        run: |
+          docker push "$IMAGE:card-scout-$GITHUB_SHA"
+          docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE:card-scout-$GITHUB_SHA" > card-scout-image.txt
+          cat card-scout-image.txt >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: card-scout-image
+          path: card-scout-image.txt
