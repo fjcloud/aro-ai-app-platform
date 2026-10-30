@@ -40,7 +40,10 @@ def main():
     ready = get('inferenceservice', 'd3-mini', 'decision-serving')
     if not any(c['type'] == 'Ready' and c['status'] == 'True' for c in ready.get('status', {}).get('conditions', [])):
         raise RuntimeError('Wait for d3-mini to be Ready before preparing the application')
-    get('service', 'lsd-genai-playground-service', APP)
+    try:
+        get('service', 'lsd-genai-playground-service', APP)
+    except RuntimeError:
+        raise RuntimeError('Native Responses backend is missing in ' + APP + '. Complete the CLI deployment in Lab 1.8 before preparing runtime access.') from None
     domain = get('ingress.config.openshift.io', 'cluster')['spec']['domain']
     mlflow = get('mlflow', 'mlflow').get('status', {}).get('url', '').rstrip('/')
     if not mlflow.startswith('https://'):

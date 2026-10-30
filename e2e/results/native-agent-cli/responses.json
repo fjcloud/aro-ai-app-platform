@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "lab": "8z97s",
+  "namespace": "signal-desk-dev",
+  "resource": "OGXServer/lsd-genai-playground",
+  "model": "maas-vllm-inference-1/deepseekv4pro",
+  "tool_call": "workshop_probe",
+  "marker_verified": true,
+  "continuation_status": "completed",
+  "key_source": "separate runtime subscription",
+  "at": "2026-10-30T10:48:42Z"
+}
