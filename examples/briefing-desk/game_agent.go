@@ -37,10 +37,11 @@ func (a *agent) gameIdeas(ctx context.Context, d document, p profile, docs []doc
 		return out, errors.New("Historical research is missing verified archive evidence")
 	}
 	seen := map[string]bool{}
+	issuers := map[string]bool{}
 	for i, idea := range out.Ideas {
 		verified, known := j.companies[idea.Symbol]
 		role := idea.Relationship
-		if !known || seen[idea.Symbol] || (role != "direct" && role != "supplier" && role != "customer" && role != "competitor") || len(idea.Thesis) < 20 || len(idea.Risk) < 10 || len(idea.Sources) == 0 {
+		if !known || seen[idea.Symbol] || issuers[companyKey(verified.Name)] || (role != "direct" && role != "supplier" && role != "customer" && role != "competitor") || len(idea.Thesis) < 20 || len(idea.Risk) < 10 || len(idea.Sources) == 0 {
 			return out, errors.New("Invalid company stock idea; use a verified individual equity and a supported relationship")
 		}
 		archived := false
@@ -56,6 +57,7 @@ func (a *agent) gameIdeas(ctx context.Context, d document, p profile, docs []doc
 			return out, errors.New("Stock thesis must cite archived facts, not just company metadata")
 		}
 		seen[idea.Symbol] = true
+		issuers[companyKey(verified.Name)] = true
 		out.Ideas[i].ID = id()
 		out.Ideas[i].Company = verified.Name
 		out.Ideas[i].Exchange = verified.Exchange
