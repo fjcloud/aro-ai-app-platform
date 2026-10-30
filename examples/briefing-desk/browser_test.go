@@ -29,6 +29,9 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 	if os.Getenv("BROWSER_E2E") != "1" {
 		t.Skip("opt-in Playwright integration")
 	}
+	t.Setenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT", "https://mlflow.fixture.example/mlflow/v1/traces")
+	t.Setenv("MLFLOW_EXPERIMENT_ID", "1")
+	t.Setenv("MLFLOW_WORKSPACE", "signal-desk-dev")
 	const scope = "LOCAL VALIDATION: model and data fixtures, no live inference"
 	key := filepath.Join(t.TempDir(), "key")
 	os.WriteFile(key, []byte("fixture-key"), 0600)

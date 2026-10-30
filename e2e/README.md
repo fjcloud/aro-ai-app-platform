@@ -65,6 +65,8 @@ make test-terminal
 make docs
 ```
 
+The browser fixtures check the initial three-story view, progressive disclosure and a workspace-scoped MLflow trace link. Live acceptance must open that exact link and inspect its graph, then verify the finance skill source/version on a fresh research trace. Cached older research is not evidence of skill use.
+
 The browser fixture test covers seven archive days, memo changes, native agent research, two investments with positive/negative returns, immutable portfolio choices, exports and mobile layout. Go tests also cover MCP discovery, strict tool arguments, archive boundaries, source safety and completed-session valuation.
 
 [Signal Desk validation and evidence](BRIEFING-DESK-VALIDATION.md) distinguishes real local Metal/Azure runs from fixture checks and ARO results. The optional `e2e/briefing-desk-live-local.cjs` tests the local Metal setup; it does not establish ARO compatibility.

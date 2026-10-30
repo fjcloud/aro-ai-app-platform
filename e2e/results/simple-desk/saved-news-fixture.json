@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "scope": "LOCAL VALIDATION: model and data fixtures, no live inference",
+  "live_models": false,
+  "repository_news": 161,
+  "week": {
+    "cutoff": "2026-10-29T04:05:00Z",
+    "id": "2026-10-26_2026-10-28",
+    "market_end": "",
+    "market_start": "2026-10-29",
+    "news_end": "2026-10-28",
+    "news_start": "2026-10-26",
+    "valuation_mode": "latest"
+  },
+  "checks": [
+    "three initial stories and progressive disclosure",
+    "direct trace link with workspace",
+    "bundled finance method",
+    "fixed repository corpus",
+    "no manual import",
+    "model scoring",
+    "archive tool loop",
+    "timestamped intraday quote",
+    "portfolio freeze and arithmetic",
+    "quote refresh",
+    "mobile layout",
+    "mock-keychain",
+    "no JavaScript errors"
+  ]
+}

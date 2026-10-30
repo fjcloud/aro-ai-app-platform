@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"log"
+	"net/url"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -52,9 +54,28 @@ func initTracing(ctx context.Context) (func(context.Context) error, error) {
 	} else {
 		processor = sdktrace.WithSampler(sdktrace.AlwaysSample())
 	}
-	provider := sdktrace.NewTracerProvider(processor, sdktrace.WithResource(resource.NewWithAttributes("", attribute.String("service.name", "briefing-desk"))))
+	provider := sdktrace.NewTracerProvider(processor, sdktrace.WithResource(resource.NewWithAttributes("", attribute.String("service.name", "signal-desk"))))
 	otel.SetTracerProvider(provider)
 	// Do not log exporter errors that may include backend bodies or credentials.
 	otel.SetErrorHandler(otel.ErrorHandlerFunc(func(error) { log.Print("Trace export failed; check MLflow availability and workspace permissions") }))
 	return provider.Shutdown, nil
+}
+
+var mlflowTraceID = regexp.MustCompile(`^tr-[a-f0-9]{32}$`)
+
+// Match the native MLflow trace-drawer route, including its workspace context.
+func mlflowTraceURL(traceID string) string {
+	if !mlflowTraceID.MatchString(traceID) {
+		return ""
+	}
+	endpoint, err := url.Parse(os.Getenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT"))
+	experiment, workspace := os.Getenv("MLFLOW_EXPERIMENT_ID"), os.Getenv("MLFLOW_WORKSPACE")
+	if err != nil || endpoint.Host == "" || endpoint.User != nil || (endpoint.Scheme != "https" && endpoint.Scheme != "http") || !strings.HasSuffix(endpoint.Path, "/v1/traces") || experiment == "" || workspace == "" {
+		return ""
+	}
+	endpoint.Path = strings.TrimSuffix(endpoint.Path, "/v1/traces") + "/"
+	endpoint.RawQuery, endpoint.RawPath = "", ""
+	query := url.Values{"workspace": {workspace}, "selectedEvaluationId": {traceID}}
+	endpoint.Fragment = "/experiments/" + url.PathEscape(experiment) + "/traces?" + query.Encode()
+	return endpoint.String()
 }

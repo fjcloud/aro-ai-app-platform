@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 type gameIdea struct {
@@ -25,16 +26,18 @@ type gameIdea struct {
 	Sources      []string `json:"sources"`
 }
 type gameProposal struct {
-	ArticleID   string     `json:"article_id"`
-	MemoVersion int        `json:"memo_version"`
-	SummaryHash string     `json:"summary_hash"`
-	Status      string     `json:"status"`
-	Error       string     `json:"error,omitempty"`
-	Comment     string     `json:"comment"`
-	Ideas       []gameIdea `json:"ideas"`
-	Evidence    []evidence `json:"evidence,omitempty"`
-	Cutoff      string     `json:"cutoff"`
-	TraceID     string     `json:"trace_id,omitempty"`
+	ArticleID   string         `json:"article_id"`
+	MemoVersion int            `json:"memo_version"`
+	SummaryHash string         `json:"summary_hash"`
+	Status      string         `json:"status"`
+	Error       string         `json:"error,omitempty"`
+	Comment     string         `json:"comment"`
+	Ideas       []gameIdea     `json:"ideas"`
+	Evidence    []evidence     `json:"evidence,omitempty"`
+	Cutoff      string         `json:"cutoff"`
+	TraceID     string         `json:"trace_id,omitempty"`
+	TraceURL    string         `json:"trace_url,omitempty"`
+	Skill       *researchSkill `json:"skill,omitempty"`
 }
 type paperPosition struct {
 	ArticleID string            `json:"article_id"`
@@ -303,8 +306,11 @@ func (s *server) proposeGame(docID string) {
 	defer cancel()
 	ctx, span := otel.Tracer("briefing-desk").Start(ctx, "game.research")
 	defer span.End()
+	span.SetAttributes(attribute.String("research.skill.name", "finance-idea-generation"), attribute.String("research.skill.upstream_revision", financeSkillRevision), attribute.String("research.skill.source", financeSkillSource))
 	proposal, e := s.agent.gameIdeas(ctx, d, p, s.gameDocuments(), s.game.Week)
 	proposal.TraceID = "tr-" + span.SpanContext().TraceID().String()
+	skill := activeFinanceSkill()
+	proposal.Skill = &skill
 	proposal.Status = "done"
 	if e != nil {
 		proposal.Status = "failed"
@@ -385,6 +391,10 @@ func (s *server) gameRoutes(mux *http.ServeMux) {
 		b, _ := json.Marshal(s.game)
 		json.Unmarshal(b, &snapshot)
 		s.gameMu.Unlock()
+		for id, proposal := range snapshot.Proposals {
+			proposal.TraceURL = mlflowTraceURL(proposal.TraceID)
+			snapshot.Proposals[id] = proposal
+		}
 		docs := s.gameDocuments()
 		p, _ := s.store.profile("tech")
 		ranked := 0
