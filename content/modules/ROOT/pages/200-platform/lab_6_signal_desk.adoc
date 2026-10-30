@@ -1,7 +1,7 @@
 = Lab 1.8 — Prepare the Signal Desk Agent
 :page-aliases: 200-platform/lab_6_cluster_voice.adoc
 
-The decision model scores relevance. The runtime agent researches possible index exposure through *OpenShift AI's native Responses API*. Prepare that second path before the developer builds the app.
+The decision model scores relevance. The runtime agent researches possible company stock exposure through *OpenShift AI's native Responses API*. Prepare that second path before the developer builds the app.
 
 [NOTE]
 ====
@@ -86,14 +86,14 @@ Read `APP_CONTRACT.md` in the template. The backend owns five simple responsibil
 . Read the dated Techmeme news snapshot bundled with the application.
 . Preserve its source dates, cutoff and collection provenance.
 . Score the archived news against the fund memo with d3-mini.
-. Ask DeepSeek for hypothetical long-only index exposures using bounded archive tools.
+. Ask DeepSeek for hypothetical long-only company stock exposures using bounded archive and company-reference tools.
 . Freeze the virtual portfolio, then compare its entry price with the latest available market quote.
 
 [source,text]
 ----
 Repository news JSON → Go app → d3-mini /v1/systemone → relevance /100
                        └→ OpenShift AI /v1/responses → DeepSeek / MaaS
-                               ↕ read_archive / search_archive / index_universe
+                               ↕ read_archive / search_archive / search_companies
 
 Browser → $10,000 paper allocation → freeze → latest market quote → result
 Playground → public MCP /mcp → the same read-only archive/catalog

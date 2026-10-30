@@ -62,12 +62,12 @@ Open the public HTTPS app Route.
 . Read the default semiconductor fund memo; expand it if you want to change the fund.
 . Click *Load saved news*. The app reads the JSON bundled from the repository and ranks its 161 articles on the T4. No Techmeme download or manual import is required.
 . Check the displayed news dates and collection provenance. *Export the news* includes the saved sources and scores; these are headlines and short excerpts, not full publisher articles.
-. Open an interesting story and click *Find index ideas*. Expect a hypothetical thesis and risk for supported ETF proxies. A high relevance score alone is not a BUY instruction.
+. Open an interesting story and click *Find stock opportunities*. Expect a hypothetical thesis and risk for verified company shares, including supported suppliers, customers or competitors. A high relevance score alone is not a BUY instruction.
 . Add a virtual amount to one or more ideas. Stay within $10,000. No return should be revealed yet.
 . Click *Compare with today’s market*. The complete portfolio freezes before market prices are requested. Inspect entry/exit dates and the price-data source.
 . Check the quote timestamp. *Update result* fetches the latest available price without changing choices. *Play again* starts a fresh budget and retains the previous round.
 
-The fixed input is https://github.com/fjcloud/aro-ai-app-platform/blob/main/examples/briefing-desk/news/techmeme.json[news/techmeme.json]. Its news cutoff is 29 October at 00:05 New York time; entry is the first US session open afterward. Valuation uses the latest available regular-market quote, including an intraday quote. Before opening, on weekends or holidays, its actual timestamp shows which session it belongs to.
+The fixed input is https://github.com/fjcloud/aro-ai-app-platform/blob/main/examples/briefing-desk/news/techmeme.json[news/techmeme.json]. Its news cutoff is 29 October at 00:05 New York time; entry is each stock exchange’s first session open afterward. Foreign share prices are converted to the USD paper fund using explicit FX references. Valuation uses the latest available regular-market quote, including an intraday quote. Before opening, on weekends or holidays, its actual timestamp shows which session it belongs to.
 
 The same saved news can be replayed in later workshops. Only market data is refreshed. This is an educational retrospective comparison; returns exclude dividends, fees and slippage.
 

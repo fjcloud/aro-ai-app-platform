@@ -9,7 +9,7 @@ Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platf
 . The launcher retrieves the assigned Showroom URL. Shared links contain only the guide and workshop ID; each participant signs in separately.
 . Follow Act 0 to clone the repository and run `make onboard` to sign in to the existing cluster.
 
-Platform labs prepare OpenShift AI, DeepSeek on Foundry through MaaS, and one T4 running the community d3-mini native decision runtime. Developers use OpenCode to build *Signal Desk*: rank the repository’s dated Techmeme news for a fund, research hypothetical index exposure and replay a $10,000 virtual portfolio against the latest available market quotes. Playground MCP and MLflow make the agent's evidence and calls visible.
+Platform labs prepare OpenShift AI, DeepSeek on Foundry through MaaS, and one T4 running the community d3-mini native decision runtime. Developers use OpenCode to build *Signal Desk*: rank the repository’s dated Techmeme news for a fund, research hypothetical company stock exposure and replay a $10,000 virtual portfolio against the latest available market quotes. Playground MCP and MLflow make the agent's evidence and calls visible.
 
 `make onboard` signs in using the existing ARO credentials retrieved from Azure, then detects the resource group containing that resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
 

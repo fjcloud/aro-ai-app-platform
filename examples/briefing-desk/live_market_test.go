@@ -18,20 +18,27 @@ func TestLiveLatestMarketQuote(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	result, err := newFetcher().weekReturn(ctx, "SMH", corpus.Week, time.Now())
-	if err != nil {
-		t.Fatal(err)
+	quotes := []historicalReturn{}
+	for _, symbol := range []string{"NVDA", "005930.KS"} {
+		result, err := newFetcher().weekReturn(ctx, symbol, corpus.Week, time.Now())
+		if err != nil {
+			t.Fatal(symbol, err)
+		}
+		if result.QuoteTime == "" || result.ExitPrice <= 0 || result.EntryDate < corpus.Week.MarketStart {
+			t.Fatal(result)
+		}
+		if symbol == "005930.KS" && (result.Currency != "KRW" || result.FXSourceURL == "" || result.FXQuoteTime == "") {
+			t.Fatal("Missing actual FX", result)
+		}
+		quotes = append(quotes, result)
 	}
-	if result.QuoteTime == "" || result.ExitPrice <= 0 || result.EntryDate < corpus.Week.MarketStart {
-		t.Fatal(result)
-	}
-	b, _ := json.MarshalIndent(map[string]any{"passed": true, "live_market_data": true, "model_calls": 0, "week": corpus.Week, "quote": result}, "", "  ")
-	path := "../../e2e/results/prepared-inputs/live-market.json"
-	if err = os.MkdirAll("../../e2e/results/prepared-inputs", 0755); err != nil {
+	b, _ := json.MarshalIndent(map[string]any{"passed": true, "live_market_data": true, "model_calls": 0, "week": corpus.Week, "quotes": quotes}, "", "  ")
+	path := "../../e2e/results/company-opportunities/live-market.json"
+	if err = os.MkdirAll("../../e2e/results/company-opportunities", 0755); err != nil {
 		t.Fatal(err)
 	}
 	if err = os.WriteFile(path, append(b, '\n'), 0644); err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("Actual SMH open %.2f → latest %.2f, quote time %s", result.EntryPrice, result.ExitPrice, result.QuoteTime)
+	t.Log("Actual US and Korean company prices, exchange entry times and USD/KRW conversion verified")
 }

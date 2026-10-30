@@ -15,11 +15,14 @@ import (
 )
 
 type gameIdea struct {
-	ID      string   `json:"id"`
-	Symbol  string   `json:"symbol"`
-	Thesis  string   `json:"thesis"`
-	Risk    string   `json:"risk"`
-	Sources []string `json:"sources"`
+	ID           string   `json:"id"`
+	Symbol       string   `json:"symbol"`
+	Company      string   `json:"company,omitempty"`
+	Exchange     string   `json:"exchange,omitempty"`
+	Relationship string   `json:"relationship"`
+	Thesis       string   `json:"thesis"`
+	Risk         string   `json:"risk"`
+	Sources      []string `json:"sources"`
 }
 type gameProposal struct {
 	ArticleID   string     `json:"article_id"`
@@ -38,6 +41,7 @@ type paperPosition struct {
 	IdeaID    string            `json:"idea_id"`
 	Amount    float64           `json:"amount"`
 	Symbol    string            `json:"symbol"`
+	Company   string            `json:"company,omitempty"`
 	Title     string            `json:"title"`
 	Result    *historicalReturn `json:"result,omitempty"`
 }
@@ -70,7 +74,9 @@ type gameState struct {
 func newPaperRound() paperRound {
 	return paperRound{ID: id(), Status: "draft", Budget: 10000, Value: 10000, Positions: []paperPosition{}}
 }
-func (s *server) gameFile() string { return filepath.Join(s.store.dir, "game-"+s.game.Week.ID+".json") }
+func (s *server) gameFile() string {
+	return filepath.Join(s.store.dir, "game-"+s.game.Week.ID+"-equities-v1.json")
+}
 func (s *server) saveGame() {
 	if e := atomicJSON(s.gameFile(), s.game); e != nil {
 		s.game.Error = "Game progress could not be saved"
@@ -91,6 +97,29 @@ func (s *server) initGame() {
 	s.game = gameState{Week: week, Status: "empty", Proposals: map[string]gameProposal{}, Round: newPaperRound()}
 	if b, e := os.ReadFile(s.gameFile()); e == nil {
 		json.Unmarshal(b, &s.game)
+	} else if usesBundledNews() && !s.preview {
+		// Reuse verified news/scores, but start a separate equities round rather
+		// than loading the earlier ETF proposal/portfolio file.
+		manifest, err := bundledCorpus()
+		if err == nil {
+			s.game.Manifest = manifest
+			docs := s.gameDocuments()
+			byURL := map[string]document{}
+			for _, d := range docs {
+				byURL[d.URL] = d
+			}
+			p, ok := s.store.profile("tech")
+			complete := ok && len(docs) == len(manifest.Stories)
+			for _, story := range manifest.Stories {
+				d, exists := byURL[story.URL]
+				complete = complete && exists && d.Summary.Title == story.Title && d.Summary.TLDR == story.Excerpt && d.Source.ArchivedAt == story.AsOf && currentScore(d, p)
+			}
+			if complete {
+				s.game.Status = "ready"
+				s.game.Message = "Saved news and memo scores reused. Research individual company stocks for this round."
+				s.saveGame()
+			}
+		}
 	}
 	if s.game.Proposals == nil {
 		s.game.Proposals = map[string]gameProposal{}
@@ -325,6 +354,9 @@ func (s *server) settleRound(roundID string) {
 			if r.QuoteTime != "" {
 				asOf = r.QuoteTime
 			}
+			if r.FXQuoteTime != "" && r.FXQuoteTime < asOf {
+				asOf = r.FXQuoteTime
+			}
 			if round.AsOf == "" || asOf < round.AsOf {
 				round.AsOf = asOf
 			}
@@ -493,6 +525,7 @@ func (s *server) playGame(w http.ResponseWriter, r *http.Request) {
 		for _, idea := range proposal.Ideas {
 			if idea.ID == pos.IdeaID {
 				pos.Symbol = idea.Symbol
+				pos.Company = idea.Company
 				matched = true
 				break
 			}

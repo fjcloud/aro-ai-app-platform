@@ -26,12 +26,12 @@ func TestReplayCalendarAndNoIntradayValuation(t *testing.T) {
 	}
 	loc, _ := time.LoadLocation("America/New_York")
 	bars := []dailyBar{{time.Date(2026, 10, 26, 9, 30, 0, 0, loc), ptr(100), ptr(102)}, {time.Date(2026, 10, 27, 9, 30, 0, 0, loc), ptr(102), ptr(95)}, {time.Date(2026, 10, 28, 9, 30, 0, 0, loc), ptr(95), ptr(999)}}
-	result, e := historicalResult("QQQ", bars, nil, week, now, "https://example.com/prices")
+	result, e := historicalResult("AMD", bars, nil, week, now, "https://example.com/prices")
 	if e != nil || result.ExitDate != "2026-10-27" || result.ReturnPct > -4.99 || result.ReturnPct < -5.01 || result.WeekComplete {
 		t.Fatal("Future/intraday price used", result, e)
 	}
 	bars[0].Open = nil
-	if _, e := historicalResult("QQQ", bars, nil, week, now, ""); e == nil {
+	if _, e := historicalResult("AMD", bars, nil, week, now, ""); e == nil {
 		t.Fatal("Missing opening price was invented")
 	}
 }
@@ -50,10 +50,10 @@ func TestArchiveOnlyUsesRequestedHistoricalItems(t *testing.T) {
 	j := a.job(context.Background(), "game_ideas", "", "", nil)
 	j.archiveWeek = week
 	j.archiveDocs = map[string]document{"original": {GameWeek: week.ID, Source: source{ArchivedAt: "2026-10-28T12:00:00Z"}}}
-	if _, _, e := a.runGameTool(j, "read_archive", "original", ""); e == nil {
+	if _, _, e := a.runGameTool(context.Background(), j, "read_archive", "original", ""); e == nil {
 		t.Fatal("Live/future article accepted as historical evidence")
 	}
-	if _, _, e := a.runGameTool(j, "market_snapshot", "", ""); e == nil {
+	if _, _, e := a.runGameTool(context.Background(), j, "market_snapshot", "", ""); e == nil {
 		t.Fatal("Research agent could access current market prices")
 	}
 }
@@ -72,7 +72,7 @@ func TestPortfolioFreezesBeforeMarketDataAndCannotOverspend(t *testing.T) {
 		d.Classes[p.ID] = classification{Status: "done", Score: &score, ProfileVersion: p.Version, SummaryHash: d.Summary.hash()}
 	})
 	d, _ = s.store.get(d.ID)
-	s.game.Proposals[d.ID] = gameProposal{ArticleID: d.ID, MemoVersion: p.Version, SummaryHash: d.Summary.hash(), Status: "done", Ideas: []gameIdea{{ID: "idea", Symbol: "SMH"}}}
+	s.game.Proposals[d.ID] = gameProposal{ArticleID: d.ID, MemoVersion: p.Version, SummaryHash: d.Summary.hash(), Status: "done", Ideas: []gameIdea{{ID: "idea", Symbol: "NVDA"}}}
 	called := make(chan bool, 1)
 	s.agent.fetch.client.Transport = roundTripFunc(func(r *http.Request) (*http.Response, error) {
 		b, e := os.ReadFile(s.gameFile())
@@ -109,7 +109,7 @@ func TestPortfolioFreezesBeforeMarketDataAndCannotOverspend(t *testing.T) {
 	s.gameMu.Lock()
 	symbol := s.game.Round.Positions[0].Symbol
 	s.gameMu.Unlock()
-	if symbol != "SMH" {
+	if symbol != "NVDA" {
 		t.Fatal("User supplied ticker overrode the researched idea")
 	}
 	if w := request(2000); w.Code != 409 {
@@ -133,7 +133,7 @@ func TestHistoricalProviderIdentityValidation(t *testing.T) {
 	f.client.Transport = roundTripFunc(func(r *http.Request) (*http.Response, error) {
 		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(`{"chart":{"result":[{"meta":{"symbol":"FAKE","currency":"EUR"},"timestamp":[]}]}}`)), Request: r}, nil
 	})
-	if _, e := f.weekReturn(context.Background(), "SMH", lastNewsWeek(fixtureTime()), fixtureTime()); e == nil {
+	if _, e := f.weekReturn(context.Background(), "NVDA", lastNewsWeek(fixtureTime()), fixtureTime()); e == nil {
 		t.Fatal("Wrong symbol/currency accepted")
 	}
 }

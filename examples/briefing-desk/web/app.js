@@ -3,6 +3,7 @@ const $=id=>document.getElementById(id),profileID='tech';
 let data=null,active='',dirty=false,busy=false,key='',limit=30,draft=[],draftKey='',amounts=new Map();
 function el(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;}
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
+const localMoney=(n,currency)=>new Intl.NumberFormat('en-US',{style:'currency',currency:currency||'USD',maximumFractionDigits:['KRW','JPY'].includes(currency)?0:2}).format(n);
 const signed=n=>(n>=0?'+':'−')+money(Math.abs(n));
 function notice(s){$('notice').hidden=!s;$('notice').textContent=s;}
 async function api(path,body){const r=await fetch('/api/'+path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const value=await r.json();if(!r.ok)throw Error(value.error||'Request failed');return value;}
@@ -17,27 +18,27 @@ function basketView(){
  $('reveal').textContent=data.game.week.valuation_mode==='latest'?'Compare with today’s market':'Reveal this week’s result';$('reveal').hidden=round.status!=='draft';$('reveal').disabled=data.preview||draft.length===0||total>round.budget;$('update').hidden=!['settled','awaiting_prices'].includes(round.status);$('reset').hidden=['draft','settling'].includes(round.status);
  $('round-note').textContent=round.status==='draft'?money(round.budget-total)+' available · choose your investments before revealing any result.':round.status==='settling'?'Portfolio frozen. Fetching observed market prices…':round.status==='awaiting_prices'?round.error:data.game.week.valuation_mode==='latest'?'Latest available market quote · '+round.as_of+' · prices may be delayed.':round.week_complete?'Week completed · results through '+round.as_of+' close.':'Week in progress · results through '+round.as_of+' close.';
  const positions=round.status==='draft'?draft:round.positions;
- for(const p of positions){const row=el('div',undefined,'basket-row'),info=el('div');info.append(el('strong',p.symbol+' · '+money(p.amount)),el('p',p.title,'status'));row.append(info);
+ for(const p of positions){const row=el('div',undefined,'basket-row'),info=el('div');info.append(el('strong',(p.company||p.symbol)+' ('+p.symbol+') · '+money(p.amount)),el('p',p.title,'status'));row.append(info);
   if(round.status==='draft')row.append(action('Remove',()=>{draft=draft.filter(x=>x.article_id!==p.article_id);saveDraft();key='';render();}));
-  if(p.result){const v=el('div',undefined,'position-result');v.append(el('strong',signed(p.amount*p.result.return_pct/100),p.result.return_pct>=0?'gain':'loss'),el('p',p.result.entry_date+' open '+money(p.result.entry_price)+' → '+(p.result.quote_time||p.result.exit_date)+' '+(p.result.price_type?'quote ':'close ')+money(p.result.exit_price),'status'),link('Price data ↗',p.result.source_url));row.append(v);}
+  if(p.result){const v=el('div',undefined,'position-result');v.append(el('strong',signed(p.amount*p.result.return_pct/100),p.result.return_pct>=0?'gain':'loss'),el('p',p.result.entry_date+' open '+localMoney(p.result.entry_price,p.result.currency)+' → '+(p.result.quote_time||p.result.exit_date)+' '+(p.result.price_type?'quote ':'close ')+localMoney(p.result.exit_price,p.result.currency),'status'),link('Price data ↗',p.result.source_url));if(p.result.currency&&p.result.currency!=='USD')v.append(el('p','USD result includes FX: '+p.result.fx_entry_usd_per_unit.toPrecision(6)+' → '+p.result.fx_exit_usd_per_unit.toPrecision(6)+' USD per '+p.result.currency+' · FX quote '+p.result.fx_quote_time,'status'),link('FX data ↗',p.result.fx_source_url));row.append(v);}
   $('basket').append(row);
  }
 }
 function storyDetail(d){
  const box=el('section',undefined,'story-detail');box.append(el('p',d.summary.tldr),link('Read the archived snapshot ↗',d.source.archive_url),el('p','Known by '+d.source.archived_at.slice(0,10)+' · archived Techmeme excerpt, not a current publisher page.','status'));
  let p=data.game.proposals[d.id];if(p&&(p.memo_version!==data.memo.version||p.summary_hash!==d.classifications.tech?.summary_hash))p=null;
- if(scored(d)){const b=action(p?.status==='running'?'Researching…':p?.status==='done'?'Research again':'Find index ideas',async()=>{await api('game/ideas',{article_id:d.id});await refresh();},'primary');b.disabled=data.preview||p?.status==='running';box.append(el('div',undefined,'actions'));box.lastChild.append(b);}
- if(p?.status==='running')box.append(el('p','The agent is comparing archived news and index exposures. It cannot see this week’s prices.','status'));
+ if(scored(d)){const b=action(p?.status==='running'?'Researching…':p?.status==='done'?'Research again':'Find stock opportunities',async()=>{await api('game/ideas',{article_id:d.id});await refresh();},'primary');b.disabled=data.preview||p?.status==='running';box.append(el('div',undefined,'actions'));box.lastChild.append(b);}
+ if(p?.status==='running')box.append(el('p','The agent is comparing archived news and company relationships. It cannot see this week’s prices.','status'));
  if(p?.error)box.append(el('p',p.error,'error'));
  if(p?.status==='done'){
-  box.append(el('h3','Possible index investments'),el('p',p.comment));
-  if(!p.ideas.length)box.append(el('p','No supported index idea. Try another news story.','status'));
+  box.append(el('h3','Company stock opportunities'),el('p',p.comment));
+  if(!p.ideas.length)box.append(el('p','No supported company stock idea. Try another news story.','status'));
   const form=el('form');form.className='investment-form';
-  for(let i=0;i<p.ideas.length;i++){const idea=p.ideas[i],label=el('label',undefined,'idea');const radio=el('input');radio.type='radio';radio.name='idea';radio.value=idea.id;radio.checked=i===0;label.append(radio,el('strong',idea.symbol),el('p',idea.thesis),el('p','Risk: '+idea.risk,'status'));form.append(label);}
+  for(let i=0;i<p.ideas.length;i++){const idea=p.ideas[i],label=el('label',undefined,'idea');const radio=el('input');radio.type='radio';radio.name='idea';radio.value=idea.id;radio.checked=i===0;label.append(radio,el('strong',(idea.company||idea.symbol)+' · '+idea.symbol),el('p',idea.exchange+' · '+({direct:'Direct business',supplier:'Supplier',customer:'Customer',competitor:'Competitor'}[idea.relationship]||idea.relationship),'status'),el('p',idea.thesis),el('p','Risk: '+idea.risk,'status'));const sources=el('div',undefined,'status');for(const ref of idea.sources||[]){const ev=p.evidence?.find(e=>e.id===ref);if(ev?.url)sources.append(link(ref+' ↗',ev.url),' ');}label.append(sources);form.append(label);}
   if(p.ideas.length&&data.game.round.status==='draft'){
    const amount=el('input');amount.type='number';amount.min=100;amount.max=10000;amount.step=100;amount.value=amounts.get(d.id)||1000;amount.className='stake-input';amount.setAttribute('aria-label','Paper investment amount');amount.oninput=()=>amounts.set(d.id,amount.value);
    const controls=el('div',undefined,'actions');controls.append(el('label','Investment / USD'),amount);const add=el('button',draft.some(p=>p.article_id===d.id)?'Update investment':'Add to portfolio','primary');add.type='submit';controls.append(add);form.append(controls);
-   form.onsubmit=e=>{e.preventDefault();try{const idea=p.ideas.find(v=>v.id===form.querySelector('input[name=idea]:checked')?.value),value=Number(amount.value);if(!idea||!Number.isFinite(value)||value<100)throw Error('Choose an index and an amount of at least $100.');const other=draft.filter(v=>v.article_id!==d.id);if(other.reduce((n,p)=>n+p.amount,0)+value>data.game.round.budget)throw Error('This exceeds the $10,000 paper budget.');draft=[...other,{article_id:d.id,idea_id:idea.id,amount:value,symbol:idea.symbol,title:d.summary.title}];saveDraft();key='';render();notice('Investment added. Review your portfolio above when ready.');}catch(err){notice(err.message);}};
+   form.onsubmit=e=>{e.preventDefault();try{const idea=p.ideas.find(v=>v.id===form.querySelector('input[name=idea]:checked')?.value),value=Number(amount.value);if(!idea||!Number.isFinite(value)||value<100)throw Error('Choose a company stock and an amount of at least $100.');const other=draft.filter(v=>v.article_id!==d.id);if(other.reduce((n,p)=>n+p.amount,0)+value>data.game.round.budget)throw Error('This exceeds the $10,000 paper budget.');draft=[...other,{article_id:d.id,idea_id:idea.id,amount:value,symbol:idea.symbol,company:idea.company,title:d.summary.title}];saveDraft();key='';render();notice('Investment added. Review your portfolio above when ready.');}catch(err){notice(err.message);}};
   }
   box.append(form);
   if(p.trace_id)box.append(el('p','MLflow trace: '+p.trace_id,'status'));
@@ -46,7 +47,7 @@ function storyDetail(d){
 }
 function render(){
  const game=data.game,p=data.memo;loadDraft();$('preview').hidden=!(data.preview||data.validation_fixture);
- $('periods').textContent='News: '+game.week.news_start+' to '+game.week.news_end+' · paper entry: first US session from '+game.week.market_start+'.';
+ $('periods').textContent='News: '+game.week.news_start+' to '+game.week.news_end+' · entry: first exchange session after the saved news cutoff.';
  $('memo-title').textContent=p.name;$('memo-preview').textContent=p.criteria;if(!dirty){$('fund-name').value=p.name;$('fund-memo').value=p.criteria;}
  $('memo-form').querySelector('button').disabled=data.preview||game.round.status!=='draft';
  $('import-news').hidden=game.week.valuation_mode==='latest';$('fetch').disabled=data.preview||['loading','ranking'].includes(game.status);$('import-news').disabled=data.preview||game.round.status!=='draft'||['loading','ranking'].includes(game.status);$('fetch').textContent=game.status==='loading'?'Loading news…':game.status==='ranking'?'Ranking the news…':game.week.valuation_mode==='latest'?(data.total?'Reload saved news':'Load saved news'):(data.total?'Reload last week':'Load last week’s news');

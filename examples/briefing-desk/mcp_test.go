@@ -15,6 +15,7 @@ import (
 
 func TestMCPArchiveCatalogAndToolRestrictions(t *testing.T) {
 	s := testServer(t)
+	s.agent.fetch = companyFixture()
 	s.clock = fixtureTime
 	s.initGame()
 	d, _, _ := s.store.add("https://example.com/archive")
@@ -43,7 +44,8 @@ func TestMCPArchiveCatalogAndToolRestrictions(t *testing.T) {
 		bad  bool
 	}{
 		{"list_news", map[string]any{}, false}, {"read_archive", map[string]any{"source_id": d.ID}, false},
-		{"search_archive", map[string]any{"query": "semiconductor"}, false}, {"index_universe", map[string]any{}, false},
+		{"search_archive", map[string]any{"query": "semiconductor"}, false}, {"search_companies", map[string]any{"query": "Samsung"}, false},
+		{"index_universe", map[string]any{}, true},
 		{"read_archive", map[string]any{"source_id": "https://attacker.example"}, true},
 		{"search_archive", map[string]any{"query": "chips", "url": "http://attacker"}, true},
 		{"market_snapshot", map[string]any{}, true}, {"list_news", map[string]any{"query": "ignored"}, true},

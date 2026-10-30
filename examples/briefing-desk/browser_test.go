@@ -72,7 +72,7 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 			reply(w, 200, map[string]any{"status": "completed", "output": []any{map[string]any{"type": "message", "content": []any{map[string]string{"type": "output_text", "text": string(text)}}}}})
 		}
 		switch {
-		case strings.HasPrefix(first.Content, "Research historical index ideas"):
+		case strings.HasPrefix(first.Content, "Research company stock opportunities"):
 			switch count {
 			case 0:
 				call("read_archive", `{"source_id":"original"}`)
@@ -81,10 +81,13 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 				call("search_archive", `{"query":"chip"}`)
 				return
 			case 2:
-				call("index_universe", "{}")
+				call("search_companies", `{"query":"Nvidia"}`)
+				return
+			case 3:
+				call("search_companies", `{"query":"AMD"}`)
 				return
 			}
-			finish(map[string]any{"comment": "Fixture archive-only research for the fund memo.", "ideas": []gameIdea{{Symbol: "SMH", Thesis: "Fixture semiconductor exposure based on archived chip demand.", Risk: "Fixture sector concentration and uncertain market transmission.", Sources: []string{"E1", "E3"}}, {Symbol: "QQQ", Thesis: "Fixture broad technology alternative to sector concentration.", Risk: "Fixture index dilution and uncertain financial transmission.", Sources: []string{"E1", "E3"}}}})
+			finish(map[string]any{"comment": "Fixture archive-only research for the fund memo.", "ideas": []gameIdea{{Symbol: "NVDA", Relationship: "direct", Thesis: "Fixture semiconductor exposure based on archived chip demand.", Risk: "Fixture company concentration and uncertain market transmission.", Sources: []string{"E1", "E3"}}, {Symbol: "AMD", Relationship: "competitor", Thesis: "Fixture distinct chipmaker alternative based on archived news.", Risk: "Fixture competitive risk and uncertain financial transmission.", Sources: []string{"E1", "E3"}}}})
 		case strings.HasPrefix(first.Content, "Explain this memo opportunity score:"):
 			finish(memoRationale{Reason: "Fixture explanation links the source evidence to the fund memo.", PointIDs: []string{"P1"}})
 		case strings.HasPrefix(first.Content, "Call get_headlines"):
@@ -184,6 +187,9 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 				body += fmt.Sprintf(`<item><title>Fixture %s chip story</title><link>https://www.techmeme.com/fixture/%s#story</link><description>&lt;a href="https://fixture.example/%s"&gt;Fixture %s chip story&lt;/a&gt;</description><pubDate>%s</pubDate></item>`, name, name, name, name, time.Now().Format(time.RFC1123Z))
 			}
 			body += `</channel></rss>`
+		case r.URL.Path == "/v1/finance/search":
+			typ = "application/json"
+			body = `{"quotes":[{"symbol":"NVDA","longname":"NVIDIA Corporation","exchDisp":"NASDAQ","quoteType":"EQUITY"},{"symbol":"AMD","longname":"Advanced Micro Devices","exchDisp":"NASDAQ","quoteType":"EQUITY"}]}`
 		case strings.Contains(r.URL.Hostname(), "finance.yahoo"):
 			typ = "application/json"
 			symbol := strings.TrimPrefix(r.URL.Path, "/v8/finance/chart/")
@@ -198,10 +204,10 @@ func terminalBrowserFixtures(t *testing.T, bundled bool) {
 				start = day.Add(9*time.Hour + 30*time.Minute)
 			}
 			close := 110.0
-			if symbol == "QQQ" {
+			if symbol == "QQQ" || symbol == "AMD" {
 				close = 95
 			}
-			body = fmt.Sprintf(`{"chart":{"result":[{"meta":{"symbol":%q,"currency":"USD","regularMarketPrice":%f,"regularMarketTime":%d},"timestamp":[%d,%d],"indicators":{"quote":[{"open":[100,100],"close":[%f,%f]}]}}]}}`, symbol, close, start.Add(2*time.Hour).Unix(), start.Unix(), start.AddDate(0, 0, 1).Unix(), close, close)
+			body = fmt.Sprintf(`{"chart":{"result":[{"meta":{"symbol":%q,"currency":"USD","instrumentType":"EQUITY","exchangeTimezoneName":"America/New_York","regularMarketPrice":%f,"regularMarketTime":%d},"timestamp":[%d,%d],"indicators":{"quote":[{"open":[100,100],"close":[%f,%f]}]}}]}}`, symbol, close, start.Add(2*time.Hour).Unix(), start.Unix(), start.AddDate(0, 0, 1).Unix(), close, close)
 		default:
 			name := strings.Trim(r.URL.Path, "/")
 			body = fmt.Sprintf(`<html><title>Fixture %s chip story</title><article>%s</article></html>`, name, strings.Repeat("A synthetic publisher text with enough readable content for the retrieval tool. ", 5))

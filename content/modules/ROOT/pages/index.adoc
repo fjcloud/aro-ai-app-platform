@@ -1,6 +1,6 @@
 = AI-Powered Developer Platform on ARO
 
-Build *Signal Desk*: a simple investment replay game. Load the saved Techmeme news, rank it for a semiconductor fund, research possible index exposure, allocate $10,000 of virtual money, then compare with the latest market prices.
+Build *Signal Desk*: a simple investment replay game. Load the saved Techmeme news, rank it for a semiconductor fund, research possible company stock exposure, allocate $10,000 of virtual money, then compare with the latest market prices.
 
 You play two roles. The *platform engineer* prepares OpenShift AI, a managed DeepSeek endpoint, one local T4 decision model and the delivery tools. The *developer* uses OpenCode and a short app contract to build and ship the game. Finally, inspect model usage, agent tools and MLflow traces.
 
@@ -20,14 +20,14 @@ Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry (coding)
 
 Techmeme archive → Go app → d3-mini on one T4 → relevance /100
                        └→ OpenShift AI Responses → DeepSeek / MaaS
-                                  ↕ archived news + index catalog tools
+                                  ↕ archived news + company lookup tools
 Browser → virtual portfolio → freeze → historical prices → paper result
 
 Playground → MCP → same archive tools      Agent → MLflow traces
 Git → Tekton → Argo CD → same Go app
 ----
 
-*DeepSeek* generates code and researches hypothetical index ideas, through separate MaaS keys. *d3-mini* is a small community model that scores relevance without generating prose. It is served by a pinned native runtime on OpenShift AI/KServe.
+*DeepSeek* generates code and researches hypothetical company stock opportunities, through separate MaaS keys. *d3-mini* is a small community model that scores relevance without generating prose. It is served by a pinned native runtime on OpenShift AI/KServe.
 
 The game separates three different values: memo relevance, the user's virtual allocation and observed historical performance. It never sends a real order. Market quotes are timestamped and may be delayed. This educational replay does not establish predictive performance or eliminate knowledge learned during model training.
 
