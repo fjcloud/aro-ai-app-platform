@@ -1,4 +1,4 @@
-// Live Signal Desk Playground: MaaS model, system prompt and actual MCP calls.
+// Live Card Scout Playground: MaaS model, system prompt and actual MCP calls.
 // CAPTURE_GUIDE=true refreshes the illustrated guide using the actual UI.
 const{chromium,expect}=require('@playwright/test');
 const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
@@ -13,33 +13,33 @@ await page.goto(base+'/gen-ai-studio/playground/'+encodeURIComponent(namespace))
 await expect(page.getByTestId('chatbot-message-bar')).toBeVisible({timeout:60000});
 if(await page.getByTestId('whats-new-skip-tour').isVisible())await page.getByTestId('whats-new-skip-tour').click();
 if(!await page.getByRole('tab',{name:'Model',exact:true}).count())await page.getByTestId('settings-button').click();
-await page.getByTestId('subscription-selector-toggle').click();await page.getByText('Signal Desk runtime',{exact:true}).click();
+await page.getByTestId('subscription-selector-toggle').click();await page.getByText('Card Scout runtime',{exact:true}).click();
 await screenshot(page,'model');
 await page.getByRole('tab',{name:'Prompt',exact:true}).click();
-await page.getByTestId('system-instructions-input').fill(fs.readFileSync(root+'/content/modules/ROOT/assets/attachments/signal-desk-agent-prompt.txt','utf8'));
+await page.getByTestId('system-instructions-input').fill(fs.readFileSync(root+'/content/modules/ROOT/assets/attachments/card-scout-agent-prompt.txt','utf8'));
 await page.getByTestId('system-instructions-input').evaluate(el=>{el.scrollTop=0});await screenshot(page,'prompt');
 await expect.poll(async()=>{try{return(await context.request.get(app+'/healthz',{timeout:8000})).status()}catch{return 0}},{timeout:600000,intervals:[3000]}).toBe(200);
 await page.getByRole('tab',{name:'MCP',exact:true}).click();
-await expect(page.getByRole('row').filter({hasText:'Signal-Desk'})).toBeVisible({timeout:30000});
+await expect(page.getByRole('row').filter({hasText:'Card-Scout'})).toBeVisible({timeout:30000});
 await screenshot(page,'mcp');
 await page.getByRole('checkbox').check();
 const connection=page.getByTestId('mcp-server-success-modal');
 await expect(connection).toBeVisible({timeout:60000});
-await expect(connection).toContainText('6 out of 6 tools are active.');
+await expect(connection).toContainText('1 out of 1 tools are active.');
 await expect(page.getByTestId('mcp-token-input')).toBeHidden();
 await screenshot(page,'connected');
 await connection.getByTestId('modal-submit-button').click();
-await expect(page.getByRole('button',{name:'View tools for Signal-Desk',exact:true})).toContainText('6 active',{timeout:30000});
+await expect(page.getByRole('button',{name:'View tools for Card-Scout',exact:true})).toContainText('1 active',{timeout:30000});
 await expect(page.getByTestId('mcp-token-input')).toBeHidden();
 console.log('Public MCP connected without a token.');
 
 const tools=page.getByRole('button',{name:/View tools/i});
 if(await tools.count()){
- await tools.click();for(const name of ['list_news','read_archive','search_archive','search_web','read_web','search_companies'])await expect(page.getByRole('dialog').getByText(name,{exact:true})).toBeVisible({timeout:15000});await screenshot(page,'tools');
+ await tools.click();for(const name of ['get_card_market_data'])await expect(page.getByRole('dialog').getByText(name,{exact:true})).toBeVisible({timeout:15000});await screenshot(page,'tools');
 
  const dialog=page.getByRole('dialog');if(await dialog.count())await dialog.getByRole('button',{name:'Close',exact:true}).first().click();else await page.keyboard.press('Escape');
 }
-const probes=[{tool:'search_web',question:'Use the search_web tool exactly once with query "SK Hynix memory demand". Summarize two returned eligible headlines and their dates. Stop after this one tool call.'}];
+const probes=[{tool:'get_card_market_data',question:'Use get_card_market_data exactly once for item-039. Verify its catalogue identity and rarity, then report Cardmarket EUR trend, 7-day average, update timestamp and source. Stop after this lookup. Never invent missing prices.'}];
 const names=[],responses=[];let actualModel='';
 for(const probe of probes){
  const stream=page.waitForResponse(r=>r.url().includes('/lsd/responses')&&r.request().method()==='POST',{timeout:180000});
@@ -55,6 +55,6 @@ await page.waitForTimeout(1000);await page.getByRole('tab',{name:'Model',exact:t
 await screenshot(page,'answer');
 
 const result={passed:true,project:namespace,model:actualModel,status:'completed',response_ids:responses,tools:names,mcp_authentication:'none',at:new Date().toISOString()};
-fs.writeFileSync(root+'/e2e/results/simple-desk/playground-current.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+fs.writeFileSync(root+'/e2e/results/card-scout/playground-current.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 
 }finally{await browser.close()}})().catch(e=>{console.error(e.stack);process.exitCode=1});

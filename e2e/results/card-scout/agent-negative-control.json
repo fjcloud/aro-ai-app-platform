@@ -1,0 +1,131 @@
+{
+  "display": {
+    "item_id": "item-035",
+    "status": "not_a_pokemon_card",
+    "card": null,
+    "currency": null,
+    "cardmarket_trend": null,
+    "cardmarket_average_7d": null,
+    "provider_updated_at": null,
+    "source_url": null
+  },
+  "evidence": {
+    "item_id": "item-035",
+    "status": "not_a_pokemon_card",
+    "pricing": null
+  },
+  "response": {
+    "background": false,
+    "created_at": 1793374687,
+    "completed_at": 1793374689,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "id": "resp_81db87da-2a38-4ac0-935c-f3ab3bee1476",
+    "incomplete_details": null,
+    "model": "maas-vllm-inference-1/deepseekv4pro",
+    "object": "response",
+    "output": [
+      {
+        "id": "mcp_list_a12a91ca-7272-407a-b940-2821a1e321ae",
+        "type": "mcp_list_tools",
+        "server_label": "card_scout_market",
+        "tools": [
+          {
+            "input_schema": {
+              "properties": {
+                "item_id": {
+                  "title": "Item Id",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "item_id"
+              ],
+              "title": "get_card_market_dataArguments",
+              "type": "object"
+            },
+            "name": "get_card_market_data",
+            "description": "Verify a prepared batch item's catalogue identity and get online market prices.\n\n    Only accepts item IDs from the fixed workshop dataset. This is a catalogue\n    lookup, not visual identity recognition. Retain provider dates, units and\n    variants. Market averages/trends are reference values, not a sale offer or\n    authentication/condition assessment. Missing prices remain unavailable.\n    "
+          }
+        ]
+      },
+      {
+        "id": "fc_d7e3477a-791e-4729-aac7-7acea5ed8c93",
+        "type": "mcp_call",
+        "arguments": "{\"item_id\": \"item-035\"}",
+        "name": "get_card_market_data",
+        "server_label": "card_scout_market",
+        "error": null,
+        "output": "{\n  \"item_id\": \"item-035\",\n  \"status\": \"not_a_pokemon_card\",\n  \"pricing\": null\n}"
+      },
+      {
+        "content": [
+          {
+            "text": "## Item-035 \u2014 Not a Pok\u00e9mon Card\n\nThis item is **not a Pok\u00e9mon card**, so no Pok\u00e9mon market pricing applies. The tool was unable to return any online market reference prices for this item because it falls outside the Pok\u00e9mon TCG catalogue.\n\n**D3 prediction note:** The earlier \"uncertain\" prediction is consistent with the fact that this item does not match a known Pok\u00e9mon card in the dataset.\n\nIf you'd like me to check a different item from the batch, just let me know which one.",
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "type": "message",
+        "id": "msg_381ead42-bbe4-4344-92b1-840ec977acce",
+        "status": "completed"
+      }
+    ],
+    "parallel_tool_calls": false,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt": null,
+    "status": "completed",
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_p": 1.0,
+    "top_logprobs": 0,
+    "tools": [
+      {
+        "type": "mcp",
+        "server_label": "card_scout_market",
+        "allowed_tools": [
+          "get_card_market_data"
+        ]
+      }
+    ],
+    "tool_choice": {
+      "server_label": "card_scout_market",
+      "type": "mcp",
+      "name": "get_card_market_data"
+    },
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 1441,
+      "output_tokens": 154,
+      "total_tokens": 1595,
+      "input_tokens_details": {
+        "cached_tokens": 512
+      },
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "instructions": "You are Card Scout, a concise trading-card research assistant.\nThe user selects an item from a fixed, mixed-era workshop dataset.\n\nCall get_card_market_data once for the selected item ID before quoting any\nidentity, rarity or price. The tool uses the dataset's known catalogue reference;\ndo not claim you visually identified the exact edition or number.\n\nUse the catalogue rarity to verify the earlier D3 prediction. Say when it differs.\nFor a non-Pokemon item, stop and explain that no Pokemon price applies.\n\nReport only the exact card name, set, collector number, verified rarity,\nCardmarket EUR trend, 7-day average, full provider update timestamp and source URL.\nDo not include other metrics, other currencies or other providers unless the\nuser explicitly asks. Preserve the exact metric names and currency. Never\nselect a different print, finish or grade to fill a missing value. If variants\nare ambiguous, say so. If the tool reports an error, missing prices or stale\ndata, report that limitation explicitly. Keep the note to one short sentence.\n\nDo not invent a price, imply rarity guarantees value, assess authenticity, or\npresent an aggregate market reference as a sale offer. Answer in English with\nthe requested JSON schema when one is supplied; otherwise use a compact card\nsummary and a source link. Do not repeat a successful tool call.\n",
+    "skills": null,
+    "max_tool_calls": null,
+    "reasoning": {
+      "effort": "none",
+      "generate_summary": null,
+      "summary": null
+    },
+    "max_output_tokens": 1000,
+    "service_tier": "default",
+    "metadata": null,
+    "presence_penalty": 0.0,
+    "store": false,
+    "safety_identifier": null
+  }
+}

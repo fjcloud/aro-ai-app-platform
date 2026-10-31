@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "at": "2026-10-30T16:10:21.905Z",
+  "dataset": {
+    "name": "Mixed-era collection",
+    "snapshot_at": "2026-10-30T15:30:47.498665+00:00",
+    "items": 51,
+    "pokemon_cards": 48,
+    "controls": 3,
+    "years": "1999–2023",
+    "identity_method": "Known catalogue references in the prepared dataset"
+  },
+  "completed": 51,
+  "failed": 0,
+  "rare_cards": 15,
+  "research_item": "item-030",
+  "research": {
+    "status": "ok",
+    "card": {
+      "name": "Impostor Professor Oak",
+      "number": "73",
+      "set": "Base Set",
+      "set_id": "base1",
+      "rarity": "Rare"
+    },
+    "currency": "EUR",
+    "trend": 9.65,
+    "average_7d": 8.64,
+    "provider": "Cardmarket",
+    "provider_updated_at": "2026-10-29T22:54:33.145Z",
+    "source_url": "https://api.tcgdex.net/v2/en/cards/base1-73",
+    "retrieved_at": "2026-10-30T16:10:18.894693+00:00",
+    "summary": "Here's the verified report for **item-030**:\n\n---\n\n**Card:** Impostor Professor Oak  \n**Set:** Base Set (base1)  \n**Collector Number:** 73  \n**Verified Rarity:** Rare  \n\n**D3 Prediction Check:** ✅ The D3 prediction of \"rare_or_higher\" is **confirmed** — the catalogue rarity is exactly \"Rare\".\n\n**Cardmarket (EUR) — Normal variant (#273768):**\n\n| Metric | Value |\n|---|---|\n| Trend | €9.65 |\n| 7-Day Average | €8.64 |\n\n**Provider Updated:** 2026-10-29T22:54:33.145Z  \n**Source:** https://api.tcgdex.net/v2/en/cards/base1-73\n\n---\n\n⚠️ Note: Multiple normal variants exist (unlimited, 1st Edition, and an unmarked variant). The prices above reflect the unlimited normal variant (product ID 273768); the 1st Edition variant has different pricing (trend €44.16, avg7 €37.83). If you need a specific edition confirmed, please clarify.",
+    "note": "Market reference; language, finish and condition can change the value.",
+    "trace_id": "tr-c59cec6aec1fd9de936e30d334073e87",
+    "trace_url": "https://rh-ai.apps.n79j08n7.eastus.aroapp.io/mlflow/#/experiments/2/traces?selectedEvaluationId=tr-c59cec6aec1fd9de936e30d334073e87&workspace=signal-desk-dev"
+  },
+  "checks": [
+    "real image inference recovered to 51/51 completed",
+    "pagination and whole-batch filters",
+    "controls offer no price action",
+    "native price research and exact evidence values",
+    "same-origin images",
+    "trace link",
+    "saved filter",
+    "390px mobile"
+  ]
+}

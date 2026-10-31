@@ -29,7 +29,7 @@ TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-signal-desk
 printf '%s/#%s?ai-provider=opencodeai/opencode\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL"
 ----
 
-Open the printed link in your browser. It clones the Signal Desk template and creates the workspace from its `devfile.yaml`.
+Open the printed link in your browser. It clones the Card Scout template and creates the workspace from its `devfile.yaml`.
 
 [NOTE]
 ====

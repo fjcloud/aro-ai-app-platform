@@ -1,0 +1,119 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: card-scout-data
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: managed-csi
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: card-scout-platform
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: card-scout-platform
+  template:
+    metadata:
+      annotations:
+        openshift.io/required-scc: restricted-v2
+      labels:
+        app.kubernetes.io/name: card-scout-platform
+    spec:
+      serviceAccountName: signal-desk
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: platform
+        image: ghcr.io/fjcloud/d3-mini-runtime@sha256:67c0e7f3c3e4826a23d027630c414fae251577d0efcc592860d417dccefa6ee1
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: signal-desk-config
+        env:
+        - name: DATA_DIR
+          value: /data
+        - name: AGENT_KEY_FILE
+          value: /etc/model/api-key
+        - name: SERVICE_CA_FILE
+          value: /etc/service-ca/service-ca.crt
+        ports:
+        - name: http
+          containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: '1'
+            memory: 512Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: model
+          mountPath: /etc/model
+          readOnly: true
+        - name: service-ca
+          mountPath: /etc/service-ca
+          readOnly: true
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 15
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: card-scout-data
+      - name: model
+        secret:
+          secretName: signal-desk-model
+      - name: service-ca
+        configMap:
+          name: signal-desk-service-ca
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: card-scout-platform
+spec:
+  selector:
+    app.kubernetes.io/name: card-scout-platform
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: card-scout-tools
+  annotations:
+    haproxy.router.openshift.io/timeout: 150s
+spec:
+  to:
+    kind: Service
+    name: card-scout-platform
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

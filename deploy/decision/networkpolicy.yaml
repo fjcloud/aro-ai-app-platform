@@ -16,7 +16,7 @@ spec:
           kubernetes.io/metadata.name: signal-desk-dev
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: signal-desk
+          app.kubernetes.io/name: card-scout-platform
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/part-of: che.eclipse.org

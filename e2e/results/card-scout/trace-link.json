@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "trace_id": "tr-231b5c447abd89b0bcddf8eeebbf40d1",
+  "trace_url": "https://rh-ai.apps.n79j08n7.eastus.aroapp.io/mlflow/#/experiments/2/traces?selectedEvaluationId=tr-231b5c447abd89b0bcddf8eeebbf40d1&workspace=signal-desk-dev",
+  "spans": [
+    "card.research",
+    "agent.responses",
+    "tool.get_card_market_data"
+  ],
+  "at": "2026-10-30T16:05:15.091Z"
+}
