@@ -15,7 +15,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
   await expect(page.getByRole('button',{name:'Create playground',exact:true})).toHaveCount(0);
   if(!await page.getByRole('tab',{name:'Model',exact:true}).count())await page.getByTestId('settings-button').click();
   await page.getByTestId('subscription-selector-toggle').click();
-  await page.getByText('Signal Desk runtime',{exact:true}).click();
+  await page.getByText('Card Scout runtime',{exact:true}).click();
   const stream=page.waitForResponse(r=>r.url().includes('/lsd/responses')&&r.request().method()==='POST',{timeout:180000});
   await page.getByTestId('chatbot-message-bar').fill('Reply with exactly CLI_BACKEND_OK.');
   await page.getByTestId('chatbot-message-bar').press('Enter');
@@ -28,7 +28,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
   const text=done.output.filter(o=>o.type==='message').flatMap(o=>o.content||[]).map(c=>c.text||'').join('');
   assert.ok(text.includes('CLI_BACKEND_OK'),'Missing actual model answer');
   const result={passed:true,project:namespace,backend_created_by:'CLI OGXServer',ui_creation_used:false,
-   live_model:true,model:done.model,subscription:'Signal Desk runtime',response_status:done.status,
+   live_model:true,model:done.model,subscription:'Card Scout runtime',response_status:done.status,
    marker_verified:true,at:new Date().toISOString()};
   const output=path.join(__dirname,'results/native-agent-cli');fs.mkdirSync(output,{recursive:true});
   await expect(page.getByTestId('chatbot')).toContainText('CLI_BACKEND_OK');

@@ -1,105 +1,96 @@
 = Lab 2.2 — Test the Model APIs
 
-*Developer · Dev Spaces terminal.* Before writing the app, call each model independently with `curl`. Format every JSON response with `jq`. Keep credentials in shell variables; never paste them into OpenCode, Git or the browser app.
+*Developer · Dev Spaces terminal.* Test each capability before writing the app.
+Format JSON responses with `jq`. Keep the injected MaaS key out of Git, OpenCode
+prompts and the browser.
 
 == Two models, two jobs
 
-A language model generates text and tool calls. A *decision model* evaluates a structured question against supplied facts and a rubric. Here, d3-mini returns five probabilities and a relevance score from 0 to 4; it does not write an explanation or predict a stock return. DeepSeek later explains hypothetical company stock exposure using archive tools.
+*d3-mini* is a multimodal decision model: it reads an image and chooses among
+supplied options, returning their probabilities. Here it decides whether an image
+shows a Pokémon card and whether its printed rarity is common, uncommon or rare.
+It does not generate a description or estimate market value.
 
-[cols="1,2,2",options="header"]
-|===
-| Model | Credential | API
-| DeepSeek | Injected MaaS key: `$OPENAI_API_KEY` | OpenAI-compatible Chat Completions through OpenShift AI MaaS
-| d3-mini | None | Internal HTTP `/v1/systemone`, called directly
-|===
+*DeepSeek* generates the Go application in OpenCode and powers the runtime agent.
+The agent verifies the selected catalogue reference through a read-only MCP tool.
+Its model endpoint is provided by OpenShift AI MaaS.
 
-d3-mini runs on the T4 and accepts the native decision API directly. DeepSeek uses the injected MaaS key.
-
-== Test d3-mini
+== Test an image on the T4
 
 [source,sh,role=execute]
 ----
 D3_URL=http://d3-mini.decision-serving.svc.cluster.local:8080
+CARD_SCOUT_URL=http://card-scout-platform.signal-desk-dev.svc.cluster.local:8080
 curl --fail-with-body -sS "$D3_URL/v1/models" | \
   jq '{id:.data[0].id,device:.data[0].device,dtype:.data[0].dtype}'
-----
-
-Expect model ID `d3-mini`, `device: cuda:0` and `dtype: float16`. No credential is needed for this internal decision service.
-
-This small synthetic news example tests the API; it is not part of the archived game corpus:
-
-[source,sh,role=execute]
-----
-cat > /tmp/d3-score.json <<'JSON'
-{
-  "model": "vllm-sr/d3-mini",
-  "state": {
-    "investment_memo": "We invest in semiconductors and electronic components. Research material changes in chip demand, capacity, margins and supply.",
-    "source_summary": "A major chipmaker raises its revenue guidance after stronger semiconductor demand."
-  },
-  "questions": {
-    "opportunity": {
-      "type": "score",
-      "instructions": "Rate relevance and materiality for this fund. Positive and negative catalysts can matter. This is not a price forecast.",
-      "criteria": [
-        "0: No connection to the fund.",
-        "1: Weak, indirect connection.",
-        "2: Relevant but limited evidence or impact.",
-        "3: Direct, concrete catalyst worth researching.",
-        "4: Direct, material, well-evidenced catalyst."
-      ],
-      "require_full_input": true
-    }
+curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-039" -o /tmp/card-scout.png
+base64 -w0 /tmp/card-scout.png > /tmp/card-scout.b64
+jq -n --rawfile image /tmp/card-scout.b64 '{
+  model:"vllm-sr/d3-mini",
+  state:"Inspect the attached image and classify the trading card.",
+  images:["data:image/png;base64," + $image],
+  questions:{
+    card_kind:{type:"choice",instructions:"Is this a Pokemon TCG card?",criteria:{pokemon_tcg:"A Pokemon Trading Card Game card",other_card:"Another card game",not_a_card:"Not a trading card",uncertain:"Cannot determine"}},
+    rarity:{type:"choice",instructions:"Read the printed rarity. A classic circle is Common, diamond Uncommon, star Rare. Character popularity is not rarity.",criteria:{common:"Common",uncommon:"Uncommon",rare_or_higher:"Rare or a higher rarity tier",not_applicable:"Not a Pokemon TCG card",uncertain:"Rarity cannot be determined"}}
   }
-}
-JSON
-curl --fail-with-body -sS --max-time 120 \
-  "$D3_URL/v1/systemone" \
-  -H 'Content-Type: application/json' --data-binary @/tmp/d3-score.json | \
-  jq '{score:.answers.opportunity.score,probabilities:.answers.opportunity.probabilities,coverage:.answers.opportunity.input_coverage}'
+}' > /tmp/card-scout-decision.json
+curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
+  -H 'Content-Type: application/json' --data-binary @/tmp/card-scout-decision.json | jq '.answers'
 ----
 
-Change only the fund memo and compare the same news:
+Expect `device: cuda:0` and `dtype: float16`. D3 needs no API key. The image is
+Toedscool from Scarlet & Violet; compare the returned choices and probabilities.
+A model probability is not a calibrated guarantee or a price prediction.
+
+Repeat with the Yu-Gi-Oh! control:
 
 [source,sh,role=execute]
 ----
-jq '.state.investment_memo = "We invest in grocery retailers and consumer marketplaces. Research store sales, retail margins and merchant activity."' \
-  /tmp/d3-score.json > /tmp/d3-retail.json
-curl --fail-with-body -sS --max-time 120 \
-  "$D3_URL/v1/systemone" \
-  -H 'Content-Type: application/json' --data-binary @/tmp/d3-retail.json | \
-  jq '{score:.answers.opportunity.score,probabilities:.answers.opportunity.probabilities,coverage:.answers.opportunity.input_coverage}'
+curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-035" -o /tmp/other-card.jpg
+base64 -w0 /tmp/other-card.jpg > /tmp/other-card.b64
+jq --rawfile image /tmp/other-card.b64 '.images=["data:image/jpeg;base64," + $image]' /tmp/card-scout-decision.json > /tmp/other-card-decision.json
+curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
+  -H 'Content-Type: application/json' --data-binary @/tmp/other-card-decision.json | jq '.answers'
 ----
-
-Explain why the memo changes relevance; do not expect an exact score. The game displays `score / 4 × 100`. A high score means *worth researching*, not BUY, confidence or probability of profit. Continue only with complete input coverage.
 
 == Test DeepSeek through MaaS
-
-The platform injects the base URL and your workshop MaaS key. No Azure account key belongs in this workspace.
 
 [source,sh,role=execute]
 ----
 curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Authorization: Bearer $OPENAI_API_KEY" -H 'Content-Type: application/json' \
-  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"In one sentence, explain why news relevance is different from expected investment return."}],"max_completion_tokens":256}' | jq '{model,answer:.choices[0].message.content,usage}'
+  -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"In one sentence, explain why a trading card rarity is different from its market value."}],"max_completion_tokens":256}' | jq '{model,answer:.choices[0].message.content,usage}'
 ----
 
-Expect an actual response and measured token usage. HTTP 429 means a MaaS allowance or provider throughput limit; do not switch models or replace inference with a rule.
+Expect an actual answer and measured usage. A quota error is a visible failure;
+do not switch the workshop model or substitute a keyword rule.
 
-== Test the runtime agent API
+== Test the native agent and its tool
 
-The app will use the native OpenShift AI Responses service with a separate runtime key. For this developer probe, your existing workshop MaaS key also grants access to the same model:
+For this probe, use the injected developer MaaS key with the native Responses
+API. The prepared service has a separate runtime key for application research.
 
 [source,sh,role=execute]
 ----
 PROVIDER_DATA=$(jq -cn --arg key "$OPENAI_API_KEY" '{vllm_api_token:$key}')
-curl --fail-with-body -sS --max-time 180 \
-  http://lsd-genai-playground-service.signal-desk-dev.svc.cluster.local:8321/v1/responses \
+jq -n --arg mcp "$CARD_SCOUT_URL/mcp" '{
+  model:"maas-vllm-inference-1/deepseekv4pro",
+  input:"Use get_card_market_data once for item-039. Report its exact catalogue identity and Cardmarket EUR trend, 7-day average, update timestamp and source. Do not invent missing prices.",
+  tools:[{type:"mcp",server_label:"card_scout_market",server_url:$mcp,require_approval:"never",allowed_tools:["get_card_market_data"]}],
+  tool_choice:{type:"mcp",server_label:"card_scout_market",name:"get_card_market_data"},
+  max_infer_iters:4,reasoning:{effort:"none"},store:false
+}' > /tmp/card-scout-agent.json
+curl --fail-with-body -sS --max-time 180   http://lsd-genai-playground-service.signal-desk-dev.svc.cluster.local:8321/v1/responses \
   -H "X-OGX-Provider-Data: $PROVIDER_DATA" -H 'Content-Type: application/json' \
-  -d '{"model":"maas-vllm-inference-1/deepseekv4pro","input":"Reply with one short sentence about evidence-based research.","store":false}' | jq '{model,status,output,usage}'
+  --data-binary @/tmp/card-scout-agent.json | jq '{status,output,usage}'
 unset PROVIDER_DATA
 ----
 
-You have tested the GPU decision model, the coding LLM and the app's native agent protocol independently. The app contract supplies the fixed runtime endpoints and server-side credentials; the coding assistant must reuse them.
+Check `status: completed`, an actual `mcp_call` for `item-039`, and dated source
+data. A plausible answer without the tool call is not a successful test.
+Prices can be missing; do not replace them with a guess.
 
-Continue to xref:300-developer/lab_3_opencode_dev.adoc[Lab 2.3 — Build and Ship Signal Desk].
+The generated application will use only the prepared Card Scout API. All three
+model/tool paths remain owned by the platform.
+
+Continue to xref:300-developer/lab_3_opencode_dev.adoc[Lab 2.3 — Build and Ship Card Scout].

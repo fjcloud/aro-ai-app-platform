@@ -1,7 +1,12 @@
 # Card Scout validation — 30 October 2026
 
-This is a prepared dataset and platform feasibility experiment. It is not yet
-the deployed application or the published workshop exercise.
+The prepared service and dataset are deployed in the ARO lab. OpenCode with
+DeepSeek generated the Go application from the contract; it did not copy the
+existing finance application. The current browser/live checks are in
+`app-live.json`, with isolated edge-case fixtures in `app-fixtures.json`.
+
+The original feasibility probes below are retained separately from deployment
+acceptance. The guide now uses Card Scout.
 
 ## Mixed-era image analysis
 
@@ -55,9 +60,21 @@ answers without a matching successful call. Checks also rejected a different
 item ID and an incomplete response. UI numeric fields come from tool evidence;
 model prose is not parsed for prices.
 
-The temporary server and port forwards were removed after testing. Packaging a
-permanent MCP service, the batch API and complete MLflow tracing remains part of
-the application/workshop implementation.
+The feasibility server and port forwards were removed after testing. The
+permanent `card-scout-platform` service now provides the batch API and MCP tool
+under restricted-v2, with separate persistent state. Its actual native research
+response is in `platform-research.json`. `persisted-trace.json` and the graph
+screenshot verify a single parent/child trace: `card.research` → `agent.responses`
+→ `tool.get_card_market_data`, including the actual tool inputs and output.
+
+The first deployed batch exposed a stale NetworkPolicy selector for the earlier
+application. It was corrected to match the actual prepared-service Deployment,
+and a regression test now checks this relationship. Retrying incomplete items
+recovered the full batch without replacing successful results.
+
+`playground-current.json` records an actual native UI test with one active MCP
+tool and no extra connector token. The guide screenshots were captured from that
+run. Browser tests use Chromium with `--use-mock-keychain`.
 
 ## Dataset integrity
 

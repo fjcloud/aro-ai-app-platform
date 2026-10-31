@@ -1,21 +1,29 @@
 = Conclusion
 
-You prepared two complementary model paths:
+You prepared complementary AI capabilities:
 
-* *DeepSeek on Foundry*, published through OpenShift AI MaaS, powered coding in Dev Spaces and runtime research with separate keys and quotas.
-* *d3-mini on one T4*, served through a custom native OpenShift AI/KServe runtime, ranked archived news against a fund memo.
+* *DeepSeek through OpenShift AI MaaS* generated the Go application and powered
+  the native price agent, using separate coding and runtime credentials.
+* *d3-mini on one T4*, served by OpenShift AI/KServe, classified a mixed-era
+  collection from real card images.
 
-Signal Desk connected archived news, memo-relative relevance, hypothetical index research and a virtual portfolio with observed historical prices. Tekton built the image and Argo CD delivered the matching Git revision. The Playground exercised bounded read-only tools; MLflow showed model and tool activity.
+Card Scout's small generated UI used a prepared platform API for analysis,
+ranking, catalogue verification and dated market prices. Tekton built its image;
+Argo CD delivered the exact Git revision. The Playground exercised the same MCP
+tool, and MLflow exposed model inputs, tool evidence and outputs.
 
-A relevance score is not a profit forecast. Results are provisional while the week is running, and historical model knowledge prevents claiming a blind backtest. No real order was sent.
+A model prediction can differ from catalogue rarity. Rarity is distinct from
+market value; provider aggregates do not determine a physical card's condition,
+authenticity or final sale price.
 
 == Costs and environment lifetime
 
-MaaS token usage and GPU utilization are different measurements. Foundry charges tokens; the T4 VM, CPU workers and disks remain provisioned while idle. The assigned RHDP environment expires on its schedule. Export code and news you want to keep before then.
+MaaS token usage and GPU utilization are different measurements. Foundry charges
+for tokens; the T4 VM, CPU workers and disks remain provisioned while idle.
+The RHDP environment expires on its assigned schedule. Export your code before then.
 
 == Explore further
 
-* Change the fund memo and compare rankings for the same archived corpus.
-* Compare agent hypotheses with realized outcomes, including losses and missing data.
-* Use MLflow to compare tool choices, latency and failures after a prompt change.
-* Extend the company lookup or historical source only with source validation and explicit accounting assumptions.
+* Compare predictions across eras and inspect uncertain or incorrect results.
+* Add catalogue references to a new prepared batch and keep labels out of inference.
+* Compare a prompt change using the same images and MLflow traces.

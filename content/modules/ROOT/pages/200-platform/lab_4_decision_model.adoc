@@ -1,7 +1,7 @@
 = Lab 1.6 — Serve d3-mini
 :page-aliases: 200-platform/lab_4_whisper.adoc
 
-DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 and scores a news item's relevance to an investment memo. The developer will compare it with the language model using curl + jq in Lab 2.2.
+DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 and classifies card images and their printed rarity. The developer will compare it with the language model using curl + jq in Lab 2.2.
 
 [NOTE]
 ====
@@ -52,7 +52,7 @@ oc get pods -n decision-serving
 
 OpenShift AI starts the published runtime on the T4. On its first start, it downloads the pinned model into the persistent cache. Later starts reuse those weights. No image build, Git credentials or Tekton runtime pipeline is needed in this lab.
 
-Expect a Ready `d3-mini` inference service and no public model Route. The application endpoint is fixed:
+Expect a Ready `d3-mini` inference service and no public model Route. The decision endpoint is fixed:
 
 [source,text]
 ----
@@ -63,7 +63,7 @@ A Ready GPU node does not establish model readiness. Wait for `InferenceService/
 
 == Make the model available to developers
 
-Developers and the application call the same internal service directly. d3-mini requires no API key or authentication proxy in this workshop. Its NetworkPolicy allows the application, Dev Spaces and monitoring namespaces; no public Route is created.
+Developers and the prepared Card Scout service call the same internal model directly. d3-mini requires no API key or authentication proxy in this workshop. Its NetworkPolicy allows the Card Scout platform service, Dev Spaces and monitoring namespaces; no public Route is created.
 
 [source,text]
 ----

@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "card": {
+    "name": "Toedscool",
+    "number": "201",
+    "set": "Scarlet & Violet",
+    "set_id": "sv01",
+    "rarity": "Illustration rare"
+  },
+  "currency": "EUR",
+  "trend": 4.09,
+  "average_7d": 4.26,
+  "provider": "Cardmarket",
+  "provider_updated_at": "2026-10-29T22:54:33.151Z",
+  "source_url": "https://api.tcgdex.net/v2/en/cards/sv01-201",
+  "retrieved_at": "2026-10-30T16:04:07.575417+00:00",
+  "summary": "Here's the verified report for **item-039**:\n\n---\n\n**Card:** Toedscool  \n**Set:** Scarlet & Violet (sv01)  \n**Collector Number:** 201  \n**Rarity:** Illustration rare  \n\n\u2705 **D3 Prediction Verified:** D3 predicted *rare_or_higher*, and the catalogue confirms *Illustration rare*, which indeed falls into that category.\n\n**Cardmarket (EUR):**\n- **Trend:** \u20ac4.09\n- **7-Day Average:** \u20ac4.26\n- **Data Updated:** 2026-10-29T22:54:33.151Z\n\n**Source:** https://api.tcgdex.net/v2/en/cards/sv01-201",
+  "note": "Market reference; language, finish and condition can change the value.",
+  "trace_id": "tr-231b5c447abd89b0bcddf8eeebbf40d1",
+  "trace_url": "https://rh-ai.apps.n79j08n7.eastus.aroapp.io/mlflow/#/experiments/2/traces?selectedEvaluationId=tr-231b5c447abd89b0bcddf8eeebbf40d1&workspace=signal-desk-dev"
+}

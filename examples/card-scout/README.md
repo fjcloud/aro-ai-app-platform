@@ -1,9 +1,10 @@
 # Card Scout
 
-A small workshop experiment: analyze a mixed box of cards, sort likely rare
-cards first, then ask an OpenShift AI agent to check an exact card's market data.
-This prepares the dataset and platform tools; it does not replace Signal Desk or
-change the published workshop yet.
+Prepared platform for the ARO workshop: analyze a mixed box of cards, sort likely
+rare cards first, then ask a native OpenShift AI agent for catalogue verification
+and dated market data. The Go application is generated separately from
+[its contract](https://github.com/fjcloud/go-app-template/blob/aro-signal-desk/APP_CONTRACT.md);
+no completed UI application is supplied here to copy.
 
 ## Prepared dataset
 
@@ -62,6 +63,17 @@ Model probabilities are not calibrated guarantees of correctness.
 
 ## Check the price with the native agent
 
+`platform_service.py` serves the fixed dataset, background analysis jobs and
+persisted results. Its app-facing API is:
+
+| Route | Purpose |
+| --- | --- |
+| `GET /api/batch` | Ranked items, progress, errors and cached research |
+| `POST /api/batch/analyze` | Start/resume incomplete model decisions |
+| `GET /assets/item-NNN` | A fixed, checksummed image |
+| `POST /api/cards/item-NNN/research` | Native agent lookup with verified tool evidence |
+| `/mcp` | Read-only Streamable HTTP tool |
+
 `market_tools.py` exposes the read-only MCP tool `get_card_market_data(item_id)`.
 It verifies the fixed catalogue identity and fetches current TCGdex market data.
 It only accepts known batch item IDs and has no trading or purchasing capability.
@@ -75,13 +87,14 @@ For an already running MCP service and an OGX port forward:
 
 ```bash
 python3 examples/card-scout/probe_agent.py item-039 \
-  --mcp-url http://card-scout-tools:18334/mcp \
+  --mcp-url http://card-scout-platform.signal-desk-dev.svc.cluster.local:8080/mcp \
   --key-file /path/to/your/maas-key \
   --prediction rare_or_higher
 ```
 
-The MCP URL above is an example service address, not a service deployed by this
-experiment. The smoke test used a temporary loopback MCP process in the OGX pod.
+The MCP URL is reachable from the native OGX backend. The developer calls the
+prepared service; its MaaS key and projected MLflow credential stay on the
+platform service. The generated app needs neither.
 
 Keep provider currency, metric, update timestamp and source link. Missing prices
 remain unavailable. Do not combine normal, reverse-holo, first-edition, graded or
@@ -94,9 +107,16 @@ The minimal application flow is:
 Mixed batch → Analyze → Ranked cards → Check price → Agent summary + source
 ```
 
-The eventual Go UI can display cards, call the prepared analysis service, and
-render the agent response. Batch orchestration, MCP hosting and end-to-end MLflow
-instrumentation still need packaging before this becomes the workshop exercise.
+The generated Go UI displays cards and proxies this API. The prebuilt Red Hat
+UBI Python image includes the source dataset images. `deploy/card-scout` pins its
+digest and defines the service, HTTPS MCP Route and persistent analysis volume.
+The setup helper handles dynamic MaaS and MLflow values; ordinary resources are
+applied with `oc apply -k deploy/card-scout`.
+
+MLflow records batch and per-image decisions, the Responses request and visible
+answer, and the actual MCP catalogue/price input and output. Trace context passes
+through the native agent to the MCP tool. Keys and image bytes are excluded.
+The app receives a direct trace URL for the selected research.
 
 ## Sources and validation
 

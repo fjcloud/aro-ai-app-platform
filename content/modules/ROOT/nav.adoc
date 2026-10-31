@@ -18,7 +18,7 @@
 
 * xref:300-developer/lab_1_devspace_launch.adoc[Lab 2.1 — Launch Your Dev Space]
 * xref:300-developer/lab_2_model_apis.adoc[Lab 2.2 — Test the Model APIs]
-* xref:300-developer/lab_3_opencode_dev.adoc[Lab 2.3 — Build and Ship Signal Desk]
+* xref:300-developer/lab_3_opencode_dev.adoc[Lab 2.3 — Build and Ship Card Scout]
 
 *Act 3 — Observe and evaluate*
 

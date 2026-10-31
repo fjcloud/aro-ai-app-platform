@@ -1,8 +1,8 @@
 = AI-Powered Developer Platform on ARO
 
-Build *Signal Desk*: a simple investment replay game. Load the saved Techmeme news, rank it for a semiconductor fund, research possible company stock exposure, allocate $10,000 of virtual money, then compare with the latest market prices.
+Build *Card Scout*: analyze a mixed-era trading-card collection, rank likely rare cards and ask a native OpenShift AI agent to verify a selected card and retrieve dated market prices.
 
-You play two roles. The *platform engineer* prepares OpenShift AI, a managed DeepSeek endpoint, one local T4 decision model and the delivery tools. The *developer* uses OpenCode and a short app contract to build and ship the game. Finally, inspect model usage, agent tools and MLflow traces.
+You play two roles. The *platform engineer* prepares OpenShift AI, a managed DeepSeek endpoint, one local T4 decision model and the delivery tools. The *developer* uses OpenCode and a short app contract to generate and ship a small Go UI from scratch. Finally, inspect model usage, agent tools and MLflow traces.
 
 == The workshop in five steps
 
@@ -10,7 +10,7 @@ You play two roles. The *platform engineer* prepares OpenShift AI, a managed Dee
 . *Infrastructure:* add one CPU worker and one single-T4 worker, then enable platform instances.
 . *Models:* deploy DeepSeek on Foundry, publish it through OpenShift AI MaaS, and serve d3-mini on the T4.
 . *Developer preflight:* from Dev Spaces, explain and test each API independently with `curl | jq`, using the MaaS key for DeepSeek.
-. *Application:* build from `APP_CONTRACT.md`, collect the saved Techmeme news, rank it for the fund, allocate virtual money and compare with the latest available market quote.
+. *Application:* generate from `APP_CONTRACT.md`, analyze the prepared images, browse rarity predictions and check a price through the native agent.
 
 == What you build
 
@@ -18,18 +18,21 @@ You play two roles. The *platform engineer* prepares OpenShift AI, a managed Dee
 ----
 Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry (coding)
 
-Techmeme archive → Go app → d3-mini on one T4 → relevance /100
-                       └→ OpenShift AI Responses → DeepSeek / MaaS
-                                  ↕ archived news + company lookup tools
-Browser → virtual portfolio → freeze → historical prices → paper result
-
-Playground → MCP → same archive tools      Agent → MLflow traces
+Fixed mixed-era images → Card Scout platform → d3-mini on T4 → rarity ranking
+Browser → generated Go UI/proxy → native OpenShift AI agent → DeepSeek / MaaS
+                                                ↕ read-only MCP → TCGdex prices
+Playground → same MCP tool                 Model and tool spans → MLflow
 Git → Tekton → Argo CD → same Go app
 ----
 
-*DeepSeek* generates code and researches hypothetical company stock opportunities, through separate MaaS keys. *d3-mini* is a small community model that scores relevance without generating prose. It is served by a pinned native runtime on OpenShift AI/KServe.
+*DeepSeek* generates the application and powers its price agent, using separate
+MaaS keys. *d3-mini* classifies images without generating prose. OpenShift AI/KServe
+serves it on one T4. The prepared service owns models, tools, persistence and
+tracing; the generated application calls one API and needs no model credential.
 
-The game separates three different values: memo relevance, the user's virtual allocation and observed historical performance. It never sends a real order. Market quotes are timestamped and may be delayed. This educational replay does not establish predictive performance or eliminate knowledge learned during model training.
+The dataset spans eight eras, from 1999 to 2023. Its catalogue references are
+known; model predictions and verified catalogue rarity remain distinct. Rarity
+is not market value. Prices retain their currency, source and update timestamp.
 
 == Workshop structure
 
@@ -38,7 +41,7 @@ The game separates three different values: memo relevance, the user's virtual al
 | Act | Role | Labs
 | 0 — Get in | Platform Engineer | Connect to the assigned RHDP ARO environment and detect its resource group.
 | 1 — Build the platform | Platform Engineer | Apply all operator manifests; add one D8 CPU worker and one single-T4 worker; enable platform instances; deploy DeepSeek and publish it through MaaS; serve d3-mini and prepare scoped developer access, the runtime agent and tracing.
-| 2 — First day | Developer | Open Dev Spaces; learn the decision-model contract and test both models independently with curl + jq; build Signal Desk from APP_CONTRACT.md; ship through Tekton and Argo CD; replay the saved news against the latest available market quote.
+| 2 — First day | Developer | Open Dev Spaces; learn the decision-model contract and test both models independently with curl + jq; generate Card Scout from APP_CONTRACT.md; ship through Tekton and Argo CD; analyze images and verify a card price.
 | 3 — Observe and evaluate | Both | Compare coding, agent and GPU usage; inspect traces and exercise the same bounded tools in the Playground.
 |===
 

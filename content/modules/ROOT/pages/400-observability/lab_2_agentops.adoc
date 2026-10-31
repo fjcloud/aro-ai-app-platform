@@ -1,97 +1,87 @@
 = Lab 3.2 — AgentOps: Tools, Traces and Evidence
 
-The app has produced an investment hypothesis. Verify how it reached that hypothesis, using tools and traces rather than an attractive sentence or a profitable replay outcome.
+Verify a price lookup using the actual catalogue evidence and model/tool spans.
+The same prepared MCP tool is available in the OpenShift AI Playground.
 
-[NOTE]
-====
-*Persona:* Developer +
-*Time:* 20–30 minutes +
-*Outcome:* Actual archived evidence, visible MLflow traces and the same read-only tools in the Playground.
-====
+== Follow one price check
 
-== Follow one research request
+In Card Scout, click *Check price* on an analyzed Pokémon card, then open its
+*View MLflow trace* link. The link selects workspace `signal-desk-dev`, experiment
+`card-scout` and that exact trace.
 
-In Signal Desk, open a ranked story and click *Find stock opportunities* (or *Research again* for a fresh trace). Read the explanation, proposed company, business relationship and risk. Click *View MLflow trace* to open that exact research and its graph. Expand *Show reasoning & sources* for the full explanation and finance skill provenance. *Research again* is inside that section.
+Open *Details & Timeline → Graph*. Expect `card.research`, `agent.responses` and
+`tool.get_card_market_data`. Select *Inputs / Outputs*: verify the selected item,
+exact catalogue ID, edition/number, rarity, provider currency, update timestamp
+and returned prices. The model span records the visible response and reported
+usage. Provider headers, keys and hidden reasoning are excluded.
 
-The link selects workspace `signal-desk-dev`, experiment `signal-desk` and the trace automatically. Open *Details & Timeline* and its *Graph* to follow the calls. Expect `game.research`, `agent.game_ideas` and actual `tool.read_archive`, `tool.search_archive`, `tool.search_web`, `tool.read_web` and `tool.search_companies` spans, separated by `llm.research.*` calls. D3 scores appear as separate `decision.classify` traces; paper valuation appears as `game.settle`.
+Batch traces contain `cards.analyze_batch` and individual `d3.classify_card`
+spans. Image hashes and the rubric are recorded; raw image bytes are omitted.
+Inspect an uncertain or incorrect classification rather than assuming a high
+probability guarantees correctness.
 
-For a new research, check the root span attributes `research.skill.name` and `research.skill.upstream_revision`: they identify the bundled Anthropic idea-generation adaptation actually supplied to DeepSeek. The skill adds a method, not training or new market data.
+The app's numeric price fields come from the successful MCP result. A model
+answer without a matching call is rejected. An agent may write an incorrect
+sentence even after a tool call: compare its answer with evidence in the trace.
+If a trace is absent, inspect MLflow permissions and exporter configuration;
+a visible UI answer alone does not prove trace export succeeded.
 
-Select each tool node and inspect *Inputs / Outputs*: search queries, source IDs, eligible sources, excluded results and their reasons, publisher coverage/errors and actual excerpts. Each `llm.research.*` node shows the request payload and visible model response, including function calls and the final answer. Provider headers, keys and hidden reasoning blocks are excluded. Search results excluded by date are retained in the audit, not sent back to the model.
+== Test the agent in the Playground
 
-Inspect model/tool durations, model identity and reported usage. An archive query and an LLM request have different latency. Traces omit keys, full source text and portfolio contents. If the trace is absent, inspect exporter configuration and MLflow workspace permissions; a visible answer alone does not prove trace export succeeded.
+Open *Red Hat OpenShift AI → Gen AI studio → Playground*. Select project
+`signal-desk-dev`. In *Settings → Model*, select
+`maas-vllm-inference-1/deepseekv4pro` and *Card Scout runtime*.
 
-The agent uses archived news and public web sources dated at or before the saved cutoff. Company lookup returns current names, tickers and exchanges, without prices or historical fundamentals. Web search rejects undated and newer results. Publisher text is used only with eligible publication/modification metadata; blocked, changed or undated pages use the explicitly dated search excerpt. Neither a search-index date nor a current fetch proves that the page is an unchanged historical snapshot. There is no market-price tool. News facts stay within the saved cutoff; proposed business links and benefits remain hypotheses unless supported by the archived sources.
+image::signal-desk-playground-model.png[Playground model and Card Scout runtime subscription]
 
-== Exercise the same evidence in the Playground
-
-Gen AI Playground and external MaaS models are *Technology Preview* in OpenShift AI 3.5. The app's public MCP connector uses Streamable HTTP over HTTPS. It needs no Signal Desk token.
-
-=== 1. Select the model and runtime subscription
-
-Open *Red Hat OpenShift AI → Gen AI studio → Playground*. Select project `signal-desk-dev`, then open *Settings → Model*. Choose the MaaS model `maas-vllm-inference-1/deepseekv4pro` and the *Signal Desk runtime* subscription. Coding uses its own subscription.
-
-image::signal-desk-playground-model.png[Playground model settings with the Signal Desk runtime subscription]
-
-=== 2. Give the agent its instructions
-
-Open *Prompt*. Replace the default system instructions with this prompt, also available as a xref:attachment$signal-desk-agent-prompt.txt[downloadable text file]:
-
-[source,text,role=execute]
-----
-include::ROOT:attachment$signal-desk-agent-prompt.txt[]
-----
-
-image::signal-desk-playground-prompt.png[Playground component-test instructions in the Prompt tab]
-
-=== 3. Connect the application's tools
-
-The application must be deployed and its news loaded before this step. Open *MCP* and select *Signal-Desk*. Its URL points to the running app's `/mcp` endpoint.
-
-image::signal-desk-playground-mcp.png[Select the Signal-Desk MCP server]
-
-The six tools connect directly without an authorization dialog or token. In *Connection successful*, confirm *6 out of 6 tools are active*, then click *Save*. The Playground itself still uses your OpenShift AI session and the selected MaaS subscription.
-
-image::signal-desk-playground-connected.png[Public MCP connection with six active tools and no token]
-
-Expect *6 tools enabled*. Click the *6 active* button (*View tools*) to inspect `list_news`, `read_archive`, `search_archive`, `search_web`, `read_web` and `search_companies`.
-
-image::signal-desk-playground-tools.png[The six read-only Signal Desk tools]
-
-=== 4. Ask a question and inspect the evidence
-
-The Playground validates one component at a time. Its native loop does not enforce the app’s staged tool protocol. Use the supplied short system prompt and start with this single-tool probe:
+Open *Prompt* and paste the xref:attachment$card-scout-agent-prompt.txt[agent instructions]:
 
 [source,text,role=execute]
 ----
-Use the search_web tool exactly once with query "SK Hynix memory demand". Summarize two returned eligible headlines and their dates. Stop after this one tool call.
+include::ROOT:attachment$card-scout-agent-prompt.txt[]
 ----
 
-For another component probe, start a new chat and request `search_archive` or `search_companies` once. Keep the full research workflow in the application, where tool order and limits are enforced.
+image::signal-desk-playground-prompt.png[Card Scout agent instructions]
 
-image::signal-desk-playground-answer.png["A real Playground response to a single-tool component probe"]
+Open *MCP*, select *Card-Scout*, confirm the single `get_card_market_data` tool
+is active and click *Save*. No separate tool token is required. The prepared
+service is available before the generated application is deployed.
 
-Expand *Tool response* below each answer. Verify the actual requested call, source IDs, date cutoff and company identity. These probes establish model/MCP connectivity. The complete app research, including page reads, finance skill and final hypothesis, is validated through its direct MLflow trace.
+image::signal-desk-playground-mcp.png[Select the Card-Scout MCP service]
+image::signal-desk-playground-connected.png[Successful connection with one active tool]
+image::signal-desk-playground-tools.png[The read-only catalogue and price tool]
 
-This tests the model, instructions and MCP tools directly in OpenShift AI. The app's research button uses the same model and read-only evidence through its bounded Responses loop. To inspect the app's MLflow spans, use *Research again* in Signal Desk and open its direct trace link as described above.
+Ask:
 
-Empty archives should produce an explicit empty result, not invented articles. A response with no tool call is not a successful connector test.
+[source,text,role=execute]
+----
+Use get_card_market_data exactly once for item-039. Verify its catalogue identity and rarity, then report Cardmarket EUR trend, 7-day average, update timestamp and source. Stop after this lookup. Never invent missing prices.
+----
+
+image::signal-desk-playground-answer.png[A real native agent answer with catalogue and price evidence]
+
+Expand *Tool response*. Check the actual call and returned data. A sentence with
+no tool execution is not a successful test. The CLI probe in Lab 2.2 explicitly
+forces the named tool; the application also validates matching tool evidence.
+
+The Playground uses its normal OpenShift session and selected MaaS subscription.
+The public MCP connector requires no additional app login. Gen AI Playground and
+external MaaS models are Technology Preview in OpenShift AI 3.5.
 
 == Check behavior
 
 [cols="2,3",options="header"]
 |===
 | Test | Expected behavior
-| Search semiconductor news | Returned IDs belong to the loaded archived week and include source dates.
-| Read one returned ID | Actual archived headline/excerpt; no current publisher enrichment.
-| Compare company opportunities | Verified company ticker, direct/supplier/customer/competitor relationship, sourced catalyst and explicit risk.
-| Ask for this week's best-performing stock before commitment | No price/return tool exists; no claim of observed future performance.
-| Ask for an arbitrary URL, shell command or order | No such tool executes.
-| Unknown source ID or extra tool argument | Validation error, no caller-selected URL fetch.
-| Model/source/price unavailable | Visible error; no heuristic score, fabricated source or random price.
-| Portfolio already revealed | Attempts to change the frozen round fail; Try another story creates a separate round.
+| Rare and common cards from different eras | Predictions are distinct from held-out catalogue labels; unknowns remain visible.
+| Yu-Gi-Oh!, receipt, Pokémon illustration | Classified as controls, with no Pokémon price button.
+| Check a known Pokémon item | Actual tool call, exact catalogue reference, dated prices or explicit unavailability.
+| D3 rarity differs from catalogue | Both values remain visible; the prediction is not silently rewritten.
+| Unknown item or arbitrary URL | Rejected; no caller-selected URL, shell or purchase tool exists.
+| Model or provider unavailable | Visible error and preserved progress; no invented result.
+| Reload the app | Cached analysis and successful research remain available.
 |===
 
-A profitable replay is not proof of a good decision model. Compare relevance against the memo, evidence quality, tool correctness, time boundaries and failures separately. A source cutoff cannot remove knowledge embedded in model training.
-
-Ship any prompt or tool change through Git, Tekton and Argo CD, then compare the same examples and MLflow traces.
+Catalogue rarity does not establish market value, physical condition or
+ authenticity. The fixed dataset knows its catalogue references; recognition
+of arbitrary uploaded editions is outside this exercise.

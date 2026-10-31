@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "trace_id": "tr-231b5c447abd89b0bcddf8eeebbf40d1",
+  "spans": [
+    {
+      "trace_id": "IxtcRHq9ibC83fju679A0Q==",
+      "span_id": "asu8vhBOjCg=",
+      "parent_span_id": null,
+      "name": "card.research",
+      "start_time_unix_nano": 1793376246232472800,
+      "end_time_unix_nano": 1793376249182909700,
+      "events": [],
+      "status": {
+        "code": "STATUS_CODE_UNSET",
+        "message": ""
+      },
+      "attributes": {
+        "mlflow.spanType": "\"CHAIN\"",
+        "mlflow.spanInputs": "{\"item_id\": \"item-039\", \"predicted_rarity\": \"rare_or_higher\"}",
+        "mlflow.spanOutputs": "{\"status\": \"ok\", \"card\": {\"name\": \"Toedscool\", \"number\": \"201\", \"set\": \"Scarlet & Violet\", \"set_id\": \"sv01\", \"rarity\": \"Illustration rare\"}, \"currency\": \"EUR\", \"trend\": 4.09, \"average_7d\": 4.26, \"provider\": \"Cardmarket\", \"provider_updated_at\": \"2026-10-29T22:54:33.151Z\", \"source_url\": \"https://api.tcgdex.net/v2/en/cards/sv01-201\", \"retrieved_at\": \"2026-10-30T16:04:07.575417+00:00\", \"summary\": \"Here's the verified report for **item-039**:\\n\\n---\\n\\n**Card:** Toedscool  \\n**Set:** Scarlet & Violet (sv01)  \\n**Collector Number:** 201  \\n**Rarity:** Illustration rare  \\n\\n\u2705 **D3 Prediction Verified:** D3 predicted *rare_or_higher*, and the catalogue confirms *Illustration rare*, which indeed falls into that category.\\n\\n**Cardmarket (EUR):**\\n- **Trend:** \u20ac4.09\\n- **7-Day Average:** \u20ac4.26\\n- **Data Updated:** 2026-10-29T22:54:33.151Z\\n\\n**Source:** https://api.tcgdex.net/v2/en/cards/sv01-201\", \"note\": \"Market reference; language, finish and condition can change the value.\", \"trace_id\": \"tr-231b5c447abd89b0bcddf8eeebbf40d1\", \"trace_url\": \"https://rh-ai.apps.n79j08n7.eastus.aroapp.io/mlflow/#/experiments/2/traces?selectedEvaluationId=tr-231b5c447abd89b0bcddf8eeebbf40d1&workspace=signal-desk-dev\"}",
+        "mlflow.traceRequestId": "\"tr-231b5c447abd89b0bcddf8eeebbf40d1\""
+      },
+      "links": []
+    },
+    {
+      "trace_id": "IxtcRHq9ibC83fju679A0Q==",
+      "span_id": "aoe6aG2EMp0=",
+      "parent_span_id": "asu8vhBOjCg=",
+      "name": "agent.responses",
+      "start_time_unix_nano": 1793376246233267700,
+      "end_time_unix_nano": 1793376249180845800,
+      "events": [],
+      "status": {
+        "code": "STATUS_CODE_UNSET",
+        "message": ""
+      },
+      "attributes": {
+        "mlflow.spanType": "\"LLM\"",
+        "gen_ai.request.model": "\"maas-vllm-inference-1/deepseekv4pro\"",
+        "mlflow.spanInputs": "{\"model\": \"maas-vllm-inference-1/deepseekv4pro\", \"input\": \"Check item-039 from our batch. D3 predicted rare_or_higher. Verify its rarity and report its Cardmarket EUR trend and 7-day average.\", \"instructions\": \"You are Card Scout, a concise trading-card research assistant.\\nThe user selects an item from a fixed, mixed-era workshop dataset.\\n\\nCall get_card_market_data once for the selected item ID before quoting any\\nidentity, rarity or price. The tool uses the dataset's known catalogue reference;\\ndo not claim you visually identified the exact edition or number.\\n\\nUse the catalogue rarity to verify the earlier D3 prediction. Say when it differs.\\nFor a non-Pokemon item, stop and explain that no Pokemon price applies.\\n\\nReport only the exact card name, set, collector number, verified rarity,\\nCardmarket EUR trend, 7-day average, full provider update timestamp and source URL.\\nDo not include other metrics, other currencies or other providers unless the\\nuser explicitly asks. Preserve the exact metric names and currency. Never\\nselect a different print, finish or grade to fill a missing value. If variants\\nare ambiguous, say so. If the tool reports an error, missing prices or stale\\ndata, report that limitation explicitly. Keep the note to one short sentence.\\n\\nDo not invent a price, imply rarity guarantees value, assess authenticity, or\\npresent an aggregate market reference as a sale offer. Answer in English with\\nthe requested JSON schema when one is supplied; otherwise use a compact card\\nsummary and a source link. Do not repeat a successful tool call.\\n\", \"tools\": [{\"type\": \"mcp\", \"server_label\": \"card_scout_market\", \"server_url\": \"http://card-scout-platform.signal-desk-dev.svc.cluster.local:8080/mcp\", \"headers\": {\"traceparent\": \"00-231b5c447abd89b0bcddf8eeebbf40d1-6a87ba686d84329d-03\"}, \"require_approval\": \"never\", \"allowed_tools\": [\"get_card_market_data\"]}], \"tool_choice\": {\"type\": \"mcp\", \"server_label\": \"card_scout_market\", \"name\": \"get_card_market_data\"}, \"reasoning\": {\"effort\": \"none\"}, \"max_output_tokens\": 1000, \"max_infer_iters\": 4, \"parallel_tool_calls\": false, \"store\": false, \"stream\": false}",
+        "mlflow.spanOutputs": "{\"status\": \"completed\", \"output\": [{\"type\": \"mcp_call\", \"name\": \"get_card_market_data\", \"server_label\": \"card_scout_market\", \"arguments\": \"{\\\"item_id\\\": \\\"item-039\\\"}\", \"output\": \"{\\n  \\\"item_id\\\": \\\"item-039\\\",\\n  \\\"status\\\": \\\"ok\\\",\\n  \\\"card_id\\\": \\\"sv01-201\\\",\\n  \\\"identity_method\\\": \\\"Known catalogue reference from the curated dataset; not inferred from the photo.\\\",\\n  \\\"card\\\": {\\n    \\\"name\\\": \\\"Toedscool\\\",\\n    \\\"number\\\": \\\"201\\\",\\n    \\\"set\\\": \\\"Scarlet & Violet\\\",\\n    \\\"set_id\\\": \\\"sv01\\\",\\n    \\\"rarity\\\": \\\"Illustration rare\\\"\\n  },\\n  \\\"source_url\\\": \\\"https://api.tcgdex.net/v2/en/cards/sv01-201\\\",\\n  \\\"retrieved_at\\\": \\\"2026-10-30T16:04:07.575417+00:00\\\",\\n  \\\"pricing\\\": {\\n    \\\"cardmarket\\\": {\\n      \\\"updated\\\": \\\"2026-10-29T22:54:33.151Z\\\",\\n      \\\"unit\\\": \\\"EUR\\\",\\n      \\\"idProduct\\\": 702497,\\n      \\\"avg\\\": 3.97,\\n      \\\"low\\\": 0.7,\\n      \\\"trend\\\": 4.09,\\n      \\\"avg1\\\": 5.15,\\n      \\\"avg7\\\": 4.26,\\n      \\\"avg30\\\": 4.02,\\n      \\\"avg-holo\\\": null,\\n      \\\"low-holo\\\": null,\\n      \\\"trend-holo\\\": 0,\\n      \\\"avg1-holo\\\": null,\\n      \\\"avg7-holo\\\": null,\\n      \\\"avg30-holo\\\": null\\n    },\\n    \\\"tcgplayer\\\": {\\n      \\\"unit\\\": \\\"USD\\\",\\n      \\\"updated\\\": \\\"2026-10-14T22:55:08.765Z\\\",\\n      \\\"holofoil\\\": {\\n        \\\"productId\\\": 490049,\\n        \\\"lowPrice\\\": 3.5,\\n        \\\"midPrice\\\": 5.38,\\n        \\\"highPrice\\\": 29.99,\\n        \\\"marketPrice\\\": 4.77,\\n        \\\"directLowPrice\\\": 6.11\\n      }\\n    }\\n  },\\n  \\\"variants\\\": [\\n    {\\n      \\\"type\\\": \\\"holo\\\",\\n      \\\"size\\\": \\\"standard\\\",\\n      \\\"variantId\\\": \\\"jr7oetx1mqug9\\\"\\n    }\\n  ],\\n  \\\"price_scope\\\": \\\"Provider aggregate reference values. Language, print edition, finish and condition may differ; do not claim a guaranteed resale price. Do not mix currencies or variants.\\\"\\n}\", \"error\": null}, {\"type\": \"message\", \"text\": \"Here's the verified report for **item-039**:\\n\\n---\\n\\n**Card:** Toedscool  \\n**Set:** Scarlet & Violet (sv01)  \\n**Collector Number:** 201  \\n**Rarity:** Illustration rare  \\n\\n\u2705 **D3 Prediction Verified:** D3 predicted *rare_or_higher*, and the catalogue confirms *Illustration rare*, which indeed falls into that category.\\n\\n**Cardmarket (EUR):**\\n- **Trend:** \u20ac4.09\\n- **7-Day Average:** \u20ac4.26\\n- **Data Updated:** 2026-10-29T22:54:33.151Z\\n\\n**Source:** https://api.tcgdex.net/v2/en/cards/sv01-201\"}], \"usage\": {\"input_tokens\": 1874, \"output_tokens\": 200, \"total_tokens\": 2074, \"input_tokens_details\": {\"cached_tokens\": 512}, \"output_tokens_details\": {\"reasoning_tokens\": 0}}}",
+        "gen_ai.usage.input_tokens": "1874",
+        "gen_ai.usage.output_tokens": "200",
+        "mlflow.traceRequestId": "\"tr-231b5c447abd89b0bcddf8eeebbf40d1\"",
+        "mlflow.chat.tokenUsage": "{\"input_tokens\": 1874, \"output_tokens\": 200, \"total_tokens\": 2074}",
+        "mlflow.llm.model": "\"maas-vllm-inference-1/deepseekv4pro\""
+      },
+      "links": []
+    },
+    {
+      "trace_id": "IxtcRHq9ibC83fju679A0Q==",
+      "span_id": "S0J55mVsNLg=",
+      "parent_span_id": "aoe6aG2EMp0=",
+      "name": "tool.get_card_market_data",
+      "start_time_unix_nano": 1793376247489960400,
+      "end_time_unix_nano": 1793376247575562800,
+      "events": [],
+      "status": {
+        "code": "STATUS_CODE_UNSET",
+        "message": ""
+      },
+      "attributes": {
+        "mlflow.spanType": "\"TOOL\"",
+        "mlflow.spanInputs": "{\"item_id\": \"item-039\"}",
+        "mlflow.spanOutputs": "{\"item_id\": \"item-039\", \"status\": \"ok\", \"card_id\": \"sv01-201\", \"identity_method\": \"Known catalogue reference from the curated dataset; not inferred from the photo.\", \"card\": {\"name\": \"Toedscool\", \"number\": \"201\", \"set\": \"Scarlet & Violet\", \"set_id\": \"sv01\", \"rarity\": \"Illustration rare\"}, \"source_url\": \"https://api.tcgdex.net/v2/en/cards/sv01-201\", \"retrieved_at\": \"2026-10-30T16:04:07.575417+00:00\", \"pricing\": {\"cardmarket\": {\"updated\": \"2026-10-29T22:54:33.151Z\", \"unit\": \"EUR\", \"idProduct\": 702497, \"avg\": 3.97, \"low\": 0.7, \"trend\": 4.09, \"avg1\": 5.15, \"avg7\": 4.26, \"avg30\": 4.02, \"avg-holo\": null, \"low-holo\": null, \"trend-holo\": 0, \"avg1-holo\": null, \"avg7-holo\": null, \"avg30-holo\": null}, \"tcgplayer\": {\"unit\": \"USD\", \"updated\": \"2026-10-14T22:55:08.765Z\", \"holofoil\": {\"productId\": 490049, \"lowPrice\": 3.5, \"midPrice\": 5.38, \"highPrice\": 29.99, \"marketPrice\": 4.77, \"directLowPrice\": 6.11}}}, \"variants\": [{\"type\": \"holo\", \"size\": \"standard\", \"variantId\": \"jr7oetx1mqug9\"}], \"price_scope\": \"Provider aggregate reference values. Language, print edition, finish and condition may differ; do not claim a guaranteed resale price. Do not mix currencies or variants.\"}",
+        "mlflow.traceRequestId": "\"tr-231b5c447abd89b0bcddf8eeebbf40d1\""
+      },
+      "links": []
+    }
+  ]
+}

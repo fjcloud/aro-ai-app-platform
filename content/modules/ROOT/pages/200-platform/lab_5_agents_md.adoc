@@ -2,7 +2,7 @@
 
 DeepSeek-V4 Pro is already answering. Prepare the scoped developer access and project runbook for the developer in Act 2.
 
-The Signal Desk template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-signal-desk[fjcloud/go-app-template].
+The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-signal-desk[fjcloud/go-app-template].
 
 [NOTE]
 ====
@@ -118,7 +118,7 @@ You should see `baseURL` `{env:OPENAI_BASE_URL}`, Bearer authentication, provide
 | ✅ Ready on one T4; internal endpoint only
 
 | Go app template
-| ✅ Signal Desk branch and app contract in `AGENTS.md`
+| ✅ Card Scout branch and app contract in `AGENTS.md`
 |===
 
-Before switching persona, prepare the native Responses backend and tracing in *Lab 1.8: Prepare the Signal Desk Agent*.
+Before switching persona, prepare the native Responses backend and tracing in *Lab 1.8: Prepare Card Scout*.

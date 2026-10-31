@@ -4,7 +4,7 @@ metadata:
   name: deepseekv4pro-signal-desk
   namespace: models-as-a-service
   annotations:
-    openshift.io/display-name: Signal Desk runtime
+    openshift.io/display-name: Card Scout runtime
     openshift.io/description: Separate runtime key and token budget from the OpenCode workspace
 spec:
   priority: 20
