@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "initial failure and Retry",
+    "empty filter stays recoverable",
+    "empty filter persists on reload",
+    "zero is not missing",
+    "null is Unavailable",
+    "HTML is escaped",
+    "unsafe links rejected",
+    "price failure preserves selection"
+  ],
+  "at": "2026-10-31T07:41:46.101Z"
+}

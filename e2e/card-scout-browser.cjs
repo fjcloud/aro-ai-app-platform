@@ -22,7 +22,7 @@ assert.ok(base,'Set APP_URL');fs.mkdirSync(dir,{recursive:true});
   const rare=batch.items.filter(i=>i.kind==='pokemon_tcg'&&i.rarity==='rare_or_higher');
   await page.locator('[data-filter=rare]').click();await expect(page.locator('.card-cell')).toHaveCount(Math.min(12,rare.length));
   await page.locator('[data-filter=review]').click();await expect(page.locator('.card-cell')).toHaveCount(batch.items.filter(i=>i.needs_review).length);
-  await page.locator('[data-filter=other]').click();await expect(page.locator('.card-cell')).toHaveCount(3);await expect(page.getByRole('button',{name:'Check price',exact:true})).toHaveCount(0);
+  await page.locator('[data-filter=other]').click();await expect(page.locator('.card-cell')).toHaveCount(3);await expect(page.getByRole('button',{name:'Show more',exact:true})).toBeHidden();await expect(page.getByRole('button',{name:'Check price',exact:true})).toHaveCount(0);
   await page.locator('[data-filter=rare]').click();
   const target=rare.find(i=>!i.research)||rare[0];assert.ok(target);
   const row=page.locator('#cell-'+target.id);
@@ -49,19 +49,7 @@ assert.ok(base,'Set APP_URL');fs.mkdirSync(dir,{recursive:true});
   const live={passed:true,at:new Date().toISOString(),dataset:batch.dataset,completed:batch.completed,failed:batch.failed,rare_cards:rare.length,research_item:target.id,research,checks:['real image inference recovered to 51/51 completed','pagination and whole-batch filters','controls offer no price action','native price research and exact evidence values','same-origin images','trace link','saved filter','390px mobile']};
   fs.writeFileSync(path.join(dir,'app-live.json'),JSON.stringify(live,null,2)+'\n');
 
-  // Browser-only fixture data never enters the running platform or its state.
-  const fixtureContext=await browser.newContext({viewport:{width:1440,height:1000}});const fixturePage=await fixtureContext.newPage(),common=structuredClone(batch.items.find(i=>i.kind==='pokemon_tcg'&&i.rarity==='common'));
-  common.research=null;const fixture={...batch,completed:1,failed:0,running:false,items:[common]};let initialFail=true,priceFail=false;
-  await fixturePage.route(base+'/api/batch',async route=>{if(initialFail){initialFail=false;return route.fulfill({status:503,json:{error:'Fixture offline'}})}return route.fulfill({json:fixture})});
-  await fixturePage.route(base+'/api/cards/'+common.id+'/research',async route=>route.fulfill(priceFail?{status:502,json:{error:'Fixture price source unavailable'}}:{json:{status:'ok',card:{name:'<img src=x onerror="window.fixtureXss=true">',set:'Fixture set',number:'1',rarity:'Common'},currency:'EUR',trend:0,average_7d:null,source_url:'javascript:alert(1)',trace_url:'data:text/html,test',provider:'Fixture',provider_updated_at:null,note:'Fixture values'}}));
-  await fixturePage.goto(base);await expect(fixturePage.locator('#main-error-wrap')).toBeVisible();await fixturePage.locator('#main-error-retry').click();await expect(fixturePage.locator('.card-cell')).toHaveCount(1);
-  await fixturePage.locator('[data-filter=rare]').click();await expect(fixturePage.locator('.empty-state')).toBeVisible();await expect(fixturePage.locator('#filters')).toBeVisible();
-  await fixturePage.reload();await expect(fixturePage.locator('[data-filter=rare]')).toHaveClass(/active/);await expect(fixturePage.locator('#filters')).toBeVisible();
-  await fixturePage.locator('[data-filter=all]').click();await fixturePage.getByRole('button',{name:'Check price',exact:true}).click();
-  const fp=fixturePage.locator('#research-panel');await expect(fp).toContainText('Unavailable');await expect(fp.locator('img')).toHaveCount(0);await expect(fp.locator('a')).toHaveCount(0);assert.equal(await fixturePage.evaluate(()=>window.fixtureXss),undefined);
-  await expect(fp.locator('dt').filter({hasText:'Trend (EUR)'}).locator('xpath=following-sibling::dd[1]')).toHaveText('0');
-  priceFail=true;await fixturePage.reload();await fixturePage.getByRole('button',{name:'Check price',exact:true}).click();await expect(fp).toContainText('Fixture price source unavailable');await expect(fp.getByRole('heading')).toContainText(common.name);
-  const fixtures={passed:true,checks:['initial failure and Retry','empty filter stays recoverable','empty filter persists on reload','zero is not missing','null is Unavailable','HTML is escaped','unsafe links rejected','price failure preserves selection'],at:new Date().toISOString()};
-  fs.writeFileSync(path.join(dir,'app-fixtures.json'),JSON.stringify(fixtures,null,2)+'\n');console.log(JSON.stringify({live:true,fixtures:true,completed:batch.completed,trace_url:research.trace_url}));
+  await require('./card-scout-fixtures.cjs')(browser,base,batch,dir);
+  console.log(JSON.stringify({live:true,fixtures:true,completed:batch.completed,trace_url:research.trace_url}));
  }finally{await browser.close()}
 })().catch(e=>{console.error(e.stack);process.exitCode=1});

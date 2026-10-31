@@ -1,0 +1,42 @@
+{
+  "coding_tool": "OpenCode 1.18.14",
+  "coding_model": "deepseek/deepseekv4pro",
+  "generated_from_scratch": true,
+  "reference_app_copied": false,
+  "generated_paths": [
+    "main.go",
+    "main_test.go",
+    "static/index.html",
+    "go.mod",
+    "Dockerfile"
+  ],
+  "generated_commits": [
+    "abb463d",
+    "ba8401c17435626932fc006bfb12d5e6df0cec2a"
+  ],
+  "live_validated_at": "2026-10-30",
+  "live_git_revision": "ba8401c17435626932fc006bfb12d5e6df0cec2a",
+  "pipeline": "build-app-5zwqj",
+  "pipeline_status": "Succeeded",
+  "argo_sync": "Synced",
+  "argo_health": "Healthy",
+  "running_image_digest": "sha256:76abbb4680c6ed954a521adf7f4adc0d8456f33aa26f841eb2acd2420234ce2b",
+  "running_digest_matched_registry": true,
+  "generated_go_tests_passed_in_devspaces": 17,
+  "generated_source_url": "https://github.com/fjcloud/go-app-template/tree/generated/card-scout-e2e",
+  "latest_source_revision": "e86150f1ebb506af3da2d4e9cb9287f0d808b06a",
+  "latest_source_checks": [
+    "Go race tests",
+    "Go vet",
+    "build",
+    "local browser fixtures including hidden pagination"
+  ],
+  "maintainer_followup": [
+    "Honor hidden attributes in CSS",
+    "Require exactly three item-ID digits",
+    "Test canonical redirects without following them as GETs"
+  ],
+  "latest_source_live_validation": "Pending a new ARO lab: the previous cluster no longer resolves on 31 October",
+  "live_app_url_at_validation": "https://signal-desk-signal-desk-dev.apps.n79j08n7.eastus.aroapp.io",
+  "technical_app_name": "signal-desk"
+}

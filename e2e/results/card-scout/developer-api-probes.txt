@@ -1,0 +1,128 @@
+{
+  "id": "d3-mini",
+  "device": "cuda:0",
+  "dtype": "float16"
+}
+{
+  "card_kind": {
+    "type": "choice",
+    "choice": "pokemon_tcg",
+    "probabilities": {
+      "pokemon_tcg": 0.9948870014696047,
+      "other_card": 0.0029325650177380825,
+      "not_a_card": 0.000486919572631092,
+      "uncertain": 0.0016935139400260557
+    },
+    "confidence": 0.9931826686261397
+  },
+  "rarity": {
+    "type": "choice",
+    "choice": "rare_or_higher",
+    "probabilities": {
+      "common": 0.2215184037266956,
+      "uncommon": 0.10683159838596316,
+      "rare_or_higher": 0.6161251245996718,
+      "not_applicable": 0.013153789013407621,
+      "uncertain": 0.04237108427426183
+    },
+    "confidence": 0.5201564057495898
+  }
+}
+{
+  "card_kind": {
+    "type": "choice",
+    "choice": "other_card",
+    "probabilities": {
+      "pokemon_tcg": 0.0014430087499526158,
+      "other_card": 0.9922483981579713,
+      "not_a_card": 0.0005645145328092345,
+      "uncertain": 0.005744078559266857
+    },
+    "confidence": 0.989664530877295
+  },
+  "rarity": {
+    "type": "choice",
+    "choice": "not_applicable",
+    "probabilities": {
+      "common": 0.011605612380613046,
+      "uncommon": 0.006826704590520505,
+      "rare_or_higher": 0.08805544216366529,
+      "not_applicable": 0.8102850582077885,
+      "uncertain": 0.08322718265741262
+    },
+    "confidence": 0.7628563227597357
+  }
+}
+{
+  "model": "deepseekv4pro",
+  "answer": "A trading card's rarity refers to its fixed supply or pull rate from packs, while its market value fluctuates based on demand, competitive utility, and collector trends.",
+  "usage": {
+    "prompt_tokens": 21,
+    "completion_tokens": 34,
+    "total_tokens": 55,
+    "audio_prompt_tokens": 0
+  }
+}
+{
+  "status": "completed",
+  "output": [
+    {
+      "id": "mcp_list_011de9fa-c317-485d-9512-20d492ed6332",
+      "type": "mcp_list_tools",
+      "server_label": "card_scout_market",
+      "tools": [
+        {
+          "input_schema": {
+            "properties": {
+              "item_id": {
+                "title": "Item Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "item_id"
+            ],
+            "title": "get_card_market_dataArguments",
+            "type": "object"
+          },
+          "name": "get_card_market_data",
+          "description": "Verify a fixed batch item and fetch its dated Cardmarket/TCGplayer prices.\n\n    Uses the dataset's known catalogue ID, not visual edition recognition.\n    Preserve provider dates, currencies and variants. Missing prices are unknown.\n    "
+        }
+      ]
+    },
+    {
+      "id": "fc_ad0cdf74-3fc0-41c4-886f-526655d601dc",
+      "type": "mcp_call",
+      "arguments": "{\"item_id\": \"item-039\"}",
+      "name": "get_card_market_data",
+      "server_label": "card_scout_market",
+      "error": null,
+      "output": "{\n  \"item_id\": \"item-039\",\n  \"status\": \"ok\",\n  \"card_id\": \"sv01-201\",\n  \"identity_method\": \"Known catalogue reference from the curated dataset; not inferred from the photo.\",\n  \"card\": {\n    \"name\": \"Toedscool\",\n    \"number\": \"201\",\n    \"set\": \"Scarlet & Violet\",\n    \"set_id\": \"sv01\",\n    \"rarity\": \"Illustration rare\"\n  },\n  \"source_url\": \"https://api.tcgdex.net/v2/en/cards/sv01-201\",\n  \"retrieved_at\": \"2026-10-30T15:57:59.654933+00:00\",\n  \"pricing\": {\n    \"cardmarket\": {\n      \"updated\": \"2026-10-29T22:54:33.152Z\",\n      \"unit\": \"EUR\",\n      \"idProduct\": 702497,\n      \"avg\": 3.97,\n      \"low\": 0.7,\n      \"trend\": 4.09,\n      \"avg1\": 5.15,\n      \"avg7\": 4.26,\n      \"avg30\": 4.02,\n      \"avg-holo\": null,\n      \"low-holo\": null,\n      \"trend-holo\": 0,\n      \"avg1-holo\": null,\n      \"avg7-holo\": null,\n      \"avg30-holo\": null\n    },\n    \"tcgplayer\": {\n      \"unit\": \"USD\",\n      \"updated\": \"2026-10-14T22:55:08.765Z\",\n      \"holofoil\": {\n        \"productId\": 490049,\n        \"lowPrice\": 3.5,\n        \"midPrice\": 5.38,\n        \"highPrice\": 29.99,\n        \"marketPrice\": 4.77,\n        \"directLowPrice\": 6.11\n      }\n    }\n  },\n  \"variants\": [\n    {\n      \"type\": \"holo\",\n      \"size\": \"standard\",\n      \"variantId\": \"jr7oetx1mqug9\"\n    }\n  ],\n  \"price_scope\": \"Provider aggregate reference values. Language, print edition, finish and condition may differ; do not claim a guaranteed resale price. Do not mix currencies or variants.\"\n}"
+    },
+    {
+      "content": [
+        {
+          "text": "Here are the results for **item-039**:\n\n---\n\n### Catalogue Identity\n| Field | Value |\n|---|---|\n| **Card Name** | Toedscool |\n| **Set** | Scarlet & Violet (sv01) |\n| **Card Number** | 201 |\n| **Rarity** | Illustration Rare |\n| **Catalogue ID** | sv01-201 |\n| **Identification Method** | Known catalogue reference from the curated dataset; not inferred from the photo. |\n\n---\n\n### Cardmarket Pricing (EUR)\n\n| Metric | Value |\n|---|---|\n| **Trend** | €4.09 |\n| **7-Day Average (avg7)** | €4.26 |\n| **30-Day Average (avg30)** | €4.02 |\n| **Current Low** | €0.70 |\n| **Overall Average (avg)** | €3.97 |\n| **1-Day Average (avg1)** | €5.15 |\n\n### Timestamp & Source\n- **Cardmarket Updated:** 2026-10-29T22:54:33.152Z\n- **Data Retrieved At:** 2026-10-30T15:57:59.654933+00:00\n- **Source:** TCGdex API (`https://api.tcgdex.net/v2/en/cards/sv01-201`)\n\n> **Note:** The Cardmarket low of €0.70 is notably below the trend and averages — this likely reflects heavily played/damaged copies on the market. The trend (€4.09) and 7-day average (€4.26) are more representative of the card's typical market value.",
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "type": "message",
+      "id": "msg_5e655a21-e1cc-4905-9909-fda3b9058f56",
+      "status": "completed"
+    }
+  ],
+  "usage": {
+    "input_tokens": 1336,
+    "output_tokens": 391,
+    "total_tokens": 1727,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  }
+}

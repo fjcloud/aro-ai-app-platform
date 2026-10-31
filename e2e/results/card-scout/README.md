@@ -1,9 +1,20 @@
 # Card Scout validation — 30 October 2026
 
-The prepared service and dataset are deployed in the ARO lab. OpenCode with
+The prepared service and dataset were deployed and validated on 30 October 2026.
+The lab no longer resolves on 31 October; its recorded URLs are historical.
+OpenCode with
 DeepSeek generated the Go application from the contract; it did not copy the
 existing finance application. The current browser/live checks are in
 `app-live.json`, with isolated edge-case fixtures in `app-fixtures.json`.
+`generated-app.json` records the real coding model, generated commits, successful
+Tekton/Argo delivery and matching running image digest.
+
+The generated source is preserved on the
+[validation branch](https://github.com/fjcloud/go-app-template/tree/generated/card-scout-e2e),
+separate from the participant starter. After the lab expired, a maintainer fixed
+the hidden-control CSS rule, exact item-ID digit counts and a redirect-sensitive
+test. Go race/vet/build and `app-fixtures-local.json` verify that final source
+locally; its redeployment awaits a new lab.
 
 The original feasibility probes below are retained separately from deployment
 acceptance. The guide now uses Card Scout.
