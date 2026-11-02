@@ -1,0 +1,79 @@
+{
+  "lab": "54w5q",
+  "showroom": "https://bastion.54w5q.azure.redhatworkshops.io/showroom/",
+  "at": "2026-11-02T15:07:12.721484+00:00",
+  "complete": true,
+  "steps": [
+    {
+      "step": "00-onboard",
+      "exit": 0,
+      "seconds": 7.85
+    },
+    {
+      "step": "01-operators",
+      "exit": 0,
+      "seconds": 1.75
+    },
+    {
+      "step": "02-workers",
+      "exit": 0,
+      "seconds": 728.01
+    },
+    {
+      "step": "03-platform",
+      "exit": 0,
+      "seconds": 18.37
+    },
+    {
+      "step": "04-foundry",
+      "exit": 0,
+      "seconds": 91.09
+    },
+    {
+      "step": "05-maas",
+      "exit": 0,
+      "seconds": 6
+    },
+    {
+      "step": "06-decision",
+      "exit": 0,
+      "seconds": 351.55
+    },
+    {
+      "step": "07-developer",
+      "exit": 0,
+      "seconds": 4.09
+    },
+    {
+      "step": "08-agent-backend",
+      "exit": 0,
+      "seconds": 185.14
+    },
+    {
+      "step": "09-devspaces-access",
+      "exit": 0,
+      "seconds": 0.88
+    }
+  ],
+  "notes": [
+    "03-platform is an idempotent replay after first provisioning; its duration excludes initial image pulls.",
+    "The new explicit MLflow Available wait also passed.",
+    "Developer and native-backend preparation overlapped model/workspace image downloads; no API probe runs before dependencies are Ready.",
+    "No credentials or raw bastion output are included.",
+    "Completion means the corrected current workshop passed; original failures and model limitations are documented in README.md.",
+    "The earlier CPU experiment was deleted; the workshop CPU and T4 workers remain."
+  ],
+  "generated_revision": "585d0c9511896e912c852298903cc5750df9c2f7",
+  "acceptance": {
+    "developer_api_commands": true,
+    "real_devspace_generation": true,
+    "tekton_argo_delivery": true,
+    "all_51_images_processed": true,
+    "live_browser": true,
+    "isolated_browser_edge_cases": true,
+    "native_playground_mcp": true,
+    "persisted_mlflow_graph": true,
+    "dashboard_api_and_ui": true,
+    "quotas_and_streaming_protocol": true
+  }
+}

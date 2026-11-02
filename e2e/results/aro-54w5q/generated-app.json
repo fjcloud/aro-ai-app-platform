@@ -1,0 +1,83 @@
+{
+  "validated_at": "2026-11-02T15:06:00.399805+00:00",
+  "model": "DeepSeek-V4-Pro / 2026-04-23",
+  "coding_tool": "OpenCode 1.18.14 in the real Dev Space",
+  "source": "Generated from the empty participant starter and contract; reviewed changes made through the same coding agent.",
+  "starter_revision": "bc1cdb9cb2eb126868e994ef196ee46636007b1e",
+  "generated_revision": "585d0c9511896e912c852298903cc5750df9c2f7",
+  "archive": "https://github.com/fjcloud/go-app-template/tree/generated/card-scout-54w5q",
+  "application": {
+    "url": "https://signal-desk-signal-desk-dev.apps.ijtxiwk6.eastus.aroapp.io",
+    "sync": "Synced",
+    "health": "Healthy",
+    "image": "image-registry.openshift-image-registry.svc:5000/signal-desk-build/signal-desk:latest"
+  },
+  "pods": [
+    {
+      "name": "signal-desk-6b98ccb6bd-hdb5h",
+      "scc": "restricted-v2",
+      "image_ids": [
+        "image-registry.openshift-image-registry.svc:5000/signal-desk-build/signal-desk@sha256:f9460142b907be11e81c96782cf73fd2eab7acb12cfa91625b18e0407b73ee5a"
+      ]
+    }
+  ],
+  "pipelines": [
+    {
+      "name": "build-app-flbmp",
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-02T15:02:16Z",
+          "message": "Tasks Completed: 3 (Failed: 0, Cancelled 0), Skipped: 0",
+          "reason": "Succeeded",
+          "status": "True",
+          "type": "Succeeded"
+        }
+      ]
+    },
+    {
+      "name": "build-app-jbzcf",
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-02T14:55:18Z",
+          "message": "Tasks Completed: 3 (Failed: 0, Cancelled 0), Skipped: 0",
+          "reason": "Succeeded",
+          "status": "True",
+          "type": "Succeeded"
+        }
+      ]
+    },
+    {
+      "name": "build-app-np65b",
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-02T14:40:23Z",
+          "message": "Tasks Completed: 3 (Failed: 0, Cancelled 0), Skipped: 0",
+          "reason": "Succeeded",
+          "status": "True",
+          "type": "Succeeded"
+        }
+      ]
+    },
+    {
+      "name": "build-app-vvwb4",
+      "conditions": [
+        {
+          "lastTransitionTime": "2026-11-02T14:26:17Z",
+          "message": "Tasks Completed: 3 (Failed: 0, Cancelled 0), Skipped: 0",
+          "reason": "Succeeded",
+          "status": "True",
+          "type": "Succeeded"
+        }
+      ]
+    }
+  ],
+  "acceptance": {
+    "real_workspace_go_race_vet_build": true,
+    "workspace_pushed_main_argo_same_revision": true,
+    "running_image_matches_tekton": true,
+    "public_ui_and_api": true,
+    "restricted_v2_no_privileged_app_or_build": true,
+    "no_model_key_or_kubernetes_token_in_ui_pod": true,
+    "browser_live_and_edge_cases": true
+  }
+}

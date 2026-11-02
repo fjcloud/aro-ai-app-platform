@@ -82,7 +82,9 @@ make test-terminal
 make docs
 ```
 
-[Card Scout evidence](results/card-scout/README.md) separates real model,
+[Fresh ARO 54w5q review](results/aro-54w5q/README.md) records the complete
+2 November participant run and corrections.
+[Earlier Card Scout evidence](results/card-scout/README.md) separates real model,
 agent, delivery and browser runs from fixtures and local checks. Record the lab,
 date, source revision and actual result of a new run; retain earlier evidence as
 historical. The finance, speech and game directories are earlier experiments,

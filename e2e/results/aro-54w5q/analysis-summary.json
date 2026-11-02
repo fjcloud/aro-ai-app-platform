@@ -1,0 +1,12 @@
+{
+  "images": 51,
+  "completed": 51,
+  "failed": 0,
+  "card_kind_correct": 51,
+  "pokemon_cards": 48,
+  "binary_rarity_correct": 45,
+  "three_tier_rarity_correct": 40,
+  "trace_id": "tr-d7e25f8dbc421e8bc29f9ec2ddee20df",
+  "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-d7e25f8dbc421e8bc29f9ec2ddee20df&workspace=signal-desk-dev",
+  "comparison": "Held-out labels were read after inference, not sent to the model."
+}

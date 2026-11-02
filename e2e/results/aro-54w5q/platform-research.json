@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "card": {
+    "name": "Impostor Professor Oak",
+    "number": "73",
+    "set": "Base Set",
+    "set_id": "base1",
+    "rarity": "Rare"
+  },
+  "currency": "EUR",
+  "trend": 13.2,
+  "average_7d": 10.54,
+  "provider": "Cardmarket",
+  "provider_updated_at": "2026-11-01T22:54:33.734Z",
+  "source_url": "https://api.tcgdex.net/v2/en/cards/base1-73",
+  "retrieved_at": "2026-11-02T14:34:19.671937+00:00",
+  "summary": "## Item-030 — Card Summary\n\n| Field | Value |\n|---|---|\n| **Name** | Impostor Professor Oak |\n| **Set** | Base Set |\n| **Collector Number** | 73 |\n| **Rarity** | **Rare** |\n\n### D3 Prediction Check\nD3 predicted **rare_or_higher**. The catalogue confirms the card is **Rare**, matching the prediction.\n\n### Cardmarket EUR (Normal variant)\n| Metric | Value |\n|---|---|\n| **Trend** | €13.20 |\n| **7-Day Average** | €10.54 |\n| **Price Updated** | 2026-11-01T22:54:33.734Z |\n\n**Source:** https://api.tcgdex.net/v2/en/cards/base1-73\n\n> Note: Two additional variants (1st Edition stamped and another normal listing under a different Cardmarket product ID) exist with different pricing; the figures above reflect the primary unlimited normal print.",
+  "note": "Market reference; language, finish and condition can change the value.",
+  "trace_id": "tr-cf43924d96ff76ce6c83d21f25087ba5",
+  "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-cf43924d96ff76ce6c83d21f25087ba5&workspace=signal-desk-dev"
+}

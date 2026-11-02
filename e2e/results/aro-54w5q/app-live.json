@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "at": "2026-11-02T15:04:49.315Z",
+  "dataset": {
+    "name": "Mixed-era collection",
+    "snapshot_at": "2026-10-30T15:30:47.498665+00:00",
+    "items": 51,
+    "pokemon_cards": 48,
+    "controls": 3,
+    "years": "1999–2023",
+    "identity_method": "Known catalogue references in the prepared dataset"
+  },
+  "completed": 51,
+  "failed": 0,
+  "rare_cards": 15,
+  "research_item": "item-033",
+  "research": {
+    "status": "ok",
+    "card": {
+      "name": "Venusaur",
+      "number": "15",
+      "set": "Base Set",
+      "set_id": "base1",
+      "rarity": "Rare"
+    },
+    "currency": "EUR",
+    "trend": 79.44,
+    "average_7d": 79.86,
+    "provider": "Cardmarket",
+    "provider_updated_at": "2026-11-01T22:54:33.760Z",
+    "source_url": "https://api.tcgdex.net/v2/en/cards/base1-15",
+    "retrieved_at": "2026-11-02T15:04:46.445996+00:00",
+    "summary": "Here is the verified report for **item-033**:\n\n| Field | Value |\n|---|---|\n| **Card Name** | Venusaur |\n| **Set** | Base Set |\n| **Collector Number** | 15 |\n| **Verified Rarity** | **Rare** (Holographic) |\n| **Cardmarket EUR Trend** | €79.44 |\n| **Cardmarket EUR 7-Day Average** | €79.86 |\n| **Price Updated** | 2026-11-01T22:54:33.760Z |\n| **Source** | https://api.tcgdex.net/v2/en/cards/base1-15 |\n\n**Rarity verification:** The dataset catalogue confirms this Venusaur (Base Set, #15) is **Rare**, not \"rare_or_higher\" as the D3 prediction suggested. The D3 prediction was incorrect — this card is a standard Rare (holo), not a higher-tier rarity.",
+    "note": "Market reference; language, finish and condition can change the value.",
+    "trace_id": "tr-48b4aaf595a4d7cd6e26c06fda0d2279",
+    "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-48b4aaf595a4d7cd6e26c06fda0d2279&workspace=signal-desk-dev"
+  },
+  "checks": [
+    "real image inference recovered to 51/51 completed",
+    "pagination and whole-batch filters",
+    "controls offer no price action",
+    "native price research and exact evidence values",
+    "same-origin images",
+    "trace link",
+    "saved filter",
+    "390px mobile"
+  ]
+}
