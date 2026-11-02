@@ -30,6 +30,19 @@ def market_lookup(item_id: str) -> dict:
     if reference["card_kind"] != "pokemon_tcg":
         return {"item_id": item_id, "status": "not_a_pokemon_card", "pricing": None}
     card_id = reference["card_id"]
+    if reference.get("catalogue_provider") == "curated":
+        # This contest promo has no matching TCGdex record. Preserve identity and
+        # provenance without borrowing a different card's or auction's price.
+        return {
+            "item_id": item_id, "status": "ok", "card_id": card_id,
+            "identity_method": "Curated historical reference from the fixed dataset; not inferred from the photo.",
+            "card": {"name": reference["name"], "number": reference["number"],
+                     "set": reference["set_name"], "set_id": reference["set_id"], "rarity": reference["rarity"]},
+            "source_url": reference["source_url"], "context_source_url": reference["context_source_url"],
+            "retrieved_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "pricing": None, "variants": [], "price_scope": reference["collector_note"],
+            "reference_scope": "Frozen curated identity; no live market quote is available for this item.",
+        }
     url = f"https://api.tcgdex.net/v2/en/cards/{card_id}"
     request = urllib.request.Request(url, headers={"User-Agent": "CardScoutWorkshop/1.0"})
     try:

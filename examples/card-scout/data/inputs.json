@@ -257,6 +257,37 @@
       "id": "item-051",
       "image_url": "https://assets.tcgdex.net/en/sm/sm1/41/high.png",
       "image_sha256": "b152b4de367aba0bd9856963d0334378659e7ace35f0d3865834305086621be9"
+    },
+    {
+      "id": "item-052",
+      "image_url": "https://assets.tcgdex.net/en/base/base1/4/high.png",
+      "image_sha256": "b05eac72e977adb4c6004640deb48f5cf06907577e6e1a10fd783f272508880b"
+    },
+    {
+      "id": "item-053",
+      "image_url": "https://assets.tcgdex.net/en/neo/neo4/107/high.png",
+      "image_sha256": "40240400584952b27fe2fe6c1ae032008e9dc74de3790eafb3e7a41a512666b4"
+    },
+    {
+      "id": "item-054",
+      "image_url": "https://assets.tcgdex.net/en/pop/pop5/17/high.png",
+      "image_sha256": "183ffbb89a2bc771dfbb1cface9e5854c8d253af06ab68c6899db6a5b420d4de"
+    },
+    {
+      "id": "item-055",
+      "image_url": "https://assets.tcgdex.net/en/neo/neo3/66/high.png",
+      "image_sha256": "6a3ad91393befba69961205f278cbdbdba9acc0df9bcd6f34f20c9a86b11ba92"
+    },
+    {
+      "id": "item-056",
+      "image_url": "https://assets.tcgdex.net/en/base/basep/24/high.png",
+      "image_sha256": "f6b8682b8c2c1f4ce6bb90bb1864399239e5f23c71810f3aed738e5fab36fcb7"
+    },
+    {
+      "id": "item-057",
+      "image_url": "https://archives.bulbagarden.net/media/upload/5/5f/Pok%C3%A9monIllustratorCoroCoropromo.jpg",
+      "image_sha256": "f44e5358a3f91a28da3245ee3f3f6f1d085be8f24521d8574a8367268a928560"
     }
-  ]
+  ],
+  "extended_at": "2026-11-02T15:21:34.596909+00:00"
 }

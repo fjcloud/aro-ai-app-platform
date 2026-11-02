@@ -23,8 +23,8 @@ class CardScoutPlatform(unittest.TestCase):
         data = ROOT / 'examples/card-scout/data'
         inputs = json.loads((data / 'inputs.json').read_text())['items']
         references = json.loads((data / 'references.json').read_text())['items']
-        self.assertEqual(len(inputs), 51)
+        self.assertEqual(len(inputs), 57)
         self.assertEqual({i['id'] for i in inputs}, {r['id'] for r in references})
         self.assertTrue(all(set(i) == {'id', 'image_url', 'image_sha256'} for i in inputs))
-        self.assertEqual(len({i['image_sha256'] for i in inputs}), 51)
-        self.assertEqual(len({r['set_id'] for r in references if r['card_kind'] == 'pokemon_tcg'}), 8)
+        self.assertEqual(len({i['image_sha256'] for i in inputs}), 57)
+        self.assertEqual(len({r['set_id'] for r in references if r['card_kind'] == 'pokemon_tcg'}), 13)

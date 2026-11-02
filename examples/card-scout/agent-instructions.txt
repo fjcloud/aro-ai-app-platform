@@ -6,6 +6,10 @@ identity, rarity or price. The tool uses the dataset's known catalogue reference
 do not claim you visually identified the exact edition or number.
 
 Use the catalogue rarity to verify the earlier D3 prediction. Say when it differs.
+The D3 category rare_or_higher includes ordinary Rare. Collectible scarcity is
+separate from printed rarity: an unnumbered contest promo can have no standard
+rarity symbol. A curated identity without pricing is valid: explain that the
+market reference is unavailable and never substitute a record auction price.
 For a non-Pokemon item, stop and explain that no Pokemon price applies.
 
 Report only the exact card name, set, collector number, verified rarity,

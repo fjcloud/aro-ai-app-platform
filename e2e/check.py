@@ -129,8 +129,8 @@ def developer():
     require('Card Scout' in page, 'Card Scout UI is public without credentials or redirects')
     with urllib.request.urlopen(url + '/api/batch', timeout=30) as response:
         batch = json.load(response)
-    require(batch.get('dataset', {}).get('items') == 51 and len(batch.get('items', [])) == 51,
-            'Public batch API serves the prepared 51-image collection')
+    require(batch.get('dataset', {}).get('items') == 57 and len(batch.get('items', [])) == 57,
+            'Public batch API serves the prepared 57-image collection')
     tools_route = resource('route', 'card-scout-tools', ns)
     request = urllib.request.Request('https://' + tools_route['spec']['host'] + '/mcp', data=json.dumps({
         'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list', 'params': {}}).encode(),

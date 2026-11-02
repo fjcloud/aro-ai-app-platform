@@ -37,7 +37,7 @@ APP_URL=https://your-app-route node e2e/card-scout-browser.cjs
 ```
 
 The delivery check compares workspace source, pushed main, Argo CD revision,
-Tekton target and running image digest. The browser check requires 51 completed
+Tekton target and running image digest. The browser check requires 57 completed
 real image analyses, full-batch filters, pagination, no price action for controls,
 a native price lookup, exact tool-derived prices, dated source and trace links,
 filter persistence and a mobile layout. Its separate fixtures exercise errors,

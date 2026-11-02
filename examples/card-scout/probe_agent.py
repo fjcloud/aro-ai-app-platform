@@ -6,6 +6,7 @@ import pathlib
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
+REFERENCES = {r["id"]: r for r in json.loads((ROOT / "data" / "references.json").read_text())["items"]}
 
 
 def market_evidence(response, item_id):
@@ -20,8 +21,12 @@ def market_evidence(response, item_id):
     evidence = json.loads(call["output"])
     if evidence.get("item_id") != item_id or evidence.get("status") not in ("ok", "not_a_pokemon_card"):
         raise ValueError("Market data is unavailable or does not match the selected item")
-    if evidence["status"] == "ok" and evidence.get("source_url") != "https://api.tcgdex.net/v2/en/cards/" + evidence.get("card_id", ""):
-        raise ValueError("Unexpected market evidence source")
+    if evidence["status"] == "ok":
+        reference = REFERENCES.get(item_id)
+        if not reference or evidence.get("card_id") != reference["card_id"] or evidence.get("source_url") != reference["source_url"]:
+            raise ValueError("Unexpected market evidence source or card identity")
+        if reference.get("catalogue_provider") == "curated" and evidence.get("pricing") is not None:
+            raise ValueError("No verified market prices exist for this curated item")
     return evidence
 
 
