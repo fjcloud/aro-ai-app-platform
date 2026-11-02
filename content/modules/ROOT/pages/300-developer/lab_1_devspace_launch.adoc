@@ -1,6 +1,6 @@
 = Lab 2.1 — Launch Your Dev Space
 
-Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is published through the OpenShift AI MaaS gateway from this morning.
+Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is published through the OpenShift AI MaaS gateway prepared in Act 1.
 
 [NOTE]
 ====

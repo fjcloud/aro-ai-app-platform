@@ -25,7 +25,7 @@ curl --fail-with-body -sS --max-time 180 \
 
 Next, in *Card Scout*, click *Analyze batch* to generate D3 activity. Click *Check price* on a Pokémon card to generate native agent and MCP traffic. Record the time of each action. Reusing completed batch results creates no new inference request.
 
-Wait 2–3 minutes for scraping on a fresh lab. Use *last hour* in the OpenShift console's *Observe → Dashboards → Workshop AI — ARO*. Lab 1.1 enabled MaaS telemetry and Lab 1.6 added the D3 ServiceMonitor; no separate Grafana is needed.
+Wait 2–3 minutes for scraping on a fresh lab. Use *last hour* in the OpenShift console's *Observe → Dashboards → Workshop AI — ARO*. Lab 1.3 enabled MaaS telemetry and Lab 1.6 added the D3 ServiceMonitor; no separate Grafana is needed.
 
 == Read the dashboard
 

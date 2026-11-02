@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Read-only assertions for the MaaS-governed Foundry ARO workshop (one inference call)."""
 import base64
-import html
 import json
 import os
 from pathlib import Path
@@ -127,17 +126,18 @@ def developer():
             return None
     with urllib.request.build_opener(NoRedirect).open(url, timeout=30) as response:
         page = response.read().decode('utf-8')
-    require('A week of news. A paper investment.' in page, 'Signal Desk UI is public without credentials or redirects')
-    with urllib.request.urlopen(url + '/api/game', timeout=30) as response:
-        require('game' in json.load(response), 'Game API is public without credentials')
-    request = urllib.request.Request(url + '/mcp', data=json.dumps({
+    require('Card Scout' in page, 'Card Scout UI is public without credentials or redirects')
+    with urllib.request.urlopen(url + '/api/batch', timeout=30) as response:
+        batch = json.load(response)
+    require(batch.get('dataset', {}).get('items') == 51 and len(batch.get('items', [])) == 51,
+            'Public batch API serves the prepared 51-image collection')
+    tools_route = resource('route', 'card-scout-tools', ns)
+    request = urllib.request.Request('https://' + tools_route['spec']['host'] + '/mcp', data=json.dumps({
         'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list', 'params': {}}).encode(),
         headers={'Content-Type': 'application/json', 'Accept': 'application/json, text/event-stream'})
     with urllib.request.urlopen(request, timeout=30) as response:
         tools = {t['name'] for t in json.load(response)['result']['tools']}
-    require(tools == {'list_news','read_archive','search_archive','index_universe'}, 'Public MCP discovers exactly the four read-only tools without a token')
-    if os.environ.get('EXPECT_UPDATED_APP') == 'true':
-        require('High relevance only' in html.unescape(page), 'Shipped update includes the relevance filter')
+    require(tools == {'get_card_market_data'}, 'Prepared public MCP exposes only the read-only card market tool')
     spec = deployment['spec']['template']['spec']
     container = spec['containers'][0]
     expected_image = f'image-registry.openshift-image-registry.svc:5000/{app}-build/{app}:latest'
@@ -151,6 +151,11 @@ def developer():
     require(spec.get('serviceAccountName') == 'signal-desk', 'Dedicated runtime identity')
     require(any(e.get('name')=='LISTEN_ADDR' and e.get('value')==':8080' for e in container.get('env',[])), 'Go backend listens on the Service port')
     require(len(spec['containers']) == 1 and spec['containers'][0]['name'] == app, 'One app container without an authentication proxy')
+    require(spec.get('automountServiceAccountToken') is False
+            and not any('secretRef' in ref for ref in container.get('envFrom', []))
+            and not any('secretKeyRef' in entry.get('valueFrom', {}) for entry in container.get('env', []))
+            and not any('secret' in volume for volume in spec.get('volumes', [])),
+            'Generated UI has no mounted Kubernetes token or model Secret')
     security = spec.get('securityContext', {})
     require(security.get('runAsNonRoot') is True and security.get('seccompProfile', {}).get('type') == 'RuntimeDefault' and 'runAsUser' not in security, 'Deployment uses portable restricted pod security')
     cs = container.get('securityContext', {})
@@ -192,7 +197,7 @@ def model_apis():
         require(denied.returncode == 1 and denied.stdout.strip() == 'no', 'Developer cannot ' + verb + ' ' + kind + ' in the model namespace')
     page = (Path(__file__).resolve().parents[1] / 'content/modules/ROOT/pages/300-developer/lab_2_model_apis.adoc').read_text()
     blocks = re.findall(r'\[source,sh,role=execute\]\n----\n(.*?)\n----', page, re.S)
-    require(len(blocks) == 5, 'All five documented API blocks are selected')
+    require(len(blocks) == 4, 'All four documented API blocks are selected')
     prefix = ['exec', pod, '-n', ns, '-c', os.environ.get('DEV_CONTAINER', 'dev'), '--', 'bash', '-c']
     raw = subprocess.check_output(['oc', *prefix, 'set -euo pipefail\n' + '\n'.join(blocks)], text=True, stderr=subprocess.DEVNULL, timeout=600).strip()
     remaining, responses, decoder = raw.lstrip(), [], json.JSONDecoder()
@@ -200,13 +205,30 @@ def model_apis():
         response, end = decoder.raw_decode(remaining)
         responses.append(response)
         remaining = remaining[end:].lstrip()
-    require(len(responses) == 5, 'Model discovery, two memo scores, Chat Completions and Responses returned JSON')
-    metadata, chips, retail, chat, native = responses
+    require(len(responses) == 5, 'Model discovery, two card decisions, Chat Completions and Responses returned JSON')
+    metadata, pokemon, control, chat, native = responses
     require(metadata['device'] == 'cuda:0' and metadata['dtype'] == 'float16', 'Developer reaches the actual T4 model directly without a credential')
-    require(chips['coverage'] == retail['coverage'] == 'complete', 'Both decision requests cover the complete input')
-    require(0 <= retail['score'] < chips['score'] <= 4, 'The semiconductor example ranks higher for the semiconductor fund than the retail fund')
+    require(pokemon['card_kind']['choice'] == 'pokemon_tcg', 'D3 recognizes the Pokemon image')
+    require(pokemon['rarity']['choice'] in {'common', 'uncommon', 'rare_or_higher', 'uncertain'}, 'D3 returns a printed-rarity decision')
+    require(control['card_kind']['choice'] == 'other_card' and control['rarity']['choice'] == 'not_applicable',
+            'D3 distinguishes the Yu-Gi-Oh! control and does not assign Pokemon rarity')
     require(bool(chat['answer']) and chat['usage']['total_tokens'] > 0, 'Developer MaaS key reaches DeepSeek with real token usage')
-    require(native['status'] == 'completed' and native['model'] == 'maas-vllm-inference-1/deepseekv4pro' and bool(native['output']), 'Native OpenShift AI Responses is reachable from Dev Spaces')
+    require(native['status'] == 'completed' and bool(native['output']), 'Native OpenShift AI Responses completed from Dev Spaces')
+    calls = [entry for entry in native['output'] if entry.get('type') == 'mcp_call'
+             and entry.get('name') == 'get_card_market_data' and not entry.get('error')]
+    require(bool(calls), 'Native agent actually executed the card price tool')
+    evidence = []
+    for call in calls:
+        arguments = call.get('arguments', {})
+        arguments = json.loads(arguments) if isinstance(arguments, str) else arguments
+        output = call.get('output', {})
+        output = json.loads(output) if isinstance(output, str) else output
+        if arguments.get('item_id') == 'item-039' and output.get('item_id') == 'item-039':
+            evidence.append(output)
+    require(any(e.get('status') == 'ok' and e.get('card_id') == 'sv01-201'
+                and e.get('source_url') == 'https://api.tcgdex.net/v2/en/cards/sv01-201'
+                and e.get('retrieved_at') for e in evidence),
+            'Tool evidence verifies the requested catalogue reference and dated source')
     print('API checks completed without printing credentials or model responses.')
 
 

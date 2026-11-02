@@ -1,7 +1,7 @@
 // Live T4/native-agent acceptance, then isolated browser fixtures for edge cases.
 const {chromium,expect}=require('@playwright/test');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-const base=process.env.APP_URL?.replace(/\/$/,''),dir=path.join(__dirname,'results/card-scout');
+const base=process.env.APP_URL?.replace(/\/$/,''),dir=process.env.CARD_SCOUT_RESULTS_DIR||path.join(__dirname,'results/card-scout');
 assert.ok(base,'Set APP_URL');fs.mkdirSync(dir,{recursive:true});
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});

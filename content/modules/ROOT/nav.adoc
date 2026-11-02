@@ -12,7 +12,7 @@
 * xref:200-platform/lab_3_openshift_ai_overview.adoc[Lab 1.5 — Publish DeepSeek through MaaS]
 * xref:200-platform/lab_4_decision_model.adoc[Lab 1.6 — Serve d3-mini]
 * xref:200-platform/lab_5_agents_md.adoc[Lab 1.7 — Prepare Developer Access]
-* xref:200-platform/lab_6_signal_desk.adoc[Lab 1.8 — Prepare the Runtime Agent]
+* xref:200-platform/lab_6_signal_desk.adoc[Lab 1.8 — Prepare Card Scout]
 
 *Act 2 — Developer*
 

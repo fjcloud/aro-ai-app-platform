@@ -1,6 +1,6 @@
 = Lab 1.4 — Publish DeepSeek on Foundry
 
-The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode calls that endpoint this afternoon. d3-mini will run separately on one T4 in Lab 1.6 to rank news; it is not OpenCode’s coding model.
+The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode uses that endpoint in Act 2. d3-mini will run separately on one T4 in Lab 1.6 to classify card images; it is not OpenCode’s coding model.
 
 [NOTE]
 ====
