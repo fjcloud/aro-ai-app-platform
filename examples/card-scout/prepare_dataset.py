@@ -64,7 +64,7 @@ def fetch(url):
                 return response.read()
         except Exception:
             if attempt == 2:
-                raise
+                raise RuntimeError(f"Could not download dataset source: {url}") from None
             time.sleep(attempt + 1)
 
 

@@ -9,7 +9,8 @@ from prepare_dataset import CACHE, ROOT, fetch
 
 def prepare(item):
     path = CACHE / item["image_sha256"]
-    data = path.read_bytes() if path.exists() else fetch(item["image_url"])
+    bundled = ROOT / "data" / "images" / item["image_sha256"]
+    data = path.read_bytes() if path.exists() else bundled.read_bytes() if bundled.exists() else fetch(item["image_url"])
     if hashlib.sha256(data).hexdigest() != item["image_sha256"]:
         raise ValueError("Image changed for " + item["id"])
     path.write_bytes(data)

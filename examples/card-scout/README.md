@@ -48,6 +48,8 @@ Inputs are shuffled with a fixed seed. Image hashes freeze the exact inputs.
 - `data/inputs.json`: anonymous item IDs, image URLs and SHA-256 checksums.
 - `data/references.json`: held-out catalogue IDs, names, dates and rarity labels.
 - `.cache/`: downloaded images; excluded from Git.
+- `data/images/`: the frozen Illustrator scan, bundled because its source blocks
+  GitHub builds; the original source URL and checksum are retained.
 
 Inference receives **image bytes only**, with the same questions for every item.
 Names, URLs, set IDs and reference labels are not included in the model input.
