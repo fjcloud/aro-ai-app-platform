@@ -1,83 +1,91 @@
-# ARO Signal Desk validation
+# ARO Card Scout validation
 
-Follow Acts 0–3 on an assigned ARO lab: actual operator/model setup, curl + jq probes, Dev Spaces, DeepSeek/OpenCode generation, Tekton, Argo CD and the browser game. Fixture success alone is not live acceptance.
+Follow Acts 0–3 on an assigned classic ARO 4.21+ lab. Live acceptance means
+installing the platform, provisioning one CPU and one T4 worker, testing the
+actual APIs from Dev Spaces, generating the Go app with DeepSeek/OpenCode,
+and delivering it through Tekton and Argo CD. Fixtures alone are not acceptance.
 
-The guide installs operators with `oc apply -k deploy/operators`, adds one CPU and one GPU worker, then enables instances with explicit CLI commands. The developer preflight is Lab 2.2, executed entirely from Dev Spaces.
+Run the shell blocks from the guide in order. Act 0 and Act 1 use the bastion;
+Act 2 uses the scoped Dev Spaces identity. The Playground tests the CLI-created
+`OGXServer/lsd-genai-playground` in `signal-desk-dev`; it does not provision it.
 
-Lab 1.8 creates the native `OGXServer` with `oc apply -k deploy/briefing/agent` in `signal-desk-dev`, after creating its cluster-derived MaaS endpoint ConfigMap. Wait for the OGX resource and Deployment; a Ready Playground in another namespace is not the application backend. The UI is used only for testing the prepared model and MCP tools.
+## Platform and developer APIs
 
-To check that the Playground discovers the CLI-created backend and answers with the runtime subscription, before the app is built:
-
-```sh
-RHOAI_URL=https://your-rhoai-route BROWSER_STATE=/private/path/login-state.json \
-  node e2e/native-agent-browser.cjs
-```
-
-From the authenticated bastion:
+From the authenticated bastion, with the workshop checkout:
 
 ```sh
 bash e2e/platform-run.sh
-bash e2e/dev-run.sh
-bash e2e/usage-run.sh
-python3 e2e/check-observability.py | jq .
-python3 e2e/maas-protocol.py | jq .
-```
-
-Verify the developer's five API command blocks verbatim, plus model-namespace permissions:
-
-```sh
 E2E_NS=your-devspaces-namespace DEV_POD=your-workspace-pod \
   python3 e2e/check.py model-apis
 ```
 
-This requires direct D3 access from Dev Spaces and the Dev Spaces-to-Responses policy from Lab 1.8. It checks model readiness, two complete memo scores, both DeepSeek protocols and scoped namespace permissions. D3 uses no credential; DeepSeek keeps its MaaS key. Credentials and full model responses are never printed.
+The API check executes all four Lab 2.2 command blocks verbatim in the real
+workspace. It requires five JSON responses: D3 discovery, Pokémon and control
+image decisions, MaaS Chat Completions, and a completed native Responses call
+with a successful `get_card_market_data` call for the requested catalogue ID.
+It also checks that the developer cannot read model Secrets or edit the model.
+D3 needs no credential; DeepSeek uses the injected MaaS key.
 
-Platform/usage/protocol/model-apis probes make billable model calls. `APP_NAME` defaults to `signal-desk`. Use `EXPECT_UPDATED_APP=true` for the shipped relevance-filter exercise and `E2E_NS`, `DEV_POD`, `DEV_CONTAINER=dev` to compare actual workspace source, pushed revision and Argo CD revision.
+## Generated app and browser
 
-Validate the UI with the fixed repository news corpus, real T4 scores, an actual native Responses tool loop, verified individual company shares, a virtual allocation and the latest timestamped market quote. Research must connect archived facts to the named company or supported suppliers, customers or competitors; ETFs and indices are excluded. For foreign shares, verify the exchange-local entry time and the USD return including the disclosed FX rates. Verify that entry follows the fixed news cutoff and that refreshing the quote cannot change the portfolio. Confirm an MLflow research trace and the same archive, dated-web and company tools in the native Playground. The app and read-only MCP endpoint are public over HTTPS; model keys remain in backend Secrets. Participants share the workshop state. Every Chromium launch includes `--use-mock-keychain`.
-
-For the public Route browser test, save model metadata from the direct d3-mini probe in Lab 2.2, then run with a fresh browser context:
+After OpenCode commits, pushes, builds and deploys the application:
 
 ```sh
-APP_URL=https://your-app-route \
-D3_METADATA=/private/path/d3-models.json \
-EXPECT_UPDATED_APP=true APPLICATION_REVISION=your-deployed-git-revision \
-  node e2e/briefing-desk-aro.cjs
+E2E_NS=your-devspaces-namespace DEV_POD=your-workspace-pod \
+  bash e2e/dev-run.sh
+APP_URL=https://your-app-route node e2e/card-scout-browser.cjs
 ```
 
-The live script detects the repository-snapshot mode and requires timestamped latest quotes. It also retains earlier archived-week acceptance; only that legacy mode accepts `NEWS_IMPORT_FILE`. The separate `saved-news-browser.cjs` fixture loads the real embedded corpus with explicitly synthetic models and prices; it is not live inference evidence.
+The delivery check compares workspace source, pushed main, Argo CD revision,
+Tekton target and running image digest. The browser check requires 51 completed
+real image analyses, full-batch filters, pagination, no price action for controls,
+a native price lookup, exact tool-derived prices, dated source and trace links,
+filter persistence and a mobile layout. Its separate fixtures exercise errors,
+missing/zero prices and edge cases using explicitly synthetic API responses.
 
-To repeat the native Playground test with an existing private OpenShift AI browser session:
+`card-scout-browser.cjs` targets the generated validation app's accessible UI and
+selectors. A newly generated implementation can use different DOM selectors;
+adapt those selectors while retaining the same acceptance behavior.
+
+## Playground, traces and measurements
+
+Use a private authenticated browser state for the cluster UI:
 
 ```sh
-RHOAI_URL=https://your-rhoai-route APP_URL=https://your-app-route \
-BROWSER_STATE=/private/path/login-state.json \
-  node e2e/agentops-browser.cjs
+RHOAI_URL=https://your-rhoai-route BROWSER_STATE=/private/path/login-state.json \
+  node e2e/native-agent-browser.cjs
+bash e2e/usage-run.sh
+python3 e2e/check-observability.py | jq .
+python3 e2e/maas-protocol.py | jq .
+python3 e2e/maas-quota.py
 ```
 
-It checks actual Responses MCP calls, rather than accepting a model's claim to have used tools. Set `CAPTURE_GUIDE=true` to refresh the guide screenshots from the real UI. Signal Desk and its MCP connector require no token.
+Follow Lab 3.2 to exercise the same price MCP tool in the Playground. Open the
+app's exact MLflow trace link and inspect `card.research` → `agent.responses` →
+`tool.get_card_market_data`, with real inputs, output, catalogue identity and
+provider dates. Verify a batch trace and its `d3.classify_card` spans too. A model
+claim to have called a tool or a visible UI answer does not establish trace export.
+Model keys and provider headers must not appear in traces or browser output.
 
-After a fresh skill-assisted research on one of the first three stories, validate the app's direct MLflow link with the existing private cluster session:
+The model and quota probes consume real model tokens. The app and its read-only
+MCP connector are public HTTPS endpoints; OpenShift AI and MLflow use normal
+cluster authentication. Every Chromium launch includes `--use-mock-keychain`.
+
+## Local checks and dated evidence
 
 ```sh
-APP_URL=https://your-app-route BROWSER_STATE=/private/path/login-state.json \
-  node e2e/trace-link-browser.cjs
-```
-
-This clicks the actual link and checks the exact trace, workspace and native agent/tool graph.
-
-Local regression checks:
-
-```sh
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r e2e/requirements.txt
 make test
 make test-terminal
 make docs
 ```
 
-The browser fixtures check the initial three-story view, progressive disclosure and a workspace-scoped MLflow trace link. Live acceptance must open that exact link and inspect its graph, then verify the finance skill source/version on a fresh research trace. Tool and LLM nodes must have actual Inputs / Outputs, with dated web sources and rejected-date reasons, without a model credential. Cached older research is not evidence of skill use.
-
-The browser fixture test covers seven archive days, memo changes, native agent research, two investments with positive/negative returns, immutable portfolio choices, exports and mobile layout. Go tests also cover MCP discovery, strict tool arguments, archive boundaries, source safety and completed-session valuation.
-
-[Signal Desk validation and evidence](BRIEFING-DESK-VALIDATION.md) distinguishes real local Metal/Azure runs from fixture checks and ARO results. The optional `e2e/briefing-desk-live-local.cjs` tests the local Metal setup; it does not establish ARO compatibility.
-
-Earlier speech, cluster-health and game experiments remain in their reference directories and historical validation records. They are not prerequisites or acceptance criteria of the Signal Desk workshop.
+[Fresh ARO 54w5q review](results/aro-54w5q/README.md) records the complete
+2 November participant run and corrections.
+[Earlier Card Scout evidence](results/card-scout/README.md) separates real model,
+agent, delivery and browser runs from fixtures and local checks. Record the lab,
+date, source revision and actual result of a new run; retain earlier evidence as
+historical. The finance, speech and game directories are earlier experiments,
+not requirements of the current Card Scout workshop.

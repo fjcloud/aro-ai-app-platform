@@ -1,0 +1,3 @@
+# Manifest checks in test_card_scout_platform.py.
+PyYAML==6.0.3
+-r ../examples/card-scout/requirements.txt

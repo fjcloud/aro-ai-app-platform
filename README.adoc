@@ -26,8 +26,9 @@ Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are 
 [source,text]
 ----
 Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry
-Fixed card images → prepared Card Scout service → d3-mini on T4 → rarity ranking
-Browser → generated Go UI → OpenShift AI Responses → DeepSeek + price MCP tool
+Browser → generated Go UI/proxy → prepared Card Scout service
+                                  ├→ fixed images → d3-mini on T4 → rarity ranking
+                                  └→ OpenShift AI Responses → DeepSeek + price MCP
 Playground → same MCP tool              Model and tool spans → MLflow
 Git → Tekton → Argo CD → same app
 ----
@@ -42,7 +43,7 @@ Prefer direct `oc`, `az` and `curl | jq` commands in the labs. Keep helpers for 
 
 `deploy/briefing/agent` defines the operator-managed native Responses backend in `signal-desk-dev`. Lab 1.8 supplies the cluster's MaaS URL and applies it with the CLI; the Playground UI is reserved for tests.
 
-`make test` runs the helper and reference-app tests. `make docs` builds the guide; `make serve` previews it at http://localhost:8443.
+Install the local test dependencies with a virtual environment and `pip install -r e2e/requirements.txt`, as shown in `e2e/README.md`. `make test` runs the helper and reference-app tests. `make docs` builds the guide; `make serve` previews it at http://localhost:8443.
 
 The published d3-mini image is pinned by digest in `deploy/decision/runtime-image.txt` and `servingruntime.yaml`. The `publish decision runtime` GitHub Actions workflow rebuilds it when the pinned Dockerfile changes, or on manual dispatch. It needs the repository's `REDHAT_REGISTRY_AUTH` secret for the Red Hat base image; participants only pull the public result. After validating a replacement on a T4, update both digest references together.
 

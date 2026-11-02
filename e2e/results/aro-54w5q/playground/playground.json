@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "project": "signal-desk-dev",
+  "backend_created_by": "CLI OGXServer",
+  "ui_creation_used": false,
+  "live_model": true,
+  "model": "maas-vllm-inference-1/deepseekv4pro",
+  "subscription": "Card Scout runtime",
+  "response_status": "completed",
+  "marker_verified": true,
+  "at": "2026-11-02T14:22:34.066Z"
+}

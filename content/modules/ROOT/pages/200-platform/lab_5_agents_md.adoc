@@ -30,7 +30,7 @@ The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-
 | Golden-path Kustomize. The Deployment already names the internal Tekton image. The pipeline validates that image before building; the model keeps the scaffold intact.
 |===
 
-`APP_CONTRACT.md` defines the game, APIs and acceptance checks. `AGENTS.md` defines the coding and delivery rules. There is no app `scripts/` directory and no Ansible.
+`APP_CONTRACT.md` defines the application, APIs and acceptance checks. `AGENTS.md` defines the coding and delivery rules. There is no app `scripts/` directory and no Ansible.
 
 == Prepare the developer's permissions
 

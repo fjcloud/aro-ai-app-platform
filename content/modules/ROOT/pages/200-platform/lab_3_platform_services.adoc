@@ -87,6 +87,7 @@ oc patch odhdashboardconfig odh-dashboard-config -n redhat-ods-applications \
   --type=merge --patch-file=deploy/instances/odh-dashboard-config.yaml
 oc wait crd/mlflows.mlflow.opendatahub.io --for=condition=Established --timeout=300s
 oc get mlflow/mlflow >/dev/null 2>&1 || oc apply -f deploy/agentops/mlflow.yaml
+oc wait mlflow/mlflow --for=condition=Available --timeout=900s
 oc wait maastenantconfig/default-tenant -n models-as-a-service --for=condition=Ready --timeout=600s
 oc patch kuadrant kuadrant -n kuadrant-system --type=merge \
   -p '{"spec":{"observability":{"enable":true}}}'

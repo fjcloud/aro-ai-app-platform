@@ -18,9 +18,10 @@ You play two roles. The *platform engineer* prepares OpenShift AI, a managed Dee
 ----
 Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry (coding)
 
-Fixed mixed-era images → Card Scout platform → d3-mini on T4 → rarity ranking
-Browser → generated Go UI/proxy → native OpenShift AI agent → DeepSeek / MaaS
-                                                ↕ read-only MCP → TCGdex prices
+Browser → generated Go UI/proxy → Card Scout platform
+                                  ├→ fixed images → d3-mini on T4 → rarity ranking
+                                  └→ native OpenShift AI agent → DeepSeek / MaaS
+                                                    ↕ read-only MCP → TCGdex prices
 Playground → same MCP tool                 Model and tool spans → MLflow
 Git → Tekton → Argo CD → same Go app
 ----

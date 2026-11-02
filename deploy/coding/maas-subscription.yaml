@@ -16,5 +16,5 @@ spec:
     - name: deepseekv4pro
       namespace: llm-serving
       tokenRateLimits:
-        - limit: 5000000
+        - limit: 10000000
           window: 24h

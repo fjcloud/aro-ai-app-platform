@@ -9,8 +9,10 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
  try{
   const context=await browser.newContext({storageState:state,viewport:{width:1440,height:1000}});
   const page=await context.newPage();
+  await page.addLocatorHandler(page.getByTestId('whats-new-skip-tour'), async () => {
+   await page.getByTestId('whats-new-skip-tour').click();
+  });
   await page.goto(base+'/gen-ai-studio/playground/'+encodeURIComponent(namespace));
-  const skip=page.getByTestId('whats-new-skip-tour');if(await skip.isVisible())await skip.click();
   await expect(page.getByTestId('chatbot-message-bar')).toBeVisible({timeout:60000});
   await expect(page.getByRole('button',{name:'Create playground',exact:true})).toHaveCount(0);
   if(!await page.getByRole('tab',{name:'Model',exact:true}).count())await page.getByTestId('settings-button').click();
@@ -30,7 +32,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
   const result={passed:true,project:namespace,backend_created_by:'CLI OGXServer',ui_creation_used:false,
    live_model:true,model:done.model,subscription:'Card Scout runtime',response_status:done.status,
    marker_verified:true,at:new Date().toISOString()};
-  const output=path.join(__dirname,'results/native-agent-cli');fs.mkdirSync(output,{recursive:true});
+  const output=process.env.NATIVE_AGENT_RESULTS_DIR||path.join(__dirname,'results/native-agent-cli');fs.mkdirSync(output,{recursive:true});
   await expect(page.getByTestId('chatbot')).toContainText('CLI_BACKEND_OK');
   await page.screenshot({path:path.join(output,'playground.png'),fullPage:true});
   fs.writeFileSync(path.join(output,'playground.json'),JSON.stringify(result,null,2)+'\n');

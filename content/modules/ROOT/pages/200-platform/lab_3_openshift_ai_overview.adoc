@@ -53,7 +53,7 @@ oc get maasauthpolicy,maassubscription -n models-as-a-service
 
 Inspect `deploy/coding/external-model.yaml`: the client model is `deepseekv4pro`, the upstream deployment has the same name, and the Azure request path is `/openai/v1/chat/completions`. `apiFormat: openai-chat` keeps the OpenAI Chat Completions contract used by OpenCode.
 
-`MaaSModelRef` publishes the external model. `MaaSAuthPolicy` grants access; `MaaSSubscription` sets a shared *5 million tokens per 24 hours* workshop allowance. The quota controls consumption, not Azure prices or infrastructure charges. It is separate from Foundry’s tokens-per-minute limit.
+`MaaSModelRef` publishes the external model. `MaaSAuthPolicy` grants access; `MaaSSubscription` sets a shared *10 million tokens per 24 hours* workshop allowance. The quota controls consumption, not Azure prices or infrastructure charges. It is separate from Foundry’s tokens-per-minute limit.
 
 == Step 3: Give Dev Spaces a MaaS key
 
@@ -89,6 +89,8 @@ The URL is `https://maas.<apps-domain>/v1`. Clients send a Bearer MaaS key; they
 == Inspect it in OpenShift AI
 
 Open *Red Hat OpenShift AI* from the OpenShift application launcher:
+
+Close the welcome tour dialog if it appears on first access.
 
 . In *AI hub → Models → External models*, choose the `llm-serving` project and inspect DeepSeek and its provider.
 . In *Settings → MaaS governance*, inspect `deepseekv4pro-workshop` and its token allowance.

@@ -1,6 +1,6 @@
 = Lab 2.1 — Launch Your Dev Space
 
-Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is published through the OpenShift AI MaaS gateway from this morning.
+Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is published through the OpenShift AI MaaS gateway prepared in Act 1.
 
 [NOTE]
 ====
@@ -62,7 +62,11 @@ A facilitator can configure a named https://docs.redhat.com/en/documentation/ope
 
 . You will be redirected to OpenShift SSO. Log in as `kubeadmin` with the ARO password, or use the named workshop user prepared by your facilitator. An administrative certificate login shown as `system:admin` by the bastion’s `oc whoami` is not a browser username.
 
-. On the Create Workspace page, confirm that **OpenCode** is selected under *AI Provider*. That selection injects the CLI at start; you do not install it yourself. You will see a progress screen:
+. On first access, click *Log in with OpenShift* if prompted, then *Allow selected permissions* for the Dev Spaces client. The redirect should return to your lab's Dev Spaces address.
+
+. If Dev Spaces asks whether you trust the repository, confirm *Continue* for `fjcloud/go-app-template`. This starts workspace creation.
+
+. The launch URL selects **OpenCode** automatically. If a Create Workspace form appears, confirm **OpenCode** under *AI Provider*. This injects the CLI at start; you do not install it yourself. You will see a progress screen:
 +
 [source,text]
 ----
@@ -106,13 +110,14 @@ Expect the `workshop-developer` service account, then `yes`, `yes`, and `no`. Th
 +
 [source,sh,role=execute]
 ----
-opencode --version && echo "GIT_SERVER=$GIT_SERVER"
+opencode --version && command -v gitpop && echo "GIT_SERVER=$GIT_SERVER"
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
 1.x.x
+/home/user/.local/bin/gitpop
 GIT_SERVER=https://git.<workshop-domain>
 ----
 

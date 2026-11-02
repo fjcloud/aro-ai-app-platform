@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-02T15:07:37.285261+00:00",
+  "all_cluster_operators_available_not_degraded": true,
+  "cluster_operator_count": 33,
+  "nodes_ready": 8,
+  "pending_pods": [],
+  "cpu_experiment_removed": true,
+  "workshop_worker_machinesets": [
+    {
+      "name": "aro-cluster-54w5q-qbtgm-gpu-t4-8-eastus1",
+      "ready": 1
+    },
+    {
+      "name": "aro-cluster-54w5q-qbtgm-workshop-cpu-eastus3",
+      "ready": 1
+    }
+  ]
+}

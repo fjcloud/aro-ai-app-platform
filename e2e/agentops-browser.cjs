@@ -3,22 +3,23 @@
 const{chromium,expect}=require('@playwright/test');
 const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),images=path.join(root,'content/modules/ROOT/assets/images');
-const base=process.env.RHOAI_URL?.replace(/\/$/,''),app=process.env.APP_URL?.replace(/\/$/,''),state=process.env.BROWSER_STATE;
+const base=process.env.RHOAI_URL?.replace(/\/$/,''),state=process.env.BROWSER_STATE;
 const namespace=process.env.APP_NAMESPACE||'signal-desk-dev';
-assert.ok(base&&app&&state,'Set RHOAI_URL, APP_URL and BROWSER_STATE');
+assert.ok(base&&state,'Set RHOAI_URL and BROWSER_STATE');
 const screenshot=async(page,name)=>{if(process.env.CAPTURE_GUIDE==='true')await page.screenshot({path:path.join(images,'signal-desk-playground-'+name+'.png'),fullPage:true})};
 (async()=>{const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});
 try{const context=await browser.newContext({storageState:state,viewport:{width:1440,height:1000}}),page=await context.newPage();
+await page.addLocatorHandler(page.getByTestId('whats-new-skip-tour'),async()=>{
+ await page.getByTestId('whats-new-skip-tour').click();
+});
 await page.goto(base+'/gen-ai-studio/playground/'+encodeURIComponent(namespace));
 await expect(page.getByTestId('chatbot-message-bar')).toBeVisible({timeout:60000});
-if(await page.getByTestId('whats-new-skip-tour').isVisible())await page.getByTestId('whats-new-skip-tour').click();
 if(!await page.getByRole('tab',{name:'Model',exact:true}).count())await page.getByTestId('settings-button').click();
 await page.getByTestId('subscription-selector-toggle').click();await page.getByText('Card Scout runtime',{exact:true}).click();
 await screenshot(page,'model');
 await page.getByRole('tab',{name:'Prompt',exact:true}).click();
 await page.getByTestId('system-instructions-input').fill(fs.readFileSync(root+'/content/modules/ROOT/assets/attachments/card-scout-agent-prompt.txt','utf8'));
 await page.getByTestId('system-instructions-input').evaluate(el=>{el.scrollTop=0});await screenshot(page,'prompt');
-await expect.poll(async()=>{try{return(await context.request.get(app+'/healthz',{timeout:8000})).status()}catch{return 0}},{timeout:600000,intervals:[3000]}).toBe(200);
 await page.getByRole('tab',{name:'MCP',exact:true}).click();
 await expect(page.getByRole('row').filter({hasText:'Card-Scout'})).toBeVisible({timeout:30000});
 await screenshot(page,'mcp');
@@ -49,12 +50,18 @@ for(const probe of probes){
  if(!done&&process.env.RESPONSE_DEBUG_FILE)fs.writeFileSync(process.env.RESPONSE_DEBUG_FILE,raw,{mode:0o600});
  assert.equal(done?.status,'completed');assert.equal(done.model,'maas-vllm-inference-1/deepseekv4pro');actualModel=done.model;const calls=done.output.filter(x=>x.type==='mcp_call');
  assert.equal(calls.length,1,'Component probe must execute exactly one tool');assert.equal(calls[0].name,probe.tool);assert.ok(!calls[0].error);
+ const args=typeof calls[0].arguments==='string'?JSON.parse(calls[0].arguments):calls[0].arguments;
+ const evidence=typeof calls[0].output==='string'?JSON.parse(calls[0].output):calls[0].output;
+ assert.equal(args.item_id,'item-039');assert.equal(evidence.item_id,'item-039');
+ assert.equal(evidence.status,'ok');assert.equal(evidence.card_id,'sv01-201');
+ assert.equal(evidence.source_url,'https://api.tcgdex.net/v2/en/cards/sv01-201');assert.ok(evidence.retrieved_at);
  names.push(probe.tool);responses.push(done.id);
 }
 await page.waitForTimeout(1000);await page.getByRole('tab',{name:'Model',exact:true}).click();
 await screenshot(page,'answer');
 
 const result={passed:true,project:namespace,model:actualModel,status:'completed',response_ids:responses,tools:names,mcp_authentication:'none',at:new Date().toISOString()};
-fs.writeFileSync(root+'/e2e/results/card-scout/playground-current.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+const output=process.env.AGENTOPS_RESULTS_DIR||root+'/e2e/results/card-scout';fs.mkdirSync(output,{recursive:true});
+fs.writeFileSync(path.join(output,'playground-current.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 
 }finally{await browser.close()}})().catch(e=>{console.error(e.stack);process.exitCode=1});
