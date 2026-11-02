@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "card": {
+    "name": "Charizard",
+    "number": "4",
+    "set": "Base Set",
+    "set_id": "base1",
+    "rarity": "Rare"
+  },
+  "currency": "EUR",
+  "trend": 490.62,
+  "average_7d": 398.82,
+  "provider": "Cardmarket",
+  "provider_updated_at": "2026-11-01T22:54:33.749Z",
+  "source_url": "https://api.tcgdex.net/v2/en/cards/base1-4",
+  "retrieved_at": "2026-11-02T15:29:32.087403+00:00",
+  "summary": "Here's the verified report for **item-052**:\n\n---\n\n**Card:** Charizard  \n**Set:** Base Set  \n**Collector Number:** 4  \n**Catalogue Rarity:** Rare  \n\n**D3 Prediction Check:** D3 predicted `rare_or_higher`. The verified rarity is **Rare**, which falls within the `rare_or_higher` category — the prediction is consistent.\n\n**Cardmarket EUR Pricing (unlimited holo variant):**\n- **Trend:** €490.62\n- **7-Day Average (avg7):** €398.82\n\n**Provider Update Timestamp:** 2026-11-01T22:54:33.749Z\n\n---\n\n**Note:** Multiple variants exist (unlimited, 1st Edition, etc.). The pricing above is for the unlimited holo variant; the 1st Edition holo variant has a separate trend of €3,843.13 and avg7 of €2,725.38. If the specific variant of item-052 is ambiguous, that distinction should be clarified.\n\n**Source:** https://api.tcgdex.net/v2/en/cards/base1-4",
+  "note": "Market reference; language, finish and condition can change the value.",
+  "trace_id": "tr-06babc0a893bbe1036c226092cfda8e1",
+  "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-06babc0a893bbe1036c226092cfda8e1&workspace=signal-desk-dev"
+}

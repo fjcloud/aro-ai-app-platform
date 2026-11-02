@@ -162,7 +162,7 @@ def main():
     envelope = {"schema_version": 1, "snapshot_at": created, "shuffle_seed": 20261030}
     (data_dir / "inputs.json").write_text(json.dumps({**envelope, "items": inputs}, indent=2) + "\n")
     (data_dir / "references.json").write_text(json.dumps({**envelope, "items": references}, indent=2) + "\n")
-    print(json.dumps({"images": len(inputs), "pokemon_cards": len(selections), "eras": len(SELECTION)}))
+    print(json.dumps({"images": len(inputs), "pokemon_cards": sum(r["card_kind"] == "pokemon_tcg" for r in references), "sets": len({r["set_id"] for r in references if r["card_kind"] == "pokemon_tcg"})}))
 
 
 if __name__ == "__main__":

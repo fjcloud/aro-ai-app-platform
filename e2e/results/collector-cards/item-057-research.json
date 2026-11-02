@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "card": {
+    "name": "Pikachu Illustrator",
+    "number": "Unnumbered",
+    "set": "Japanese Unnumbered Promotional cards",
+    "set_id": "jp-unnumbered-promos",
+    "rarity": "Unnumbered contest promo; no standard printed rarity"
+  },
+  "currency": null,
+  "trend": null,
+  "average_7d": null,
+  "provider": null,
+  "provider_updated_at": null,
+  "source_url": "https://bulbapedia.bulbagarden.net/wiki/Pokemon_Illustrator",
+  "retrieved_at": "2026-11-02T15:29:35.440888+00:00",
+  "summary": "## item-057 — Pikachu Illustrator\n\n| Field | Value |\n|---|---|\n| **Name** | Pikachu Illustrator |\n| **Set** | Japanese Unnumbered Promotional cards |\n| **Number** | Unnumbered |\n| **Rarity** | Unnumbered contest promo; no standard printed rarity |\n| **Cardmarket EUR Trend** | *Unavailable* |\n| **7-day Average** | *Unavailable* |\n| **Last Updated** | 2026-11-02T15:29:35 UTC |\n| **Source** | https://bulbapedia.bulbagarden.net/wiki/Pokemon_Illustrator |\n\n**Rarity vs D3 prediction:** D3's \"uncertain\" prediction is consistent with the verified catalogue identity — this is an unnumbered illustration contest prize carrying no standard printed rarity symbol. It does not fall under the D3 `rare_or_higher` category because there is no printed rarity to classify. Collectible scarcity is extreme, but that is separate from printed rarity.\n\n**Pricing note:** No Cardmarket aggregate pricing is available for this curated identity, and no auction record or substitute is provided.",
+  "note": "Illustration contest prize. Scarcity is not a visible standard rarity symbol. No comparable Cardmarket aggregate is provided; do not substitute an auction record or another Pikachu.",
+  "trace_id": "tr-2c868060afe8cf24e4ec0f277b5a20a6",
+  "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-2c868060afe8cf24e4ec0f277b5a20a6&workspace=signal-desk-dev"
+}

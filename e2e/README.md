@@ -82,6 +82,8 @@ make test-terminal
 make docs
 ```
 
+[Collector-card extension](results/collector-cards/README.md) records the
+57-image dataset and live tests of the added collector cards.
 [Fresh ARO 54w5q review](results/aro-54w5q/README.md) records the complete
 2 November participant run and corrections.
 [Earlier Card Scout evidence](results/card-scout/README.md) separates real model,
