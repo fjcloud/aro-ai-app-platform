@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "card": {
+    "name": "Umbreon \u2605",
+    "number": "17",
+    "set": "POP Series 5",
+    "set_id": "pop5",
+    "rarity": "Rare"
+  },
+  "currency": null,
+  "trend": null,
+  "average_7d": null,
+  "provider": null,
+  "provider_updated_at": null,
+  "source_url": "https://api.tcgdex.net/v2/en/cards/pop5-17",
+  "retrieved_at": "2026-11-02T15:30:21.271434+00:00",
+  "summary": "Here is the verified report for item-054:\n\n---\n\n**Card:** Umbreon \u2605  \n**Set:** POP Series 5  \n**Collector Number:** 17  \n**Verified Rarity:** Rare  \n\n**Rarity Check vs. D3 Prediction:**  \nD3 predicted **Common**, but the catalogue confirms the card is **Rare**. The D3 prediction is incorrect \u2014 \"Rare\" falls within the D3 `rare_or_higher` category.\n\n**Cardmarket EUR Pricing:**  \n- **Trend:** Unavailable  \n- **7-Day Average:** Unavailable  \n\n**Note:** Cardmarket has no pricing data for this card. The tool returned `null` for both the trend and the 7-day average. No record auction price or alternate provider price is substituted.\n\n**Provider Update Timestamp:** 2026-11-02T15:30:21.271434+00:00  \n**Source URL:** https://api.tcgdex.net/v2/en/cards/pop5-17",
+  "note": "Market reference; language, finish and condition can change the value.",
+  "trace_id": "tr-81131198350ac0da6df1a12a3f1c461b",
+  "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-81131198350ac0da6df1a12a3f1c461b&workspace=signal-desk-dev"
+}

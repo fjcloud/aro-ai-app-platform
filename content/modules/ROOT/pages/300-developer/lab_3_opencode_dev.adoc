@@ -57,10 +57,11 @@ a successful deployment. The app has no model key or Kubernetes token.
 
 Open the public HTTPS app Route.
 
-. Click *Analyze batch*. Watch all 51 images progress; completed results remain
+. Click *Analyze batch*. Watch all 57 images progress; completed results remain
   visible and persist when the page reloads.
-. Browse the ranking. The collection contains 48 Pokémon cards across eight eras
-  and three controls. It is deliberately balanced, not a random booster pack.
+. Browse the ranking. The collection contains 54 Pokémon cards from 1998 to 2023
+  and three controls, including collector highlights. It is a curated demo,
+  not a random booster pack.
 . Compare *Rare*, *Needs review* and *Other*. The controls should not offer a
   Pokémon price check. A model can make mistakes; uncertainty stays visible.
 . Click *Check price* on a Pokémon card. The native OpenShift AI agent calls the

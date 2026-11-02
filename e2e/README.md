@@ -37,7 +37,7 @@ APP_URL=https://your-app-route node e2e/card-scout-browser.cjs
 ```
 
 The delivery check compares workspace source, pushed main, Argo CD revision,
-Tekton target and running image digest. The browser check requires 51 completed
+Tekton target and running image digest. The browser check requires 57 completed
 real image analyses, full-batch filters, pagination, no price action for controls,
 a native price lookup, exact tool-derived prices, dated source and trace links,
 filter persistence and a mobile layout. Its separate fixtures exercise errors,
@@ -82,6 +82,8 @@ make test-terminal
 make docs
 ```
 
+[Collector-card extension](results/collector-cards/README.md) records the
+57-image dataset and live tests of the added collector cards.
 [Fresh ARO 54w5q review](results/aro-54w5q/README.md) records the complete
 2 November participant run and corrections.
 [Earlier Card Scout evidence](results/card-scout/README.md) separates real model,

@@ -8,8 +8,8 @@ no completed UI application is supplied here to copy.
 
 ## Prepared dataset
 
-The frozen batch contains **48 English Pokémon TCG cards from eight eras**, plus
-three negative controls: a Yu-Gi-Oh! card, a receipt and a standalone Pikachu image.
+The frozen batch contains **54 Pokémon TCG cards (53 English and one Japanese)**,
+plus three negative controls: a Yu-Gi-Oh! card, a receipt and a standalone Pikachu image.
 
 | Set | Released | Cards |
 |---|---|---:|
@@ -22,17 +22,38 @@ three negative controls: a Yu-Gi-Oh! card, a receipt and a standalone Pikachu im
 | Sword & Shield | 2020 | 6 |
 | Scarlet & Violet | 2023 | 6 |
 
-There are 16 common, 16 uncommon and 16 rare-or-higher cards. This is an
-intentionally balanced demo sample, not the distribution in a booster pack.
+The original 48-card sample is balanced across common, uncommon and rare.
+Six collector examples are appended without changing the original 51 item IDs:
+
+| Item | Card | Exact reference |
+|---|---|---|
+| item-052 | Charizard (Dracaufeu), Base Set | base1-4 |
+| item-053 | Shining Charizard | neo4-107 |
+| item-054 | Umbreon Gold Star (Noctali) | pop5-17 |
+| item-055 | Shining Magikarp | neo3-66 |
+| item-056 | Birthday Pikachu | basep-24 |
+| item-057 | Pikachu Illustrator, Japanese contest promo (1998) | Curated historical reference |
+
+These examples illustrate why appearance and printed rarity do not determine
+value. Birthday Pikachu is catalogued Common; Illustrator has no standard
+printed rarity, so its reference bucket is `uncertain`, not an invented star
+rarity. The full sample has 17 common, 16 uncommon, 20 rare-or-higher, one special
+promo with no standard rarity, and three controls. It is not a booster distribution.
+Illustrator's identity comes from a sourced curated reference because TCGdex
+has no matching record. Its prices remain unavailable; no auction record or
+another Pikachu's value is substituted. The other five use exact TCGdex IDs.
+No first-edition, grade or auction premium is implied by the Base Set image.
 Inputs are shuffled with a fixed seed. Image hashes freeze the exact inputs.
 
 - `data/inputs.json`: anonymous item IDs, image URLs and SHA-256 checksums.
 - `data/references.json`: held-out catalogue IDs, names, dates and rarity labels.
 - `.cache/`: downloaded images; excluded from Git.
+- `data/images/`: the frozen Illustrator scan, bundled because its source blocks
+  GitHub builds; the original source URL and checksum are retained.
 
 Inference receives **image bytes only**, with the same questions for every item.
 Names, URLs, set IDs and reference labels are not included in the model input.
-References are loaded after inference to measure results. The price agent uses
+Evaluation reference labels are read after inference to measure results. The price agent uses
 the dataset's known catalogue ID; exact edition recognition from a new uploaded
 photograph is outside this experiment.
 
@@ -55,7 +76,9 @@ jq '.summary, .ranking[:5]' examples/card-scout/.cache/analysis.json
 The runner downloads missing images and checks their frozen hashes. A prepared
 image bundle can populate `.cache/` before the session to avoid external image
 downloads. `prepare_dataset.py` is a maintainer tool for creating a new snapshot;
-it refuses to overwrite the frozen dataset.
+it refuses to overwrite the frozen dataset. `--append-collectors` adds only
+missing collector examples, preserves all original IDs and hashes, and records
+the extension date.
 
 Ranking uses the model's predicted rarity tier, then its rare-option probability.
 It is a review priority, not a price ranking. Unknown results remain explicit.

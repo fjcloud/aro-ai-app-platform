@@ -31,7 +31,8 @@ MaaS keys. *d3-mini* classifies images without generating prose. OpenShift AI/KS
 serves it on one T4. The prepared service owns models, tools, persistence and
 tracing; the generated application calls one API and needs no model credential.
 
-The dataset spans eight eras, from 1999 to 2023. Its catalogue references are
+The dataset spans 1998 to 2023, with collector highlights such as Pikachu
+Illustrator and Charizard. Its references are
 known; model predictions and verified catalogue rarity remain distinct. Rarity
 is not market value. Prices retain their currency, source and update timestamp.
 

@@ -9,15 +9,15 @@ assert.ok(base,'Set APP_URL');fs.mkdirSync(dir,{recursive:true});
   const context=await browser.newContext({storageState:process.env.BROWSER_STATE||undefined,viewport:{width:1440,height:1000}});
   const page=await context.newPage();await page.goto(base);await expect(page.getByRole('heading',{name:'Card Scout',exact:true})).toBeVisible();
   const getBatch=async()=>{const r=await context.request.get(base+'/api/batch');assert.equal(r.status(),200);return r.json()};
-  let batch=await getBatch();assert.equal(batch.dataset.items,51);assert.equal(batch.items.length,51);
+  let batch=await getBatch();assert.equal(batch.dataset.items,57);assert.equal(batch.items.length,57);
   await expect(page.locator('.card')).toHaveCount(12,{timeout:15000});
-  if(batch.completed!==51||batch.failed){
+  if(batch.completed!==57||batch.failed){
    const started=page.waitForResponse(r=>r.url()===base+'/api/batch/analyze'&&r.request().method()==='POST');
    await page.getByRole('button',{name:'Analyze batch',exact:true}).click();
    assert.equal((await started).status(),202);
-   await expect.poll(async()=>{batch=await getBatch();return batch.completed===51&&batch.failed===0&&!batch.running},{timeout:180000,intervals:[1500]}).toBe(true);
+   await expect.poll(async()=>{batch=await getBatch();return batch.completed===57&&batch.failed===0&&!batch.running},{timeout:180000,intervals:[1500]}).toBe(true);
   }
-  await expect(page.locator('#progress-msg')).toContainText('51 completed',{timeout:10000});
+  await expect(page.locator('#progress-msg')).toContainText('57 completed',{timeout:10000});
   await page.getByRole('button',{name:'Show more',exact:true}).click();await expect(page.locator('.card')).toHaveCount(24);
   const rare=batch.items.filter(i=>i.kind==='pokemon_tcg'&&i.rarity==='rare_or_higher');
   await page.locator('[data-filter=rare]').click();await expect(page.locator('.card')).toHaveCount(Math.min(12,rare.length));
@@ -46,7 +46,7 @@ assert.ok(base,'Set APP_URL');fs.mkdirSync(dir,{recursive:true});
   await page.setViewportSize({width:390,height:844});await page.locator('[data-filter=other]').click();
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Mobile horizontal overflow');
   await page.screenshot({path:path.join(dir,'app-mobile.png'),fullPage:true});
-  const live={passed:true,at:new Date().toISOString(),dataset:batch.dataset,completed:batch.completed,failed:batch.failed,rare_cards:rare.length,research_item:target.id,research,checks:['real image inference recovered to 51/51 completed','pagination and whole-batch filters','controls offer no price action','native price research and exact evidence values','same-origin images','trace link','saved filter','390px mobile']};
+  const live={passed:true,at:new Date().toISOString(),dataset:batch.dataset,completed:batch.completed,failed:batch.failed,rare_cards:rare.length,research_item:target.id,research,checks:['real image inference recovered to 57/57 completed','pagination and whole-batch filters','controls offer no price action','native price research and exact evidence values','same-origin images','trace link','saved filter','390px mobile']};
   fs.writeFileSync(path.join(dir,'app-live.json'),JSON.stringify(live,null,2)+'\n');
 
   await require('./card-scout-fixtures.cjs')(browser,base,batch,dir);

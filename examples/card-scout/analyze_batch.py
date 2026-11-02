@@ -70,12 +70,15 @@ def main():
     ranking = [{"rank": i, "id": r["id"], "predicted_rarity": r["answers"]["rarity"]["choice"], "rare_probability": r["answers"]["rarity"]["probabilities"].get("rare_or_higher", 0)} for i, r in enumerate(candidates, start=1)]
     pokemon = [r for r in results if references[r["id"]]["card_kind"] == "pokemon_tcg"]
     valid_rarities = set(tier)
+    scorable = [r for r in pokemon if references[r["id"]]["rarity_bucket"] in valid_rarities]
     binary_ok = lambda r: r["answers"]["rarity"]["choice"] in valid_rarities and ((r["answers"]["rarity"]["choice"] == "rare_or_higher") == (references[r["id"]]["rarity_bucket"] == "rare_or_higher"))
     summary = {
         "images": len(results), "pokemon_cards": len(pokemon),
         "card_kind_correct": sum(r["answers"]["card_kind"]["choice"] == references[r["id"]]["card_kind"] for r in results),
-        "binary_rarity_correct": sum(binary_ok(r) for r in pokemon),
-        "three_tier_rarity_correct": sum(r["answers"]["rarity"]["choice"] == references[r["id"]]["rarity_bucket"] for r in pokemon),
+        "binary_rarity_correct": sum(binary_ok(r) for r in scorable),
+        "rarity_evaluable_cards": len(scorable),
+        "nonstandard_rarity_cards": len(pokemon) - len(scorable),
+        "three_tier_rarity_correct": sum(r["answers"]["rarity"]["choice"] == references[r["id"]]["rarity_bucket"] for r in scorable),
         "mean_seconds": round(sum(r["elapsed_seconds"] for r in results) / len(results), 3),
         "by_era": {},
     }

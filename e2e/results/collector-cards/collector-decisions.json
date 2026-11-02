@@ -1,0 +1,147 @@
+{
+  "dataset": {
+    "name": "Mixed-era collection",
+    "snapshot_at": "2026-11-02T15:21:34.596909+00:00",
+    "items": 57,
+    "pokemon_cards": 54,
+    "controls": 3,
+    "years": "1998\u20132023",
+    "identity_method": "Known catalogue references in the prepared dataset"
+  },
+  "completed": 57,
+  "failed": 0,
+  "collector_decisions": [
+    {
+      "id": "item-052",
+      "name": "Charizard",
+      "kind": "pokemon_tcg",
+      "rarity": "rare_or_higher",
+      "needs_review": false,
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.9900124513293566,
+          "other_card": 0.0021588644972869936,
+          "not_a_card": 0.00069940908197014,
+          "uncertain": 0.0071292750913862935
+        },
+        "rarity": {
+          "common": 0.10399327383565742,
+          "uncommon": 0.07364002584351216,
+          "rare_or_higher": 0.6822963924423477,
+          "not_applicable": 0.007168908107783565,
+          "uncertain": 0.13290139977069917
+        }
+      }
+    },
+    {
+      "id": "item-053",
+      "name": "Shining Charizard",
+      "kind": "pokemon_tcg",
+      "rarity": "uncertain",
+      "needs_review": true,
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.991247013196217,
+          "other_card": 0.002440586722786036,
+          "not_a_card": 0.000786892033823425,
+          "uncertain": 0.005525508047173561
+        },
+        "rarity": {
+          "common": 0.29980995916042524,
+          "uncommon": 0.12910316740233638,
+          "rare_or_higher": 0.2336209539291901,
+          "not_applicable": 0.02202905317363456,
+          "uncertain": 0.31543686633441376
+        }
+      }
+    },
+    {
+      "id": "item-054",
+      "name": "Umbreon \u2605",
+      "kind": "pokemon_tcg",
+      "rarity": "common",
+      "needs_review": false,
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.9952386343766257,
+          "other_card": 0.0014871760712222937,
+          "not_a_card": 0.00040975536973345217,
+          "uncertain": 0.0028644341824185207
+        },
+        "rarity": {
+          "common": 0.32979430826028683,
+          "uncommon": 0.17948057877384013,
+          "rare_or_higher": 0.28445615159213744,
+          "not_applicable": 0.010257525078257715,
+          "uncertain": 0.19601143629547788
+        }
+      }
+    },
+    {
+      "id": "item-055",
+      "name": "Shining Magikarp",
+      "kind": "pokemon_tcg",
+      "rarity": "rare_or_higher",
+      "needs_review": false,
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.9877609516660949,
+          "other_card": 0.004431921213498254,
+          "not_a_card": 0.0011877905679081636,
+          "uncertain": 0.006619336552498637
+        },
+        "rarity": {
+          "common": 0.15105946558977712,
+          "uncommon": 0.17841115826531892,
+          "rare_or_higher": 0.5053023165783216,
+          "not_applicable": 0.019004957998236094,
+          "uncertain": 0.1462221015683463
+        }
+      }
+    },
+    {
+      "id": "item-056",
+      "name": "___________'s Pikachu",
+      "kind": "pokemon_tcg",
+      "rarity": "uncertain",
+      "needs_review": true,
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.9751530244188868,
+          "other_card": 0.008492928477827262,
+          "not_a_card": 0.0017545004201741778,
+          "uncertain": 0.014599546683111711
+        },
+        "rarity": {
+          "common": 0.08079192042350769,
+          "uncommon": 0.10264426469802856,
+          "rare_or_higher": 0.316886842250824,
+          "not_applicable": 0.13444194197654724,
+          "uncertain": 0.36523503065109253
+        }
+      }
+    },
+    {
+      "id": "item-057",
+      "name": "Pikachu Illustrator",
+      "kind": "pokemon_tcg",
+      "rarity": "uncertain",
+      "needs_review": true,
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.9553273951897817,
+          "other_card": 0.015200134440520355,
+          "not_a_card": 0.008336948782134208,
+          "uncertain": 0.02113552158756371
+        },
+        "rarity": {
+          "common": 0.17363317181443294,
+          "uncommon": 0.06683859179289198,
+          "rare_or_higher": 0.06643245319699903,
+          "not_applicable": 0.14106856181421457,
+          "uncertain": 0.5520272213814614
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Freeze a small, mixed-era TCGdex image dataset; no model or API key needed."""
+import argparse
 import concurrent.futures
 import datetime
 import hashlib
@@ -23,6 +24,28 @@ SELECTION = {
     "swsh1": ["60", "38", "93", "52", "78", "115"],
     "sv01": ["063", "052", "026", "129", "190", "201"],
 }
+# Additional collector examples; appended so the original 51 item IDs stay stable.
+COLLECTOR_SELECTION = {
+    "base1": ["4"],       # Charizard
+    "neo4": ["107"],      # Shining Charizard
+    "pop5": ["17"],       # Umbreon Gold Star
+    "neo3": ["66"],       # Shining Magikarp
+    "basep": ["24"],      # Birthday Pikachu: collectible does not imply Rare.
+}
+ILLUSTRATOR = {
+    "card_kind": "pokemon_tcg", "card_id": "jp-illustrator-1998",
+    "catalogue_provider": "curated", "language": "ja",
+    "name": "Pikachu Illustrator", "number": "Unnumbered",
+    "set_id": "jp-unnumbered-promos", "set_name": "Japanese Unnumbered Promotional cards",
+    "release_date": "1998", "rarity": "Unnumbered contest promo; no standard printed rarity",
+    "rarity_bucket": "uncertain",
+    "source_url": "https://bulbapedia.bulbagarden.net/wiki/Pokemon_Illustrator",
+    "context_source_url": "https://www.psacard.com/articles/articleview/9248/eye-prize-collecting-pokemon-trophy-cards",
+    "collector_note": "Illustration contest prize. Scarcity is not a visible standard rarity symbol. No comparable Cardmarket aggregate is provided; do not substitute an auction record or another Pikachu.",
+}
+ILLUSTRATOR_IMAGE = "https://archives.bulbagarden.net/media/upload/5/5f/Pok%C3%A9monIllustratorCoroCoropromo.jpg"
+
+
 CONTROLS = [
     ("other_card", "Yu-Gi-Oh! — Blue-Eyes White Dragon",
      "https://images.ygoprodeck.com/images/cards/89631139.jpg"),
@@ -41,7 +64,7 @@ def fetch(url):
                 return response.read()
         except Exception:
             if attempt == 2:
-                raise
+                raise RuntimeError(f"Could not download dataset source: {url}") from None
             time.sleep(attempt + 1)
 
 
@@ -80,12 +103,45 @@ def prepare_card(selection):
     return item, reference
 
 
+def collector_records():
+    records = []
+    for sid, numbers in COLLECTOR_SELECTION.items():
+        info = json.loads(fetch(f"{API}/sets/{sid}"))
+        for number in numbers:
+            item, reference = prepare_card((sid, number, info))
+            reference["language"] = "en"
+            records.append((item, reference))
+    records.append((image_record(ILLUSTRATOR_IMAGE), dict(ILLUSTRATOR)))
+    return records
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--append-collectors", action="store_true", help="Extend the existing snapshot without changing existing IDs or images")
+    args = parser.parse_args()
     CACHE.mkdir(exist_ok=True)
     data_dir = ROOT / "data"
     data_dir.mkdir(exist_ok=True)
     if (data_dir / "inputs.json").exists():
-        raise SystemExit("Dataset already frozen. Remove data/*.json explicitly to create a new snapshot.")
+        if not args.append_collectors:
+            raise SystemExit("Dataset already frozen. Use --append-collectors to extend it without changing existing items.")
+        inputs = json.loads((data_dir / "inputs.json").read_text())
+        references = json.loads((data_dir / "references.json").read_text())
+        known = {r["card_id"] for r in references["items"]}
+        added = 0
+        for item, reference in collector_records():
+            if reference["card_id"] in known:
+                continue
+            item_id = f"item-{len(inputs['items']) + 1:03d}"
+            inputs["items"].append({"id": item_id, **item})
+            references["items"].append({"id": item_id, **reference})
+            added += 1
+        if added:
+            for manifest, name in ((inputs, "inputs"), (references, "references")):
+                manifest["extended_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+                (data_dir / f"{name}.json").write_text(json.dumps(manifest, indent=2) + "\n")
+        print(json.dumps({"added": added, "images": len(inputs["items"])}))
+        return
     created = datetime.datetime.now(datetime.timezone.utc).isoformat()
     set_info = {sid: json.loads(fetch(f"{API}/sets/{sid}")) for sid in SELECTION}
     selections = [(sid, number, set_info[sid]) for sid, numbers in SELECTION.items() for number in numbers]
@@ -97,6 +153,7 @@ def main():
             "rarity": None, "rarity_bucket": "not_applicable", "source_url": url,
         }))
     random.Random(20261030).shuffle(records)
+    records.extend(collector_records())
     inputs, references = [], []
     for i, (item, reference) in enumerate(records, start=1):
         item_id = f"item-{i:03d}"
@@ -105,7 +162,7 @@ def main():
     envelope = {"schema_version": 1, "snapshot_at": created, "shuffle_seed": 20261030}
     (data_dir / "inputs.json").write_text(json.dumps({**envelope, "items": inputs}, indent=2) + "\n")
     (data_dir / "references.json").write_text(json.dumps({**envelope, "items": references}, indent=2) + "\n")
-    print(json.dumps({"images": len(inputs), "pokemon_cards": len(selections), "eras": len(SELECTION)}))
+    print(json.dumps({"images": len(inputs), "pokemon_cards": sum(r["card_kind"] == "pokemon_tcg" for r in references), "sets": len({r["set_id"] for r in references if r["card_kind"] == "pokemon_tcg"})}))
 
 
 if __name__ == "__main__":

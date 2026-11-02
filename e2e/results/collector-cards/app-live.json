@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "at": "2026-11-02T15:28:52.256Z",
+  "dataset": {
+    "name": "Mixed-era collection",
+    "snapshot_at": "2026-11-02T15:21:34.596909+00:00",
+    "items": 57,
+    "pokemon_cards": 54,
+    "controls": 3,
+    "years": "1998–2023",
+    "identity_method": "Known catalogue references in the prepared dataset"
+  },
+  "completed": 57,
+  "failed": 0,
+  "rare_cards": 17,
+  "research_item": "item-030",
+  "research": {
+    "status": "ok",
+    "card": {
+      "name": "Impostor Professor Oak",
+      "number": "73",
+      "set": "Base Set",
+      "set_id": "base1",
+      "rarity": "Rare"
+    },
+    "currency": "EUR",
+    "trend": 13.2,
+    "average_7d": 10.54,
+    "provider": "Cardmarket",
+    "provider_updated_at": "2026-11-01T22:54:33.734Z",
+    "source_url": "https://api.tcgdex.net/v2/en/cards/base1-73",
+    "retrieved_at": "2026-11-02T15:28:49.427798+00:00",
+    "summary": "Here's the verified summary for **item-030**:\n\n---\n\n**Card:** Impostor Professor Oak  \n**Set:** Base Set  \n**Collector Number:** 73  \n**Verified Rarity:** **Rare**  \n\n**D3 Prediction Check:** ✅ Confirmed — \"Rare\" falls within the D3 `rare_or_higher` category.\n\n**Cardmarket EUR (normal/unlimited variant):**\n- **Trend:** €13.20\n- **7-Day Average:** €10.54\n\n**Provider Update Timestamp:** 2026-11-01T22:54:33.734Z  \n**Source:** `https://api.tcgdex.net/v2/en/cards/base1-73`\n\n---\n\n*Note: The 1st Edition variant has a separate Cardmarket listing (trend €44.16, avg7 €37.83); the figures above are for the unlimited/normal print as identified by the dataset catalogue reference.*",
+    "note": "Market reference; language, finish and condition can change the value.",
+    "trace_id": "tr-42758e764e375ce0b6a3e54dd0e74501",
+    "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-42758e764e375ce0b6a3e54dd0e74501&workspace=signal-desk-dev"
+  },
+  "checks": [
+    "real image inference recovered to 57/57 completed",
+    "pagination and whole-batch filters",
+    "controls offer no price action",
+    "native price research and exact evidence values",
+    "same-origin images",
+    "trace link",
+    "saved filter",
+    "390px mobile"
+  ]
+}
