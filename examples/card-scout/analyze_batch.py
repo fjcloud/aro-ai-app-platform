@@ -16,12 +16,12 @@ QUESTIONS = {
     "card_kind": {
         "type": "choice",
         "instructions": "What does this image show? Pokemon TCG includes Trainer and Energy cards. Identify the actual card game, not just a generic fantasy card.",
-        "criteria": {"pokemon_tcg": "A Pokemon Trading Card Game card, including Pokemon, Trainer and Energy cards", "other_card": "A card from another game, a sports card or a standard playing card", "not_a_card": "A receipt, photograph or object that is not a trading or playing card", "uncertain": "Not enough information to identify"},
+        "criteria": {"pokemon_tcg": "A Pokemon Trading Card Game card", "other_card": "A card from another game, a sports card or a standard playing card", "not_a_card": "A receipt, photograph or object that is not a trading or playing card", "uncertain": "Not enough information to identify"},
     },
     "rarity": {
         "type": "choice",
         "instructions": "For a Pokemon TCG card, identify its rarity using the rarity mark near the collector number. A circle is Common, a diamond is Uncommon, a star is Rare. Basic Energy cards in the original Base Set are Common even though they have no printed rarity symbol; Double Colorless Energy is Uncommon. The 1st Edition stamp is a print edition, not a rarity mark. Do not confuse character popularity or evolution stage with rarity. If it is not a Pokemon TCG card select not_applicable. If the rarity cannot be established select uncertain.",
-        "criteria": {"common": "Common rarity: a classic circle symbol, or a Basic Energy card without a rarity mark", "uncommon": "Uncommon rarity: classic diamond symbol, including Double Colorless Energy", "rare_or_higher": "Rare or higher rarity, classic star symbol", "not_applicable": "This is not a Pokemon TCG card", "uncertain": "Rarity cannot be determined"},
+        "criteria": {"common": "Common rarity, classic circle symbol", "uncommon": "Uncommon rarity, classic diamond symbol", "rare_or_higher": "Rare or higher rarity, classic star or a modern rare tier", "not_applicable": "This is not a Pokemon TCG card", "uncertain": "Printed rarity cannot be determined"},
     },
 }
 

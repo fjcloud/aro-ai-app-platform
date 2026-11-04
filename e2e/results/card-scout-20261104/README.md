@@ -1,6 +1,8 @@
-# Card Scout recheck — 4 November 2026
+# Card Scout multi-era baseline — 4 November 2026
 
-Card Scout remains operational on ARO lab `54w5q`. The public application,
+This is the multi-era snapshot tested before migration to the complete English
+Base Set later on 4 November. Its old item IDs and model metrics are historical.
+Card Scout was operational on ARO lab `54w5q`. The public application,
 filters, pagination, saved filter, mobile layout, image serving and native
 agent research passed the existing browser acceptance suite. Isolated browser
 fixtures also passed. Lab URLs are temporary.

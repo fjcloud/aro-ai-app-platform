@@ -66,6 +66,7 @@ def main():
     data_dir = ROOT / 'data'
     if (data_dir / 'inputs.json').exists() and not args.replace:
         raise SystemExit('Dataset already frozen. Use --replace to create a new Base Set snapshot.')
+    previous_hashes = {i['image_sha256'] for i in json.loads((data_dir / 'inputs.json').read_text())['items']} if (data_dir / 'inputs.json').exists() else set()
     CACHE.mkdir(exist_ok=True)
     data_dir.mkdir(exist_ok=True)
     info = json.loads(fetch(f'{API}/sets/{SET_ID}'))
@@ -90,6 +91,8 @@ def main():
     for item in inputs:
         digest = item['image_sha256']
         (images / digest).write_bytes((CACHE / digest).read_bytes())
+    for digest in previous_hashes - {i['image_sha256'] for i in inputs}:
+        (images / digest).unlink(missing_ok=True)
     print(json.dumps({'images': len(inputs), 'set': SET_ID, 'language': 'en', 'edition': '1st Edition'}))
 
 
