@@ -10,7 +10,7 @@ Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platf
 . Follow Act 0 to clone the repository and run `make onboard` to sign in to the existing cluster.
 
 Platform labs prepare OpenShift AI, DeepSeek through MaaS, and one T4 running
-d3-mini. Developers generate *Card Scout* from scratch with OpenCode: analyze a
+d3-mini. Developers generate *Card Scout* from scratch with OpenCode: analyze an
 English Base Set collection, browse the rarity ranking and check a price through
 an OpenShift AI agent. The platform owns the dataset, read-only MCP tool, state
 and MLflow traces. The generated Go app is a small UI and same-origin proxy.

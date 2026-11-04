@@ -1,0 +1,220 @@
+{
+  "dataset": {
+    "name": "Base Set \u2014 English 1st Edition",
+    "snapshot_at": "2026-11-04T17:04:03.003724+00:00",
+    "items": 102,
+    "pokemon_cards": 102,
+    "controls": 0,
+    "years": "1999",
+    "identity_method": "Known catalogue references in the prepared dataset"
+  },
+  "completed": 102,
+  "failed": 0,
+  "card_kind_correct": 101,
+  "rarity_correct": 75,
+  "rare_true_positives": 31,
+  "rare_predictions": 31,
+  "rare_reference_count": 32,
+  "needs_review": 23,
+  "predicted_counts": {
+    "rare_or_higher": 31,
+    "uncertain": 23,
+    "uncommon": 23,
+    "common": 24,
+    "not_applicable": 1
+  },
+  "mean_seconds": 0.93,
+  "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-f280e7153ba089205324b24a772a9a69&workspace=signal-desk-dev",
+  "errors": [
+    {
+      "id": "item-127",
+      "name": "Farfetch'd",
+      "reference": "uncommon",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-161",
+      "name": "Rattata",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-167",
+      "name": "Voltorb",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-139",
+      "name": "Porygon",
+      "reference": "uncommon",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-164",
+      "name": "Starmie",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-140",
+      "name": "Raticate",
+      "reference": "uncommon",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-133",
+      "name": "Kakuna",
+      "reference": "uncommon",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-138",
+      "name": "Poliwhirl",
+      "reference": "uncommon",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-134",
+      "name": "Machoke",
+      "reference": "uncommon",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-137",
+      "name": "Nidorino",
+      "reference": "uncommon",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-154",
+      "name": "Metapod",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-163",
+      "name": "Squirtle",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-155",
+      "name": "Nidoran\u2642",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-166",
+      "name": "Tangela",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-151",
+      "name": "Koffing",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-201",
+      "name": "Psychic Energy",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-191",
+      "name": "Bill",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-197",
+      "name": "Fighting Energy",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-193",
+      "name": "Gust of Wind",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-195",
+      "name": "Switch",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-200",
+      "name": "Lightning Energy",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-202",
+      "name": "Water Energy",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-198",
+      "name": "Fire Energy",
+      "reference": "common",
+      "predicted": "uncertain",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-110",
+      "name": "Mewtwo",
+      "reference": "rare_or_higher",
+      "predicted": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-132",
+      "name": "Kadabra",
+      "reference": "uncommon",
+      "predicted": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-131",
+      "name": "Jynx",
+      "reference": "uncommon",
+      "predicted": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-199",
+      "name": "Grass Energy",
+      "reference": "common",
+      "predicted": "not_applicable",
+      "kind": "other_card"
+    }
+  ],
+  "runtime_image": "ghcr.io/fjcloud/d3-mini-runtime@sha256:efb90eb1b9b87c362d2bc8479e4f6d796d7e14fd35d81bf89f1451d3f789789c"
+}

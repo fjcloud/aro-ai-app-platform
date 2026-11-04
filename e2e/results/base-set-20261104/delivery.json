@@ -1,0 +1,25 @@
+{
+  "app_commit": "71edd0decfaa1df0a5c7ad45e05bf277279f9af0",
+  "pipeline": "build-app-wq2x2",
+  "pipeline_succeeded": true,
+  "argo_sync": "Synced",
+  "argo_health": "Healthy",
+  "registry_image_digest": "sha256:830bbcff6b629505cef193b550fb58a2e9ed80a9ab665c9f20502c5c8f0420e5",
+  "running_image_ids": [
+    "image-registry.openshift-image-registry.svc:5000/signal-desk-build/signal-desk@sha256:830bbcff6b629505cef193b550fb58a2e9ed80a9ab665c9f20502c5c8f0420e5"
+  ],
+  "matching_ready_images": true,
+  "contract_commit": "86da15a",
+  "go_checks": [
+    "CGO_ENABLED=1 go test -race ./...",
+    "go vet ./...",
+    "CGO_ENABLED=0 go build -buildvcs=false"
+  ],
+  "javascript_syntax": "node --check on actual deployed source",
+  "developer_identity": "Existing scoped workshop-developer identity renewed; no new privileges",
+  "changes": [
+    "Complete natural-height portrait images on desktop and mobile",
+    "Updated Base Set contract",
+    "Show provider price_scope note"
+  ]
+}
