@@ -129,8 +129,8 @@ def developer():
     require('Card Scout' in page, 'Card Scout UI is public without credentials or redirects')
     with urllib.request.urlopen(url + '/api/batch', timeout=30) as response:
         batch = json.load(response)
-    require(batch.get('dataset', {}).get('items') == 57 and len(batch.get('items', [])) == 57,
-            'Public batch API serves the prepared 57-image collection')
+    require(batch.get('dataset', {}).get('items') == 102 and len(batch.get('items', [])) == 102,
+            'Public batch API serves the prepared 102-image collection')
     tools_route = resource('route', 'card-scout-tools', ns)
     request = urllib.request.Request('https://' + tools_route['spec']['host'] + '/mcp', data=json.dumps({
         'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list', 'params': {}}).encode(),
@@ -223,10 +223,10 @@ def model_apis():
         arguments = json.loads(arguments) if isinstance(arguments, str) else arguments
         output = call.get('output', {})
         output = json.loads(output) if isinstance(output, str) else output
-        if arguments.get('item_id') == 'item-039' and output.get('item_id') == 'item-039':
+        if arguments.get('item_id') == 'item-104' and output.get('item_id') == 'item-104':
             evidence.append(output)
-    require(any(e.get('status') == 'ok' and e.get('card_id') == 'sv01-201'
-                and e.get('source_url') == 'https://api.tcgdex.net/v2/en/cards/sv01-201'
+    require(any(e.get('status') == 'ok' and e.get('card_id') == 'base1-4'
+                and e.get('source_url') == 'https://api.tcgdex.net/v2/en/cards/base1-4'
                 and e.get('retrieved_at') for e in evidence),
             'Tool evidence verifies the requested catalogue reference and dated source')
     print('API checks completed without printing credentials or model responses.')

@@ -1,0 +1,23 @@
+{
+  "card_kind": {
+    "type": "choice",
+    "instructions": "Identify the physical item shown. Pokemon TCG includes Pokemon, Trainer and Energy cards. A drawing of a Pokemon without the trading-card layout is not a card.",
+    "criteria": {
+      "pokemon_tcg": "A Pokemon Trading Card Game card",
+      "other_card": "Another trading, game, sports or standard playing card",
+      "not_a_card": "An image or object that is not a card",
+      "uncertain": "Card game cannot be identified"
+    }
+  },
+  "rarity": {
+    "type": "choice",
+    "instructions": "Read the official rarity mark next to the collector number, usually on the bottom edge (left or right depending on era). Distinguish its SHAPE: circle = common, diamond = uncommon, star(s) = rare or higher. Do not use the energy symbol, set logo, regulation letter, character fame, or evolution stage. Rare includes modern illustration, ultra, secret and special rare tiers. If there is no legible standard rarity mark, choose uncertain. If this is not a Pokemon TCG card, choose not_applicable.",
+    "criteria": {
+      "common": "A circle rarity symbol (\u25cf), not a diamond or star",
+      "uncommon": "A diamond rarity symbol (\u25c6), not a circle or star",
+      "rare_or_higher": "One or more star rarity symbols (\u2605 or \u2606), including modern rare and higher tiers",
+      "not_applicable": "The item is not a Pokemon TCG card",
+      "uncertain": "The printed rarity symbol is absent, unreadable or not standard"
+    }
+  }
+}

@@ -136,7 +136,7 @@ def public_batch():
     tiers = {"rare_or_higher": 4, "uncertain": 3, "uncommon": 2, "common": 1}
     items.sort(key=lambda i: (tiers.get(i["rarity"], 0) if i["kind"] == "pokemon_tcg" else 0,
                              (i["probabilities"].get("rarity") or {}).get("rare_or_higher", 0)), reverse=True)
-    return {"dataset": {"name": "Mixed-era collection", "snapshot_at": INPUTS.get("extended_at", INPUTS["snapshot_at"]), "items": len(ITEMS), "pokemon_cards": sum(r["card_kind"] == "pokemon_tcg" for r in REFERENCES.values()), "controls": sum(r["card_kind"] != "pokemon_tcg" for r in REFERENCES.values()), "years": "1998–2023", "identity_method": "Known catalogue references in the prepared dataset"},
+    return {"dataset": {"name": INPUTS["name"], "snapshot_at": INPUTS["snapshot_at"], "items": len(ITEMS), "pokemon_cards": sum(r["card_kind"] == "pokemon_tcg" for r in REFERENCES.values()), "controls": sum(r["card_kind"] != "pokemon_tcg" for r in REFERENCES.values()), "years": INPUTS["years"], "identity_method": "Known catalogue references in the prepared dataset"},
             "running": state["running"], "completed": sum(i["status"] == "done" for i in items),
             "failed": sum(i["status"] == "error" for i in items), "items": items,
             "trace_id": state["analysis_trace_id"], "trace_url": state["analysis_trace_url"]}
@@ -195,7 +195,7 @@ def research(item_id):
                       "provider": "Cardmarket" if euro else None, "provider_updated_at": provider.get("updated"),
                       "source_url": evidence["source_url"], "retrieved_at": evidence["retrieved_at"],
                       "summary": "\n".join(i["text"] for i in visible_response(reply)["output"] if i["type"] == "message"),
-                      "note": evidence["price_scope"] if REFERENCES[item_id].get("catalogue_provider") == "curated" else "Market reference; language, finish and condition can change the value."}
+                      "note": evidence["price_scope"]}
             result["trace_id"], result["trace_url"] = trace_link(root)
             record(root, "spanOutputs", result)
             with LOCK:

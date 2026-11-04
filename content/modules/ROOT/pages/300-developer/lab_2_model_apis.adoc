@@ -23,7 +23,7 @@ D3_URL=http://d3-mini.decision-serving.svc.cluster.local:8080
 CARD_SCOUT_URL=http://card-scout-platform.signal-desk-dev.svc.cluster.local:8080
 curl --fail-with-body -sS "$D3_URL/v1/models" | \
   jq '{id:.data[0].id,device:.data[0].device,dtype:.data[0].dtype}'
-curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-039" -o /tmp/card-scout.png
+curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-104" -o /tmp/card-scout.png
 base64 -w0 /tmp/card-scout.png > /tmp/card-scout.b64
 jq -n --rawfile image /tmp/card-scout.b64 '{
   model:"vllm-sr/d3-mini",
@@ -31,7 +31,7 @@ jq -n --rawfile image /tmp/card-scout.b64 '{
   images:["data:image/png;base64," + $image],
   questions:{
     card_kind:{type:"choice",instructions:"Is this a Pokemon TCG card?",criteria:{pokemon_tcg:"A Pokemon Trading Card Game card",other_card:"Another card game",not_a_card:"Not a trading card",uncertain:"Cannot determine"}},
-    rarity:{type:"choice",instructions:"Read the printed rarity. A classic circle is Common, diamond Uncommon, star Rare. Character popularity is not rarity.",criteria:{common:"Common",uncommon:"Uncommon",rare_or_higher:"Rare or a higher rarity tier",not_applicable:"Not a Pokemon TCG card",uncertain:"Rarity cannot be determined"}}
+    rarity:{type:"choice",instructions:"Read the rarity: circle Common, diamond Uncommon, star Rare. Base Set Basic Energy is Common even without a rarity symbol. The 1st Edition stamp is not rarity.",criteria:{common:"Common",uncommon:"Uncommon",rare_or_higher:"Rare or a higher rarity tier",not_applicable:"Not a Pokemon TCG card",uncertain:"Rarity cannot be determined"}}
   }
 }' > /tmp/card-scout-decision.json
 curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
@@ -39,18 +39,19 @@ curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
 ----
 
 Expect `device: cuda:0` and `dtype: float16`. D3 needs no API key. The image is
-Toedscool from Scarlet & Violet; compare the returned choices and probabilities.
+Charizard from the English Base Set; compare the returned choices and probabilities.
 A model probability is not a calibrated guarantee or a price prediction.
 
-Repeat with the Yu-Gi-Oh! control:
+Repeat with Fighting Energy. It is a Pokémon TCG card with Common rarity,
+even though Basic Energy has no printed rarity symbol:
 
 [source,sh,role=execute]
 ----
-curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-035" -o /tmp/other-card.jpg
-base64 -w0 /tmp/other-card.jpg > /tmp/other-card.b64
-jq --rawfile image /tmp/other-card.b64 '.images=["data:image/jpeg;base64," + $image]' /tmp/card-scout-decision.json > /tmp/other-card-decision.json
+curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-197" -o /tmp/energy-card.png
+base64 -w0 /tmp/energy-card.png > /tmp/energy-card.b64
+jq --rawfile image /tmp/energy-card.b64 '.images=["data:image/png;base64," + $image]' /tmp/card-scout-decision.json > /tmp/energy-card-decision.json
 curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
-  -H 'Content-Type: application/json' --data-binary @/tmp/other-card-decision.json | jq '.answers'
+  -H 'Content-Type: application/json' --data-binary @/tmp/energy-card-decision.json | jq '.answers'
 ----
 
 == Test DeepSeek through MaaS
@@ -65,6 +66,19 @@ curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
 Expect an actual answer and measured usage. A quota error is a visible failure;
 do not switch the workshop model or substitute a keyword rule.
 
+[TIP]
+====
+MaaS keys expire after 24 hours. If a previously working request returns `403`,
+renew the developer key in the *bastion terminal*:
+
+[source,sh,role=execute]
+----
+bash deploy/coding/mint-workshop-key.sh
+----
+
+Stop and start the Dev Space to load the new key, then repeat the test.
+====
+
 == Test the native agent and its tool
 
 For this probe, use the injected developer MaaS key with the native Responses
@@ -75,7 +89,7 @@ API. The prepared service has a separate runtime key for application research.
 PROVIDER_DATA=$(jq -cn --arg key "$OPENAI_API_KEY" '{vllm_api_token:$key}')
 jq -n --arg mcp "$CARD_SCOUT_URL/mcp" '{
   model:"maas-vllm-inference-1/deepseekv4pro",
-  input:"Use get_card_market_data once for item-039. Report its exact catalogue identity and Cardmarket EUR trend, 7-day average, update timestamp and source. Do not invent missing prices.",
+  input:"Use get_card_market_data once for item-104. Report its exact catalogue identity and Cardmarket EUR trend, 7-day average, update timestamp and source. Do not invent missing prices.",
   tools:[{type:"mcp",server_label:"card_scout_market",server_url:$mcp,require_approval:"never",allowed_tools:["get_card_market_data"]}],
   tool_choice:{type:"mcp",server_label:"card_scout_market",name:"get_card_market_data"},
   max_infer_iters:4,reasoning:{effort:"none"},store:false
@@ -86,7 +100,7 @@ curl --fail-with-body -sS --max-time 180   http://lsd-genai-playground-service.s
 unset PROVIDER_DATA
 ----
 
-Check `status: completed`, an actual `mcp_call` for `item-039`, and dated source
+Check `status: completed`, an actual `mcp_call` for `item-104`, and dated source
 data. A plausible answer without the tool call is not a successful test.
 Prices can be missing; do not replace them with a guess.
 

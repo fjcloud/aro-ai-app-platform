@@ -55,7 +55,7 @@ Ask:
 
 [source,text,role=execute]
 ----
-Use get_card_market_data exactly once for item-039. Verify its catalogue identity and rarity, then report Cardmarket EUR trend, 7-day average, update timestamp and source. Stop after this lookup. Never invent missing prices.
+Use get_card_market_data exactly once for item-104. Verify its catalogue identity and rarity, then report Cardmarket EUR trend, 7-day average, update timestamp and source. Stop after this lookup. Never invent missing prices.
 ----
 
 image::signal-desk-playground-answer.png[A real native agent answer with catalogue and price evidence]

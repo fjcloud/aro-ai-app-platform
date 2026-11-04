@@ -1,6 +1,6 @@
 = AI-Powered Developer Platform on ARO
 
-Build *Card Scout*: analyze a mixed-era trading-card collection, rank likely rare cards and ask a native OpenShift AI agent to verify a selected card and retrieve dated market prices.
+Build *Card Scout*: analyze a complete English Base Set collection, rank likely rare cards and ask a native OpenShift AI agent to verify a selected card and retrieve dated market prices.
 
 You play two roles. The *platform engineer* prepares OpenShift AI, a managed DeepSeek endpoint, one local T4 decision model and the delivery tools. The *developer* uses OpenCode and a short app contract to generate and ship a small Go UI from scratch. Finally, inspect model usage, agent tools and MLflow traces.
 
@@ -31,10 +31,11 @@ MaaS keys. *d3-mini* classifies images without generating prose. OpenShift AI/KS
 serves it on one T4. The prepared service owns models, tools, persistence and
 tracing; the generated application calls one API and needs no model credential.
 
-The dataset spans 1998 to 2023, with collector highlights such as Pikachu
-Illustrator and Charizard. Its references are
-known; model predictions and verified catalogue rarity remain distinct. Rarity
-is not market value. Prices retain their currency, source and update timestamp.
+The dataset contains all 102 English Base Set cards from 1999, using 1st Edition
+scans: 69 Pokémon, 26 Trainers and seven Energy cards. Model predictions and
+verified catalogue rarity remain distinct. The edition stamp is not a rarity
+symbol. Market references retain their currency, source and update timestamp;
+a catalogue aggregate is not a verified 1st Edition valuation.
 
 == Workshop structure
 

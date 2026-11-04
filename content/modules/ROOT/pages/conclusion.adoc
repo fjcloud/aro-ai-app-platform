@@ -4,7 +4,7 @@ You prepared complementary AI capabilities:
 
 * *DeepSeek through OpenShift AI MaaS* generated the Go application and powered
   the native price agent, using separate coding and runtime credentials.
-* *d3-mini on one T4*, served by OpenShift AI/KServe, classified a mixed-era
+* *d3-mini on one T4*, served by OpenShift AI/KServe, classified an English Base Set
   collection from real card images.
 
 Card Scout's small generated UI used a prepared platform API for analysis,

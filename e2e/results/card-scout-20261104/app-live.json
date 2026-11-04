@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "at": "2026-11-04T16:49:45.916Z",
+  "dataset": {
+    "name": "Mixed-era collection",
+    "snapshot_at": "2026-11-02T15:21:34.596909+00:00",
+    "items": 57,
+    "pokemon_cards": 54,
+    "controls": 3,
+    "years": "1998–2023",
+    "identity_method": "Known catalogue references in the prepared dataset"
+  },
+  "completed": 57,
+  "failed": 0,
+  "rare_cards": 17,
+  "research_item": "item-008",
+  "research": {
+    "status": "ok",
+    "card": {
+      "name": "Magcargo",
+      "number": "21",
+      "set": "XY",
+      "set_id": "xy1",
+      "rarity": "Rare"
+    },
+    "currency": "EUR",
+    "trend": 0.68,
+    "average_7d": 0.73,
+    "provider": "Cardmarket",
+    "provider_updated_at": "2026-11-03T22:54:32.817Z",
+    "source_url": "https://api.tcgdex.net/v2/en/cards/xy1-21",
+    "retrieved_at": "2026-11-04T16:49:42.295756+00:00",
+    "summary": "Here are the verified details for **item-008**:\n\n| Field | Value |\n|---|---|\n| **Card Name** | Magcargo |\n| **Set** | XY |\n| **Collector Number** | 21 |\n| **Verified Rarity** | **Rare** |\n| **Cardmarket EUR Trend** | €0.68 |\n| **Cardmarket EUR 7-Day Average** | €0.73 |\n| **Pricing Last Updated** | 2026-11-03T22:54:32.817Z |\n| **Source** | https://api.tcgdex.net/v2/en/cards/xy1-21 |\n\n**D3 Prediction Check:** The D3 predicted `rare_or_higher`. The verified catalogue rarity is **Rare**, which falls within the `rare_or_higher` category, so the prediction is confirmed.\n\n*Note: Prices are provider aggregate reference values only — not a guaranteed resale price.*",
+    "note": "Market reference; language, finish and condition can change the value.",
+    "trace_id": "tr-b56d49e080633f2ceb036474d10e73aa",
+    "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-b56d49e080633f2ceb036474d10e73aa&workspace=signal-desk-dev"
+  },
+  "checks": [
+    "real image inference recovered to 57/57 completed",
+    "pagination and whole-batch filters",
+    "controls offer no price action",
+    "native price research and exact evidence values",
+    "same-origin images",
+    "trace link",
+    "saved filter",
+    "390px mobile"
+  ]
+}

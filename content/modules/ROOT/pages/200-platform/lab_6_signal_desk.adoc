@@ -1,7 +1,7 @@
 = Lab 1.8 — Prepare Card Scout
 :page-aliases: 200-platform/lab_6_cluster_voice.adoc
 
-Prepare the mixed-era card dataset, local image classification and a native OpenShift AI agent that verifies catalogue references and retrieves dated market prices. The developer will generate only a small Go UI and proxy.
+Prepare the complete English Base Set dataset, local image classification and a native OpenShift AI agent that verifies catalogue references and retrieves dated market prices. The developer will generate only a small Go UI and proxy.
 
 [NOTE]
 ====
@@ -64,7 +64,7 @@ oc get serviceaccount,pvc -n signal-desk-dev
 
 A helper handles the dynamic MaaS key and MLflow experiment APIs. The CLI then
 applies the service manifests. Its prebuilt Red Hat UBI image includes the fixed
-dataset and all 57 images; the lab does not download card images at startup.
+dataset and all 102 images; the lab does not download card images at startup.
 
 [source,sh,role=execute]
 ----
@@ -79,8 +79,20 @@ oc get secret signal-desk-model -n signal-desk-dev
 
 The platform service owns the runtime model key, state and trace export. Its
 service account receives MLflow integration access, with no monitoring or
-workload-editing grant. The MaaS key expires after 24 hours; refresh it with the
-helper and restart `card-scout-platform` if needed.
+workload-editing grant.
+
+[TIP]
+====
+The runtime MaaS key expires after 24 hours. If the agent's model access expires,
+renew it in the *bastion terminal*:
+
+[source,sh,role=execute]
+----
+python3 scripts/prepare-card-scout.py
+oc rollout restart deployment/card-scout-platform -n signal-desk-dev
+oc rollout status deployment/card-scout-platform -n signal-desk-dev --timeout=180s
+----
+====
 
 The generated Go app has no model key, Kubernetes token or storage volume. It
 calls one internal API supplied as `CARD_SCOUT_URL`. Keep the technical name
@@ -94,14 +106,16 @@ CARD_HOST=$(oc get route card-scout-tools -n signal-desk-dev -o jsonpath='{.spec
 curl --fail-with-body -sS "https://${CARD_HOST}/api/batch" |   jq '{dataset,running,completed,failed,first:.items[0]}'
 ----
 
-Expect 54 Pokémon cards from 1998 to 2023, plus three controls. The original
-balanced sample is extended with Charizard, Shining Charizard, Umbreon Gold Star,
-Shining Magikarp, Birthday Pikachu and Pikachu Illustrator. Collectible scarcity
-and printed rarity differ. Pikachu Illustrator has a curated historical reference
-and no comparable market quote; its price stays *Unavailable*.
-The original eight-era sample contains common, uncommon and rare cards. References are known
-from this prepared collection. D3 sees only image bytes; reference labels are
-held out. It does not identify the exact edition of an arbitrary uploaded photo.
+Expect all *102 English Base Set cards (1999)*, using 1st Edition scans:
+69 Pokémon, 26 Trainers and seven Energy cards. There are 38 Common, 32 Uncommon
+and 32 Rare cards. No modern cards or negative controls are included.
+
+A circle means Common, a diamond Uncommon, and a star Rare. Basic Energy cards
+are Common even without a printed rarity symbol. The 1st Edition stamp describes
+the print run, not the rarity. Source catalogue references are known; D3 sees
+only image bytes, with labels held out. It does not authenticate physical cards
+or establish their condition. Provider aggregate prices must not be presented
+as verified 1st Edition quotes.
 
 [source,text]
 ----

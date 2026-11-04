@@ -35,7 +35,7 @@ jobs:
           docker build --platform linux/amd64 \
             --label org.opencontainers.image.source=https://github.com/fjcloud/aro-ai-app-platform \
             --label org.opencontainers.image.revision="$GITHUB_SHA" \
-            --label org.opencontainers.image.description='Card Scout platform: mixed-era dataset, T4 analysis, native agent MCP and MLflow' \
+            --label org.opencontainers.image.description='Card Scout platform: English Base Set dataset, T4 analysis, native agent MCP and MLflow' \
             -t "$IMAGE:card-scout-$GITHUB_SHA" examples/card-scout
       - name: Validate platform behavior without model calls
         run: docker run --rm "$IMAGE:card-scout-$GITHUB_SHA" python -m unittest discover -p 'test_*.py'

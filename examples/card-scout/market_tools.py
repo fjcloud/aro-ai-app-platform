@@ -63,7 +63,7 @@ def market_lookup(item_id: str) -> dict:
         "retrieved_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "pricing": card.get("pricing"),
         "variants": [{k: v for k, v in variant.items() if k in ("type", "size", "stamp", "foil", "variantId", "pricing", "thirdParty")} for variant in card.get("variants_detailed", [])],
-        "price_scope": "Provider aggregate reference values. Language, print edition, finish and condition may differ; do not claim a guaranteed resale price. Do not mix currencies or variants.",
+        "price_scope": "Catalogue aggregate, not a verified 1st Edition quote. The scan's stamp does not establish the edition of the provider's price. Language, print edition, finish and condition may differ; do not mix currencies or variants.",
     }
 
 
