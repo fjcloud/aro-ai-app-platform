@@ -64,7 +64,7 @@ oc get serviceaccount,pvc -n signal-desk-dev
 
 A helper handles the dynamic MaaS key and MLflow experiment APIs. The CLI then
 applies the service manifests. Its prebuilt Red Hat UBI image includes the fixed
-dataset and all 102 images; the lab does not download card images at startup.
+dataset and all 105 images; the lab does not download card images at startup.
 
 [source,sh,role=execute]
 ----
@@ -108,7 +108,9 @@ curl --fail-with-body -sS "https://${CARD_HOST}/api/batch" |   jq '{dataset,runn
 
 Expect all *102 English Base Set cards (1999)*, using 1st Edition scans:
 69 Pokémon, 26 Trainers and seven Energy cards. There are 38 Common, 32 Uncommon
-and 32 Rare cards. No modern cards or negative controls are included.
+and 32 Rare cards. Add three negative controls: a standalone Pikachu illustration,
+a Yu-Gi-Oh! card and Magic Black Lotus. The complete batch has 105 images.
+Controls belong under *Other* and must not offer a Pokémon price check.
 
 D3 reads the small bottom-right rarity mark. A circle means Common, a diamond
 Uncommon, and a star Rare. A square tilted 45 degrees is the diamond. Basic Energy cards

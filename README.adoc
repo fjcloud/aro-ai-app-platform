@@ -47,7 +47,7 @@ Install the local test dependencies with a virtual environment and `pip install 
 
 The published d3-mini image is pinned by digest in `deploy/decision/runtime-image.txt` and `servingruntime.yaml`. The `publish decision runtime` GitHub Actions workflow rebuilds it when the pinned Dockerfile changes, or on manual dispatch. It needs the repository's `REDHAT_REGISTRY_AUTH` secret for the Red Hat base image; participants only pull the public result. After validating a replacement on a T4, update both digest references together.
 
-`examples/card-scout/data` freezes all 102 English Base Set cards (1999), using 1st Edition scans. It includes 69 Pokémon, 26 Trainers and seven Energy cards; no other sets or negative controls.
+`examples/card-scout/data` freezes all 102 English Base Set cards (1999), using 1st Edition scans. It includes 69 Pokémon, 26 Trainers and seven Energy cards; three negative controls (Pikachu artwork, Yu-Gi-Oh! and Magic Black Lotus).
 Input image hashes and held-out reference labels are separate. The Card Scout
 platform image embeds the verified images, avoiding session-time image downloads.
 Its publishing workflow uses the public workshop runtime package with a separate

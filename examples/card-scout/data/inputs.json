@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot_at": "2026-11-04T17:04:03.003724+00:00",
-  "name": "Base Set \u2014 English 1st Edition",
+  "name": "Base Set \u2014 English 1st Edition + controls",
   "years": "1999",
   "set_id": "base1",
   "language": "en",
@@ -516,6 +516,22 @@
       "id": "item-202",
       "image_url": "https://assets.tcgdex.net/en/base/base1/102/high.png",
       "image_sha256": "e779564cbaa219a75c87d2aecd1bff0d33ae32a76fb118566f1e8faf17e4ff9c"
+    },
+    {
+      "id": "item-203",
+      "image_url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+      "image_sha256": "759ceafdb4b8d637dfcfe673cf672bc3c472354a3b2e7e0835d9cdcacd8d195d"
+    },
+    {
+      "id": "item-204",
+      "image_url": "https://images.ygoprodeck.com/images/cards/89631139.jpg",
+      "image_sha256": "d638d67b9c24b3a26000848758589b158ba3cf8d2ed310dae90ace1c35156058"
+    },
+    {
+      "id": "item-205",
+      "image_url": "https://cards.scryfall.io/png/front/b/0/b0faa7f2-b547-42c4-a810-839da50dadfe.png?1783948669",
+      "image_sha256": "3f9ac386a0b1bc74a0298ba1580f257dab6035c8cf47c7b228332fe7af0233ec"
     }
-  ]
+  ],
+  "extended_at": "2026-11-04T19:10:13.161145+00:00"
 }

@@ -128,7 +128,7 @@ def public_batch():
     tiers = {"rare_or_higher": 4, "uncertain": 3, "uncommon": 2, "common": 1}
     items.sort(key=lambda i: (tiers.get(i["rarity"], 0) if i["kind"] == "pokemon_tcg" else 0,
                              (i["probabilities"].get("rarity") or {}).get("rare_or_higher", 0)), reverse=True)
-    return {"dataset": {"name": INPUTS["name"], "snapshot_at": INPUTS["snapshot_at"], "items": len(ITEMS), "pokemon_cards": sum(r["card_kind"] == "pokemon_tcg" for r in REFERENCES.values()), "controls": sum(r["card_kind"] != "pokemon_tcg" for r in REFERENCES.values()), "years": INPUTS["years"], "identity_method": "Known catalogue references in the prepared dataset"},
+    return {"dataset": {"name": INPUTS["name"], "snapshot_at": INPUTS.get("extended_at", INPUTS["snapshot_at"]), "items": len(ITEMS), "pokemon_cards": sum(r["card_kind"] == "pokemon_tcg" for r in REFERENCES.values()), "controls": sum(r["card_kind"] != "pokemon_tcg" for r in REFERENCES.values()), "years": INPUTS["years"], "identity_method": "Known catalogue references in the prepared dataset"},
             "running": state["running"], "completed": sum(i["status"] == "done" for i in items),
             "failed": sum(i["status"] == "error" for i in items), "items": items,
             "trace_id": state["analysis_trace_id"], "trace_url": state["analysis_trace_url"]}

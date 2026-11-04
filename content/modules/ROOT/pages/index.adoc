@@ -32,7 +32,9 @@ serves it on one T4. The prepared service owns models, tools, persistence and
 tracing; the generated application calls one API and needs no model credential.
 
 The dataset contains all 102 English Base Set cards from 1999, using 1st Edition
-scans: 69 Pokémon, 26 Trainers and seven Energy cards. Model predictions and
+scans: 69 Pokémon, 26 Trainers and seven Energy cards. Three negative controls
+(Pikachu artwork, Yu-Gi-Oh! and Magic Black Lotus) bring the batch to 105 images.
+Model predictions and
 verified catalogue rarity remain distinct. The edition stamp is not a rarity
 symbol. Market references retain their currency, source and update timestamp;
 a catalogue aggregate is not a verified 1st Edition valuation.

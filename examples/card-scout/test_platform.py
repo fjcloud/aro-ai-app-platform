@@ -77,6 +77,18 @@ class CatalogueTests(unittest.TestCase):
         self.assertEqual(evidence['pricing']['cardmarket']['trend'], 123)
 
 
+class NegativeControlTests(unittest.TestCase):
+    def test_non_pokemon_references_never_request_pokemon_market_prices(self):
+        with patch.object(market_tools.urllib.request, "urlopen", side_effect=AssertionError("No price lookup for a negative control")):
+            for item_id in ("item-203", "item-204", "item-205"):
+                result = market_tools.market_lookup(item_id)
+                self.assertEqual(result["status"], "not_a_pokemon_card")
+                self.assertIsNone(result["pricing"])
+        self.assertEqual(service.REFERENCES["item-203"]["card_kind"], "not_a_card")
+        self.assertEqual(service.REFERENCES["item-204"]["card_kind"], "other_card")
+        self.assertIn("Black Lotus", service.REFERENCES["item-205"]["name"])
+
+
 class BatchTests(unittest.TestCase):
     def test_native_symbols_become_base_set_rarity_without_changing_evidence(self):
         for symbol, rarity in (("circle", "common"), ("diamond", "uncommon"), ("star", "rare_or_higher"), ("none", "common"), ("uncertain", "uncertain")):
@@ -112,9 +124,9 @@ class BatchTests(unittest.TestCase):
         self.assertEqual(service.analysis_snapshot(), original)
 
     def test_complete_base_set_keeps_labels_held_out(self):
-        self.assertEqual(len(service.ITEMS), 102)
+        self.assertEqual(len(service.ITEMS), 105)
         counts = {kind: sum(r["rarity_bucket"] == kind for r in service.REFERENCES.values()) for kind in ("common", "uncommon", "rare_or_higher", "uncertain", "not_applicable")}
-        self.assertEqual(counts, {"common": 38, "uncommon": 32, "rare_or_higher": 32, "uncertain": 0, "not_applicable": 0})
+        self.assertEqual(counts, {"common": 38, "uncommon": 32, "rare_or_higher": 32, "uncertain": 0, "not_applicable": 3})
         self.assertTrue(all(set(r) == {"id", "image_url", "image_sha256"} for r in service.ITEMS.values()))
 
     def test_missing_probabilities_are_not_accepted(self):

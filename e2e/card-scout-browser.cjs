@@ -16,16 +16,16 @@ assert.ok(base,'Set APP_URL');fs.mkdirSync(dir,{recursive:true});
    assert.notEqual(geometry.fit,'cover','The complete card must be visible, not cropped to fill');
    assert.ok(Math.abs(geometry.ratio/geometry.natural-1)<0.03,'Card frame must preserve the source portrait proportions');
   };
-  let batch=await getBatch();assert.equal(batch.dataset.items,102);assert.equal(batch.items.length,102);
+  let batch=await getBatch();assert.equal(batch.dataset.items,105);assert.equal(batch.items.length,105);
   await expect(page.locator('.card')).toHaveCount(12,{timeout:15000});
   await checkWholeCard();
-  if(batch.completed!==102||batch.failed){
+  if(batch.completed!==105||batch.failed){
    const started=page.waitForResponse(r=>r.url()===base+'/api/batch/analyze'&&r.request().method()==='POST');
    await page.getByRole('button',{name:'Analyze batch',exact:true}).click();
    assert.equal((await started).status(),202);
-   await expect.poll(async()=>{batch=await getBatch();return batch.completed===102&&batch.failed===0&&!batch.running},{timeout:300000,intervals:[1500]}).toBe(true);
+   await expect.poll(async()=>{batch=await getBatch();return batch.completed===105&&batch.failed===0&&!batch.running},{timeout:300000,intervals:[1500]}).toBe(true);
   }
-  await expect(page.locator('#progress-msg')).toContainText('102 completed',{timeout:10000});
+  await expect(page.locator('#progress-msg')).toContainText('105 completed',{timeout:10000});
   await page.getByRole('button',{name:'Show more',exact:true}).click();await expect(page.locator('.card')).toHaveCount(24);
   const rare=batch.items.filter(i=>i.kind==='pokemon_tcg'&&i.rarity==='rare_or_higher');
   await page.locator('[data-filter=rare]').click();await expect(page.locator('.card')).toHaveCount(Math.min(12,rare.length));
@@ -57,7 +57,7 @@ assert.ok(base,'Set APP_URL');fs.mkdirSync(dir,{recursive:true});
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Mobile horizontal overflow');
   await page.locator('[data-filter=rare]').click();await checkWholeCard();
   await page.screenshot({path:path.join(dir,'app-mobile.png'),fullPage:true});
-  const live={passed:true,at:new Date().toISOString(),dataset:batch.dataset,completed:batch.completed,failed:batch.failed,rare_cards:rare.length,research_item:target.id,research,checks:['real image inference recovered to 102/102 completed','pagination and whole-batch filters','Other filter agrees with model choices','native price research and exact evidence values','same-origin images','trace link','saved filter','complete card and portrait proportions on desktop and mobile','390px mobile']};
+  const live={passed:true,at:new Date().toISOString(),dataset:batch.dataset,completed:batch.completed,failed:batch.failed,rare_cards:rare.length,research_item:target.id,research,checks:['real image inference recovered to 105/105 completed','pagination and whole-batch filters','Other filter agrees with model choices','native price research and exact evidence values','same-origin images','trace link','saved filter','complete card and portrait proportions on desktop and mobile','390px mobile']};
   fs.writeFileSync(path.join(dir,'app-live.json'),JSON.stringify(live,null,2)+'\n');
 
   await require('./card-scout-fixtures.cjs')(browser,base,batch,dir);
