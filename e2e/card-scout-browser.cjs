@@ -26,6 +26,12 @@ assert.ok(base,'Set APP_URL');fs.mkdirSync(dir,{recursive:true});
    await expect.poll(async()=>{batch=await getBatch();return batch.completed===105&&batch.failed===0&&!batch.running},{timeout:300000,intervals:[1500]}).toBe(true);
   }
   await expect(page.locator('#progress-msg')).toContainText('105 completed',{timeout:10000});
+  for(const [id,kind]of[['item-203','not_a_card'],['item-204','other_card'],['item-205','other_card']]){
+   const item=batch.items.find(i=>i.id===id);assert.ok(item);
+   assert.equal(item.kind,kind);assert.equal(item.rarity,'not_applicable');
+   const denied=await context.request.post(base+'/api/cards/'+id+'/research');
+   assert.equal(denied.status(),409,'Negative controls must not invoke Pokemon price research');
+  }
   await page.getByRole('button',{name:'Show more',exact:true}).click();await expect(page.locator('.card')).toHaveCount(24);
   const rare=batch.items.filter(i=>i.kind==='pokemon_tcg'&&i.rarity==='rare_or_higher');
   await page.locator('[data-filter=rare]').click();await expect(page.locator('.card')).toHaveCount(Math.min(12,rare.length));

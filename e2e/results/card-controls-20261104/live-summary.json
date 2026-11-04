@@ -1,0 +1,111 @@
+{
+  "dataset": {
+    "name": "Base Set \u2014 English 1st Edition + controls",
+    "snapshot_at": "2026-11-04T19:10:13.161145+00:00",
+    "items": 105,
+    "pokemon_cards": 102,
+    "controls": 3,
+    "years": "1999",
+    "identity_method": "Known catalogue references in the prepared dataset"
+  },
+  "completed": 105,
+  "failed": 0,
+  "controls": [
+    {
+      "id": "item-203",
+      "image_url": "/assets/item-203",
+      "name": "Pikachu illustration without a card",
+      "set_name": null,
+      "year": null,
+      "status": "done",
+      "error": null,
+      "kind": "not_a_card",
+      "rarity": "not_applicable",
+      "rarity_symbol": "none",
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.05607877661273111,
+          "other_card": 0.011887880020052418,
+          "not_a_card": 0.7120403038113559,
+          "uncertain": 0.2199930395558606
+        },
+        "rarity_symbol": {
+          "circle": 0.0930630706767509,
+          "diamond": 0.07963690102370902,
+          "star": 0.10061731114523625,
+          "none": 0.4665382171680166,
+          "uncertain": 0.2601444999862872
+        },
+        "rarity": {}
+      },
+      "needs_review": false,
+      "research": null
+    },
+    {
+      "id": "item-204",
+      "image_url": "/assets/item-204",
+      "name": "Yu-Gi-Oh! \u2014 Blue-Eyes White Dragon",
+      "set_name": null,
+      "year": null,
+      "status": "done",
+      "error": null,
+      "kind": "other_card",
+      "rarity": "not_applicable",
+      "rarity_symbol": "none",
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.0010049473489611655,
+          "other_card": 0.9888865347072079,
+          "not_a_card": 0.0033057751118644257,
+          "uncertain": 0.006802742831966494
+        },
+        "rarity_symbol": {
+          "circle": 0.06427795368122362,
+          "diamond": 0.03322620280206722,
+          "star": 0.06699497177829998,
+          "none": 0.6169738700579047,
+          "uncertain": 0.2185270016805045
+        },
+        "rarity": {}
+      },
+      "needs_review": false,
+      "research": null
+    },
+    {
+      "id": "item-205",
+      "image_url": "/assets/item-205",
+      "name": "Magic: The Gathering \u2014 Black Lotus (Alpha)",
+      "set_name": null,
+      "year": null,
+      "status": "done",
+      "error": null,
+      "kind": "other_card",
+      "rarity": "not_applicable",
+      "rarity_symbol": "none",
+      "probabilities": {
+        "card_kind": {
+          "pokemon_tcg": 0.0006768487803168243,
+          "other_card": 0.978746312763554,
+          "not_a_card": 0.003242411512187097,
+          "uncertain": 0.017334426943942126
+        },
+        "rarity_symbol": {
+          "circle": 0.12323093792107886,
+          "diamond": 0.06589449745731063,
+          "star": 0.08818969612748337,
+          "none": 0.5624294709435262,
+          "uncertain": 0.16025539755060084
+        },
+        "rarity": {}
+      },
+      "needs_review": false,
+      "research": null
+    }
+  ],
+  "other_filter_count": 4,
+  "known_model_error": "Grass Energy remains incorrectly classified as another game; it is not one of the three added controls.",
+  "price_guard": "POST /api/cards/{control_id}/research returned 409 for all three in live browser acceptance",
+  "base_set_preserved": "All 102 prior input/reference records and image bytes unchanged",
+  "append_idempotent": "Second append returned added=0, images=105",
+  "runtime_image": "ghcr.io/fjcloud/d3-mini-runtime@sha256:7ebc27a97655d33a2b0037475b84ad1406b5a82665ccad2f3f33d824e66e9b86"
+}
