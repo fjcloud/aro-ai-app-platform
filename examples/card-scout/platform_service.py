@@ -19,7 +19,7 @@ from starlette.concurrency import run_in_threadpool
 from starlette.responses import FileResponse, JSONResponse
 from starlette.routing import Route
 
-from analyze_batch import DECISION_STATE, QUESTIONS
+from analyze_batch import DECISION_STATE, QUESTIONS, validate_answer
 from market_tools import mcp
 from observability import PROVIDER, TRACER, record, trace_link
 from prepare_dataset import CACHE, ROOT
@@ -67,20 +67,6 @@ def now():
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 
-def validate_answer(reply):
-    answers = reply.get("answers", {})
-    expected = {"card_kind": {"pokemon_tcg", "other_card", "not_a_card", "uncertain"},
-                "rarity": {"common", "uncommon", "rare_or_higher", "not_applicable", "uncertain"}}
-    for name, options in expected.items():
-        answer = answers.get(name, {})
-        probabilities = answer.get("probabilities", {})
-        if answer.get("choice") not in options or set(probabilities) != options:
-            raise ValueError("Decision response has an invalid choice or missing probabilities")
-        if any(not isinstance(p, (int, float)) or not 0 <= p <= 1 for p in probabilities.values()) or abs(sum(probabilities.values()) - 1) > 0.02:
-            raise ValueError("Invalid decision probabilities")
-    return answers
-
-
 def analyze():
     with TRACER.start_as_current_span("cards.analyze_batch", attributes={"mlflow.spanType": "CHAIN"}) as root:
         tid, link = trace_link(root)
@@ -107,7 +93,7 @@ def analyze():
                         reply = post_json(os.environ["DECISION_URL"], payload)
                         answers = validate_answer(reply)
                         result = {"status": "done", "answers": answers, "elapsed_seconds": round(time.monotonic() - started, 3)}
-                        record(span, "spanOutputs", {"answers": answers, "usage": reply.get("usage")})
+                        record(span, "spanOutputs", {"answers": reply["answers"], "mapped_answers": answers, "usage": reply.get("usage")})
                     except Exception:
                         result = {"status": "error", "error": "Model analysis failed. Retry the batch; no result was substituted."}
                         span.set_status(Status(StatusCode.ERROR, result["error"]))
@@ -136,7 +122,7 @@ def public_batch():
                       "name": reference["name"], "set_name": reference.get("set_name"),
                       "year": reference.get("release_date", "")[:4] or None,
                       "status": decision["status"], "error": decision.get("error"),
-                      "kind": kind, "rarity": rarity, "probabilities": {k: v.get("probabilities") for k, v in answers.items()},
+                      "kind": kind, "rarity": rarity, "rarity_symbol": answers.get("rarity_symbol", {}).get("choice"), "probabilities": {k: v.get("probabilities") for k, v in answers.items()},
                       "needs_review": kind == "uncertain" or rarity == "uncertain",
                       "research": state["prices"].get(item_id)})
     tiers = {"rare_or_higher": 4, "uncertain": 3, "uncommon": 2, "common": 1}

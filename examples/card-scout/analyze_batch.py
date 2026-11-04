@@ -14,18 +14,56 @@ from prepare_dataset import CACHE, ROOT, fetch
 
 DECISION_STATE = "Inspect the attached image and classify the card and its official printed rarity. Judge only from visible evidence."
 
-QUESTIONS = {
-    "card_kind": {
-        "type": "choice",
-        "instructions": "What does this image show? Pokemon TCG includes Trainer and Energy cards. Identify the actual card game, not just a generic fantasy card.",
-        "criteria": {"pokemon_tcg": "A Pokemon Trading Card Game card", "other_card": "A card from another game, a sports card or a standard playing card", "not_a_card": "A receipt, photograph or object that is not a trading or playing card", "uncertain": "Not enough information to identify"},
-    },
-    "rarity": {
-        "type": "choice",
-        "instructions": "For a Pokemon TCG card, identify its rarity using the rarity mark near the collector number. A circle is Common, a diamond is Uncommon, a star is Rare. Basic Energy cards in the original Base Set are Common even though they have no printed rarity symbol; Double Colorless Energy is Uncommon. The 1st Edition stamp is a print edition, not a rarity mark. Do not confuse character popularity or evolution stage with rarity. If it is not a Pokemon TCG card select not_applicable. If the rarity cannot be established select uncertain.",
-        "criteria": {"common": "Common rarity, classic circle symbol", "uncommon": "Uncommon rarity, classic diamond symbol", "rare_or_higher": "Rare or higher rarity, classic star or a modern rare tier", "not_applicable": "This is not a Pokemon TCG card", "uncertain": "Printed rarity cannot be determined"},
-    },
-}
+QUESTIONS = {'card_kind': {'type': 'choice',
+               'instructions': 'Is this a Pokemon Trading Card Game card: yes or no? Pokemon, Trainer and '
+                               'Energy cards all count as yes. Select pokemon_tcg for yes, otherwise '
+                               'other_card or not_a_card. Judge the printed trading-card layout; a Pokemon '
+                               'illustration alone is not a card.',
+               'criteria': {'pokemon_tcg': 'A Pokemon Trading Card Game card',
+                            'other_card': 'A card from another game, a sports card or a standard playing '
+                                          'card',
+                            'not_a_card': 'A receipt, photograph or object that is not a trading or playing '
+                                          'card',
+                            'uncertain': 'Not enough information to identify'}},
+ 'rarity_symbol': {'type': 'choice',
+                   'instructions': 'Inspect the small printed rarity mark in the bottom-right corner, beside '
+                                   'the collector number. Report the SHAPE of this mark only. Ignore the '
+                                   'character, its fame, the artwork, the large Energy symbols, and the 1st '
+                                   'Edition stamp. A blank but fully visible corner is none, as on Basic '
+                                   'Energy cards. A cropped, blurry or unreadable corner is uncertain.',
+                   'criteria': {'circle': 'A small filled circle or round dot',
+                                'diamond': 'A small diamond, a square rotated 45 degrees',
+                                'star': 'A small five-pointed star',
+                                'none': 'The corner is fully visible and has no printed rarity mark',
+                                'uncertain': 'The corner or small rarity mark cannot be read reliably'}}}
+
+# This mapping belongs to the fixed English Base Set, not arbitrary promo cards.
+RARITY_BY_SYMBOL = {"circle": "common", "diamond": "uncommon", "star": "rare_or_higher",
+                    "none": "common", "uncertain": "uncertain"}
+
+
+def validate_answer(reply):
+    """Validate native shape evidence, then apply Base Set rarity/eligibility rules."""
+    answers = reply.get("answers", {})
+    expected = {"card_kind": {"pokemon_tcg", "other_card", "not_a_card", "uncertain"},
+                "rarity_symbol": set(RARITY_BY_SYMBOL)}
+    for name, options in expected.items():
+        answer = answers.get(name, {})
+        probabilities = answer.get("probabilities", {})
+        if answer.get("choice") not in options or set(probabilities) != options:
+            raise ValueError("Decision response has an invalid choice or missing probabilities")
+        if any(not isinstance(p, (int, float)) or not 0 <= p <= 1 for p in probabilities.values()) or abs(sum(probabilities.values()) - 1) > 0.02:
+            raise ValueError("Invalid decision probabilities")
+    kind, symbol = answers["card_kind"], answers["rarity_symbol"]
+    p = symbol["probabilities"]
+    rarity = {"choice": RARITY_BY_SYMBOL[symbol["choice"]],
+              "probabilities": {"common": p["circle"] + p["none"], "uncommon": p["diamond"],
+                                "rare_or_higher": p["star"], "uncertain": p["uncertain"]}}
+    if kind["choice"] != "pokemon_tcg":
+        # Applicability is a gate, not a fabricated model confidence of 100%.
+        rarity = {"choice": "not_applicable", "probabilities": {}}
+    return {"card_kind": kind, "rarity_symbol": symbol, "rarity": rarity}
+
 
 
 def main():
@@ -44,7 +82,7 @@ def main():
             raise SystemExit(f"Image changed for {item['id']}; refusing a different input.")
         path.write_bytes(image)
         mime = "image/jpeg" if image[:2] == b"\xff\xd8" else "image/png"
-        # No ID, URL, filename, catalogue name, edition or reference label enters the prompt.
+        # No per-item ID, URL, name, print identity or reference answer enters the prompt.
         payload = {
             "model": "vllm-sr/d3-mini",
             "state": DECISION_STATE,
@@ -58,8 +96,8 @@ def main():
                 reply = json.load(response)
         except urllib.error.HTTPError as exc:
             raise SystemExit(f"{item['id']}: HTTP {exc.code}: {exc.read()[:500]!r}") from exc
-        answers = reply["answers"]
-        results.append({"id": item["id"], "elapsed_seconds": round(time.monotonic() - started, 3), "answers": answers, "usage": reply.get("usage")})
+        answers = validate_answer(reply)
+        results.append({"id": item["id"], "elapsed_seconds": round(time.monotonic() - started, 3), "answers": answers, "raw_answers": reply["answers"], "usage": reply.get("usage")})
         # Checkpoint completed model outputs before evaluation or catalogue lookup.
         args.output.write_text(json.dumps({"dataset_snapshot_at": inputs["snapshot_at"], "results": results}, indent=2) + "\n")
         print(json.dumps({"id": item["id"], "kind": answers["card_kind"]["choice"], "rarity": answers["rarity"]["choice"], "seconds": results[-1]["elapsed_seconds"]}), flush=True)
