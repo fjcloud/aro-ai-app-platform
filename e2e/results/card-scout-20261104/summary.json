@@ -1,0 +1,97 @@
+{
+  "date": "2026-11-04",
+  "default_prompt_changed": false,
+  "dataset_sha256": "d17c9c07f7143bd7d4a36e4e2f85a9f2add5a8976f3383acc6292ed63941e80d",
+  "baseline": {
+    "images": 57,
+    "pokemon_cards": 54,
+    "card_kind_correct": 57,
+    "binary_rarity_correct": 47,
+    "rarity_evaluable_cards": 53,
+    "nonstandard_rarity_cards": 1,
+    "three_tier_rarity_correct": 42,
+    "mean_seconds": 1.225,
+    "by_era": {
+      "base1": {
+        "cards": 7,
+        "binary_rarity_correct": 6
+      },
+      "basep": {
+        "cards": 1,
+        "binary_rarity_correct": 0
+      },
+      "bw1": {
+        "cards": 6,
+        "binary_rarity_correct": 6
+      },
+      "dp1": {
+        "cards": 6,
+        "binary_rarity_correct": 6
+      },
+      "ex1": {
+        "cards": 6,
+        "binary_rarity_correct": 5
+      },
+      "jp-unnumbered-promos": {
+        "cards": 1,
+        "binary_rarity_correct": 0
+      },
+      "neo3": {
+        "cards": 1,
+        "binary_rarity_correct": 1
+      },
+      "neo4": {
+        "cards": 1,
+        "binary_rarity_correct": 0
+      },
+      "pop5": {
+        "cards": 1,
+        "binary_rarity_correct": 0
+      },
+      "sm1": {
+        "cards": 6,
+        "binary_rarity_correct": 6
+      },
+      "sv01": {
+        "cards": 6,
+        "binary_rarity_correct": 5
+      },
+      "swsh1": {
+        "cards": 6,
+        "binary_rarity_correct": 6
+      },
+      "xy1": {
+        "cards": 6,
+        "binary_rarity_correct": 6
+      }
+    }
+  },
+  "exploratory_review_policy": {
+    "rule": "Predicted rarity uncertain OR largest rarity probability < 0.4",
+    "evaluable_cards": 53,
+    "review_count": 13,
+    "review_ids": [
+      "item-009",
+      "item-013",
+      "item-018",
+      "item-021",
+      "item-028",
+      "item-036",
+      "item-037",
+      "item-046",
+      "item-047",
+      "item-050",
+      "item-053",
+      "item-054",
+      "item-056"
+    ],
+    "accepted_count": 40,
+    "accepted_correct": 40,
+    "caveat": "Threshold inspected after seeing errors on this dataset; not an independent calibration or generalization result."
+  },
+  "llm_recheck": {
+    "before": "Existing runtime key: MaaS /v1/models HTTP 403; native agent HTTP 500 wrapping 403. Developer secret created 2026-11-02; scripts mint 24h keys.",
+    "recovery": "Renewed coding and runtime MaaS keys; restarted prepared service.",
+    "after": "Developer chat completions HTTP 200, answer OK; fresh native Responses + MCP research HTTP 200 with matching source and structured market values."
+  }
+}

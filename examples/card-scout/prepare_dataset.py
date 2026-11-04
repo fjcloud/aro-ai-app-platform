@@ -1,169 +1,100 @@
 #!/usr/bin/env python3
-"""Freeze a small, mixed-era TCGdex image dataset; no model or API key needed."""
+"""Freeze all 102 English Base Set cards with source images and held-out labels."""
 import argparse
 import concurrent.futures
 import datetime
 import hashlib
 import json
 import pathlib
-import random
 import time
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
-CACHE = ROOT / ".cache"
-API = "https://api.tcgdex.net/v2/en"
-# Two common, two uncommon and two rare-or-higher cards from each era.
-SELECTION = {
-    "base1": ["46", "63", "32", "27", "73", "15"],
-    "ex1": ["55", "73", "47", "37", "16", "99"],
-    "dp1": ["87", "100", "64", "59", "24", "6"],
-    "bw1": ["36", "50", "90", "17", "62", "57"],
-    "xy1": ["58", "98", "74", "8", "21", "93"],
-    "sm1": ["23", "57", "77", "95", "41", "15"],
-    "swsh1": ["60", "38", "93", "52", "78", "115"],
-    "sv01": ["063", "052", "026", "129", "190", "201"],
-}
-# Additional collector examples; appended so the original 51 item IDs stay stable.
-COLLECTOR_SELECTION = {
-    "base1": ["4"],       # Charizard
-    "neo4": ["107"],      # Shining Charizard
-    "pop5": ["17"],       # Umbreon Gold Star
-    "neo3": ["66"],       # Shining Magikarp
-    "basep": ["24"],      # Birthday Pikachu: collectible does not imply Rare.
-}
-ILLUSTRATOR = {
-    "card_kind": "pokemon_tcg", "card_id": "jp-illustrator-1998",
-    "catalogue_provider": "curated", "language": "ja",
-    "name": "Pikachu Illustrator", "number": "Unnumbered",
-    "set_id": "jp-unnumbered-promos", "set_name": "Japanese Unnumbered Promotional cards",
-    "release_date": "1998", "rarity": "Unnumbered contest promo; no standard printed rarity",
-    "rarity_bucket": "uncertain",
-    "source_url": "https://bulbapedia.bulbagarden.net/wiki/Pokemon_Illustrator",
-    "context_source_url": "https://www.psacard.com/articles/articleview/9248/eye-prize-collecting-pokemon-trophy-cards",
-    "collector_note": "Illustration contest prize. Scarcity is not a visible standard rarity symbol. No comparable Cardmarket aggregate is provided; do not substitute an auction record or another Pikachu.",
-}
-ILLUSTRATOR_IMAGE = "https://archives.bulbagarden.net/media/upload/5/5f/Pok%C3%A9monIllustratorCoroCoropromo.jpg"
-
-
-CONTROLS = [
-    ("other_card", "Yu-Gi-Oh! — Blue-Eyes White Dragon",
-     "https://images.ygoprodeck.com/images/cards/89631139.jpg"),
-    ("not_a_card", "Pikachu illustration without a card",
-     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"),
-    ("not_a_card", "Store receipt",
-     "https://huggingface.co/vllm-sr/d3-mini/resolve/df99bf4ca4418bc6908ee68e9b7479af1f3b8800/assets/example-receipt.png"),
-]
+CACHE = ROOT / '.cache'
+API = 'https://api.tcgdex.net/v2/en'
+SET_ID = 'base1'
 
 
 def fetch(url):
     for attempt in range(3):
         try:
-            request = urllib.request.Request(url, headers={"User-Agent": "CardScoutWorkshop/1.0"})
+            request = urllib.request.Request(url, headers={'User-Agent': 'CardScoutWorkshop/1.0'})
             with urllib.request.urlopen(request, timeout=25) as response:
                 return response.read()
         except Exception:
             if attempt == 2:
-                raise RuntimeError(f"Could not download dataset source: {url}") from None
+                raise RuntimeError(f'Could not download dataset source: {url}') from None
             time.sleep(attempt + 1)
 
 
 def rarity_bucket(rarity):
     value = rarity.lower()
-    if value in ("common", "uncommon"):
+    if value in ('common', 'uncommon'):
         return value
-    if "rare" in value:
-        return "rare_or_higher"
-    raise ValueError(f"Unmapped rarity: {rarity!r}")
-
-
-def image_record(url):
-    image = fetch(url)
-    digest = hashlib.sha256(image).hexdigest()
-    (CACHE / digest).write_bytes(image)
-    return {"image_url": url, "image_sha256": digest}
+    if 'rare' in value:
+        return 'rare_or_higher'
+    raise ValueError(f'Unmapped rarity: {rarity!r}')
 
 
 def prepare_card(selection):
-    set_id, number, set_info = selection
-    card_id = f"{set_id}-{number}"
-    url = f"{API}/cards/{card_id}"
+    number, set_info = selection
+    card_id = f'{SET_ID}-{number}'
+    url = f'{API}/cards/{card_id}'
     card = json.loads(fetch(url))
-    if card["id"] != card_id or card["set"]["id"] != set_id:
-        raise ValueError(f"Unexpected catalogue identity for {card_id}")
-    item = image_record(card["image"] + "/high.png")
+    if card['id'] != card_id or card['set']['id'] != SET_ID or not card.get('variants', {}).get('firstEdition'):
+        raise ValueError(f'Unexpected catalogue identity or missing first-edition variant for {card_id}')
+    image_url = card['image'] + '/high.png'
+    image = fetch(image_url)
+    digest = hashlib.sha256(image).hexdigest()
+    (CACHE / digest).write_bytes(image)
     reference = {
-        "card_kind": "pokemon_tcg", "card_id": card_id,
-        "name": card["name"], "number": card["localId"],
-        "set_id": set_id, "set_name": set_info["name"],
-        "release_date": set_info["releaseDate"],
-        "rarity": card["rarity"], "rarity_bucket": rarity_bucket(card["rarity"]),
-        "source_url": url,
+        'card_kind': 'pokemon_tcg', 'card_id': card_id,
+        'name': card['name'], 'number': card['localId'],
+        'set_id': SET_ID, 'set_name': set_info['name'],
+        'release_date': set_info['releaseDate'], 'language': 'en',
+        'print_edition': '1st Edition', 'category': card['category'],
+        'rarity': card['rarity'], 'rarity_bucket': rarity_bucket(card['rarity']),
+        'source_url': url,
     }
-    return item, reference
-
-
-def collector_records():
-    records = []
-    for sid, numbers in COLLECTOR_SELECTION.items():
-        info = json.loads(fetch(f"{API}/sets/{sid}"))
-        for number in numbers:
-            item, reference = prepare_card((sid, number, info))
-            reference["language"] = "en"
-            records.append((item, reference))
-    records.append((image_record(ILLUSTRATOR_IMAGE), dict(ILLUSTRATOR)))
-    return records
+    return {'image_url': image_url, 'image_sha256': digest}, reference
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--append-collectors", action="store_true", help="Extend the existing snapshot without changing existing IDs or images")
+    parser.add_argument('--replace', action='store_true', help='Explicitly replace the snapshot; results from another snapshot are invalidated')
     args = parser.parse_args()
+    data_dir = ROOT / 'data'
+    if (data_dir / 'inputs.json').exists() and not args.replace:
+        raise SystemExit('Dataset already frozen. Use --replace to create a new Base Set snapshot.')
+    previous_hashes = {i['image_sha256'] for i in json.loads((data_dir / 'inputs.json').read_text())['items']} if (data_dir / 'inputs.json').exists() else set()
     CACHE.mkdir(exist_ok=True)
-    data_dir = ROOT / "data"
     data_dir.mkdir(exist_ok=True)
-    if (data_dir / "inputs.json").exists():
-        if not args.append_collectors:
-            raise SystemExit("Dataset already frozen. Use --append-collectors to extend it without changing existing items.")
-        inputs = json.loads((data_dir / "inputs.json").read_text())
-        references = json.loads((data_dir / "references.json").read_text())
-        known = {r["card_id"] for r in references["items"]}
-        added = 0
-        for item, reference in collector_records():
-            if reference["card_id"] in known:
-                continue
-            item_id = f"item-{len(inputs['items']) + 1:03d}"
-            inputs["items"].append({"id": item_id, **item})
-            references["items"].append({"id": item_id, **reference})
-            added += 1
-        if added:
-            for manifest, name in ((inputs, "inputs"), (references, "references")):
-                manifest["extended_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
-                (data_dir / f"{name}.json").write_text(json.dumps(manifest, indent=2) + "\n")
-        print(json.dumps({"added": added, "images": len(inputs["items"])}))
-        return
-    created = datetime.datetime.now(datetime.timezone.utc).isoformat()
-    set_info = {sid: json.loads(fetch(f"{API}/sets/{sid}")) for sid in SELECTION}
-    selections = [(sid, number, set_info[sid]) for sid, numbers in SELECTION.items() for number in numbers]
+    info = json.loads(fetch(f'{API}/sets/{SET_ID}'))
+    numbers = sorted(int(c['localId']) for c in info['cards'])
+    if numbers != list(range(1, 103)) or info['cardCount']['official'] != 102:
+        raise ValueError('Expected the complete English Base Set, numbered 1 through 102')
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-        records = list(pool.map(prepare_card, selections))
-    for kind, name, url in CONTROLS:
-        records.append((image_record(url), {
-            "card_kind": kind, "card_id": None, "name": name,
-            "rarity": None, "rarity_bucket": "not_applicable", "source_url": url,
-        }))
-    random.Random(20261030).shuffle(records)
-    records.extend(collector_records())
+        records = list(pool.map(prepare_card, [(n, info) for n in numbers]))
     inputs, references = [], []
-    for i, (item, reference) in enumerate(records, start=1):
-        item_id = f"item-{i:03d}"
-        inputs.append({"id": item_id, **item})
-        references.append({"id": item_id, **reference})
-    envelope = {"schema_version": 1, "snapshot_at": created, "shuffle_seed": 20261030}
-    (data_dir / "inputs.json").write_text(json.dumps({**envelope, "items": inputs}, indent=2) + "\n")
-    (data_dir / "references.json").write_text(json.dumps({**envelope, "items": references}, indent=2) + "\n")
-    print(json.dumps({"images": len(inputs), "pokemon_cards": sum(r["card_kind"] == "pokemon_tcg" for r in references), "sets": len({r["set_id"] for r in references if r["card_kind"] == "pokemon_tcg"})}))
+    for n, (item, reference) in enumerate(records, start=1):
+        # New opaque IDs prevent browsers reusing old, cached multi-era images.
+        item_id = f'item-{100 + n:03d}'
+        inputs.append({'id': item_id, **item})
+        references.append({'id': item_id, **reference})
+    envelope = {'schema_version': 1, 'snapshot_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                'name': 'Base Set — English 1st Edition', 'years': '1999', 'set_id': SET_ID,
+                'language': 'en', 'print_edition': '1st Edition'}
+    for name, items in (('inputs', inputs), ('references', references)):
+        (data_dir / f'{name}.json').write_text(json.dumps({**envelope, 'items': items}, indent=2) + '\n')
+    images = data_dir / 'images'
+    images.mkdir(exist_ok=True)
+    for item in inputs:
+        digest = item['image_sha256']
+        (images / digest).write_bytes((CACHE / digest).read_bytes())
+    for digest in previous_hashes - {i['image_sha256'] for i in inputs}:
+        (images / digest).unlink(missing_ok=True)
+    print(json.dumps({'images': len(inputs), 'set': SET_ID, 'language': 'en', 'edition': '1st Edition'}))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

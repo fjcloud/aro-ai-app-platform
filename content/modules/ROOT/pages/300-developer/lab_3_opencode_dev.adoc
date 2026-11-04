@@ -57,13 +57,16 @@ a successful deployment. The app has no model key or Kubernetes token.
 
 Open the public HTTPS app Route.
 
-. Click *Analyze batch*. Watch all 57 images progress; completed results remain
+. Click *Analyze batch*. Watch all 102 images progress; completed results remain
   visible and persist when the page reloads.
-. Browse the ranking. The collection contains 54 Pokémon cards from 1998 to 2023
-  and three controls, including collector highlights. It is a curated demo,
+. Browse the ranking. The collection is the complete 102-card English Base Set (1999),
+  using 1st Edition scans. It includes Pokémon, Trainer and Energy cards,
   not a random booster pack.
-. Compare *Rare*, *Needs review* and *Other*. The controls should not offer a
-  Pokémon price check. A model can make mistakes; uncertainty stays visible.
+. Check that every card is shown in full, including its borders, edition stamp
+  and rarity symbol, on desktop and mobile. Images must retain their portrait
+  proportions without cropping.
+. Compare *Rare*, *Needs review* and *Other*. This collection has no negative controls, so *Other* should be empty
+  unless the model makes a mistake. Uncertainty stays visible.
 . Click *Check price* on a Pokémon card. The native OpenShift AI agent calls the
   prepared MCP tool and verifies the dataset's exact catalogue reference.
 . Read the catalogue rarity, Cardmarket EUR trend and 7-day average. Compare

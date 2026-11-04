@@ -44,7 +44,7 @@ def main():
         'AGENT_MODEL': 'maas-vllm-inference-1/deepseekv4pro',
         'DECISION_URL': 'http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone', 'DECISION_MODEL': 'vllm-sr/d3-mini',
         'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT': mlflow + '/v1/traces', 'MLFLOW_EXPERIMENT_ID': experiment, 'MLFLOW_WORKSPACE': APP}})
-    entry = json.dumps({'url': 'https://card-scout-tools-' + APP + '.' + domain + '/mcp', 'description': 'Verify mixed-era catalogue cards and retrieve dated market reference prices.'})
+    entry = json.dumps({'url': 'https://card-scout-tools-' + APP + '.' + domain + '/mcp', 'description': 'Verify English Base Set cards and retrieve dated catalogue market references, distinct from 1st Edition valuations.'})
     name = 'gen-ai-aa-mcp-servers'
     if oc('get', 'configmap', name, '-n', 'redhat-ods-applications', '--ignore-not-found', '-o', 'name'):
         oc('patch', 'configmap', name, '-n', 'redhat-ods-applications', '--type=merge', '-p', json.dumps({'data': {'Signal-Desk': None, 'Card-Scout': entry}}))

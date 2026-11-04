@@ -40,7 +40,7 @@ if(await tools.count()){
 
  const dialog=page.getByRole('dialog');if(await dialog.count())await dialog.getByRole('button',{name:'Close',exact:true}).first().click();else await page.keyboard.press('Escape');
 }
-const probes=[{tool:'get_card_market_data',question:'Use get_card_market_data exactly once for item-039. Verify its catalogue identity and rarity, then report Cardmarket EUR trend, 7-day average, update timestamp and source. Stop after this lookup. Never invent missing prices.'}];
+const probes=[{tool:'get_card_market_data',question:'Use get_card_market_data exactly once for item-104. Verify its catalogue identity and rarity, then report Cardmarket EUR trend, 7-day average, update timestamp and source. Stop after this lookup. Never invent missing prices.'}];
 const names=[],responses=[];let actualModel='';
 for(const probe of probes){
  const stream=page.waitForResponse(r=>r.url().includes('/lsd/responses')&&r.request().method()==='POST',{timeout:180000});
@@ -52,9 +52,9 @@ for(const probe of probes){
  assert.equal(calls.length,1,'Component probe must execute exactly one tool');assert.equal(calls[0].name,probe.tool);assert.ok(!calls[0].error);
  const args=typeof calls[0].arguments==='string'?JSON.parse(calls[0].arguments):calls[0].arguments;
  const evidence=typeof calls[0].output==='string'?JSON.parse(calls[0].output):calls[0].output;
- assert.equal(args.item_id,'item-039');assert.equal(evidence.item_id,'item-039');
- assert.equal(evidence.status,'ok');assert.equal(evidence.card_id,'sv01-201');
- assert.equal(evidence.source_url,'https://api.tcgdex.net/v2/en/cards/sv01-201');assert.ok(evidence.retrieved_at);
+ assert.equal(args.item_id,'item-104');assert.equal(evidence.item_id,'item-104');
+ assert.equal(evidence.status,'ok');assert.equal(evidence.card_id,'base1-4');
+ assert.equal(evidence.source_url,'https://api.tcgdex.net/v2/en/cards/base1-4');assert.ok(evidence.retrieved_at);
  names.push(probe.tool);responses.push(done.id);
 }
 await page.waitForTimeout(1000);await page.getByRole('tab',{name:'Model',exact:true}).click();

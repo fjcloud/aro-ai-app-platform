@@ -12,6 +12,8 @@ import urllib.request
 
 from prepare_dataset import CACHE, ROOT, fetch
 
+DECISION_STATE = "Inspect the attached image and classify the card and its official printed rarity. Judge only from visible evidence."
+
 QUESTIONS = {
     "card_kind": {
         "type": "choice",
@@ -20,7 +22,7 @@ QUESTIONS = {
     },
     "rarity": {
         "type": "choice",
-        "instructions": "For a Pokemon TCG card, identify its printed rarity using the rarity mark near the collector number. On classic cards, a circle is Common, a diamond is Uncommon, a star is Rare. Do not confuse character popularity or evolution stage with rarity. For modern cards use their printed rarity symbols. If it is not a Pokemon TCG card select not_applicable. If the rarity is unreadable or cannot be established select uncertain.",
+        "instructions": "For a Pokemon TCG card, identify its rarity using the rarity mark near the collector number. A circle is Common, a diamond is Uncommon, a star is Rare. Basic Energy cards in the original Base Set are Common even though they have no printed rarity symbol; Double Colorless Energy is Uncommon. The 1st Edition stamp is a print edition, not a rarity mark. Do not confuse character popularity or evolution stage with rarity. If it is not a Pokemon TCG card select not_applicable. If the rarity cannot be established select uncertain.",
         "criteria": {"common": "Common rarity, classic circle symbol", "uncommon": "Uncommon rarity, classic diamond symbol", "rare_or_higher": "Rare or higher rarity, classic star or a modern rare tier", "not_applicable": "This is not a Pokemon TCG card", "uncertain": "Printed rarity cannot be determined"},
     },
 }
@@ -45,7 +47,7 @@ def main():
         # No ID, URL, filename, catalogue name, edition or reference label enters the prompt.
         payload = {
             "model": "vllm-sr/d3-mini",
-            "state": "Inspect the attached image and classify the card and its official printed rarity. Judge only from visible evidence.",
+            "state": DECISION_STATE,
             "images": [f"data:{mime};base64," + base64.b64encode(image).decode()],
             "questions": QUESTIONS,
         }
