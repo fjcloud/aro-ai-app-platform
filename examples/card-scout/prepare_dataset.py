@@ -13,6 +13,32 @@ ROOT = pathlib.Path(__file__).resolve().parent
 CACHE = ROOT / '.cache'
 API = 'https://api.tcgdex.net/v2/en'
 SET_ID = 'base1'
+CONTROLS = (
+    ('item-203', 'not_a_card', 'Pikachu illustration without a card',
+     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
+     'https://github.com/PokeAPI/sprites/blob/master/sprites/pokemon/other/official-artwork/25.png'),
+    ('item-204', 'other_card', 'Yu-Gi-Oh! — Blue-Eyes White Dragon',
+     'https://images.ygoprodeck.com/images/cards/89631139.jpg',
+     'https://db.ygoprodeck.com/api/v7/cardinfo.php?id=89631139'),
+    ('item-205', 'other_card', 'Magic: The Gathering — Black Lotus (Alpha)',
+     'https://cards.scryfall.io/png/front/b/0/b0faa7f2-b547-42c4-a810-839da50dadfe.png?1783948669',
+     'https://scryfall.com/card/lea/232/black-lotus'),
+)
+
+
+def append_controls(inputs, references):
+    """Append blind negative examples without replacing any Base Set scan or ID."""
+    known = {i['id'] for i in inputs}
+    for item_id, kind, name, url, source in CONTROLS:
+        if item_id in known:
+            continue
+        image = fetch(url)
+        digest = hashlib.sha256(image).hexdigest()
+        (CACHE / digest).write_bytes(image)
+        inputs.append({'id': item_id, 'image_url': url, 'image_sha256': digest})
+        references.append({'id': item_id, 'card_kind': kind, 'card_id': None, 'name': name,
+                           'rarity': None, 'rarity_bucket': 'not_applicable', 'source_url': source})
+
 
 
 def fetch(url):
@@ -61,9 +87,25 @@ def prepare_card(selection):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--append-controls', action='store_true', help='Append only the three fixed negative controls; preserve existing images')
     parser.add_argument('--replace', action='store_true', help='Explicitly replace the snapshot; results from another snapshot are invalidated')
     args = parser.parse_args()
     data_dir = ROOT / 'data'
+    if args.append_controls:
+        CACHE.mkdir(exist_ok=True)
+        manifests = [json.loads((data_dir / (name + '.json')).read_text()) for name in ('inputs', 'references')]
+        before = len(manifests[0]['items'])
+        append_controls(manifests[0]['items'], manifests[1]['items'])
+        if len(manifests[0]['items']) != before:
+            for name, manifest in zip(('inputs', 'references'), manifests):
+                manifest['name'] = 'Base Set — English 1st Edition + controls'
+                manifest['extended_at'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+                (data_dir / (name + '.json')).write_text(json.dumps(manifest, indent=2) + '\n')
+            for item in manifests[0]['items'][before:]:
+                digest = item['image_sha256']
+                (data_dir / 'images' / digest).write_bytes((CACHE / digest).read_bytes())
+        print(json.dumps({'images': len(manifests[0]['items']), 'added': len(manifests[0]['items']) - before}))
+        return
     if (data_dir / 'inputs.json').exists() and not args.replace:
         raise SystemExit('Dataset already frozen. Use --replace to create a new Base Set snapshot.')
     previous_hashes = {i['image_sha256'] for i in json.loads((data_dir / 'inputs.json').read_text())['items']} if (data_dir / 'inputs.json').exists() else set()
@@ -81,8 +123,9 @@ def main():
         item_id = f'item-{100 + n:03d}'
         inputs.append({'id': item_id, **item})
         references.append({'id': item_id, **reference})
+    append_controls(inputs, references)
     envelope = {'schema_version': 1, 'snapshot_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                'name': 'Base Set — English 1st Edition', 'years': '1999', 'set_id': SET_ID,
+                'name': 'Base Set — English 1st Edition + controls', 'years': '1999', 'set_id': SET_ID,
                 'language': 'en', 'print_edition': '1st Edition'}
     for name, items in (('inputs', inputs), ('references', references)):
         (data_dir / f'{name}.json').write_text(json.dumps({**envelope, 'items': items}, indent=2) + '\n')

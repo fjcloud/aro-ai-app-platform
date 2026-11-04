@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot_at": "2026-11-04T17:04:03.003724+00:00",
-  "name": "Base Set \u2014 English 1st Edition",
+  "name": "Base Set \u2014 English 1st Edition + controls",
   "years": "1999",
   "set_id": "base1",
   "language": "en",
@@ -1638,6 +1638,34 @@
       "rarity": "Common",
       "rarity_bucket": "common",
       "source_url": "https://api.tcgdex.net/v2/en/cards/base1-102"
+    },
+    {
+      "id": "item-203",
+      "card_kind": "not_a_card",
+      "card_id": null,
+      "name": "Pikachu illustration without a card",
+      "rarity": null,
+      "rarity_bucket": "not_applicable",
+      "source_url": "https://github.com/PokeAPI/sprites/blob/master/sprites/pokemon/other/official-artwork/25.png"
+    },
+    {
+      "id": "item-204",
+      "card_kind": "other_card",
+      "card_id": null,
+      "name": "Yu-Gi-Oh! \u2014 Blue-Eyes White Dragon",
+      "rarity": null,
+      "rarity_bucket": "not_applicable",
+      "source_url": "https://db.ygoprodeck.com/api/v7/cardinfo.php?id=89631139"
+    },
+    {
+      "id": "item-205",
+      "card_kind": "other_card",
+      "card_id": null,
+      "name": "Magic: The Gathering \u2014 Black Lotus (Alpha)",
+      "rarity": null,
+      "rarity_bucket": "not_applicable",
+      "source_url": "https://scryfall.com/card/lea/232/black-lotus"
     }
-  ]
+  ],
+  "extended_at": "2026-11-04T19:10:13.161588+00:00"
 }

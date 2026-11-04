@@ -9,7 +9,9 @@ No finished application source is supplied here to copy.
 ## Dataset
 
 All **102 cards**, numbered 1/102 through 102/102, using original **1st Edition
-scans** from TCGdex. No modern cards, Japanese promos or negative controls.
+scans** from TCGdex, plus three negative controls: Pikachu artwork without a
+card, Yu-Gi-Oh! Blue-Eyes White Dragon and Magic Black Lotus (Alpha). The batch
+has **105 images**. These controls must have no Pokémon rarity or price action.
 
 | Category | Cards |
 |---|---:|
@@ -52,7 +54,8 @@ python3 examples/card-scout/analyze_batch.py --output /tmp/card-scout-analysis.j
 jq '.summary, .ranking[:5]' /tmp/card-scout-analysis.json
 ```
 
-`prepare_dataset.py` is a maintainer tool. It refuses to overwrite a snapshot
+`prepare_dataset.py --append-controls` adds only missing controls while preserving
+all existing card IDs and image bytes. `prepare_dataset.py` is a maintainer tool. It refuses to overwrite a snapshot
 without `--replace`. Images are checksummed, and reference labels are read only
 after inference for evaluation. The ranking uses predicted rarity, then the
 rare-option probability. It is not a price ranking or a calibrated guarantee. The chosen rarity maps the

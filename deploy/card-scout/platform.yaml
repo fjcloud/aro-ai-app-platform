@@ -34,7 +34,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: platform
-        image: ghcr.io/fjcloud/d3-mini-runtime@sha256:3cc267973adf97a1f8ee4306e3c3c2813a572c86bb74ee5417b415077a464b13
+        image: ghcr.io/fjcloud/d3-mini-runtime@sha256:7ebc27a97655d33a2b0037475b84ad1406b5a82665ccad2f3f33d824e66e9b86
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
