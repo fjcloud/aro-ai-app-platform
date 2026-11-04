@@ -71,6 +71,14 @@ class CatalogueTests(unittest.TestCase):
 
 
 class BatchTests(unittest.TestCase):
+    def test_changing_the_questions_or_model_invalidates_cached_decisions(self):
+        original = service.analysis_snapshot()
+        with patch.object(service, 'QUESTIONS', {**service.QUESTIONS, 'extra': {'type': 'choice'}}):
+            self.assertNotEqual(service.analysis_snapshot(), original)
+        with patch.dict(os.environ, {'DECISION_MODEL': 'a-different-model'}):
+            self.assertNotEqual(service.analysis_snapshot(), original)
+        self.assertEqual(service.analysis_snapshot(), original)
+
     def test_complete_base_set_keeps_labels_held_out(self):
         self.assertEqual(len(service.ITEMS), 102)
         counts = {kind: sum(r["rarity_bucket"] == kind for r in service.REFERENCES.values()) for kind in ("common", "uncommon", "rare_or_higher", "uncertain", "not_applicable")}

@@ -19,7 +19,7 @@ from starlette.concurrency import run_in_threadpool
 from starlette.responses import FileResponse, JSONResponse
 from starlette.routing import Route
 
-from analyze_batch import QUESTIONS
+from analyze_batch import DECISION_STATE, QUESTIONS
 from market_tools import mcp
 from observability import PROVIDER, TRACER, record, trace_link
 from prepare_dataset import CACHE, ROOT
@@ -31,7 +31,13 @@ ITEMS = {r["id"]: r for r in INPUTS["items"]}
 DATA = pathlib.Path(os.getenv("DATA_DIR", "/data"))
 DATA.mkdir(parents=True, exist_ok=True)
 STATE_FILE = DATA / "card-scout-v1.json"
-SNAPSHOT = hashlib.sha256((ROOT / "data" / "inputs.json").read_bytes()).hexdigest()
+def analysis_snapshot():
+    configuration = json.dumps({"questions": QUESTIONS, "state": DECISION_STATE,
+                                "model": os.getenv("DECISION_MODEL", "vllm-sr/d3-mini")})
+    return hashlib.sha256((ROOT / "data" / "inputs.json").read_bytes() + configuration.encode()).hexdigest()
+
+
+SNAPSHOT = analysis_snapshot()
 LOCK = threading.RLock()
 RESEARCH_LOCK = threading.Lock()
 STATE = {"snapshot": SNAPSHOT, "results": {}, "prices": {}, "running": False, "analysis_trace_id": "", "analysis_trace_url": ""}
@@ -96,7 +102,7 @@ def analyze():
                             raise ValueError("Dataset image checksum mismatch")
                         mime = "image/jpeg" if image[:2] == b"\xff\xd8" else "image/png"
                         payload = {"model": os.getenv("DECISION_MODEL", "vllm-sr/d3-mini"),
-                                   "state": "Inspect the attached image and classify the card and its official printed rarity. Judge only from visible evidence.",
+                                   "state": DECISION_STATE,
                                    "images": [f"data:{mime};base64," + base64.b64encode(image).decode()], "questions": QUESTIONS}
                         reply = post_json(os.environ["DECISION_URL"], payload)
                         answers = validate_answer(reply)

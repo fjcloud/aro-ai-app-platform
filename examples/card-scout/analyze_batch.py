@@ -12,6 +12,8 @@ import urllib.request
 
 from prepare_dataset import CACHE, ROOT, fetch
 
+DECISION_STATE = "Inspect the attached image and classify the card and its official printed rarity. Judge only from visible evidence."
+
 QUESTIONS = {
     "card_kind": {
         "type": "choice",
@@ -45,7 +47,7 @@ def main():
         # No ID, URL, filename, catalogue name, edition or reference label enters the prompt.
         payload = {
             "model": "vllm-sr/d3-mini",
-            "state": "Inspect the attached image and classify the card and its official printed rarity. Judge only from visible evidence.",
+            "state": DECISION_STATE,
             "images": [f"data:{mime};base64," + base64.b64encode(image).decode()],
             "questions": QUESTIONS,
         }
