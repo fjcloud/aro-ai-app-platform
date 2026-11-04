@@ -1,0 +1,51 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "brightside",
+        "namespace": "brightside-poc-dev"
+      },
+      "spec": {
+        "selector": {
+          "app.kubernetes.io/name": "brightside"
+        },
+        "ports": [
+          {
+            "name": "http",
+            "port": 8080,
+            "targetPort": "http"
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "route.openshift.io/v1",
+      "kind": "Route",
+      "metadata": {
+        "name": "brightside",
+        "namespace": "brightside-poc-dev",
+        "annotations": {
+          "haproxy.router.openshift.io/timeout": "5m"
+        }
+      },
+      "spec": {
+        "host": "brightside-brightside-poc-dev.apps.ijtxiwk6.eastus.aroapp.io",
+        "to": {
+          "kind": "Service",
+          "name": "brightside"
+        },
+        "port": {
+          "targetPort": "http"
+        },
+        "tls": {
+          "termination": "edge",
+          "insecureEdgeTerminationPolicy": "Redirect"
+        }
+      }
+    }
+  ]
+}

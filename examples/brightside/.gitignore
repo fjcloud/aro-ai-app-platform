@@ -1,0 +1,9 @@
+data/
+__pycache__/
+.env
+.env.*
+*.log
+.DS_Store
+
+# Runtime state and research captures stay outside the parked source snapshot.
+evidence/

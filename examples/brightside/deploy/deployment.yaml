@@ -1,0 +1,150 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "brightside",
+    "namespace": "brightside-poc-dev"
+  },
+  "spec": {
+    "replicas": 0,
+    "strategy": {
+      "type": "Recreate"
+    },
+    "selector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "brightside"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/name": "brightside"
+        },
+        "annotations": {
+          "openshift.io/required-scc": "restricted-v2",
+          "poc.fjcloud.io/source-revision": "2d49f0466a036ead756289fdc8f6e892ee921ec4",
+          "poc.fjcloud.io/build-context-sha256": "85264b601543aa88b26250047b7a49c5dfbb40d452de5017d5c718998dd7e095"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "brightside",
+        "automountServiceAccountToken": false,
+        "terminationGracePeriodSeconds": 20,
+        "securityContext": {
+          "runAsNonRoot": true,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "brightside",
+            "image": "image-registry.openshift-image-registry.svc:5000/brightside-poc-build/brightside@sha256:1831324a075f0f346b8edc4de7d3274f21cb4ec2154e2bdb8fca6dd958cbd472",
+            "imagePullPolicy": "Always",
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080
+              }
+            ],
+            "envFrom": [
+              {
+                "configMapRef": {
+                  "name": "brightside-config"
+                }
+              }
+            ],
+            "env": [
+              {
+                "name": "LLM_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "brightside-llm",
+                    "key": "api-key"
+                  }
+                }
+              },
+              {
+                "name": "HOST",
+                "value": "0.0.0.0"
+              },
+              {
+                "name": "PORT",
+                "value": "8080"
+              },
+              {
+                "name": "STATE_FILE",
+                "value": "/var/lib/brightside/state.json"
+              },
+              {
+                "name": "AUTO_START",
+                "value": "1"
+              },
+              {
+                "name": "NODE_OPTIONS",
+                "value": "--max-old-space-size=256"
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "100m",
+                "memory": "128Mi"
+              },
+              "limits": {
+                "cpu": "1000m",
+                "memory": "512Mi"
+              }
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "readOnlyRootFilesystem": true,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "data",
+                "mountPath": "/var/lib/brightside"
+              },
+              {
+                "name": "tmp",
+                "mountPath": "/tmp"
+              }
+            ],
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/healthz",
+                "port": "http"
+              },
+              "initialDelaySeconds": 2,
+              "periodSeconds": 5
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/healthz",
+                "port": "http"
+              },
+              "initialDelaySeconds": 10,
+              "periodSeconds": 20
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "data",
+            "persistentVolumeClaim": {
+              "claimName": "brightside-data"
+            }
+          },
+          {
+            "name": "tmp",
+            "emptyDir": {}
+          }
+        ]
+      }
+    }
+  }
+}
