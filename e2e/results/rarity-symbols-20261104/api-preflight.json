@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "context": "Actual scoped Dev Spaces dev container",
+  "blocks": 4,
+  "responses": 5,
+  "checks": [
+    "T4 metadata cuda:0 float16 and no model key",
+    "No public model route",
+    "Scoped user cannot get model secrets or patch inference services",
+    "Charizard: pokemon_tcg + star",
+    "Fighting Energy: pokemon_tcg + none",
+    "Developer MaaS key: actual DeepSeek completion and usage",
+    "Native Responses: completed and actual matching MCP tool evidence for item-104/base1-4"
+  ],
+  "guide_alignment": "Developer blocks use the same shared D3 state and questions as production; optional bastion key renewal is excluded",
+  "credentials_printed": false
+}

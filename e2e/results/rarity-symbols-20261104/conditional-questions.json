@@ -1,0 +1,22 @@
+{
+  "card_kind": {
+    "type": "choice",
+    "instructions": "Is this a Pokemon Trading Card Game card: yes or no? Pokemon, Trainer and Energy cards all count as yes. Select pokemon_tcg for yes, otherwise other_card or not_a_card. Judge the printed trading-card layout; a Pokemon illustration alone is not a card.",
+    "criteria": {
+      "pokemon_tcg": "A Pokemon Trading Card Game card",
+      "other_card": "A card from another game, a sports card or a standard playing card",
+      "not_a_card": "A receipt, photograph or object that is not a trading or playing card",
+      "uncertain": "Not enough information to identify"
+    }
+  },
+  "rarity": {
+    "type": "choice",
+    "instructions": "For a Pokemon TCG card, look at the small printed rarity symbol in the bottom-right corner, beside the collector number. A circle means Common. A diamond (a square rotated 45 degrees) means Uncommon. A star means Rare. Ignore the character, its fame, the artwork, the large Energy symbols and the 1st Edition stamp. A Basic Energy card with a fully visible bottom-right corner and no rarity symbol is Common. If that corner is cropped, blurry or unreadable, choose uncertain.",
+    "criteria": {
+      "common": "Common rarity, classic circle symbol",
+      "uncommon": "Uncommon rarity, classic diamond symbol",
+      "rare_or_higher": "Rare or higher rarity, classic star or a modern rare tier",
+      "uncertain": "Printed rarity cannot be determined"
+    }
+  }
+}

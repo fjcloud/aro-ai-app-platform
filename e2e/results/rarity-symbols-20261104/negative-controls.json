@@ -1,0 +1,98 @@
+[
+  {
+    "historical_item_id": "item-026",
+    "name": "Pikachu illustration without a card",
+    "expected_kind": "not_a_card",
+    "raw_answers": {
+      "card_kind": {
+        "type": "choice",
+        "choice": "not_a_card",
+        "probabilities": {
+          "pokemon_tcg": 0.05607877661273111,
+          "other_card": 0.011887880020052418,
+          "not_a_card": 0.7120403038113559,
+          "uncertain": 0.2199930395558606
+        },
+        "confidence": 0.6160537384151411
+      },
+      "rarity_symbol": {
+        "type": "choice",
+        "choice": "none",
+        "probabilities": {
+          "circle": 0.0930630706767509,
+          "diamond": 0.07963690102370902,
+          "star": 0.10061731114523625,
+          "none": 0.4665382171680166,
+          "uncertain": 0.2601444999862872
+        },
+        "confidence": 0.33317277146002067
+      }
+    },
+    "eligible_for_rarity": false,
+    "scope": "Regression probe only; not added to the 102-card production dataset"
+  },
+  {
+    "historical_item_id": "item-031",
+    "name": "Store receipt",
+    "expected_kind": "not_a_card",
+    "raw_answers": {
+      "card_kind": {
+        "type": "choice",
+        "choice": "not_a_card",
+        "probabilities": {
+          "pokemon_tcg": 3.269524464331226e-05,
+          "other_card": 0.0008488297271948284,
+          "not_a_card": 0.9989614947510991,
+          "uncertain": 0.00015698027706279358
+        },
+        "confidence": 0.9986153263347988
+      },
+      "rarity_symbol": {
+        "type": "choice",
+        "choice": "none",
+        "probabilities": {
+          "circle": 0.03665150274855639,
+          "diamond": 0.018800999689087276,
+          "star": 0.032211515572495526,
+          "none": 0.8524229399498859,
+          "uncertain": 0.0599130420399749
+        },
+        "confidence": 0.8155286749373575
+      }
+    },
+    "eligible_for_rarity": false,
+    "scope": "Regression probe only; not added to the 102-card production dataset"
+  },
+  {
+    "historical_item_id": "item-035",
+    "name": "Yu-Gi-Oh! \u2014 Blue-Eyes White Dragon",
+    "expected_kind": "other_card",
+    "raw_answers": {
+      "card_kind": {
+        "type": "choice",
+        "choice": "other_card",
+        "probabilities": {
+          "pokemon_tcg": 0.0010049473489611655,
+          "other_card": 0.9888865347072079,
+          "not_a_card": 0.0033057751118644257,
+          "uncertain": 0.006802742831966494
+        },
+        "confidence": 0.9851820462762771
+      },
+      "rarity_symbol": {
+        "type": "choice",
+        "choice": "none",
+        "probabilities": {
+          "circle": 0.06427795368122362,
+          "diamond": 0.03322620280206722,
+          "star": 0.06699497177829998,
+          "none": 0.6169738700579047,
+          "uncertain": 0.2185270016805045
+        },
+        "confidence": 0.5212173375723809
+      }
+    },
+    "eligible_for_rarity": false,
+    "scope": "Regression probe only; not added to the 102-card production dataset"
+  }
+]

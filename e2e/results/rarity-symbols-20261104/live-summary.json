@@ -1,0 +1,77 @@
+{
+  "completed": 102,
+  "failed": 0,
+  "kind_correct": 101,
+  "rarity_correct": 94,
+  "rare_detected": 32,
+  "rare_predictions": 32,
+  "trace_url": "https://rh-ai.apps.ijtxiwk6.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-335e8e0758dd7fbfa97a2c127a25b801&workspace=signal-desk-dev",
+  "runtime_image": "ghcr.io/fjcloud/d3-mini-runtime@sha256:3cc267973adf97a1f8ee4306e3c3c2813a572c86bb74ee5417b415077a464b13",
+  "client": "Existing Go app unchanged; live browser and fixtures passed",
+  "errors": [
+    {
+      "id": "item-134",
+      "name": "Machoke",
+      "reference": "uncommon",
+      "symbol": "none",
+      "choice": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-139",
+      "name": "Porygon",
+      "reference": "uncommon",
+      "symbol": "none",
+      "choice": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-127",
+      "name": "Farfetch'd",
+      "reference": "uncommon",
+      "symbol": "none",
+      "choice": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-133",
+      "name": "Kakuna",
+      "reference": "uncommon",
+      "symbol": "none",
+      "choice": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-132",
+      "name": "Kadabra",
+      "reference": "uncommon",
+      "symbol": "none",
+      "choice": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-130",
+      "name": "Ivysaur",
+      "reference": "uncommon",
+      "symbol": "none",
+      "choice": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-131",
+      "name": "Jynx",
+      "reference": "uncommon",
+      "symbol": "none",
+      "choice": "common",
+      "kind": "pokemon_tcg"
+    },
+    {
+      "id": "item-199",
+      "name": "Grass Energy",
+      "reference": "common",
+      "symbol": "none",
+      "choice": "not_applicable",
+      "kind": "other_card"
+    }
+  ]
+}
