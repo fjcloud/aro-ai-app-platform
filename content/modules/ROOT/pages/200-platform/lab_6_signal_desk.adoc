@@ -110,7 +110,8 @@ Expect all *102 English Base Set cards (1999)*, using 1st Edition scans:
 69 Pokémon, 26 Trainers and seven Energy cards. There are 38 Common, 32 Uncommon
 and 32 Rare cards. No modern cards or negative controls are included.
 
-A circle means Common, a diamond Uncommon, and a star Rare. Basic Energy cards
+D3 reads the small bottom-right rarity mark. A circle means Common, a diamond
+Uncommon, and a star Rare. A square tilted 45 degrees is the diamond. Basic Energy cards
 are Common even without a printed rarity symbol. The 1st Edition stamp describes
 the print run, not the rarity. Source catalogue references are known; D3 sees
 only image bytes, with labels held out. It does not authenticate physical cards

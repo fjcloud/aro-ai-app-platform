@@ -14,6 +14,13 @@ from probe_agent import market_evidence
 import market_tools
 
 
+def symbol_reply(symbol="star", kind="pokemon_tcg"):
+    return {"answers": {
+        "card_kind": {"choice": kind, "probabilities": {k: float(k == kind) for k in ("pokemon_tcg", "other_card", "not_a_card", "uncertain")}},
+        "rarity_symbol": {"choice": symbol, "probabilities": {s: float(s == symbol) for s in ("circle", "diamond", "star", "none", "uncertain")}},
+    }}
+
+
 def response_for(item_id="item-104"):
     evidence = {"status": "ok", "item_id": item_id, "card_id": "base1-4", "source_url": "https://api.tcgdex.net/v2/en/cards/base1-4", "pricing": {"cardmarket": {"unit": "EUR", "trend": 4.09}}}
     return {"status": "completed", "output": [{"type": "mcp_call", "server_label": "card_scout_market", "name": "get_card_market_data", "error": None, "arguments": json.dumps({"item_id": item_id}), "output": json.dumps(evidence)}, {"type": "message", "content": [{"type": "output_text", "text": "The price is €9999"}]}]}
@@ -71,6 +78,31 @@ class CatalogueTests(unittest.TestCase):
 
 
 class BatchTests(unittest.TestCase):
+    def test_native_symbols_become_base_set_rarity_without_changing_evidence(self):
+        for symbol, rarity in (("circle", "common"), ("diamond", "uncommon"), ("star", "rare_or_higher"), ("none", "common"), ("uncertain", "uncertain")):
+            with self.subTest(symbol=symbol):
+                reply = symbol_reply(symbol)
+                before = copy.deepcopy(reply)
+                result = service.validate_answer(reply)
+                self.assertEqual(result["rarity"]["choice"], rarity)
+                self.assertEqual(result["rarity_symbol"]["choice"], symbol)
+                self.assertEqual(reply, before)
+
+    def test_non_pokemon_has_no_applicable_rarity_or_invented_confidence(self):
+        for kind in ("other_card", "not_a_card", "uncertain"):
+            reply = symbol_reply("star", kind)
+            result = service.validate_answer(reply)
+            self.assertEqual(result["rarity"], {"choice": "not_applicable", "probabilities": {}})
+            self.assertEqual(reply["answers"]["rarity_symbol"]["choice"], "star")
+
+    def test_common_probability_groups_circle_and_absent_symbol(self):
+        reply = symbol_reply("none")
+        reply["answers"]["rarity_symbol"]["probabilities"] = {"circle": 0.25, "none": 0.35, "diamond": 0.2, "star": 0.1, "uncertain": 0.1}
+        result = service.validate_answer(reply)
+        self.assertAlmostEqual(result["rarity"]["probabilities"]["common"], 0.6)
+        self.assertAlmostEqual(sum(result["rarity"]["probabilities"].values()), 1)
+        self.assertEqual(reply["answers"]["rarity_symbol"]["probabilities"]["none"], 0.35)
+
     def test_changing_the_questions_or_model_invalidates_cached_decisions(self):
         original = service.analysis_snapshot()
         with patch.object(service, 'QUESTIONS', {**service.QUESTIONS, 'extra': {'type': 'choice'}}):
@@ -86,8 +118,10 @@ class BatchTests(unittest.TestCase):
         self.assertTrue(all(set(r) == {"id", "image_url", "image_sha256"} for r in service.ITEMS.values()))
 
     def test_missing_probabilities_are_not_accepted(self):
+        reply = symbol_reply()
+        del reply["answers"]["rarity_symbol"]["probabilities"]["none"]
         with self.assertRaises(ValueError):
-            service.validate_answer({"answers": {"rarity": {"choice": "rare_or_higher", "probabilities": {"rare_or_higher": 1}}}})
+            service.validate_answer(reply)
 
     def test_inference_failure_stays_an_error(self):
         item_id, item = next(iter(service.ITEMS.items()))

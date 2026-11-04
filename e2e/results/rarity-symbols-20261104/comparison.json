@@ -1,0 +1,28 @@
+{
+  "dataset": "English Base Set, 102 unchanged source scans",
+  "baseline": {
+    "correct": 75,
+    "rare_detected": 31,
+    "rare_predictions": 31,
+    "uncertain": 23,
+    "wrong_without_abstention": 4
+  },
+  "corner_with_not_applicable": {
+    "correct": 85
+  },
+  "conditional_direct_rarity": {
+    "correct": 88,
+    "rare_detected": 32,
+    "rare_predictions": 32
+  },
+  "symbol_mapping": {
+    "images": 102,
+    "kind_correct": 101,
+    "rarity_correct": 94,
+    "rare_detected": 32,
+    "rare_predictions": 32,
+    "mean_seconds": 1.33,
+    "uncertain": 0
+  },
+  "scope": "Same benchmark used for prompt selection; not an independent test. Reference identities and labels were not sent to the model. Three negative regression probes are separate from the production dataset."
+}

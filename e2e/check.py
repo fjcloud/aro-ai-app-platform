@@ -196,8 +196,9 @@ def model_apis():
         denied = subprocess.run(['oc', 'auth', 'can-i', verb, kind, '-n', 'decision-serving', '--as=' + identity], text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=30)
         require(denied.returncode == 1 and denied.stdout.strip() == 'no', 'Developer cannot ' + verb + ' ' + kind + ' in the model namespace')
     page = (Path(__file__).resolve().parents[1] / 'content/modules/ROOT/pages/300-developer/lab_2_model_apis.adoc').read_text()
-    blocks = re.findall(r'\[source,sh,role=execute\]\n----\n(.*?)\n----', page, re.S)
-    require(len(blocks) == 4, 'All four documented API blocks are selected')
+    blocks = [b for b in re.findall(r'\[source,sh,role=execute\]\n----\n(.*?)\n----', page, re.S)
+              if 'curl --fail-with-body' in b]
+    require(len(blocks) == 4, 'Select the four developer API blocks, excluding optional bastion key renewal')
     prefix = ['exec', pod, '-n', ns, '-c', os.environ.get('DEV_CONTAINER', 'dev'), '--', 'bash', '-c']
     raw = subprocess.check_output(['oc', *prefix, 'set -euo pipefail\n' + '\n'.join(blocks)], text=True, stderr=subprocess.DEVNULL, timeout=600).strip()
     remaining, responses, decoder = raw.lstrip(), [], json.JSONDecoder()
@@ -209,9 +210,9 @@ def model_apis():
     metadata, pokemon, control, chat, native = responses
     require(metadata['device'] == 'cuda:0' and metadata['dtype'] == 'float16', 'Developer reaches the actual T4 model directly without a credential')
     require(pokemon['card_kind']['choice'] == 'pokemon_tcg', 'D3 recognizes the Pokemon image')
-    require(pokemon['rarity']['choice'] in {'common', 'uncommon', 'rare_or_higher', 'uncertain'}, 'D3 returns a printed-rarity decision')
-    require(control['card_kind']['choice'] == 'other_card' and control['rarity']['choice'] == 'not_applicable',
-            'D3 distinguishes the Yu-Gi-Oh! control and does not assign Pokemon rarity')
+    require(pokemon['rarity_symbol']['choice'] == 'star', 'D3 reads the Charizard rarity star')
+    require(control['card_kind']['choice'] == 'pokemon_tcg' and control['rarity_symbol']['choice'] == 'none',
+            'D3 recognizes the Basic Energy card and its absent rarity mark')
     require(bool(chat['answer']) and chat['usage']['total_tokens'] > 0, 'Developer MaaS key reaches DeepSeek with real token usage')
     require(native['status'] == 'completed' and bool(native['output']), 'Native OpenShift AI Responses completed from Dev Spaces')
     calls = [entry for entry in native['output'] if entry.get('type') == 'mcp_call'

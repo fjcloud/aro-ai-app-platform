@@ -1,0 +1,4176 @@
+{
+  "dataset_snapshot_at": "2026-11-04T17:04:03.003724+00:00",
+  "analyzed_at": "2026-11-04T18:09:50.956662+00:00",
+  "summary": {
+    "images": 102,
+    "pokemon_cards": 102,
+    "card_kind_correct": 101,
+    "binary_rarity_correct": 89,
+    "rarity_evaluable_cards": 102,
+    "nonstandard_rarity_cards": 0,
+    "three_tier_rarity_correct": 88,
+    "mean_seconds": 1.272,
+    "by_era": {
+      "base1": {
+        "cards": 102,
+        "binary_rarity_correct": 89
+      }
+    }
+  },
+  "ranking": [
+    {
+      "rank": 1,
+      "id": "item-173",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.9340358598151903
+    },
+    {
+      "rank": 2,
+      "id": "item-171",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.9317298687725678
+    },
+    {
+      "rank": 3,
+      "id": "item-176",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.9145103063040229
+    },
+    {
+      "rank": 4,
+      "id": "item-175",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.9103879352040779
+    },
+    {
+      "rank": 5,
+      "id": "item-179",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8965495612856744
+    },
+    {
+      "rank": 6,
+      "id": "item-178",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8906409311471187
+    },
+    {
+      "rank": 7,
+      "id": "item-177",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8836017122893122
+    },
+    {
+      "rank": 8,
+      "id": "item-172",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8828749722456557
+    },
+    {
+      "rank": 9,
+      "id": "item-174",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8822589105805889
+    },
+    {
+      "rank": 10,
+      "id": "item-102",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8739676003436364
+    },
+    {
+      "rank": 11,
+      "id": "item-170",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8666414552697919
+    },
+    {
+      "rank": 12,
+      "id": "item-107",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8623050264805149
+    },
+    {
+      "rank": 13,
+      "id": "item-118",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8610797428219049
+    },
+    {
+      "rank": 14,
+      "id": "item-106",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8499489959333166
+    },
+    {
+      "rank": 15,
+      "id": "item-114",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8465411571586822
+    },
+    {
+      "rank": 16,
+      "id": "item-121",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8303356883294762
+    },
+    {
+      "rank": 17,
+      "id": "item-119",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8288448669087666
+    },
+    {
+      "rank": 18,
+      "id": "item-109",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8282190416855477
+    },
+    {
+      "rank": 19,
+      "id": "item-101",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8275273303543292
+    },
+    {
+      "rank": 20,
+      "id": "item-104",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8183496533457215
+    },
+    {
+      "rank": 21,
+      "id": "item-105",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.81415706599297
+    },
+    {
+      "rank": 22,
+      "id": "item-117",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8073141339710713
+    },
+    {
+      "rank": 23,
+      "id": "item-115",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.8031960728165561
+    },
+    {
+      "rank": 24,
+      "id": "item-103",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.7946940094034896
+    },
+    {
+      "rank": 25,
+      "id": "item-122",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.7821387314768455
+    },
+    {
+      "rank": 26,
+      "id": "item-111",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.7795098511074839
+    },
+    {
+      "rank": 27,
+      "id": "item-108",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.7383641995021635
+    },
+    {
+      "rank": 28,
+      "id": "item-120",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.7263598252664552
+    },
+    {
+      "rank": 29,
+      "id": "item-116",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.70765018726755
+    },
+    {
+      "rank": 30,
+      "id": "item-112",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.6987552903128896
+    },
+    {
+      "rank": 31,
+      "id": "item-113",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.5831860401642962
+    },
+    {
+      "rank": 32,
+      "id": "item-110",
+      "predicted_rarity": "rare_or_higher",
+      "rare_probability": 0.46055611968040466
+    },
+    {
+      "rank": 33,
+      "id": "item-140",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.12096918170016326
+    },
+    {
+      "rank": 34,
+      "id": "item-133",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.11638317170453688
+    },
+    {
+      "rank": 35,
+      "id": "item-137",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.10881049104921153
+    },
+    {
+      "rank": 36,
+      "id": "item-135",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.1084479937355517
+    },
+    {
+      "rank": 37,
+      "id": "item-123",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.1012255035432093
+    },
+    {
+      "rank": 38,
+      "id": "item-126",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.09826584978599734
+    },
+    {
+      "rank": 39,
+      "id": "item-124",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.0973996116548603
+    },
+    {
+      "rank": 40,
+      "id": "item-125",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.05672045403450558
+    },
+    {
+      "rank": 41,
+      "id": "item-130",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.05468853333152731
+    },
+    {
+      "rank": 42,
+      "id": "item-129",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.04388255302476756
+    },
+    {
+      "rank": 43,
+      "id": "item-136",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.037765213201162516
+    },
+    {
+      "rank": 44,
+      "id": "item-189",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.03668264631164097
+    },
+    {
+      "rank": 45,
+      "id": "item-141",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.02867990518511048
+    },
+    {
+      "rank": 46,
+      "id": "item-185",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.02819239104144964
+    },
+    {
+      "rank": 47,
+      "id": "item-128",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.027887231562762276
+    },
+    {
+      "rank": 48,
+      "id": "item-180",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.023236577161797167
+    },
+    {
+      "rank": 49,
+      "id": "item-184",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.019810086595883826
+    },
+    {
+      "rank": 50,
+      "id": "item-181",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.018775533395153532
+    },
+    {
+      "rank": 51,
+      "id": "item-182",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.018403588034246004
+    },
+    {
+      "rank": 52,
+      "id": "item-190",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.018178983777587237
+    },
+    {
+      "rank": 53,
+      "id": "item-186",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.0172746403718394
+    },
+    {
+      "rank": 54,
+      "id": "item-187",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.01697575237692325
+    },
+    {
+      "rank": 55,
+      "id": "item-188",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.015714614763838772
+    },
+    {
+      "rank": 56,
+      "id": "item-183",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.014384730946775923
+    },
+    {
+      "rank": 57,
+      "id": "item-196",
+      "predicted_rarity": "uncommon",
+      "rare_probability": 0.013046261554961653
+    },
+    {
+      "rank": 58,
+      "id": "item-167",
+      "predicted_rarity": "common",
+      "rare_probability": 0.16338720369903434
+    },
+    {
+      "rank": 59,
+      "id": "item-149",
+      "predicted_rarity": "common",
+      "rare_probability": 0.14805181324481964
+    },
+    {
+      "rank": 60,
+      "id": "item-159",
+      "predicted_rarity": "common",
+      "rare_probability": 0.13429889883392446
+    },
+    {
+      "rank": 61,
+      "id": "item-161",
+      "predicted_rarity": "common",
+      "rare_probability": 0.13097782579412118
+    },
+    {
+      "rank": 62,
+      "id": "item-168",
+      "predicted_rarity": "common",
+      "rare_probability": 0.11835427317721531
+    },
+    {
+      "rank": 63,
+      "id": "item-164",
+      "predicted_rarity": "common",
+      "rare_probability": 0.11752390686386963
+    },
+    {
+      "rank": 64,
+      "id": "item-132",
+      "predicted_rarity": "common",
+      "rare_probability": 0.11333679477353127
+    },
+    {
+      "rank": 65,
+      "id": "item-158",
+      "predicted_rarity": "common",
+      "rare_probability": 0.10701424601024549
+    },
+    {
+      "rank": 66,
+      "id": "item-156",
+      "predicted_rarity": "common",
+      "rare_probability": 0.10133283368743834
+    },
+    {
+      "rank": 67,
+      "id": "item-160",
+      "predicted_rarity": "common",
+      "rare_probability": 0.09571630154877647
+    },
+    {
+      "rank": 68,
+      "id": "item-146",
+      "predicted_rarity": "common",
+      "rare_probability": 0.08482270719417448
+    },
+    {
+      "rank": 69,
+      "id": "item-157",
+      "predicted_rarity": "common",
+      "rare_probability": 0.08442673769275294
+    },
+    {
+      "rank": 70,
+      "id": "item-148",
+      "predicted_rarity": "common",
+      "rare_probability": 0.0790850892663002
+    },
+    {
+      "rank": 71,
+      "id": "item-151",
+      "predicted_rarity": "common",
+      "rare_probability": 0.07008702791903064
+    },
+    {
+      "rank": 72,
+      "id": "item-155",
+      "predicted_rarity": "common",
+      "rare_probability": 0.06798440167319475
+    },
+    {
+      "rank": 73,
+      "id": "item-169",
+      "predicted_rarity": "common",
+      "rare_probability": 0.061262633879716075
+    },
+    {
+      "rank": 74,
+      "id": "item-144",
+      "predicted_rarity": "common",
+      "rare_probability": 0.056451606023456
+    },
+    {
+      "rank": 75,
+      "id": "item-153",
+      "predicted_rarity": "common",
+      "rare_probability": 0.049098106433366526
+    },
+    {
+      "rank": 76,
+      "id": "item-163",
+      "predicted_rarity": "common",
+      "rare_probability": 0.048850869353141466
+    },
+    {
+      "rank": 77,
+      "id": "item-150",
+      "predicted_rarity": "common",
+      "rare_probability": 0.04440797931563823
+    },
+    {
+      "rank": 78,
+      "id": "item-152",
+      "predicted_rarity": "common",
+      "rare_probability": 0.042233338868866155
+    },
+    {
+      "rank": 79,
+      "id": "item-166",
+      "predicted_rarity": "common",
+      "rare_probability": 0.038356342860678266
+    },
+    {
+      "rank": 80,
+      "id": "item-165",
+      "predicted_rarity": "common",
+      "rare_probability": 0.037393456133907564
+    },
+    {
+      "rank": 81,
+      "id": "item-145",
+      "predicted_rarity": "common",
+      "rare_probability": 0.03661873618690276
+    },
+    {
+      "rank": 82,
+      "id": "item-162",
+      "predicted_rarity": "common",
+      "rare_probability": 0.02998483894502983
+    },
+    {
+      "rank": 83,
+      "id": "item-147",
+      "predicted_rarity": "common",
+      "rare_probability": 0.024799390457553524
+    },
+    {
+      "rank": 84,
+      "id": "item-191",
+      "predicted_rarity": "common",
+      "rare_probability": 0.023667155990983367
+    },
+    {
+      "rank": 85,
+      "id": "item-192",
+      "predicted_rarity": "common",
+      "rare_probability": 0.017863265038745458
+    },
+    {
+      "rank": 86,
+      "id": "item-143",
+      "predicted_rarity": "common",
+      "rare_probability": 0.01609732204639419
+    },
+    {
+      "rank": 87,
+      "id": "item-194",
+      "predicted_rarity": "common",
+      "rare_probability": 0.015063326169112557
+    },
+    {
+      "rank": 88,
+      "id": "item-193",
+      "predicted_rarity": "common",
+      "rare_probability": 0.01503363021293381
+    },
+    {
+      "rank": 89,
+      "id": "item-195",
+      "predicted_rarity": "common",
+      "rare_probability": 0.01171800744125042
+    },
+    {
+      "rank": 90,
+      "id": "item-138",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.18779192305231324
+    },
+    {
+      "rank": 91,
+      "id": "item-142",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.18015587477714756
+    },
+    {
+      "rank": 92,
+      "id": "item-127",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.14363473974841998
+    },
+    {
+      "rank": 93,
+      "id": "item-134",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.11434041112376095
+    },
+    {
+      "rank": 94,
+      "id": "item-139",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.10132837814103712
+    },
+    {
+      "rank": 95,
+      "id": "item-154",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.0793902531039064
+    },
+    {
+      "rank": 96,
+      "id": "item-131",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.05108332911351083
+    },
+    {
+      "rank": 97,
+      "id": "item-200",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.013226588658296212
+    },
+    {
+      "rank": 98,
+      "id": "item-201",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.012312377550758136
+    },
+    {
+      "rank": 99,
+      "id": "item-197",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.0122702494835027
+    },
+    {
+      "rank": 100,
+      "id": "item-202",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.008255904078120505
+    },
+    {
+      "rank": 101,
+      "id": "item-198",
+      "predicted_rarity": "uncertain",
+      "rare_probability": 0.00735178178606958
+    }
+  ],
+  "errors": [
+    {
+      "id": "item-127",
+      "reference": {
+        "id": "item-127",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-27",
+        "name": "Farfetch'd",
+        "number": "27",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Pokemon",
+        "rarity": "Uncommon",
+        "rarity_bucket": "uncommon",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-27"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-131",
+      "reference": {
+        "id": "item-131",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-31",
+        "name": "Jynx",
+        "number": "31",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Pokemon",
+        "rarity": "Uncommon",
+        "rarity_bucket": "uncommon",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-31"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-132",
+      "reference": {
+        "id": "item-132",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-32",
+        "name": "Kadabra",
+        "number": "32",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Pokemon",
+        "rarity": "Uncommon",
+        "rarity_bucket": "uncommon",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-32"
+      },
+      "predicted": "common"
+    },
+    {
+      "id": "item-134",
+      "reference": {
+        "id": "item-134",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-34",
+        "name": "Machoke",
+        "number": "34",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Pokemon",
+        "rarity": "Uncommon",
+        "rarity_bucket": "uncommon",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-34"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-138",
+      "reference": {
+        "id": "item-138",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-38",
+        "name": "Poliwhirl",
+        "number": "38",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Pokemon",
+        "rarity": "Uncommon",
+        "rarity_bucket": "uncommon",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-38"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-139",
+      "reference": {
+        "id": "item-139",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-39",
+        "name": "Porygon",
+        "number": "39",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Pokemon",
+        "rarity": "Uncommon",
+        "rarity_bucket": "uncommon",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-39"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-142",
+      "reference": {
+        "id": "item-142",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-42",
+        "name": "Wartortle",
+        "number": "42",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Pokemon",
+        "rarity": "Uncommon",
+        "rarity_bucket": "uncommon",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-42"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-154",
+      "reference": {
+        "id": "item-154",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-54",
+        "name": "Metapod",
+        "number": "54",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Pokemon",
+        "rarity": "Common",
+        "rarity_bucket": "common",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-54"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-197",
+      "reference": {
+        "id": "item-197",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-97",
+        "name": "Fighting Energy",
+        "number": "97",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Energy",
+        "rarity": "Common",
+        "rarity_bucket": "common",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-97"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-198",
+      "reference": {
+        "id": "item-198",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-98",
+        "name": "Fire Energy",
+        "number": "98",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Energy",
+        "rarity": "Common",
+        "rarity_bucket": "common",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-98"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-199",
+      "reference": {
+        "id": "item-199",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-99",
+        "name": "Grass Energy",
+        "number": "99",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Energy",
+        "rarity": "Common",
+        "rarity_bucket": "common",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-99"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-200",
+      "reference": {
+        "id": "item-200",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-100",
+        "name": "Lightning Energy",
+        "number": "100",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Energy",
+        "rarity": "Common",
+        "rarity_bucket": "common",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-100"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-201",
+      "reference": {
+        "id": "item-201",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-101",
+        "name": "Psychic Energy",
+        "number": "101",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Energy",
+        "rarity": "Common",
+        "rarity_bucket": "common",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-101"
+      },
+      "predicted": "uncertain"
+    },
+    {
+      "id": "item-202",
+      "reference": {
+        "id": "item-202",
+        "card_kind": "pokemon_tcg",
+        "card_id": "base1-102",
+        "name": "Water Energy",
+        "number": "102",
+        "set_id": "base1",
+        "set_name": "Base Set",
+        "release_date": "1999-01-09",
+        "language": "en",
+        "print_edition": "1st Edition",
+        "category": "Energy",
+        "rarity": "Common",
+        "rarity_bucket": "common",
+        "source_url": "https://api.tcgdex.net/v2/en/cards/base1-102"
+      },
+      "predicted": "uncertain"
+    }
+  ],
+  "results": [
+    {
+      "id": "item-101",
+      "elapsed_seconds": 1.533,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9752560098963043,
+            "other_card": 0.008398440529617753,
+            "not_a_card": 0.0028788013845877495,
+            "uncertain": 0.013466748189490202
+          },
+          "confidence": 0.9670080131950725
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.055080193102878074,
+            "uncommon": 0.023581331200465596,
+            "rare_or_higher": 0.8275273303543292,
+            "uncertain": 0.09381114534232708
+          },
+          "confidence": 0.770036440472439
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-102",
+      "elapsed_seconds": 2.023,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9843959929824312,
+            "other_card": 0.0019944380283600685,
+            "not_a_card": 0.0013288280624961218,
+            "uncertain": 0.012280740926712582
+          },
+          "confidence": 0.9791946573099083
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.029318964387755903,
+            "uncommon": 0.015847527497302186,
+            "rare_or_higher": 0.8739676003436364,
+            "uncertain": 0.0808659077713055
+          },
+          "confidence": 0.8319568004581819
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-103",
+      "elapsed_seconds": 1.43,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9859177026024378,
+            "other_card": 0.00249812205243236,
+            "not_a_card": 0.0016028536925669318,
+            "uncertain": 0.009981321652562884
+          },
+          "confidence": 0.9812236034699171
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.08334586800391178,
+            "uncommon": 0.015892546683149586,
+            "rare_or_higher": 0.7946940094034896,
+            "uncertain": 0.10606757590944907
+          },
+          "confidence": 0.7262586792046527
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-104",
+      "elapsed_seconds": 1.22,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9795305772244653,
+            "other_card": 0.006293981363900389,
+            "not_a_card": 0.002542562095520245,
+            "uncertain": 0.011632879316114054
+          },
+          "confidence": 0.9727074362992871
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.05046186558558147,
+            "uncommon": 0.03091802424998563,
+            "rare_or_higher": 0.8183496533457215,
+            "uncertain": 0.10027045681871133
+          },
+          "confidence": 0.7577995377942953
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-105",
+      "elapsed_seconds": 1.212,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9860507863097314,
+            "other_card": 0.003184670122313552,
+            "not_a_card": 0.0011480856939709379,
+            "uncertain": 0.009616457873984107
+          },
+          "confidence": 0.9814010484129753
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.05159443232191952,
+            "uncommon": 0.010298212778164034,
+            "rare_or_higher": 0.81415706599297,
+            "uncertain": 0.12395028890694647
+          },
+          "confidence": 0.75220942132396
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-106",
+      "elapsed_seconds": 1.218,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9740009953798777,
+            "other_card": 0.003923058529921641,
+            "not_a_card": 0.00229909505010119,
+            "uncertain": 0.01977685104009945
+          },
+          "confidence": 0.9653346605065036
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.042699556479606354,
+            "uncommon": 0.02074846237340225,
+            "rare_or_higher": 0.8499489959333166,
+            "uncertain": 0.08660298521367471
+          },
+          "confidence": 0.7999319945777555
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-107",
+      "elapsed_seconds": 1.225,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9758692346276151,
+            "other_card": 0.006144723831352791,
+            "not_a_card": 0.0019099312993898368,
+            "uncertain": 0.016076110241642263
+          },
+          "confidence": 0.9678256461701534
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.04465235609306969,
+            "uncommon": 0.014288091779400297,
+            "rare_or_higher": 0.8623050264805149,
+            "uncertain": 0.07875452564701513
+          },
+          "confidence": 0.8164067019740199
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-108",
+      "elapsed_seconds": 1.206,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9572744486685432,
+            "other_card": 0.012790179833038139,
+            "not_a_card": 0.0038921333024005073,
+            "uncertain": 0.026043238196018205
+          },
+          "confidence": 0.9430325982247242
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.0824011549739782,
+            "uncommon": 0.03562969702012385,
+            "rare_or_higher": 0.7383641995021635,
+            "uncertain": 0.1436049485037345
+          },
+          "confidence": 0.6511522660028847
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-109",
+      "elapsed_seconds": 1.222,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9903484293542361,
+            "other_card": 0.003176800497741763,
+            "not_a_card": 0.0015310710527501807,
+            "uncertain": 0.004943699095272039
+          },
+          "confidence": 0.9871312391389814
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.04344530387711788,
+            "uncommon": 0.01718777636994931,
+            "rare_or_higher": 0.8282190416855477,
+            "uncertain": 0.11114787806738513
+          },
+          "confidence": 0.7709587222473969
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-110",
+      "elapsed_seconds": 1.215,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9747515864625372,
+            "other_card": 0.008924815755972927,
+            "not_a_card": 0.002411832787219399,
+            "uncertain": 0.013911764994270496
+          },
+          "confidence": 0.9663354486167163
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.2077447772026062,
+            "uncommon": 0.08234401047229767,
+            "rare_or_higher": 0.46055611968040466,
+            "uncertain": 0.24935509264469147
+          },
+          "confidence": 0.28074149290720624
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-111",
+      "elapsed_seconds": 1.25,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9702141876153243,
+            "other_card": 0.006981275543333196,
+            "not_a_card": 0.0022479969547206558,
+            "uncertain": 0.020556539886621848
+          },
+          "confidence": 0.960285583487099
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.053861994898267034,
+            "uncommon": 0.03695531230742461,
+            "rare_or_higher": 0.7795098511074839,
+            "uncertain": 0.12967284168682444
+          },
+          "confidence": 0.7060131348099786
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-112",
+      "elapsed_seconds": 1.223,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.985632656513105,
+            "other_card": 0.004073490848187895,
+            "not_a_card": 0.0017497717609225036,
+            "uncertain": 0.008544080877784518
+          },
+          "confidence": 0.9808435420174734
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.11292492273915271,
+            "uncommon": 0.026693382363519907,
+            "rare_or_higher": 0.6987552903128896,
+            "uncertain": 0.16162640458443778
+          },
+          "confidence": 0.5983403870838528
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-113",
+      "elapsed_seconds": 1.233,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9785606271903221,
+            "other_card": 0.006598289129276496,
+            "not_a_card": 0.0020137580591350034,
+            "uncertain": 0.01282732562126638
+          },
+          "confidence": 0.9714141695870961
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.16078429193619384,
+            "uncommon": 0.02935060721664776,
+            "rare_or_higher": 0.5831860401642962,
+            "uncertain": 0.22667906068286214
+          },
+          "confidence": 0.44424805355239494
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-114",
+      "elapsed_seconds": 1.251,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.930088694802002,
+            "other_card": 0.03299643245969174,
+            "not_a_card": 0.005804226802093284,
+            "uncertain": 0.031110645936212992
+          },
+          "confidence": 0.9067849264026693
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.044573075000827016,
+            "uncommon": 0.024791245895102374,
+            "rare_or_higher": 0.8465411571586822,
+            "uncertain": 0.08409452194538844
+          },
+          "confidence": 0.7953882095449095
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-115",
+      "elapsed_seconds": 1.229,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9883599323883324,
+            "other_card": 0.002042114510615151,
+            "not_a_card": 0.001342700450876718,
+            "uncertain": 0.00825525265017575
+          },
+          "confidence": 0.9844799098511099
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.06594248607326195,
+            "uncommon": 0.024289557657357876,
+            "rare_or_higher": 0.8031960728165561,
+            "uncertain": 0.10657188345282402
+          },
+          "confidence": 0.7375947637554082
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-116",
+      "elapsed_seconds": 1.228,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9670992808867943,
+            "other_card": 0.013895105092161035,
+            "not_a_card": 0.0032587890644163054,
+            "uncertain": 0.015746824956628377
+          },
+          "confidence": 0.9561323745157257
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.1008580926837701,
+            "uncommon": 0.028097327903275668,
+            "rare_or_higher": 0.70765018726755,
+            "uncertain": 0.1633943921454042
+          },
+          "confidence": 0.6102002496900667
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-117",
+      "elapsed_seconds": 1.22,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9626064423805462,
+            "other_card": 0.014054692530307939,
+            "not_a_card": 0.0031687238193768568,
+            "uncertain": 0.020170141269769
+          },
+          "confidence": 0.9501419231740615
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.04390858682581426,
+            "uncommon": 0.028289613647294654,
+            "rare_or_higher": 0.8073141339710713,
+            "uncertain": 0.12048766555581981
+          },
+          "confidence": 0.7430855119614285
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-118",
+      "elapsed_seconds": 1.221,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9824901743597618,
+            "other_card": 0.003368740381297757,
+            "not_a_card": 0.0015425895925003878,
+            "uncertain": 0.012598495666440055
+          },
+          "confidence": 0.9766535658130158
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.03441534152907869,
+            "uncommon": 0.017933491417018794,
+            "rare_or_higher": 0.8610797428219049,
+            "uncertain": 0.08657142423199761
+          },
+          "confidence": 0.8147729904292066
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-119",
+      "elapsed_seconds": 1.315,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9781959214004499,
+            "other_card": 0.0051398077874087586,
+            "not_a_card": 0.002290096403569135,
+            "uncertain": 0.014374174408572268
+          },
+          "confidence": 0.9709278952005999
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.05230997639212696,
+            "uncommon": 0.019596253101429983,
+            "rare_or_higher": 0.8288448669087666,
+            "uncertain": 0.09924890359767648
+          },
+          "confidence": 0.7717931558783554
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-120",
+      "elapsed_seconds": 1.216,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9904602535427489,
+            "other_card": 0.002972711274104396,
+            "not_a_card": 0.0013959630998791404,
+            "uncertain": 0.005171072083267568
+          },
+          "confidence": 0.9872803380569986
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.07313459920904714,
+            "uncommon": 0.04937819635254378,
+            "rare_or_higher": 0.7263598252664552,
+            "uncertain": 0.1511273791719539
+          },
+          "confidence": 0.6351464336886069
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-121",
+      "elapsed_seconds": 1.236,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.957980417662398,
+            "other_card": 0.00784561145733741,
+            "not_a_card": 0.00346282788342424,
+            "uncertain": 0.030711142996840298
+          },
+          "confidence": 0.9439738902165308
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.050004542711859896,
+            "uncommon": 0.029201708910515576,
+            "rare_or_higher": 0.8303356883294762,
+            "uncertain": 0.0904580600481483
+          },
+          "confidence": 0.773780917772635
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-122",
+      "elapsed_seconds": 1.225,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9734245707585459,
+            "other_card": 0.0040936622260164006,
+            "not_a_card": 0.001713178837252282,
+            "uncertain": 0.020768588178185398
+          },
+          "confidence": 0.964566094344728
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.06090456824057219,
+            "uncommon": 0.023872681762479753,
+            "rare_or_higher": 0.7821387314768455,
+            "uncertain": 0.13308401852010251
+          },
+          "confidence": 0.709518308635794
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-123",
+      "elapsed_seconds": 1.227,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9807555452812304,
+            "other_card": 0.0024382442698471568,
+            "not_a_card": 0.0013361679665892065,
+            "uncertain": 0.015470042482333244
+          },
+          "confidence": 0.9743407270416405
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.15357987697109488,
+            "uncommon": 0.48870092994496916,
+            "rare_or_higher": 0.1012255035432093,
+            "uncertain": 0.2564936895407266
+          },
+          "confidence": 0.31826790659329224
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-124",
+      "elapsed_seconds": 1.235,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9778510512428378,
+            "other_card": 0.00192474181678541,
+            "not_a_card": 0.001158311240138517,
+            "uncertain": 0.01906589570023828
+          },
+          "confidence": 0.9704680683237837
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.11939569351355851,
+            "uncommon": 0.5900690819353945,
+            "rare_or_higher": 0.0973996116548603,
+            "uncertain": 0.1931356128961867
+          },
+          "confidence": 0.45342544258052603
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-125",
+      "elapsed_seconds": 1.227,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9778042949025678,
+            "other_card": 0.0019735382974690025,
+            "not_a_card": 0.001079094769278511,
+            "uncertain": 0.01914307203068462
+          },
+          "confidence": 0.970405726536757
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.1825752251499324,
+            "uncommon": 0.5509693602063903,
+            "rare_or_higher": 0.05672045403450558,
+            "uncertain": 0.20973496060917168
+          },
+          "confidence": 0.4012924802751871
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-126",
+      "elapsed_seconds": 1.293,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9844362272750312,
+            "other_card": 0.003629745046326774,
+            "not_a_card": 0.0020347136512836074,
+            "uncertain": 0.009899314027358445
+          },
+          "confidence": 0.979248303033375
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.26198002891227623,
+            "uncommon": 0.38718584468354167,
+            "rare_or_higher": 0.09826584978599734,
+            "uncertain": 0.2525682766181847
+          },
+          "confidence": 0.18291445957805555
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-127",
+      "elapsed_seconds": 1.227,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9778003756372282,
+            "other_card": 0.0032912052916720855,
+            "not_a_card": 0.001657240336388985,
+            "uncertain": 0.017251178734710673
+          },
+          "confidence": 0.9704005008496376
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.3544851024706312,
+            "uncommon": 0.03908828733313726,
+            "rare_or_higher": 0.14363473974841998,
+            "uncertain": 0.46279187044781156
+          },
+          "confidence": 0.28372249393041543
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-128",
+      "elapsed_seconds": 1.227,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9883516816382146,
+            "other_card": 0.0018212388645987441,
+            "not_a_card": 0.000959818289518284,
+            "uncertain": 0.008867261207668332
+          },
+          "confidence": 0.9844689088509528
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.14404782116234968,
+            "uncommon": 0.6766807184859842,
+            "rare_or_higher": 0.027887231562762276,
+            "uncertain": 0.15138422878890379
+          },
+          "confidence": 0.568907624647979
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-129",
+      "elapsed_seconds": 1.244,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9712008000407172,
+            "other_card": 0.006534030966909311,
+            "not_a_card": 0.003047218238944673,
+            "uncertain": 0.01921795075342878
+          },
+          "confidence": 0.9616010667209562
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.15000643003739153,
+            "uncommon": 0.6194127271258764,
+            "rare_or_higher": 0.04388255302476756,
+            "uncertain": 0.1866982898119646
+          },
+          "confidence": 0.4925503028345018
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-130",
+      "elapsed_seconds": 1.297,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9789651150229051,
+            "other_card": 0.00364080122253859,
+            "not_a_card": 0.0016730046094512172,
+            "uncertain": 0.01572107914510508
+          },
+          "confidence": 0.9719534866972067
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.21250232118187937,
+            "uncommon": 0.49280319902905223,
+            "rare_or_higher": 0.05468853333152731,
+            "uncertain": 0.2400059464575411
+          },
+          "confidence": 0.323737598705403
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-131",
+      "elapsed_seconds": 1.321,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9687039141068469,
+            "other_card": 0.009098083604126641,
+            "not_a_card": 0.0034804062038891214,
+            "uncertain": 0.018717596085137362
+          },
+          "confidence": 0.9582718854757958
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.3184403717808356,
+            "uncommon": 0.22139615898213985,
+            "rare_or_higher": 0.05108332911351083,
+            "uncertain": 0.40908014012351374
+          },
+          "confidence": 0.2121068534980183
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-132",
+      "elapsed_seconds": 1.229,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9796168038944161,
+            "other_card": 0.003480916338076947,
+            "not_a_card": 0.0018257274961724003,
+            "uncertain": 0.01507655227133462
+          },
+          "confidence": 0.9728224051925548
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.3784062934871737,
+            "uncommon": 0.1358828165601005,
+            "rare_or_higher": 0.11333679477353127,
+            "uncertain": 0.3723740951791945
+          },
+          "confidence": 0.17120839131623158
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-133",
+      "elapsed_seconds": 1.233,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9490513359638241,
+            "other_card": 0.02500874991487945,
+            "not_a_card": 0.004377692733998749,
+            "uncertain": 0.02156222138729778
+          },
+          "confidence": 0.9320684479517655
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.19475462887618966,
+            "uncommon": 0.3572734567726146,
+            "rare_or_higher": 0.11638317170453688,
+            "uncertain": 0.33158874264665883
+          },
+          "confidence": 0.14303127569681942
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-134",
+      "elapsed_seconds": 1.237,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9685399028017815,
+            "other_card": 0.013344783352259295,
+            "not_a_card": 0.0032073175483923063,
+            "uncertain": 0.01490799629756689
+          },
+          "confidence": 0.9580532037357087
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.27491824385205127,
+            "uncommon": 0.26410253458680405,
+            "rare_or_higher": 0.11434041112376095,
+            "uncertain": 0.3466388104373837
+          },
+          "confidence": 0.12885174724984494
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-135",
+      "elapsed_seconds": 1.291,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9805220830495741,
+            "other_card": 0.0036954134290597455,
+            "not_a_card": 0.0016958445682827162,
+            "uncertain": 0.014086658953083475
+          },
+          "confidence": 0.9740294440660988
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.1974302127382952,
+            "uncommon": 0.4798919963812529,
+            "rare_or_higher": 0.1084479937355517,
+            "uncertain": 0.2142297971449002
+          },
+          "confidence": 0.30652266184167054
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-136",
+      "elapsed_seconds": 1.233,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9881304553101934,
+            "other_card": 0.0017388141803103294,
+            "not_a_card": 0.0008825380400325723,
+            "uncertain": 0.009248192469463738
+          },
+          "confidence": 0.9841739404135912
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.22968990124068933,
+            "uncommon": 0.5427044155308101,
+            "rare_or_higher": 0.037765213201162516,
+            "uncertain": 0.18984047002733803
+          },
+          "confidence": 0.3902725540410801
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-137",
+      "elapsed_seconds": 1.313,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9653577665630753,
+            "other_card": 0.00844741827754635,
+            "not_a_card": 0.002681041630753173,
+            "uncertain": 0.02351377352862527
+          },
+          "confidence": 0.9538103554174336
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.20030364244950083,
+            "uncommon": 0.3489045772783117,
+            "rare_or_higher": 0.10881049104921153,
+            "uncertain": 0.3419812892229759
+          },
+          "confidence": 0.1318727697044156
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-138",
+      "elapsed_seconds": 1.234,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9709274718339422,
+            "other_card": 0.004762335828964587,
+            "not_a_card": 0.002299513514698282,
+            "uncertain": 0.022010678822394894
+          },
+          "confidence": 0.961236629111923
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.2869696233579629,
+            "uncommon": 0.20528871699307213,
+            "rare_or_higher": 0.18779192305231324,
+            "uncertain": 0.31994973659665177
+          },
+          "confidence": 0.09326631546220236
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-139",
+      "elapsed_seconds": 1.216,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9796839316941051,
+            "other_card": 0.008827752935227872,
+            "not_a_card": 0.002820965062900324,
+            "uncertain": 0.008667350307766691
+          },
+          "confidence": 0.9729119089254734
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.20077241508426336,
+            "uncommon": 0.3133006025858089,
+            "rare_or_higher": 0.10132837814103712,
+            "uncertain": 0.38459860418889064
+          },
+          "confidence": 0.17946480558518751
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-140",
+      "elapsed_seconds": 1.236,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9740641591091196,
+            "other_card": 0.00469031021471015,
+            "not_a_card": 0.0019820759571748496,
+            "uncertain": 0.019263454718995383
+          },
+          "confidence": 0.9654188788121595
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.17958846000977427,
+            "uncommon": 0.40442408939111635,
+            "rare_or_higher": 0.12096918170016326,
+            "uncertain": 0.29501826889894617
+          },
+          "confidence": 0.2058987858548218
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-141",
+      "elapsed_seconds": 1.306,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9892411088538072,
+            "other_card": 0.001350703361773214,
+            "not_a_card": 0.000992887931666914,
+            "uncertain": 0.00841529985275269
+          },
+          "confidence": 0.9856548118050763
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.23208270727971886,
+            "uncommon": 0.5555669251406994,
+            "rare_or_higher": 0.02867990518511048,
+            "uncertain": 0.1836704623944713
+          },
+          "confidence": 0.40742256685426587
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-142",
+      "elapsed_seconds": 1.248,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9849443475601719,
+            "other_card": 0.0016988369375541905,
+            "not_a_card": 0.0009847704230791824,
+            "uncertain": 0.012372045079194724
+          },
+          "confidence": 0.9799257967468958
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.23712499163113596,
+            "uncommon": 0.2188893691532784,
+            "rare_or_higher": 0.18015587477714756,
+            "uncertain": 0.36382976443843806
+          },
+          "confidence": 0.15177301925125075
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-143",
+      "elapsed_seconds": 1.299,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9858036270785059,
+            "other_card": 0.00394837101801231,
+            "not_a_card": 0.0015125256383913951,
+            "uncertain": 0.008735476265090431
+          },
+          "confidence": 0.9810715027713411
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.670711276416811,
+            "uncommon": 0.03498308720073444,
+            "rare_or_higher": 0.01609732204639419,
+            "uncertain": 0.2782083143360603
+          },
+          "confidence": 0.560948368555748
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-144",
+      "elapsed_seconds": 1.238,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9830692916104484,
+            "other_card": 0.0025535376973299453,
+            "not_a_card": 0.00144425557063704,
+            "uncertain": 0.012932915121584631
+          },
+          "confidence": 0.9774257221472645
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.612845643274786,
+            "uncommon": 0.037539876018542306,
+            "rare_or_higher": 0.056451606023456,
+            "uncertain": 0.2931628746832158
+          },
+          "confidence": 0.48379419103304794
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-145",
+      "elapsed_seconds": 1.306,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9750444093362741,
+            "other_card": 0.004405591277368426,
+            "not_a_card": 0.0017942390104567696,
+            "uncertain": 0.018755760375900658
+          },
+          "confidence": 0.9667258791150322
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.7398045173258262,
+            "uncommon": 0.033742417152858036,
+            "rare_or_higher": 0.03661873618690276,
+            "uncertain": 0.18983432933441297
+          },
+          "confidence": 0.6530726897677682
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-146",
+      "elapsed_seconds": 1.228,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9897908640399027,
+            "other_card": 0.0017339863242085726,
+            "not_a_card": 0.0008638366770453044,
+            "uncertain": 0.007611312958843431
+          },
+          "confidence": 0.9863878187198702
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5015436429587887,
+            "uncommon": 0.05395424758625868,
+            "rare_or_higher": 0.08482270719417448,
+            "uncertain": 0.3596794022607781
+          },
+          "confidence": 0.3353915239450516
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-147",
+      "elapsed_seconds": 1.24,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9223121087766658,
+            "other_card": 0.04103257631283135,
+            "not_a_card": 0.005618078338529492,
+            "uncertain": 0.031037236571973364
+          },
+          "confidence": 0.8964161450355544
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5854526921767562,
+            "uncommon": 0.043480833344557324,
+            "rare_or_higher": 0.024799390457553524,
+            "uncertain": 0.34626708402113293
+          },
+          "confidence": 0.44727025623567496
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-148",
+      "elapsed_seconds": 1.249,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.977492786854005,
+            "other_card": 0.002483984014141318,
+            "not_a_card": 0.0013038201793033688,
+            "uncertain": 0.01871940895255028
+          },
+          "confidence": 0.9699903824720066
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6690121293067932,
+            "uncommon": 0.03363550454378128,
+            "rare_or_higher": 0.0790850892663002,
+            "uncertain": 0.2182672768831253
+          },
+          "confidence": 0.5586828390757242
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-149",
+      "elapsed_seconds": 1.371,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9906720969797247,
+            "other_card": 0.0013266197443993193,
+            "not_a_card": 0.000643754484933677,
+            "uncertain": 0.00735752879094232
+          },
+          "confidence": 0.9875627959729663
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5437535643577576,
+            "uncommon": 0.07845714688301086,
+            "rare_or_higher": 0.14805181324481964,
+            "uncertain": 0.22973747551441193
+          },
+          "confidence": 0.39167141914367676
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-150",
+      "elapsed_seconds": 2.039,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9708861747069901,
+            "other_card": 0.005592984169507569,
+            "not_a_card": 0.0025680500649979455,
+            "uncertain": 0.02095279105850436
+          },
+          "confidence": 0.9611815662759868
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6911943061827764,
+            "uncommon": 0.04588940808012199,
+            "rare_or_higher": 0.04440797931563823,
+            "uncertain": 0.2185083064214633
+          },
+          "confidence": 0.5882590749103686
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-151",
+      "elapsed_seconds": 1.341,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9798481628041338,
+            "other_card": 0.005145435620432268,
+            "not_a_card": 0.0022601959650975782,
+            "uncertain": 0.012746205610336379
+          },
+          "confidence": 0.973130883738845
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5786191009499467,
+            "uncommon": 0.05269148004459292,
+            "rare_or_higher": 0.07008702791903064,
+            "uncertain": 0.29860239108642966
+          },
+          "confidence": 0.4381588012665956
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-152",
+      "elapsed_seconds": 1.233,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9858468871230893,
+            "other_card": 0.0025202933362723887,
+            "not_a_card": 0.0012640603182285492,
+            "uncertain": 0.01036875922240969
+          },
+          "confidence": 0.9811291828307858
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.674535249377219,
+            "uncommon": 0.049784345560359,
+            "rare_or_higher": 0.042233338868866155,
+            "uncertain": 0.23344706619355582
+          },
+          "confidence": 0.5660469991696253
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-153",
+      "elapsed_seconds": 1.235,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9713322615241528,
+            "other_card": 0.00975460382404117,
+            "not_a_card": 0.0029817461327727272,
+            "uncertain": 0.015931388519033397
+          },
+          "confidence": 0.9617763486988703
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6543169314108908,
+            "uncommon": 0.06696185768970211,
+            "rare_or_higher": 0.049098106433366526,
+            "uncertain": 0.22962310446604065
+          },
+          "confidence": 0.5390892418811877
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-154",
+      "elapsed_seconds": 1.228,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.963782209677189,
+            "other_card": 0.015947178310637508,
+            "not_a_card": 0.0036480497334012946,
+            "uncertain": 0.016622562278772263
+          },
+          "confidence": 0.9517096129029187
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.42315088298733844,
+            "uncommon": 0.07142898706454735,
+            "rare_or_higher": 0.0793902531039064,
+            "uncertain": 0.42602987684420784
+          },
+          "confidence": 0.23470650245894378
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-155",
+      "elapsed_seconds": 1.23,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9759723860666614,
+            "other_card": 0.005064702913407595,
+            "not_a_card": 0.0018649242749936678,
+            "uncertain": 0.017097986744937402
+          },
+          "confidence": 0.9679631814222152
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6079527094367689,
+            "uncommon": 0.04924545400406827,
+            "rare_or_higher": 0.06798440167319475,
+            "uncertain": 0.274817434885968
+          },
+          "confidence": 0.47727027924902526
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-156",
+      "elapsed_seconds": 1.238,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9838133465290388,
+            "other_card": 0.004841134250839375,
+            "not_a_card": 0.001844775743984052,
+            "uncertain": 0.009500743476137757
+          },
+          "confidence": 0.9784177953720518
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.49422120645305845,
+            "uncommon": 0.04757815102522863,
+            "rare_or_higher": 0.10133283368743834,
+            "uncertain": 0.35686780883427455
+          },
+          "confidence": 0.3256282752707446
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-157",
+      "elapsed_seconds": 1.239,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9878101518496403,
+            "other_card": 0.001946176784935067,
+            "not_a_card": 0.0009678240915241248,
+            "uncertain": 0.009275847273900578
+          },
+          "confidence": 0.9837468691328537
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5446003634884926,
+            "uncommon": 0.02929297067751757,
+            "rare_or_higher": 0.08442673769275294,
+            "uncertain": 0.3416799281412368
+          },
+          "confidence": 0.3928004846513235
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-158",
+      "elapsed_seconds": 1.241,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9823718829425991,
+            "other_card": 0.007773787843049256,
+            "not_a_card": 0.002213139822039038,
+            "uncertain": 0.007641189392312534
+          },
+          "confidence": 0.9764958439234656
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5546690001489296,
+            "uncommon": 0.036260868060200006,
+            "rare_or_higher": 0.10701424601024549,
+            "uncertain": 0.3020558857806248
+          },
+          "confidence": 0.40622533353190615
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-159",
+      "elapsed_seconds": 1.24,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9914251010365486,
+            "other_card": 0.0012780290219039897,
+            "not_a_card": 0.0007873517384548303,
+            "uncertain": 0.006509518203092656
+          },
+          "confidence": 0.9885668013820648
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5955747720941765,
+            "uncommon": 0.06793447243776753,
+            "rare_or_higher": 0.13429889883392446,
+            "uncertain": 0.20219185663413147
+          },
+          "confidence": 0.4607663627922354
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-160",
+      "elapsed_seconds": 1.243,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9736670382612743,
+            "other_card": 0.008670394421914147,
+            "not_a_card": 0.003064496482632077,
+            "uncertain": 0.0145980708341794
+          },
+          "confidence": 0.9648893843483658
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5612585178533334,
+            "uncommon": 0.05478965343045513,
+            "rare_or_higher": 0.09571630154877647,
+            "uncertain": 0.288235527167435
+          },
+          "confidence": 0.4150113571377778
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-161",
+      "elapsed_seconds": 1.242,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.985335842774604,
+            "other_card": 0.0017414426357148165,
+            "not_a_card": 0.0012768587928168476,
+            "uncertain": 0.011645855796864366
+          },
+          "confidence": 0.9804477903661386
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5629196825949813,
+            "uncommon": 0.03050283004160408,
+            "rare_or_higher": 0.13097782579412118,
+            "uncertain": 0.27559966156929355
+          },
+          "confidence": 0.417226243459975
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-162",
+      "elapsed_seconds": 1.239,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9753554497450431,
+            "other_card": 0.005040585546663213,
+            "not_a_card": 0.00225286628906452,
+            "uncertain": 0.017351098419229147
+          },
+          "confidence": 0.9671405996600574
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6731418478255494,
+            "uncommon": 0.03713464839709683,
+            "rare_or_higher": 0.02998483894502983,
+            "uncertain": 0.25973866483232394
+          },
+          "confidence": 0.5641891304340659
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-163",
+      "elapsed_seconds": 1.229,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9701590633179697,
+            "other_card": 0.006889306033991195,
+            "not_a_card": 0.0020331332045930347,
+            "uncertain": 0.02091849744344601
+          },
+          "confidence": 0.9602120844239597
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6052344621787805,
+            "uncommon": 0.045288977631598046,
+            "rare_or_higher": 0.048850869353141466,
+            "uncertain": 0.30062569083648
+          },
+          "confidence": 0.47364594957170736
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-164",
+      "elapsed_seconds": 1.24,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9623027361049947,
+            "other_card": 0.007461604135840653,
+            "not_a_card": 0.002662480388132027,
+            "uncertain": 0.027573179371032548
+          },
+          "confidence": 0.9497369814733263
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5408868709074427,
+            "uncommon": 0.06895978646040281,
+            "rare_or_higher": 0.11752390686386963,
+            "uncertain": 0.27262943576828486
+          },
+          "confidence": 0.3878491612099236
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-165",
+      "elapsed_seconds": 1.238,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9761880593586609,
+            "other_card": 0.005115947351422811,
+            "not_a_card": 0.002831348265612297,
+            "uncertain": 0.015864645024303986
+          },
+          "confidence": 0.9682507458115479
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6443710019158275,
+            "uncommon": 0.043060256230544575,
+            "rare_or_higher": 0.037393456133907564,
+            "uncertain": 0.2751752857197204
+          },
+          "confidence": 0.5258280025544367
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-166",
+      "elapsed_seconds": 1.238,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9887038626023947,
+            "other_card": 0.004117142722547444,
+            "not_a_card": 0.0014321295237881956,
+            "uncertain": 0.005746865151269572
+          },
+          "confidence": 0.9849384834698597
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5425941620710991,
+            "uncommon": 0.05724935264889284,
+            "rare_or_higher": 0.038356342860678266,
+            "uncertain": 0.36180014241932973
+          },
+          "confidence": 0.39012554942813216
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-167",
+      "elapsed_seconds": 1.24,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9826677299743986,
+            "other_card": 0.004864355944658148,
+            "not_a_card": 0.0019773505342668544,
+            "uncertain": 0.010490563546676436
+          },
+          "confidence": 0.9768903066325314
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.4859593347697183,
+            "uncommon": 0.041910591061430726,
+            "rare_or_higher": 0.16338720369903434,
+            "uncertain": 0.30874287046981663
+          },
+          "confidence": 0.31461244635962443
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-168",
+      "elapsed_seconds": 1.238,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9886237705143466,
+            "other_card": 0.0031438298616875385,
+            "not_a_card": 0.0011859801984478785,
+            "uncertain": 0.007046419425517954
+          },
+          "confidence": 0.9848316940191287
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6124001604527199,
+            "uncommon": 0.03719405001713224,
+            "rare_or_higher": 0.11835427317721531,
+            "uncertain": 0.23205151635293253
+          },
+          "confidence": 0.48320021393695994
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-169",
+      "elapsed_seconds": 1.244,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9564877925860451,
+            "other_card": 0.0180010415184787,
+            "not_a_card": 0.004234810174409227,
+            "uncertain": 0.021276355721066967
+          },
+          "confidence": 0.9419837234480601
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6306211971887246,
+            "uncommon": 0.05088013429522564,
+            "rare_or_higher": 0.061262633879716075,
+            "uncertain": 0.2572360346363337
+          },
+          "confidence": 0.5074949295849661
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-170",
+      "elapsed_seconds": 1.319,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.8714233742360993,
+            "other_card": 0.09102817735016933,
+            "not_a_card": 0.008245640534156306,
+            "uncertain": 0.029302807879575066
+          },
+          "confidence": 0.8285644989814657
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.04301622553977138,
+            "uncommon": 0.01740974613688962,
+            "rare_or_higher": 0.8666414552697919,
+            "uncertain": 0.0729325730535472
+          },
+          "confidence": 0.8221886070263892
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-171",
+      "elapsed_seconds": 1.242,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9153039246565232,
+            "other_card": 0.0503013569560058,
+            "not_a_card": 0.003969634326867721,
+            "uncertain": 0.030425084060603232
+          },
+          "confidence": 0.8870718995420309
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.02164944670134228,
+            "uncommon": 0.012172131071890108,
+            "rare_or_higher": 0.9317298687725678,
+            "uncertain": 0.03444855345419977
+          },
+          "confidence": 0.9089731583634237
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-172",
+      "elapsed_seconds": 1.298,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9509067972038664,
+            "other_card": 0.012303078340873672,
+            "not_a_card": 0.003422841372330538,
+            "uncertain": 0.03336728308292935
+          },
+          "confidence": 0.9345423962718219
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.039691105780684244,
+            "uncommon": 0.020556803945875196,
+            "rare_or_higher": 0.8828749722456557,
+            "uncertain": 0.056877118027784807
+          },
+          "confidence": 0.8438332963275409
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-173",
+      "elapsed_seconds": 1.323,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.8871612697550122,
+            "other_card": 0.05529470461914752,
+            "not_a_card": 0.007754748817147202,
+            "uncertain": 0.04978927680869306
+          },
+          "confidence": 0.8495483596733496
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.019087174715655318,
+            "uncommon": 0.013542245396385964,
+            "rare_or_higher": 0.9340358598151903,
+            "uncertain": 0.03333472007276834
+          },
+          "confidence": 0.9120478130869204
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-174",
+      "elapsed_seconds": 1.229,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.7806373878117264,
+            "other_card": 0.17930497450085536,
+            "not_a_card": 0.007764223413466495,
+            "uncertain": 0.03229341427395168
+          },
+          "confidence": 0.7075165170823019
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.030207209745086276,
+            "uncommon": 0.021130568295225114,
+            "rare_or_higher": 0.8822589105805889,
+            "uncertain": 0.06640331137909966
+          },
+          "confidence": 0.8430118807741186
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-175",
+      "elapsed_seconds": 1.306,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9494500359990664,
+            "other_card": 0.021024528790458658,
+            "not_a_card": 0.005204908986056045,
+            "uncertain": 0.024320526224418878
+          },
+          "confidence": 0.9326000479987552
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.0329513342672114,
+            "uncommon": 0.020273158905492344,
+            "rare_or_higher": 0.9103879352040779,
+            "uncertain": 0.036387571623218366
+          },
+          "confidence": 0.8805172469387705
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-176",
+      "elapsed_seconds": 1.248,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9516895699229697,
+            "other_card": 0.01777444163141264,
+            "not_a_card": 0.004348334714591768,
+            "uncertain": 0.026187653731025867
+          },
+          "confidence": 0.9355860932306262
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.028466176128729828,
+            "uncommon": 0.016605646438871198,
+            "rare_or_higher": 0.9145103063040229,
+            "uncertain": 0.0404178711283761
+          },
+          "confidence": 0.8860137417386972
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-177",
+      "elapsed_seconds": 1.231,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9688520505440094,
+            "other_card": 0.01082667783264148,
+            "not_a_card": 0.00250483857093776,
+            "uncertain": 0.017816433052411446
+          },
+          "confidence": 0.9584694007253458
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.036924511893319856,
+            "uncommon": 0.02313678149503025,
+            "rare_or_higher": 0.8836017122893122,
+            "uncertain": 0.05633699432233768
+          },
+          "confidence": 0.8448022830524162
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-178",
+      "elapsed_seconds": 1.301,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9390764703495633,
+            "other_card": 0.02160330087072338,
+            "not_a_card": 0.003574593642051093,
+            "uncertain": 0.03574563513766218
+          },
+          "confidence": 0.9187686271327511
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.03405866691227756,
+            "uncommon": 0.01948192137511146,
+            "rare_or_higher": 0.8906409311471187,
+            "uncertain": 0.05581848056549226
+          },
+          "confidence": 0.8541879081961583
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-179",
+      "elapsed_seconds": 1.239,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9423729734211204,
+            "other_card": 0.030202845020945404,
+            "not_a_card": 0.004626202668483153,
+            "uncertain": 0.022797978889451054
+          },
+          "confidence": 0.9231639645614939
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "rare_or_higher",
+          "probabilities": {
+            "common": 0.031144566305587113,
+            "uncommon": 0.02115715758244437,
+            "rare_or_higher": 0.8965495612856744,
+            "uncertain": 0.051148714826294114
+          },
+          "confidence": 0.8620660817142326
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-180",
+      "elapsed_seconds": 1.309,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.935924658058291,
+            "other_card": 0.030025972385926948,
+            "not_a_card": 0.003929842085104998,
+            "uncertain": 0.030119527470677074
+          },
+          "confidence": 0.9145662107443879
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.23819591397179352,
+            "uncommon": 0.5504631123272627,
+            "rare_or_higher": 0.023236577161797167,
+            "uncertain": 0.18810439653914662
+          },
+          "confidence": 0.400617483103017
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-181",
+      "elapsed_seconds": 1.324,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.8151893892903306,
+            "other_card": 0.14010019052381814,
+            "not_a_card": 0.009824117261345569,
+            "uncertain": 0.034886302924505695
+          },
+          "confidence": 0.7535858523871074
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.14061829081055507,
+            "uncommon": 0.6524815389239387,
+            "rare_or_higher": 0.018775533395153532,
+            "uncertain": 0.18812463687035272
+          },
+          "confidence": 0.5366420518985849
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-182",
+      "elapsed_seconds": 1.242,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9350954301239537,
+            "other_card": 0.021542595226154402,
+            "not_a_card": 0.0038621900765753005,
+            "uncertain": 0.03949978457331665
+          },
+          "confidence": 0.9134605734986049
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.11806123813671282,
+            "uncommon": 0.7276403971727975,
+            "rare_or_higher": 0.018403588034246004,
+            "uncertain": 0.13589477665624372
+          },
+          "confidence": 0.6368538628970634
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-183",
+      "elapsed_seconds": 1.237,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9056870712435163,
+            "other_card": 0.05275839783378831,
+            "not_a_card": 0.007755942960513281,
+            "uncertain": 0.03379858796218212
+          },
+          "confidence": 0.8742494283246884
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.11133048114610666,
+            "uncommon": 0.7633887650236572,
+            "rare_or_higher": 0.014384730946775923,
+            "uncertain": 0.11089602288346029
+          },
+          "confidence": 0.6845183533648762
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-184",
+      "elapsed_seconds": 1.241,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9552809802875455,
+            "other_card": 0.014092833160831174,
+            "not_a_card": 0.003896456751534731,
+            "uncertain": 0.02672972980008863
+          },
+          "confidence": 0.940374640383394
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.13995364647246414,
+            "uncommon": 0.7232479628216913,
+            "rare_or_higher": 0.019810086595883826,
+            "uncertain": 0.11698830410996071
+          },
+          "confidence": 0.6309972837622552
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-185",
+      "elapsed_seconds": 1.238,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9155723278604729,
+            "other_card": 0.03932143929080222,
+            "not_a_card": 0.007396905558320531,
+            "uncertain": 0.03770932729040431
+          },
+          "confidence": 0.8874297704806305
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.16655860500010727,
+            "uncommon": 0.6061628336686805,
+            "rare_or_higher": 0.02819239104144964,
+            "uncertain": 0.19908617028976255
+          },
+          "confidence": 0.47488377822490735
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-186",
+      "elapsed_seconds": 1.356,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.8887162258102238,
+            "other_card": 0.07579538776729279,
+            "not_a_card": 0.009097867374898545,
+            "uncertain": 0.026390519047584837
+          },
+          "confidence": 0.8516216344136317
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.15006586797486343,
+            "uncommon": 0.6593069981090203,
+            "rare_or_higher": 0.0172746403718394,
+            "uncertain": 0.17335249354427684
+          },
+          "confidence": 0.5457426641453603
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-187",
+      "elapsed_seconds": 1.322,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9412149703698939,
+            "other_card": 0.024864892898682725,
+            "not_a_card": 0.0040633657367032915,
+            "uncertain": 0.029856770994720144
+          },
+          "confidence": 0.9216199604931918
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.15909912589568176,
+            "uncommon": 0.676812802373886,
+            "rare_or_higher": 0.01697575237692325,
+            "uncertain": 0.14711231935350896
+          },
+          "confidence": 0.5690837364985146
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-188",
+      "elapsed_seconds": 1.235,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9196998733943292,
+            "other_card": 0.045332414433334425,
+            "not_a_card": 0.0059345124084831885,
+            "uncertain": 0.029033199763853098
+          },
+          "confidence": 0.8929331645257723
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.09798002477094402,
+            "uncommon": 0.7598518928962704,
+            "rare_or_higher": 0.015714614763838772,
+            "uncertain": 0.12645346756894682
+          },
+          "confidence": 0.6798025238616939
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-189",
+      "elapsed_seconds": 1.249,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9486462085444349,
+            "other_card": 0.02850005838065536,
+            "not_a_card": 0.006083541217225807,
+            "uncertain": 0.016770191857683945
+          },
+          "confidence": 0.9315282780592465
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.1330273434553965,
+            "uncommon": 0.6871403974986777,
+            "rare_or_higher": 0.03668264631164097,
+            "uncertain": 0.14314961273428486
+          },
+          "confidence": 0.5828538633315703
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-190",
+      "elapsed_seconds": 1.287,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9462956200999694,
+            "other_card": 0.024172156396787006,
+            "not_a_card": 0.0048156847780020644,
+            "uncertain": 0.024716538725241585
+          },
+          "confidence": 0.9283941601332925
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.18688039140226861,
+            "uncommon": 0.5860032799432208,
+            "rare_or_higher": 0.018178983777587237,
+            "uncertain": 0.20893734487692336
+          },
+          "confidence": 0.4480043732576277
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-191",
+      "elapsed_seconds": 1.234,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.8476337320750018,
+            "other_card": 0.08483490474276102,
+            "not_a_card": 0.017337225635904455,
+            "uncertain": 0.05019413754633274
+          },
+          "confidence": 0.7968449761000024
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5165284718117573,
+            "uncommon": 0.05540370776046193,
+            "rare_or_higher": 0.023667155990983367,
+            "uncertain": 0.40440066443679734
+          },
+          "confidence": 0.3553712957490098
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-192",
+      "elapsed_seconds": 1.244,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9354055357650067,
+            "other_card": 0.022411966732659293,
+            "not_a_card": 0.00444767168800228,
+            "uncertain": 0.03773482581433164
+          },
+          "confidence": 0.9138740476866757
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.685854868369055,
+            "uncommon": 0.043287583679374596,
+            "rare_or_higher": 0.017863265038745458,
+            "uncertain": 0.252994282912825
+          },
+          "confidence": 0.5811398244920732
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-193",
+      "elapsed_seconds": 1.291,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9422831638453781,
+            "other_card": 0.02547252764860373,
+            "not_a_card": 0.003737017786046452,
+            "uncertain": 0.02850729071997168
+          },
+          "confidence": 0.9230442184605042
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6635074831757339,
+            "uncommon": 0.04687914405089807,
+            "rare_or_higher": 0.01503363021293381,
+            "uncertain": 0.27457974256043416
+          },
+          "confidence": 0.5513433109009785
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-194",
+      "elapsed_seconds": 1.248,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9693999778173866,
+            "other_card": 0.015167052688072778,
+            "not_a_card": 0.0030149006879154516,
+            "uncertain": 0.012418068806625134
+          },
+          "confidence": 0.9591999704231822
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.6594410071598935,
+            "uncommon": 0.05486881840251869,
+            "rare_or_higher": 0.015063326169112557,
+            "uncertain": 0.2706268482684752
+          },
+          "confidence": 0.545921342879858
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-195",
+      "elapsed_seconds": 1.235,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.9802496872604975,
+            "other_card": 0.004170258716394846,
+            "not_a_card": 0.0012562628234342192,
+            "uncertain": 0.014323791199673388
+          },
+          "confidence": 0.9736662496806634
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "common",
+          "probabilities": {
+            "common": 0.5983506290656821,
+            "uncommon": 0.06957580719278493,
+            "rare_or_higher": 0.01171800744125042,
+            "uncertain": 0.32035555630028245
+          },
+          "confidence": 0.46446750542090953
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-196",
+      "elapsed_seconds": 1.252,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.8732988557851304,
+            "other_card": 0.08368479940548243,
+            "not_a_card": 0.005550088185162285,
+            "uncertain": 0.03746625662422485
+          },
+          "confidence": 0.8310651410468406
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncommon",
+          "probabilities": {
+            "common": 0.08572367248836063,
+            "uncommon": 0.774430014444851,
+            "rare_or_higher": 0.013046261554961653,
+            "uncertain": 0.12680005151182663
+          },
+          "confidence": 0.6992400192598014
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-197",
+      "elapsed_seconds": 1.24,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.6179778575897217,
+            "other_card": 0.2771052122116089,
+            "not_a_card": 0.032565437257289886,
+            "uncertain": 0.07235149294137955
+          },
+          "confidence": 0.4906371434529622
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.24729846533061223,
+            "uncommon": 0.009507986761201112,
+            "rare_or_higher": 0.0122702494835027,
+            "uncertain": 0.730923298424684
+          },
+          "confidence": 0.6412310645662452
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-198",
+      "elapsed_seconds": 1.242,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.8189142087073222,
+            "other_card": 0.10348151296528853,
+            "not_a_card": 0.019429774339671874,
+            "uncertain": 0.05817450398771731
+          },
+          "confidence": 0.7585522782764297
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.1844515256383352,
+            "uncommon": 0.00670064624530588,
+            "rare_or_higher": 0.00735178178606958,
+            "uncertain": 0.8014960463302894
+          },
+          "confidence": 0.7353280617737191
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-199",
+      "elapsed_seconds": 1.251,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "other_card",
+          "probabilities": {
+            "pokemon_tcg": 0.42949942494559307,
+            "other_card": 0.4509485128772289,
+            "not_a_card": 0.038201106582524284,
+            "uncertain": 0.08135095559465372
+          },
+          "confidence": 0.2679313505029719
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.23831011421506326,
+            "uncommon": 0.006634045410810165,
+            "rare_or_higher": 0.00920765942672545,
+            "uncertain": 0.7458481809474011
+          },
+          "confidence": 0.6611309079298682
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-200",
+      "elapsed_seconds": 1.241,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.8392349231471145,
+            "other_card": 0.08892260226837986,
+            "not_a_card": 0.0148956324191203,
+            "uncertain": 0.05694684216538542
+          },
+          "confidence": 0.7856465641961526
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.43645249049416085,
+            "uncommon": 0.00830920472992975,
+            "rare_or_higher": 0.013226588658296212,
+            "uncertain": 0.5420117161176132
+          },
+          "confidence": 0.3893489548234843
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-201",
+      "elapsed_seconds": 1.251,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.6468898395316964,
+            "other_card": 0.26460923144418463,
+            "not_a_card": 0.01705579548620111,
+            "uncertain": 0.07144513353791784
+          },
+          "confidence": 0.5291864527089286
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.33612050917497727,
+            "uncommon": 0.011581863039358532,
+            "rare_or_higher": 0.012312377550758136,
+            "uncertain": 0.639985250234906
+          },
+          "confidence": 0.5199803336465414
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    },
+    {
+      "id": "item-202",
+      "elapsed_seconds": 1.245,
+      "answers": {
+        "card_kind": {
+          "type": "choice",
+          "choice": "pokemon_tcg",
+          "probabilities": {
+            "pokemon_tcg": 0.6427855812309899,
+            "other_card": 0.28060530414074286,
+            "not_a_card": 0.020377696550102867,
+            "uncertain": 0.056231418078164355
+          },
+          "confidence": 0.5237141083079866
+        },
+        "rarity": {
+          "type": "choice",
+          "choice": "uncertain",
+          "probabilities": {
+            "common": 0.4683253733141793,
+            "uncommon": 0.009296386099494576,
+            "rare_or_higher": 0.008255904078120505,
+            "uncertain": 0.5141223365082056
+          },
+          "confidence": 0.35216311534427414
+        }
+      },
+      "usage": {
+        "input_tokens": 1452,
+        "output_tokens": 0
+      }
+    }
+  ]
+}

@@ -18,7 +18,9 @@ scans** from TCGdex. No modern cards, Japanese promos or negative controls.
 | Energy | 7 |
 
 The rarity reference contains **38 Common, 32 Uncommon and 32 Rare** cards.
-A circle means Common, a diamond Uncommon and a star Rare. Basic Energy cards
+D3 first recognizes the card game, then identifies the small bottom-right mark.
+The platform maps circle to Common, diamond to Uncommon and star to Rare.
+A diamond is a square rotated 45 degrees. Basic Energy cards
 are Common even without a printed rarity symbol. The 1st Edition stamp is a
 print run, not a rarity tier. A complete set is not a booster distribution.
 
@@ -53,7 +55,12 @@ jq '.summary, .ranking[:5]' /tmp/card-scout-analysis.json
 `prepare_dataset.py` is a maintainer tool. It refuses to overwrite a snapshot
 without `--replace`. Images are checksummed, and reference labels are read only
 after inference for evaluation. The ranking uses predicted rarity, then the
-rare-option probability. It is not a price ranking or a calibrated guarantee.
+rare-option probability. It is not a price ranking or a calibrated guarantee. The chosen rarity maps the
+model's chosen symbol; its probabilities group circle and absent-mark scores
+under Common. These grouped scores need not have the same argmax as the chosen
+visual symbol. Non-Pokémon items have no applicable rarity or invented score.
+A missing mark is Common only in this fixed Base Set policy, not a general rule
+for promotional cards. An unreadable corner remains Uncertain.
 
 ## Prepared API and agent
 
@@ -78,6 +85,8 @@ an Unlimited or Shadowless quote and label it 1st Edition.
 The generated Go UI calls only `CARD_SCOUT_URL`; model keys, state, MCP and
 MLflow remain on the prepared platform. MLflow records per-image probabilities,
 agent requests, tool evidence and the visible answer without keys or image bytes.
+Decision traces retain the raw symbol choice/probabilities separately from the
+mapped rarity, so the model's actual visual output remains auditable.
 
 `deploy/card-scout` pins the platform image and supplies the service, HTTPS MCP
 Route and persistent volume. The setup helper supplies dynamic MaaS/MLflow values.

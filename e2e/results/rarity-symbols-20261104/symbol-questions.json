@@ -1,0 +1,23 @@
+{
+  "card_kind": {
+    "type": "choice",
+    "instructions": "Is this a Pokemon Trading Card Game card: yes or no? Pokemon, Trainer and Energy cards all count as yes. Select pokemon_tcg for yes, otherwise other_card or not_a_card. Judge the printed trading-card layout; a Pokemon illustration alone is not a card.",
+    "criteria": {
+      "pokemon_tcg": "A Pokemon Trading Card Game card",
+      "other_card": "A card from another game, a sports card or a standard playing card",
+      "not_a_card": "A receipt, photograph or object that is not a trading or playing card",
+      "uncertain": "Not enough information to identify"
+    }
+  },
+  "rarity_symbol": {
+    "type": "choice",
+    "instructions": "Inspect the small printed rarity mark in the bottom-right corner, beside the collector number. Report the SHAPE of this mark only. Ignore the character, its fame, the artwork, the large Energy symbols, and the 1st Edition stamp. A blank but fully visible corner is none, as on Basic Energy cards. A cropped, blurry or unreadable corner is uncertain.",
+    "criteria": {
+      "circle": "A small filled circle or round dot",
+      "diamond": "A small diamond, a square rotated 45 degrees",
+      "star": "A small five-pointed star",
+      "none": "The corner is fully visible and has no printed rarity mark",
+      "uncertain": "The corner or small rarity mark cannot be read reliably"
+    }
+  }
+}
