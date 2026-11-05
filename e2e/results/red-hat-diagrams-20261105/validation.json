@@ -1,0 +1,208 @@
+{
+  "platform": "aro",
+  "documentation_build": "make docs passed",
+  "geometry": [
+    {
+      "platform": "aro",
+      "name": "architecture-overview.svg",
+      "fonts": [
+        {
+          "family": "Red Hat Display",
+          "status": "loaded"
+        },
+        {
+          "family": "Red Hat Text",
+          "status": "loaded"
+        }
+      ],
+      "icons": 9,
+      "nodes": 9,
+      "issues": [],
+      "title": "Card Scout on ARO"
+    },
+    {
+      "platform": "aro",
+      "name": "card-scout-workflow.svg",
+      "fonts": [
+        {
+          "family": "Red Hat Display",
+          "status": "loaded"
+        },
+        {
+          "family": "Red Hat Text",
+          "status": "loaded"
+        }
+      ],
+      "icons": 6,
+      "nodes": 6,
+      "issues": [],
+      "title": "Card Scout: analyze, then verify"
+    },
+    {
+      "platform": "aro",
+      "name": "cicd-gitops.svg",
+      "fonts": [
+        {
+          "family": "Red Hat Display",
+          "status": "loaded"
+        },
+        {
+          "family": "Red Hat Text",
+          "status": "loaded"
+        }
+      ],
+      "icons": 7,
+      "nodes": 7,
+      "issues": [],
+      "title": "From prompt to a running application"
+    },
+    {
+      "platform": "aro",
+      "name": "maas-access.svg",
+      "fonts": [
+        {
+          "family": "Red Hat Display",
+          "status": "loaded"
+        },
+        {
+          "family": "Red Hat Text",
+          "status": "loaded"
+        }
+      ],
+      "icons": 3,
+      "nodes": 4,
+      "issues": [],
+      "title": "Two credentials, two trust boundaries"
+    },
+    {
+      "platform": "aro",
+      "name": "model-serving-architecture.svg",
+      "fonts": [
+        {
+          "family": "Red Hat Display",
+          "status": "loaded"
+        },
+        {
+          "family": "Red Hat Text",
+          "status": "loaded"
+        }
+      ],
+      "icons": 2,
+      "nodes": 3,
+      "issues": [],
+      "title": "Local image inference on one T4"
+    },
+    {
+      "platform": "aro",
+      "name": "rarity-decision.svg",
+      "fonts": [
+        {
+          "family": "Red Hat Display",
+          "status": "loaded"
+        },
+        {
+          "family": "Red Hat Text",
+          "status": "loaded"
+        }
+      ],
+      "icons": 2,
+      "nodes": 5,
+      "issues": [],
+      "title": "Read the mark, then map the rarity"
+    },
+    {
+      "platform": "aro",
+      "name": "the-bill-observability.svg",
+      "fonts": [
+        {
+          "family": "Red Hat Display",
+          "status": "loaded"
+        },
+        {
+          "family": "Red Hat Text",
+          "status": "loaded"
+        }
+      ],
+      "icons": 6,
+      "nodes": 6,
+      "issues": [],
+      "title": "Observe usage and explain behavior"
+    }
+  ],
+  "built_pages": [
+    {
+      "platform": "aro",
+      "page": "index.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "200-platform/lab_3_openshift_ai_overview.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "200-platform/lab_4_decision_model.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "200-platform/lab_5_agents_md.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "200-platform/lab_6_signal_desk.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "300-developer/lab_2_model_apis.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "400-observability/lab_1_llm_metrics.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    }
+  ],
+  "offline_svg_render": true,
+  "embedded_fonts_loaded": true,
+  "unmodified_official_icon_sources_verified": true,
+  "text_contrast_ratios": {
+    "#151515 on #e0e0e0": 13.83,
+    "#151515 on #ffffff": 18.26,
+    "#4d4d4d on #ffffff": 8.45,
+    "#0066cc on #ffffff": 5.57,
+    "#ffffff on #151515": 18.26
+  },
+  "reproducible": true,
+  "desktop_mobile": true,
+  "full_size_links": true,
+  "browser_args": [
+    "--use-mock-keychain"
+  ],
+  "diagram_sha256": {
+    "architecture-overview.svg": "d1c3ff1fc9e39529de810e8d0c7e19b4d2d2aab2e593096a98f4e651eec5c49e",
+    "card-scout-workflow.svg": "e4d7144930e8bb8cb76567aaf3a21d4a230c64b1bfdc4446d3bd4169861cea8a",
+    "cicd-gitops.svg": "1611d7038b17443e84d67f5c078ba6d64a48cd8a1cc3cde0218df580c3c26e10",
+    "maas-access.svg": "f0ac20c3fc366c3052f5fd05a0500e41f051e45ed9810f8e40f61c8626f1c008",
+    "model-serving-architecture.svg": "96a572d0603203bb2840dd2930b3c39635aaf8775eb3c45161ab33cb8a91f10f",
+    "rarity-decision.svg": "b6c67bde0e0e2d3ef276e267eb29637961dff77b752d60d7e51320c6db20671b",
+    "the-bill-observability.svg": "2eeab9cabc8c56306e74ddce7c3c074b12628c5a95313208fc38a338996617fe"
+  }
+}

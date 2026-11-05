@@ -1,0 +1,132 @@
+[
+  {
+    "file": "icons/code.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Code/Icon-Red_Hat-Code-A-Black-RGB.svg",
+    "sha256": "5d0733111aab10327f1e2c01456b508218a39cd20505506b3760bfe1ebc63775",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/model.svg",
+    "archive": "icon.zip",
+    "source": "Icons/AI model/Icon-Red_Hat-AI_model-Black.svg",
+    "sha256": "54c0d111fef8aa01f4bbd18f649734f3ad27a5aa5113d1b79a36571f4d42d954",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/inference.svg",
+    "archive": "icon.zip",
+    "source": "Icons/AI inference/rh-icon-AI-inference-black.svg",
+    "sha256": "510089f67d69f77666e3f650778fefed1375f6a31ab755dbb52b81d1dde3561b",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/gateway.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Gateway/Icon-Red_Hat-Gateway-A-Black-RGB.svg",
+    "sha256": "992521dde0590458530e7a012d8fbd706e07144a2b8dc1ac398c15983582c82b",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/website.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Website/Icon-Red_Hat-Website-A-Black-RGB.svg",
+    "sha256": "b46137acb2a3d17cfeb1306ea04442d2f8beac864f986d47f800a0c6de041ed0",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/registry.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Container registry/Icon-Red_Hat-Container_registry-A-Black-RGB.svg",
+    "sha256": "cf97b31a277e787b4cf317df39fb58cfb9a9962a7a024c36978546076dcc301c",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/metrics.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Graph (line up)/Icon-Red_Hat-Graph_line_up-A-Black-RGB.svg",
+    "sha256": "2db9a053c688b10451b8772d4dac2361582c377e34b1af14b2aa67d350b8dce4",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/flowchart.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Flowchart/Icon-Red_Hat-Flowchart-A-Black-RGB.svg",
+    "sha256": "15661aa065a91b2caf715549fa013972bced002c4dce22229353a200b68a4de9",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/data.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Data/Icon-Red_Hat-Data-A-Black-RGB.svg",
+    "sha256": "98c6f34bba4931fa1adf8441e69e59c36fbeab76555ad9ad4e1a087d15f85eb4",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/search.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Magnifying glass/Icon-Red_Hat-Magnifying_glass-A-Black-RGB.svg",
+    "sha256": "f702f8d9835868803c8881a144eac6e102f63c64b3f18729945b7a966b263525",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/key.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Key/Icon-Red_Hat-Key-A-Black-RGB.svg",
+    "sha256": "583193af2af5871b7a58a2d76b98241a9b4eb6f693221a83992d0f36966c4479",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/cloud.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Cloud/Icon-Red_Hat-Cloud-A-Black-RGB.svg",
+    "sha256": "6d40e544ec39c017e7ac43c8ab3b451bd6bb845e00709df60abd9d06f989ea75",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/image.svg",
+    "archive": "icon.zip",
+    "source": "Icons/Camera/Icon-Red_Hat-Camera-A-Black-RGB.svg",
+    "sha256": "6bbbe2f315143b66aa3e071d205be20cd98359e395637dbf2709ab789070fab5",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "file": "icons/devspaces.svg",
+    "archive": "technology-icons.zip",
+    "source": "Technology icons/Red Hat OpenShift Dev Spaces/Technology_icon-Red_Hat-OpenShift_Dev_Spaces-Standard-RGB.svg",
+    "sha256": "de101bcf2b63f71ca1821b5aa7fdce1834a39a933d3d9f4f2bf5da53d13ad265",
+    "usage": "Red Hat technology icon guidelines; unchanged official artwork, trademarks retained"
+  },
+  {
+    "file": "icons/gitops.svg",
+    "archive": "technology-icons.zip",
+    "source": "Technology icons/Red Hat OpenShift GitOps/Technology_icon-Red_Hat-OpenShift_GitOps-Standard-RGB.svg",
+    "sha256": "9b3e262720a984fc1cd7d40bd5c7b0ea17ad480e5a2773c033845d3a902a7980",
+    "usage": "Red Hat technology icon guidelines; unchanged official artwork, trademarks retained"
+  },
+  {
+    "file": "icons/pipelines.svg",
+    "archive": "technology-icons.zip",
+    "source": "Technology icons/Red Hat OpenShift Pipelines/Technology_icon-Red_Hat-OpenShift_Pipelines-Standard-RGB.svg",
+    "sha256": "87243c90aae477146e7f35a5a2800577baa62c92e580adf6f0cdf9452c6793d1",
+    "usage": "Red Hat technology icon guidelines; unchanged official artwork, trademarks retained"
+  },
+  {
+    "file": "fonts/RedHatDisplay-VF.woff2",
+    "source": "https://raw.githubusercontent.com/RedHatOfficial/RedHatFont/6bb1048a6402b0076ea04f42951ec66263cd1437/fonts/Proportional/RedHatDisplay/webfonts/RedHatDisplay-VF.woff2",
+    "sha256": "69dca56dda2a2b067dee3e910323c97e54b8544f90f3d1c2192b5a37c0eb1ec3",
+    "license": "OFL-1.1"
+  },
+  {
+    "file": "fonts/RedHatText-Regular.woff2",
+    "source": "https://raw.githubusercontent.com/RedHatOfficial/RedHatFont/6bb1048a6402b0076ea04f42951ec66263cd1437/fonts/Proportional/RedHatText/webfonts/RedHatText-Regular.woff2",
+    "sha256": "8b6c947032e889935aeef9d3a987fe4760b5bb029af531f2511e5824602a550a",
+    "license": "OFL-1.1"
+  },
+  {
+    "file": "fonts/OFL.txt",
+    "source": "https://raw.githubusercontent.com/RedHatOfficial/RedHatFont/6bb1048a6402b0076ea04f42951ec66263cd1437/OFL.txt",
+    "sha256": "4f1417e27511207cd217656c964f1b0d8b0c4a30156a1a699cf16dc5eba0dff6",
+    "license": "OFL-1.1"
+  }
+]
