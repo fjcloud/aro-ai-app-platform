@@ -155,7 +155,7 @@
         {
           "expr": "sum(vllm_srun_requests_total{namespace=\"decision-serving\",exported_endpoint=\"/v1/systemone\",status=\"200\"})",
           "refId": "A",
-          "legendFormat": "Whisper completed requests"
+          "legendFormat": "D3 completed scoring requests"
         }
       ],
       "legend": {
@@ -194,7 +194,7 @@
         {
           "expr": "histogram_quantile(0.95, sum by (le) (rate(vllm_srun_request_duration_seconds_bucket{namespace=\"decision-serving\",exported_endpoint=\"/v1/systemone\"}[5m])))",
           "refId": "A",
-          "legendFormat": "Whisper inference latency p95"
+          "legendFormat": "D3 request latency p95"
         }
       ],
       "legend": {
@@ -233,7 +233,7 @@
         {
           "expr": "sum(vllm_srun_queue_depth{namespace=\"decision-serving\"})",
           "refId": "A",
-          "legendFormat": "Whisper queued requests"
+          "legendFormat": "D3 queued requests"
         }
       ],
       "legend": {

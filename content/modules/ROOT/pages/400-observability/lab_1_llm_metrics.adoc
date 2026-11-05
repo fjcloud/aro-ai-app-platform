@@ -23,6 +23,11 @@ No additional installation or metrics commands are needed.
 The application generation, batch analysis and price checks from Act 2 have
 already produced activity. Allow 2–3 minutes for new measurements to appear.
 
+The captures show a completed workshop. Your timestamps and values will differ.
+
+.Token consumption and accepted requests, split by subscription
+image::card-scout-dashboard-tokens.png["OpenShift dashboard with the Last 1 hour range and separate coding and runtime token series",align="center",link=self]
+
 == Explore the existing activity
 
 [cols="2,3",options="header"]
@@ -35,6 +40,12 @@ already produced activity. Allow 2–3 minutes for new measurements to appear.
 | T4 utilization / memory | Compare the batch activity with quieter periods. Model memory remains allocated while idle. DeepSeek runs on Foundry, so a coding request does not use this T4.
 | Scrape health | `1` means the monitoring target is reachable. A missing series or `0` needs investigation.
 |===
+
+.D3 image scoring: completed requests and request latency
+image::card-scout-dashboard-d3.png["D3 completed scoring requests and p95 latency during batch analysis",align="center",link=self]
+
+.Local T4: utilization during scoring and memory retained while idle
+image::card-scout-dashboard-gpu.png["T4 utilization spike during classification and persistent GPU memory allocation",align="center",link=self]
 
 == Connect an app action to the graphs
 
