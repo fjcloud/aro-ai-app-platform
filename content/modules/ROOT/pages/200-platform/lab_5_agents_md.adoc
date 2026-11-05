@@ -18,19 +18,28 @@ The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-
 | Path | Why it exists
 
 | `AGENTS.md`
-| The project runbook for OpenCode. Generate `main.go` / `go.mod` / `Dockerfile`, then git, ephemeral Git, and `oc`.
+| Short instructions: generate, run the supplied acceptance tests, fix app failures, then ship.
+
+| `APP_CONTRACT.md`
+| The minimal page, proxy API and stable test hooks.
+
+| `DELIVERY.md`
+| Build and delivery commands, read when shipping.
+
+| `tests/`
+| Fixed acceptance tests with fixture data, plus the real-platform check.
 
 | `opencode.json`
 | The template pins `deepseek/deepseekv4pro`. The key and base URL stay `$OPENAI_API_KEY` and `$OPENAI_BASE_URL`.
 
 | `devfile.yaml`
-| Dev Spaces workspace. Installs the ephemeral Git client.
+| Dev Spaces workspace with the ephemeral Git client and a local-only test browser.
 
 | `deploy/` `pipeline/` `gitops/`
 | Golden-path Kustomize. The Deployment already names the internal Tekton image. The pipeline validates that image before building; the model keeps the scaffold intact.
 |===
 
-`APP_CONTRACT.md` defines the application, APIs and acceptance checks. `AGENTS.md` defines the coding and delivery rules. There is no app `scripts/` directory and no Ansible.
+`APP_CONTRACT.md` defines the application, APIs and acceptance checks. `AGENTS.md` defines the short test-and-fix workflow; `DELIVERY.md` contains the detailed delivery commands. There is no app `scripts/` directory and no Ansible.
 
 == Prepare the developer's permissions
 
@@ -61,12 +70,9 @@ cat "$HOME/card-scout-template/AGENTS.md"
 cat "$HOME/card-scout-template/APP_CONTRACT.md"
 ----
 
-Focus on these sections:
-
-* *Generate* — `main.go`, `go.mod`, `Dockerfile` with an exact two-stage template
-* *Existing scaffold* — do not rewrite `deploy/`, `pipeline/`, `gitops/`, or `devfile.yaml`
-* *Deploy* — ephemeral Git → Tekton image validation/build → Argo CD Application; the Deployment image is preconfigured
-* *Namespaces* — `$\{APP_NAME}-build` and `$\{APP_NAME}-dev` only. Never namespace `default` for the app, Argo CD, or the Application.
+The app contract stays small. OpenCode must run `npm test`, fix the application
+until it passes and keep the supplied tests unchanged. The detailed Git → Tekton
+→ Argo CD commands remain in `DELIVERY.md` for the shipping phase.
 
 [cols="1,2,2", options="header"]
 |===
@@ -118,7 +124,7 @@ You should see `baseURL` `{env:OPENAI_BASE_URL}`, Bearer authentication, provide
 | ✅ Ready on one T4; internal endpoint only
 
 | Go app template
-| ✅ Card Scout branch and app contract in `AGENTS.md`
+| ✅ Minimal contract, short `AGENTS.md` and acceptance tests
 |===
 
 Before switching persona, prepare the native Responses backend and tracing in *Lab 1.8: Prepare Card Scout*.

@@ -28,24 +28,32 @@ D3 needs no credential; DeepSeek uses the injected MaaS key.
 
 ## Generated app and browser
 
-After OpenCode commits, pushes, builds and deploys the application:
+The `aro-card-scout` template provides the minimal app's acceptance tests.
+From the generated checkout in Dev Spaces:
+
+```sh
+npm ci && npm run setup
+npm test
+APP_URL=https://your-app-route npm run test:live
+```
+
+The first command prepares the test browser. `npm test` builds the real Go app
+with the race detector and exercises a local fixture API: complete images, fixed
+routes, analyze/reload, price evidence, mobile layout and retry recovery. No
+fixture responses are installed in the running platform. The live test compares
+the app with the real platform dataset and performs a price lookup with source
+and trace links. OpenCode fixes the app until both pass; tests stay unchanged.
+
+After delivery, independently verify source, GitOps, image digest and permissions:
 
 ```sh
 E2E_NS=your-devspaces-namespace DEV_POD=your-workspace-pod \
   bash e2e/dev-run.sh
-APP_URL=https://your-app-route node e2e/card-scout-browser.cjs
 ```
 
-The delivery check compares workspace source, pushed main, Argo CD revision,
-Tekton target and running image digest. The browser check requires 105 completed
-real image analyses, full-batch filters, pagination, no price action for controls,
-a native price lookup, exact tool-derived prices, dated source and trace links,
-filter persistence and a mobile layout. Its separate fixtures exercise errors,
-missing/zero prices and edge cases using explicitly synthetic API responses.
-
-`card-scout-browser.cjs` targets the generated validation app's accessible UI and
-selectors. A newly generated implementation can use different DOM selectors;
-adapt those selectors while retaining the same acceptance behavior.
+The older `card-scout-browser.cjs` and dated evidence scripts target the earlier
+paginated/filter UI. They are historical checks, not requirements for the minimal
+contract. See the latest validation record for the one-prompt generation result.
 
 ## Playground, traces and measurements
 
@@ -109,3 +117,8 @@ Acts 0–3, DeepSeek Pro generation and three actual deliveries, API/browser/tra
 checks, model errors, workspace startup measurements and a real Git push after
 restart. It records the fresh-workspace injector fix, image caching and persistent
 Git helper, plus portable browser checks for that generated implementation.
+
+The [minimal Card Scout trial](results/card-scout-minimal-7vxhk/README.md) validates
+the current template's built-in acceptance tests. One DeepSeek Pro prompt completed
+three automatic correction rounds and real delivery, with no follow-up code
+feedback and no modifications to the supplied tests or scaffold.

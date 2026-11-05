@@ -1,0 +1,38 @@
+[
+  [
+    "not ok 1 - real Go server: health, fixed routes, complete images and upstream errors",
+    "not ok 2 - load \u2192 analyze \u2192 price, reload and full cards on mobile",
+    "not ok 3 - two initial load failures can be retried without losing the page",
+    "not ok 4 - price failure keeps the card; Retry handles unavailable prices and unsafe links",
+    "# tests 4",
+    "# pass 0",
+    "# fail 4"
+  ],
+  [
+    "ok 1 - real Go server: health, fixed routes, complete images and upstream errors",
+    "ok 2 - load \u2192 analyze \u2192 price, reload and full cards on mobile",
+    "not ok 3 - two initial load failures can be retried without losing the page",
+    "not ok 4 - price failure keeps the card; Retry handles unavailable prices and unsafe links",
+    "# tests 4",
+    "# pass 2",
+    "# fail 2"
+  ],
+  [
+    "ok 1 - real Go server: health, fixed routes, complete images and upstream errors",
+    "ok 2 - load \u2192 analyze \u2192 price, reload and full cards on mobile",
+    "ok 3 - two initial load failures can be retried without losing the page",
+    "not ok 4 - price failure keeps the card; Retry handles unavailable prices and unsafe links",
+    "# tests 4",
+    "# pass 3",
+    "# fail 1"
+  ],
+  [
+    "ok 1 - real Go server: health, fixed routes, complete images and upstream errors",
+    "ok 2 - load \u2192 analyze \u2192 price, reload and full cards on mobile",
+    "ok 3 - two initial load failures can be retried without losing the page",
+    "ok 4 - price failure keeps the card; Retry handles unavailable prices and unsafe links",
+    "# tests 4",
+    "# pass 4",
+    "# fail 0"
+  ]
+]

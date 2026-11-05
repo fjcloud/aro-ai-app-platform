@@ -34,7 +34,7 @@ Open the printed link in your browser. It clones the Card Scout template and cre
 
 [NOTE]
 ====
-The `#<template-url>` suffix tells Dev Spaces to clone the template and create a workspace from its `devfile.yaml` automatically. OpenCode is injected by the platform. The project `opencode.json` already pins DeepSeek through MaaS. The workspace comes pre-loaded with `AGENTS.md`, `pipeline/`, `gitops/`, and `deploy/base/` — you only need to write the application code.
+The `#<template-url>` suffix tells Dev Spaces to clone the template and create a workspace from its `devfile.yaml` automatically. OpenCode is injected by the platform. The project `opencode.json` already pins DeepSeek through MaaS. The workspace comes pre-loaded with a short `AGENTS.md`, `APP_CONTRACT.md`, acceptance tests, `DELIVERY.md` and the delivery scaffold — you only need to write the application code.
 ====
 
 . Open that URL in your browser.
@@ -88,6 +88,10 @@ oc auth can-i use scc/privileged -n "${APP_NAME}-build"
 ----
 
 Expect the `workshop-developer` service account, then `yes`, `yes`, and `no`. The final `no` is intentional: OpenCode must not grant SCCs or use privileged containers. If build/deploy access is missing, ask the facilitator to rerun `scripts/prepare-developer.py` and restart the workspace. Keep the scoped identity; an administrator login is not a workaround.
+
+The template also includes a local-only browser component for acceptance tests.
+OpenCode prepares it with `npm ci && npm run setup`. No system-package installation
+is needed in the developer container. The generated app remains a Go application.
 
 == Verify OpenCode is Running
 

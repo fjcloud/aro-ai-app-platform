@@ -1,3 +1,4 @@
+// Historical paginated UI checks. The minimal contract uses the template acceptance tests.
 // Live T4/native-agent acceptance, then isolated browser fixtures for edge cases.
 const {chromium,expect}=require('@playwright/test');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
