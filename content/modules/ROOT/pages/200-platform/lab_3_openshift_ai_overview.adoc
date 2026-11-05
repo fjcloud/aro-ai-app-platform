@@ -16,12 +16,7 @@ https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/h
 
 == The two credentials
 
-[source,text]
-----
-Dev Spaces / OpenCode
-  └─ HTTPS + MaaS key → OpenShift AI MaaS gateway
-                          └─ HTTPS + provider key → DeepSeek on Foundry
-----
+image::maas-access.svg["Client MaaS keys and the Azure provider credential across trust boundaries",align="center",link=self]
 
 The Foundry account key stays in Secret `foundry-provider-key` in `llm-serving`. Workspaces receive only a separate MaaS key and the cluster gateway URL. MaaS authenticates the caller and injects the provider credential for the Azure request.
 

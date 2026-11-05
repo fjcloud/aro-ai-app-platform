@@ -18,6 +18,8 @@ It does not generate a description or estimate market value.
 The agent verifies the selected catalogue reference through a read-only MCP tool.
 Its model endpoint is provided by OpenShift AI MaaS.
 
+image::rarity-decision.svg["Card-kind eligibility and the bottom-right rarity symbol mapping for the fixed Base Set",align="center",link=self]
+
 == Test an image on the T4
 
 [source,sh,role=execute]

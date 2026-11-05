@@ -85,7 +85,7 @@ Focus on these sections:
 | 2–3 min
 |===
 
-image::cicd-gitops.png[Prompt to deployment, align="center"]
+image::cicd-gitops.svg["Prompt to deployment",align="center",link=self]
 
 == Step 2: Confirm OpenCode is wired to MaaS
 

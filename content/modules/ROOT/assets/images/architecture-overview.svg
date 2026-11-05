@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="920" viewBox="0 0 1120 920" role="img" aria-labelledby="title desc">
+<title id="title">Card Scout on ARO</title><desc id="desc">Code with a managed LLM. Classify images locally. Verify prices through an agent.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0,0 L 10,5 L 0,10 z" fill="#687683"/></marker><marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0,0 L 10,5 L 0,10 z" fill="#0066cc"/></marker></defs><style>text{font-family:Arial,Helvetica,sans-serif}svg{background:white}</style>
+<rect width="1120" height="920" rx="16" fill="white"/>
+<rect x="40" y="36" width="38" height="5" rx="2" fill="#ee0000"/>
+<text x="40" y="77" font-size="30" fill="#151515" font-weight="700" text-anchor="start" class="">Card Scout on ARO</text>
+<text x="40" y="108" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="">Code with a managed LLM. Classify images locally. Verify prices through an agent.</text>
+<rect x="20" y="145" width="1080" height="210" rx="12" fill="#f6f7f9" stroke="#d5dbe1" stroke-width="1.5"/>
+<text x="40" y="174" font-size="17" fill="#52606d" font-weight="600" text-anchor="start" class="">1  Build the Go application</text>
+<g data-role="node" data-node="0-0">
+<rect x="60" y="194" width="260" height="145" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="61" y="212" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="80" y="230.5" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">OpenCode in Dev</text>
+<text x="80" y="257.5" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Spaces</text>
+<text x="80" y="294.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Project contract +</text>
+<text x="80" y="318.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">AGENTS.md</text>
+</g>
+<g data-role="node" data-node="0-1">
+<rect x="430" y="194" width="260" height="145" rx="12" fill="white" stroke="#ee0000" stroke-width="1.5"/>
+<rect x="431" y="212" width="4" height="25" rx="2" fill="#ee0000"/>
+<text x="450" y="244.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">OpenShift AI MaaS</text>
+<text x="450" y="281.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Coding key + token</text>
+<text x="450" y="305.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">quota</text>
+</g>
+<g data-role="node" data-node="0-2">
+<rect x="800" y="194" width="260" height="145" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="801" y="212" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="820" y="256.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">DeepSeek on Foundry</text>
+<text x="820" y="293.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Managed model in Azure</text>
+</g>
+<path data-role="connector" data-source="0-0" data-target="0-1" data-points="[[320, 266.5], [430, 266.5]]" d="M 320,266.5 L 430,266.5" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path data-role="connector" data-source="0-1" data-target="0-2" data-points="[[690, 266.5], [800, 266.5]]" d="M 690,266.5 L 800,266.5" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="20" y="375" width="1080" height="210" rx="12" fill="#f6f7f9" stroke="#d5dbe1" stroke-width="1.5"/>
+<text x="40" y="404" font-size="17" fill="#52606d" font-weight="600" text-anchor="start" class="">2  Analyze the collection</text>
+<g data-role="node" data-node="1-0">
+<rect x="60" y="424" width="260" height="145" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="61" y="442" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="80" y="474.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Browser + Go proxy</text>
+<text x="80" y="511.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">One prepared platform</text>
+<text x="80" y="535.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">API</text>
+</g>
+<g data-role="node" data-node="1-1">
+<rect x="430" y="424" width="260" height="145" rx="12" fill="white" stroke="#ee0000" stroke-width="1.5"/>
+<rect x="431" y="442" width="4" height="25" rx="2" fill="#ee0000"/>
+<text x="450" y="474.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Card Scout platform</text>
+<text x="450" y="511.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Fixed images, state +</text>
+<text x="450" y="535.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">rules</text>
+</g>
+<g data-role="node" data-node="1-2">
+<rect x="800" y="424" width="260" height="145" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="801" y="442" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="820" y="474.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">d3-mini on one T4</text>
+<text x="820" y="511.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Card kind + rarity</text>
+<text x="820" y="535.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">symbol</text>
+</g>
+<path data-role="connector" data-source="1-0" data-target="1-1" data-points="[[320, 496.5], [430, 496.5]]" d="M 320,496.5 L 430,496.5" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path data-role="connector" data-source="1-1" data-target="1-2" data-points="[[690, 496.5], [800, 496.5]]" d="M 690,496.5 L 800,496.5" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="20" y="605" width="1080" height="210" rx="12" fill="#f6f7f9" stroke="#d5dbe1" stroke-width="1.5"/>
+<text x="40" y="634" font-size="17" fill="#52606d" font-weight="600" text-anchor="start" class="">3  Verify a selected card</text>
+<g data-role="node" data-node="2-0">
+<rect x="60" y="654" width="260" height="145" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="61" y="672" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="80" y="704.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Card Scout platform</text>
+<text x="80" y="741.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Separate runtime MaaS</text>
+<text x="80" y="765.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">key</text>
+</g>
+<g data-role="node" data-node="2-1">
+<rect x="430" y="654" width="260" height="145" rx="12" fill="white" stroke="#ee0000" stroke-width="1.5"/>
+<rect x="431" y="672" width="4" height="25" rx="2" fill="#ee0000"/>
+<text x="450" y="716.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">OpenShift AI agent</text>
+<text x="450" y="753.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">DeepSeek through MaaS</text>
+</g>
+<g data-role="node" data-node="2-2">
+<rect x="800" y="654" width="260" height="145" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="801" y="672" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="820" y="704.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Read-only MCP tool</text>
+<text x="820" y="741.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">TCGdex identity +</text>
+<text x="820" y="765.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">prices</text>
+</g>
+<path data-role="connector" data-source="2-0" data-target="2-1" data-points="[[320, 726.5], [430, 726.5]]" d="M 320,726.5 L 430,726.5" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path data-role="connector" data-source="2-1" data-target="2-2" data-points="[[690, 726.5], [800, 726.5]]" d="M 690,726.5 L 800,726.5" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 40,864 H 1080" stroke="#d5dbe1"/>
+<text x="40" y="895" font-size="16" fill="#52606d" font-weight="400" text-anchor="start" class="">The Go app has no model key. MLflow records model decisions and actual tool evidence.</text>
+</svg>

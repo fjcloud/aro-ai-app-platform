@@ -14,17 +14,7 @@ You play two roles. The *platform engineer* prepares OpenShift AI, a managed Dee
 
 == What you build
 
-[source,text]
-----
-Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry (coding)
-
-Browser → generated Go UI/proxy → Card Scout platform
-                                  ├→ fixed images → d3-mini on T4 → rarity ranking
-                                  └→ native OpenShift AI agent → DeepSeek / MaaS
-                                                    ↕ read-only MCP → TCGdex prices
-Playground → same MCP tool                 Model and tool spans → MLflow
-Git → Tekton → Argo CD → same Go app
-----
+image::architecture-overview.svg["Card Scout architecture: coding through MaaS, local D3 analysis and native agent research",align="center",link=self]
 
 *DeepSeek* generates the application and powers its price agent, using separate
 MaaS keys. *d3-mini* classifies images without generating prose. OpenShift AI/KServe

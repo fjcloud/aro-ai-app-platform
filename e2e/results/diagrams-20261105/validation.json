@@ -1,0 +1,123 @@
+{
+  "platform": "aro",
+  "svg_diagrams": 7,
+  "reproducible": true,
+  "network_or_image_library_required": false,
+  "geometry": [
+    {
+      "platform": "aro",
+      "name": "architecture-overview.svg",
+      "nodes": 9,
+      "issues": [],
+      "title": "Card Scout on ARO"
+    },
+    {
+      "platform": "aro",
+      "name": "card-scout-workflow.svg",
+      "nodes": 6,
+      "issues": [],
+      "title": "Card Scout: analyze, then verify"
+    },
+    {
+      "platform": "aro",
+      "name": "cicd-gitops.svg",
+      "nodes": 7,
+      "issues": [],
+      "title": "From prompt to a running application"
+    },
+    {
+      "platform": "aro",
+      "name": "maas-access.svg",
+      "nodes": 4,
+      "issues": [],
+      "title": "Two credentials, two trust boundaries"
+    },
+    {
+      "platform": "aro",
+      "name": "model-serving-architecture.svg",
+      "nodes": 3,
+      "issues": [],
+      "title": "Local image inference on one T4"
+    },
+    {
+      "platform": "aro",
+      "name": "rarity-decision.svg",
+      "nodes": 5,
+      "issues": [],
+      "title": "Read the mark, then map the rarity"
+    },
+    {
+      "platform": "aro",
+      "name": "the-bill-observability.svg",
+      "nodes": 6,
+      "issues": [],
+      "title": "Observe usage and explain behavior"
+    }
+  ],
+  "built_pages": [
+    {
+      "platform": "aro",
+      "page": "index.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "200-platform/lab_3_openshift_ai_overview.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "200-platform/lab_4_decision_model.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "200-platform/lab_5_agents_md.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "200-platform/lab_6_signal_desk.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "300-developer/lab_2_model_apis.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    },
+    {
+      "platform": "aro",
+      "page": "400-observability/lab_1_llm_metrics.html",
+      "diagrams": 1,
+      "loaded": true,
+      "full_size_links": true
+    }
+  ],
+  "desktop_mobile": true,
+  "full_size_links": true,
+  "browser_args": [
+    "--use-mock-keychain"
+  ],
+  "documentation_build": "make docs passed",
+  "diagram_sha256": {
+    "model-serving-architecture.svg": "996700b917d810ad54bd42f050a1f2721f527e3cef1b863f6e21e8c14241e2cb",
+    "architecture-overview.svg": "4401c477e1e36a6bf37fb1aca621ed39fac89513e216f22813f564a6ad11b80c",
+    "the-bill-observability.svg": "b4a75ccbf097e294f276f59649f7d380a92a9c7b7e53d6fbfd82653d4efc805c",
+    "cicd-gitops.svg": "a0e339f85f414b41ad512f1ec22beab81446fc21127b3165bf642442ee5d185f",
+    "maas-access.svg": "56b0207c6a70fb55f0c658bf95b63ebec854b9af232a375a214303ca284b5d38",
+    "rarity-decision.svg": "9efe633438baefbf872e3e3c95c24ebbf27c0f4818ab24f1246e5299befc0e30",
+    "card-scout-workflow.svg": "b7b0c60c9a96b999462ac042836c30d8f26745a604a06048bc5eee0b4ef31ae1"
+  }
+}

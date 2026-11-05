@@ -9,6 +9,8 @@ Observe two different model paths: DeepSeek consumes Foundry tokens through MaaS
 *Outcome:* Distinguish coding/runtime tokens, quota rejections, local scoring latency and GPU activity.
 ====
 
+image::the-bill-observability.svg["Metrics flow into OpenShift monitoring; model and tool spans flow into MLflow",align="center",link=self]
+
 == Create recognizable activity
 
 In the *Dev Spaces terminal*, make a short coding request:

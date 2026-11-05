@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="730" viewBox="0 0 1120 730" role="img" aria-labelledby="title desc">
+<title id="title">Two credentials, two trust boundaries</title><desc id="desc">Clients use MaaS credentials. Only the platform holds the Azure provider credential.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0,0 L 10,5 L 0,10 z" fill="#687683"/></marker><marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0,0 L 10,5 L 0,10 z" fill="#0066cc"/></marker></defs><style>text{font-family:Arial,Helvetica,sans-serif}svg{background:white}</style>
+<rect width="1120" height="730" rx="16" fill="white"/>
+<rect x="40" y="36" width="38" height="5" rx="2" fill="#ee0000"/>
+<text x="40" y="77" font-size="30" fill="#151515" font-weight="700" text-anchor="start" class="">Two credentials, two trust boundaries</text>
+<text x="40" y="108" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="">Clients use MaaS credentials. Only the platform holds the Azure provider credential.</text>
+<rect x="20" y="155" width="710" height="440" rx="12" fill="#f6f7f9" stroke="#d5dbe1" stroke-width="1.5"/>
+<text x="40" y="184" font-size="17" fill="#52606d" font-weight="600" text-anchor="start" class="">ARO cluster</text>
+<rect x="780" y="155" width="320" height="440" rx="12" fill="#f0f6fc" stroke="#d5dbe1" stroke-width="1.5" stroke-dasharray="7 5"/>
+<text x="800" y="184" font-size="17" fill="#0066cc" font-weight="600" text-anchor="start" class="">Azure Foundry</text>
+<g data-role="node" data-node="client">
+<rect x="55" y="230" width="255" height="150" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="56" y="248" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="75" y="282.5" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Model client</text>
+<text x="75" y="319.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">OpenCode / native agent</text>
+<text x="75" y="343.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Uses a MaaS key</text>
+</g>
+<g data-role="node" data-node="maas">
+<rect x="425" y="230" width="275" height="150" rx="12" fill="white" stroke="#ee0000" stroke-width="1.5"/>
+<rect x="426" y="248" width="4" height="25" rx="2" fill="#ee0000"/>
+<text x="445" y="282.5" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">OpenShift AI MaaS</text>
+<text x="445" y="319.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Authenticate + enforce</text>
+<text x="445" y="343.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">quota</text>
+</g>
+<g data-role="node" data-node="provider">
+<rect x="800" y="230" width="280" height="150" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="801" y="248" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="820" y="294.5" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">DeepSeek</text>
+<text x="820" y="331.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Managed Azure endpoint</text>
+</g>
+<path data-role="connector" data-source="client" data-target="maas" data-points="[[310, 305.0], [425, 305.0]]" d="M 310,305.0 L 425,305.0" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<g data-role="edge-label">
+<rect x="323.2" y="261" width="87.6" height="26" rx="5" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="367" y="280" font-size="17" fill="#687683" font-weight="400" text-anchor="middle" class="">MaaS key</text>
+</g>
+<path data-role="connector" data-source="maas" data-target="provider" data-points="[[700, 305.0], [800, 305.0]]" d="M 700,305.0 L 800,305.0" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<g data-role="edge-label">
+<rect x="701.85" y="261" width="96.3" height="26" rx="5" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="750" y="280" font-size="17" fill="#687683" font-weight="400" text-anchor="middle" class="">Azure key</text>
+</g>
+<g data-role="node" data-node="secret">
+<rect x="425" y="455" width="275" height="115" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="426" y="473" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="445" y="490.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Provider credential</text>
+<text x="445" y="527.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Cluster Secret</text>
+<text x="445" y="551.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Never sent to workspaces</text>
+</g>
+<path data-role="connector" data-source="secret" data-target="maas" data-points="[[562.5, 455], [562.5, 380]]" d="M 562.5,455 L 562.5,380" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<g data-role="edge-label">
+<rect x="598.6" y="403" width="52.8" height="26" rx="5" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="625" y="422" font-size="17" fill="#687683" font-weight="400" text-anchor="middle" class="">read</text>
+</g>
+<path d="M 40,674 H 1080" stroke="#d5dbe1"/>
+<text x="40" y="705" font-size="16" fill="#52606d" font-weight="400" text-anchor="start" class="">Coding and runtime callers have separate MaaS subscriptions and API keys.</text>
+</svg>
