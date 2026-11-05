@@ -107,8 +107,12 @@ Use the bastion's OpenShift 4.21+ CLI. `readiness.yaml` lists Deployments to obs
 ----
 oc wait --for=create -f deploy/operators/readiness.yaml --timeout=900s
 oc wait --for=condition=Available -f deploy/operators/readiness.yaml --timeout=900s
-oc apply -f deploy/operators/tekton-tasks.yaml
+oc wait --for=create tektonconfig/config --timeout=300s
+oc wait tektonconfig/config --for=condition=Ready --timeout=600s
+python3 scripts/install-pipeline-tasks.py
 ----
+
+The helper reuses the installed Red Hat `git-clone` and `buildah` task images and scripts. It adapts only the workspace mount and initial working directory for ARO user namespaces. The application pipeline passes `/source` as its build context. It does not need a privileged SCC.
 
 Do not continue after a timeout. Inspect Pending pods, quota and OLM conditions before creating platform instances.
 

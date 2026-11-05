@@ -38,29 +38,13 @@ The `#<template-url>` suffix tells Dev Spaces to clone the template and create a
 
 . Open that URL in your browser.
 
-== Get the OpenShift password from the bastion
+== Use the named workshop account
 
-The RHDP catalog password opens your assigned environment; it is not the OpenShift password. Use the ARO administrator credentials in the assignment’s access details. If you need to retrieve the password, run this in the *bastion terminal*, where Azure CLI is already authenticated:
-
-[source,sh,role=execute]
-----
-cd "$HOME/aro-ai-app-platform"
-source state/workshop.env
-az aro list-credentials --name "${ARO_CLUSTER_ID##*/}" \
-  --resource-group "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" \
-  --query kubeadminPassword -o tsv
-----
-
-This displays the password for the `kubeadmin` browser login. Keep it out of OpenCode and Git. The Azure credentials used by this command remain on the bastion.
-
-[TIP]
-====
-A facilitator can configure a named https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html-single/authentication_and_authorization/authentication_and_authorization[HTPasswd user] for the console and Dev Spaces. Browser authentication and deployment permissions are separate. The platform preparation step supplies namespaces, build permissions and a scoped CLI identity for the developer.
-====
+Choose the *workshop* identity provider and sign in as `workshop-admin` with the password created in Act 0. The RHDP catalog password is different. Keep the OpenShift password out of OpenCode and Git; the developer terminal receives its own scoped identity.
 
 == Log In and Create Your Workspace
 
-. You will be redirected to OpenShift SSO. Log in as `kubeadmin` with the ARO password, or use the named workshop user prepared by your facilitator. An administrative certificate login shown as `system:admin` by the bastion’s `oc whoami` is not a browser username.
+. You will be redirected to OpenShift SSO. Choose *workshop* and log in as `workshop-admin`.
 
 . On first access, click *Log in with OpenShift* if prompted, then *Allow selected permissions* for the Dev Spaces client. The redirect should return to your lab's Dev Spaces address.
 

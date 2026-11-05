@@ -34,16 +34,6 @@ RESP="$(mint_key)"
 HTTP_CODE="$(echo "${RESP}" | tail -n1)"
 BODY="$(echo "${RESP}" | sed '$d')"
 
-# 503 / WASM AUTH_FAILURE: Kuadrant started before EnvoyFilter CRDs existed.
-if [[ "${HTTP_CODE}" == "503" || "${HTTP_CODE}" == "000" ]]; then
-  echo "Mint HTTP ${HTTP_CODE} — recycling Kuadrant after Gateway API CRDs..." >&2
-  bash "${SCRIPT_DIR}/../instances/configure-kuadrant-gateway.sh"
-  sleep 8
-  RESP="$(mint_key)"
-  HTTP_CODE="$(echo "${RESP}" | tail -n1)"
-  BODY="$(echo "${RESP}" | sed '$d')"
-fi
-
 if [[ "${HTTP_CODE}" != "200" && "${HTTP_CODE}" != "201" ]]; then
   echo "Failed to mint API key (HTTP ${HTTP_CODE}):" >&2
   exit 1

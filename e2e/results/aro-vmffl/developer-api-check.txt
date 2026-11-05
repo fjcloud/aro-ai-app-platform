@@ -1,0 +1,16 @@
+PASS: E2E_NS and DEV_POD identify a real Dev Spaces workspace
+PASS: D3 inference service is Ready
+PASS: Decision model API has no public Route
+PASS: Developer cannot get secrets in the model namespace
+PASS: Developer cannot patch inferenceservices in the model namespace
+PASS: Select the four developer API blocks, excluding optional bastion key renewal
+PASS: Model discovery, two card decisions, Chat Completions and Responses returned JSON
+PASS: Developer reaches the actual T4 model directly without a credential
+PASS: D3 recognizes the Pokemon image
+PASS: D3 reads the Charizard rarity star
+PASS: D3 recognizes the Basic Energy card and its absent rarity mark
+PASS: Developer MaaS key reaches DeepSeek with real token usage
+PASS: Native OpenShift AI Responses completed from Dev Spaces
+PASS: Native agent actually executed the card price tool
+PASS: Tool evidence verifies the requested catalogue reference and dated source
+API checks completed without printing credentials or model responses.

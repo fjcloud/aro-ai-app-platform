@@ -31,7 +31,7 @@ data:
           "url": "https://opencode.ai",
           "binary": "opencode",
           "pattern": "init",
-          "injectorImage": "quay.io/che-incubator/dashboard-ai/opencode:next",
+          "injectorImage": "quay.io/che-incubator/dashboard-ai/opencode@sha256:11be643a79b29935ca0b7a8835201fce165dbe6aca646cec8dd05c742d43ee5b",
           "envVarName": "OPENAI_API_KEY",
           "arch": ["amd64", "arm64"]
         }

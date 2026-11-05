@@ -22,6 +22,8 @@ git pull --ff-only
 MAAS_URL="https://maas.$(oc get ingress.config.openshift.io cluster -o jsonpath='{.spec.domain}')/v1"
 oc create configmap card-scout-agent-endpoint -n card-scout-dev \
   --from-literal=MAAS_URL="$MAAS_URL" --dry-run=client -o yaml | oc apply -f -
+oc wait --for=create configmap/odh-trusted-ca-bundle -n card-scout-dev --timeout=180s
+oc label configmap odh-trusted-ca-bundle -n card-scout-dev ogx.io/watch=true --overwrite
 oc apply -k deploy/card-scout/agent
 oc wait ogxserver/lsd-genai-playground -n card-scout-dev \
   --for=jsonpath='{.status.phase}'=Ready --timeout=600s
@@ -34,7 +36,7 @@ oc get mlflow mlflow -o json | jq '{conditions:.status.conditions,url:.status.ur
 
 Continue only when the backend is Ready in `card-scout-dev`. A Playground created in another project does not provide the application endpoint. The first Red Hat image pull can take several minutes; inspect `oc describe ogxserver lsd-genai-playground -n card-scout-dev` and pod events if a wait times out.
 
-The bundled configuration uses local SQLite/FAISS storage; Playground session history is temporary. Card Scout stores analysis and research results in a separate persistent volume. OpenShift AI's Playground is used later to test the prepared agent, not to provision it.
+The operator manages a 1 GiB persistent volume for the bundled SQLite/FAISS storage. The built-in Responses provider requires the vector storage providers at startup, so they remain in the configuration even though Card Scout does not use document retrieval. The agent trusts the OpenShift AI CA bundle and verifies the MaaS HTTPS certificate; no custom startup command or TLS bypass is needed. Card Scout stores analysis and research results in a separate persistent volume. OpenShift AI's Playground is used later to test the prepared agent, not to provision it.
 
 The runtime application calls:
 

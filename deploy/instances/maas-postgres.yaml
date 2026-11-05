@@ -1,23 +1,4 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: redhat-ai-gateway-infra
-  labels:
-    app.kubernetes.io/part-of: maas
-    maas.opendatahub.io/gateway-access: "true"
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: postgres-creds
-  namespace: redhat-ai-gateway-infra
-type: Opaque
-stringData:
-  POSTGRESQL_USER: maas
-  POSTGRESQL_PASSWORD: MaasWorkshopDb16
-  POSTGRESQL_DATABASE: maas
----
-# Workshop/POC Postgres for MaaS API keys. Use an external database in production.
+# Single-instance workshop PostgreSQL. Persist keys across pod replacement.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,6 +8,8 @@ metadata:
     app: postgres
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: postgres
@@ -61,7 +44,8 @@ spec:
               mountPath: /var/lib/pgsql/data
       volumes:
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: maas-postgres-data
 ---
 apiVersion: v1
 kind: Service
@@ -77,10 +61,12 @@ spec:
       targetPort: 5432
 ---
 apiVersion: v1
-kind: Secret
+kind: PersistentVolumeClaim
 metadata:
-  name: maas-db-config
+  name: maas-postgres-data
   namespace: redhat-ai-gateway-infra
-type: Opaque
-stringData:
-  DB_CONNECTION_URL: postgresql://maas:MaasWorkshopDb16@postgres.redhat-ai-gateway-infra.svc.cluster.local:5432/maas?sslmode=disable
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi

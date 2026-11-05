@@ -8,12 +8,6 @@ spec:
     cheServer:
       debug: false
       logLevel: INFO
-      deployment:
-        tolerations:
-          - key: nvidia.com/gpu
-            operator: Equal
-            value: present
-            effect: NoSchedule
     dashboard:
       logLevel: ERROR
     devWorkspace: {}
@@ -26,19 +20,6 @@ spec:
     pluginRegistry: {}
   containerRegistry: {}
   devEnvironments:
-    containerBuildConfiguration:
-      openShiftSecurityContextConstraint: container-build
-    containerRunConfiguration:
-      containerSecurityContext:
-        allowPrivilegeEscalation: true
-        capabilities:
-          add:
-            - SETGID
-            - SETUID
-        procMount: Unmasked
-      openShiftSecurityContextConstraint: container-run
-      workspacesPodAnnotations:
-        io.kubernetes.cri-o.Devices: /dev/fuse,/dev/net/tun
     defaultNamespace:
       autoProvision: true
       template: <username>-devspaces
@@ -56,12 +37,6 @@ spec:
   networking:
     auth:
       gateway:
-        deployment:
-          tolerations:
-            - key: nvidia.com/gpu
-              operator: Equal
-              value: present
-              effect: NoSchedule
         configLabels:
           app: che
           component: che-gateway-config

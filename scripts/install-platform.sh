@@ -3,10 +3,16 @@
 set -euo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$ROOT"
+oc apply -f deploy/instances/gatewayclass.yaml
+oc wait --for=create crd/envoyfilters.networking.istio.io --timeout=300s
+oc wait crd/envoyfilters.networking.istio.io --for=condition=Established --timeout=60s
 oc apply -k deploy/operators
 bash scripts/wait-for-platform.sh
-oc apply -f deploy/operators/tekton-tasks.yaml
+oc wait --for=create tektonconfig/config --timeout=300s
+oc wait tektonconfig/config --for=condition=Ready --timeout=600s
+python3 scripts/install-pipeline-tasks.py
 # The database must be available before the MaaS component starts.
+bash deploy/instances/configure-maas-database.sh
 oc apply -f deploy/instances/maas-postgres.yaml
 oc rollout status deployment/postgres -n redhat-ai-gateway-infra --timeout=300s
 oc apply -k deploy/instances

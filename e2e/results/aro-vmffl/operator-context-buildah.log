@@ -1,0 +1,29 @@
+STEP 1/4: FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
+Trying to pull registry.access.redhat.com/ubi9/ubi-minimal:latest...
+Getting image source signatures
+Checking if image destination supports signatures
+Copying blob sha256:32b344ffa7c9dd8da7d1cfc046e3d302ca99a3db1387bb8137f797a9a3a080c7
+Copying config sha256:f1ab2326c7873451c046c5740eafac56ab1906d6d81c1755a87b2c12ba9b2a80
+Writing manifest to image destination
+Storing signatures
+STEP 2/4: COPY README.md /README.md
+STEP 3/4: USER 1001
+STEP 4/4: CMD ["/usr/bin/cat", "/README.md"]
+COMMIT image-registry.openshift-image-registry.svc:5000/card-scout-build/stock-task-probe:validated
+Getting image source signatures
+Copying blob sha256:95ac3d364b0e62cb9ad4814c0a58aa29f116fa6c74368b405bc50813123d6595
+Copying blob sha256:d28b20a4e315cfd2988a20f3e0f2ed329d8ef86d66aed2fe5a27d3594358e4c8
+Copying config sha256:a7c2be271040a1cecac1f9e038c43dcacbb73f64972c4dc2973fd5c6eef7fe82
+Writing manifest to image destination
+--> a7c2be271040
+Successfully tagged image-registry.openshift-image-registry.svc:5000/card-scout-build/stock-task-probe:validated
+a7c2be271040a1cecac1f9e038c43dcacbb73f64972c4dc2973fd5c6eef7fe82
+---> Phase: Pushing 'image-registry.openshift-image-registry.svc:5000/card-scout-build/stock-task-probe:validated' to the container registry...
+Getting image source signatures
+Copying blob sha256:d28b20a4e315cfd2988a20f3e0f2ed329d8ef86d66aed2fe5a27d3594358e4c8
+Copying blob sha256:95ac3d364b0e62cb9ad4814c0a58aa29f116fa6c74368b405bc50813123d6595
+Copying config sha256:a7c2be271040a1cecac1f9e038c43dcacbb73f64972c4dc2973fd5c6eef7fe82
+Writing manifest to image destination
+---> Phase: Inspecting digest report ('/tmp/buildah-digest.txt')...
+---> Phase: Successfuly built container image 'image-registry.openshift-image-registry.svc:5000/card-scout-build/stock-task-probe:validated' ('sha256:8ea2c7332b495d1c09b28c0e2a2f4b2b0148a19ef7223189f5f377668929a0ab')...
+image-registry.openshift-image-registry.svc:5000/card-scout-build/stock-task-probe:validatedsha256:8ea2c7332b495d1c09b28c0e2a2f4b2b0148a19ef7223189f5f377668929a0ab

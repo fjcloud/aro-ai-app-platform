@@ -6,10 +6,15 @@
 [source,sh,role=execute]
 ----
 cd "$HOME/aro-ai-app-platform"
+oc apply -f deploy/instances/gatewayclass.yaml
+oc wait --for=create crd/envoyfilters.networking.istio.io --timeout=300s
+oc wait crd/envoyfilters.networking.istio.io --for=condition=Established --timeout=60s
 oc apply -k deploy/operators
 oc get subscriptions -A
 oc get csv -A
 ----
+
+The GatewayClass starts the OpenShift Gateway API controller first. Waiting for its Istio CRDs before installing Connectivity Link lets Kuadrant discover them on its initial startup.
 
 The manifests install OpenShift AI, Dev Spaces, Pipelines, GitOps, Connectivity Link, cert-manager, LeaderWorkerSet, Node Feature Discovery, NVIDIA GPU Operator, Cluster Observability and OpenTelemetry. OpenShift AI manages the additional MLflow and TrustyAI operators when its components are enabled in Lab 1.3.
 

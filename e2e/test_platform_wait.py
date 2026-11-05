@@ -11,7 +11,8 @@ FAKE_OC = '''#!/usr/bin/env python3
 import json,os,sys
 with open(os.environ['CALL_LOG'],'a') as f:f.write(json.dumps(sys.argv[1:])+'\\n')
 a=[x for x in sys.argv[1:] if not x.startswith('--request-timeout=')]
-if a[:3]==['apply','-k','deploy/operators']:sys.exit(0)
+if a in (['apply','-k','deploy/operators'], ['apply','-f','deploy/instances/gatewayclass.yaml']):sys.exit(0)
+if a[0]=='wait' and 'crd/envoyfilters.networking.istio.io' in a:sys.exit(0)
 if a[0]=='get' and a[1].startswith('deployment/'):
     sys.exit(1 if os.environ['MODE']=='missing' else 0)
 if a[0]=='get' and a[1]=='subscriptions':sys.exit(0)
@@ -33,7 +34,7 @@ class PlatformWait(unittest.TestCase):
                                       text=True,capture_output=True,timeout=12)
                 self.assertNotEqual(result.returncode,0)
                 calls=[json.loads(x) for x in log.read_text().splitlines()]
-                self.assertEqual([a for a in calls if a[0]=='apply'],[['apply','-k','deploy/operators']])
+                self.assertEqual([a for a in calls if a[0]=='apply'],[['apply','-f','deploy/instances/gatewayclass.yaml'],['apply','-k','deploy/operators']])
                 self.assertFalse(any('scale' in a or 'delete' in a for a in calls))
                 if mode=='missing':self.assertIn('was not created within 1 seconds',result.stderr)
 
@@ -62,7 +63,9 @@ if not pathlib.Path(os.environ['COUNTER']).exists() or int(pathlib.Path(os.envir
             calls=[json.loads(x) for x in log.read_text().splitlines()]
             self.assertEqual(calls[:2],[['get','deployment/authorino','-n','kuadrant-system']]*2)
             self.assertTrue(any('set' in c and 'env' in c for c in calls))
-            patch=next(json.loads(c[c.index('-p')+1]) for c in calls if c[:2]==['patch','authorino'])
+            patches=[json.loads(c[c.index('-p')+1]) for c in calls if c[:2]==['patch','authorino']]
+            patch=next(p for p in patches if 'volumes' in p['spec'])
+            self.assertTrue(any(p.get('spec',{}).get('listener',{}).get('tls',{}).get('enabled') for p in patches))
             volumes=patch['spec']['volumes']['items']
             self.assertEqual({v['name'] for v in volumes},{'existing','workshop-service-ca'})
             self.assertNotIn('listener',patch['spec'])
