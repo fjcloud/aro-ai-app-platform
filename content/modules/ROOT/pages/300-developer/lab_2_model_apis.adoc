@@ -25,7 +25,7 @@ image::rarity-decision.svg["Card-kind eligibility and the bottom-right rarity sy
 [source,sh,role=execute]
 ----
 D3_URL=http://d3-mini.decision-serving.svc.cluster.local:8080
-CARD_SCOUT_URL=http://card-scout-platform.signal-desk-dev.svc.cluster.local:8080
+CARD_SCOUT_URL=http://card-scout-platform.card-scout-dev.svc.cluster.local:8080
 curl --fail-with-body -sS "$D3_URL/v1/models" | \
   jq '{id:.data[0].id,device:.data[0].device,dtype:.data[0].dtype}'
 curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-104" -o /tmp/card-scout.png
@@ -121,7 +121,7 @@ jq -n --arg mcp "$CARD_SCOUT_URL/mcp" '{
   tool_choice:{type:"mcp",server_label:"card_scout_market",name:"get_card_market_data"},
   max_infer_iters:4,reasoning:{effort:"none"},store:false
 }' > /tmp/card-scout-agent.json
-curl --fail-with-body -sS --max-time 180   http://lsd-genai-playground-service.signal-desk-dev.svc.cluster.local:8321/v1/responses \
+curl --fail-with-body -sS --max-time 180   http://lsd-genai-playground-service.card-scout-dev.svc.cluster.local:8321/v1/responses \
   -H "X-OGX-Provider-Data: $PROVIDER_DATA" -H 'Content-Type: application/json' \
   --data-binary @/tmp/card-scout-agent.json | jq '{status,output,usage}'
 unset PROVIDER_DATA

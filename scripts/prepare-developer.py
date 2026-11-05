@@ -101,7 +101,7 @@ def prepare(app):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--app-name', default='signal-desk')
+    parser.add_argument('--app-name', default='card-scout')
     args = parser.parse_args()
     try:
         prepare(args.app_name)

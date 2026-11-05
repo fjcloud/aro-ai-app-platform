@@ -11,7 +11,7 @@ spec = importlib.util.spec_from_file_location('platform', ROOT / 'scripts/prepar
 platform = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(platform)
 oc, get, apply = platform.oc, platform.get, platform.apply
-APP, BUILD, IDENTITY = platform.APP, platform.BUILD, 'signal-desk'
+APP, BUILD, IDENTITY = 'signal-desk-dev', 'signal-desk-build', 'signal-desk'
 
 
 def request(url, token, body=None, workspace=None):

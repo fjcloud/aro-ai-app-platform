@@ -2,7 +2,7 @@
 
 DeepSeek-V4 Pro is already answering. Prepare the scoped developer access and project runbook for the developer in Act 2.
 
-The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-signal-desk[fjcloud/go-app-template].
+The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-card-scout[fjcloud/go-app-template].
 
 [NOTE]
 ====
@@ -41,8 +41,8 @@ Run from the bastion before opening Dev Spaces:
 [source,sh,role=execute]
 ----
 python3 scripts/prepare-developer.py
-oc auth can-i create pipelineruns -n signal-desk-build \
-  --as=system:serviceaccount:signal-desk-dev:workshop-developer
+oc auth can-i create pipelineruns -n card-scout-build \
+  --as=system:serviceaccount:card-scout-dev:workshop-developer
 ----
 
 The developer can build and deploy in the two application namespaces. They cannot create namespaces, change SCCs or create cluster-wide bindings. Image-pull permission is prepared here, not by the model. The Pipelines operator supplies its standard, non-privileged build service account permissions.
@@ -55,10 +55,10 @@ Clone only if you want it on disk. On a shared workshop cluster you can also ope
 
 [source,sh,role=execute]
 ----
-git clone --depth 1 --branch aro-signal-desk https://github.com/fjcloud/go-app-template "$HOME/signal-desk-template"
-wc -l "$HOME/signal-desk-template/AGENTS.md"
-cat "$HOME/signal-desk-template/AGENTS.md"
-cat "$HOME/signal-desk-template/APP_CONTRACT.md"
+git clone --depth 1 --branch aro-card-scout https://github.com/fjcloud/go-app-template "$HOME/card-scout-template"
+wc -l "$HOME/card-scout-template/AGENTS.md"
+cat "$HOME/card-scout-template/AGENTS.md"
+cat "$HOME/card-scout-template/APP_CONTRACT.md"
 ----
 
 Focus on these sections:

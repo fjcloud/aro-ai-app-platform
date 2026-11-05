@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "browser_args": [
+    "--use-mock-keychain"
+  ],
+  "pages": [
+    {
+      "page": "index.html",
+      "images_loaded": true,
+      "card_scout_names": true
+    },
+    {
+      "page": "200-platform/lab_5_agents_md.html",
+      "images_loaded": true,
+      "card_scout_names": true
+    },
+    {
+      "page": "200-platform/lab_6_card_scout.html",
+      "images_loaded": true,
+      "card_scout_names": true
+    },
+    {
+      "page": "300-developer/lab_1_devspace_launch.html",
+      "images_loaded": true,
+      "card_scout_names": true
+    },
+    {
+      "page": "300-developer/lab_2_model_apis.html",
+      "images_loaded": true,
+      "card_scout_names": true
+    },
+    {
+      "page": "300-developer/lab_3_opencode_dev.html",
+      "images_loaded": true,
+      "card_scout_names": true
+    },
+    {
+      "page": "400-observability/lab_1_llm_metrics.html",
+      "images_loaded": true,
+      "card_scout_names": true
+    },
+    {
+      "page": "400-observability/lab_2_agentops.html",
+      "images_loaded": true,
+      "card_scout_names": true
+    },
+    {
+      "old_lab_url_redirect": true
+    }
+  ]
+}

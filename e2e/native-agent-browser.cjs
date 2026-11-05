@@ -4,7 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 (async()=>{
  const base=process.env.RHOAI_URL?.replace(/\/$/,''),state=process.env.BROWSER_STATE;
  assert.ok(base&&state,'Set RHOAI_URL and a private BROWSER_STATE file');
- const namespace=process.env.APP_NAMESPACE||'signal-desk-dev';
+ const namespace=process.env.APP_NAMESPACE||'card-scout-dev';
  const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});
  try{
   const context=await browser.newContext({storageState:state,viewport:{width:1440,height:1000}});
