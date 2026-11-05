@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "trace_id": "tr-821e76dc7f90091f0dc48141c6e6af80",
+  "trace_url": "https://rh-ai.apps.h02mzao2.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-821e76dc7f90091f0dc48141c6e6af80&workspace=card-scout-dev",
+  "verified_graph_spans": [
+    "card.research",
+    "agent.responses",
+    "tool.get_card_market_data"
+  ],
+  "source_url": "https://api.tcgdex.net/v2/en/cards/base1-7"
+}
