@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-05",
+  "template_revision": "9f5f0b871f9ffe9ba28db70daf66342df9d91926",
+  "model": "deepseek/deepseekv4pro",
+  "prompt_count": 1,
+  "external_code_feedback_messages": 0,
+  "first_draft_passed": false,
+  "acceptance_pass_counts": [
+    0,
+    2,
+    3,
+    4
+  ],
+  "test_count": 4,
+  "test_driven_correction_rounds": 3,
+  "prepared_files_integrity": {
+    "changed_prepared_files": [],
+    "checked": 28
+  },
+  "generated_files": [
+    "Dockerfile",
+    "go.mod",
+    "index.html",
+    "main.go"
+  ],
+  "application_revision": "63bbfd977f18dbcacea7a0d3307930e38002af57",
+  "pipeline": "build-app-ndwh8",
+  "image_digest": "sha256:3e8c8f8f123ddf6887ce1d57bfdb24233647899ce0cdf23f49ac08a0be595ddd",
+  "app_url": "https://card-scout-card-scout-dev.apps.o578n620.eastus.aroapp.io",
+  "independent_tests_passed": true,
+  "live_platform_cards": 105,
+  "scope": "Fresh template workspace on the already prepared ARO lab; one prompt, automatic corrections, not first-draft success."
+}

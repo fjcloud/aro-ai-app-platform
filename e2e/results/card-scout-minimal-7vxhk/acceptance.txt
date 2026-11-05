@@ -1,0 +1,43 @@
+
+> test
+> node --test tests/app.test.cjs
+
+TAP version 13
+# Subtest: real Go server: health, fixed routes, complete images and upstream errors
+ok 1 - real Go server: health, fixed routes, complete images and upstream errors
+  ---
+  duration_ms: 155.086833
+  type: 'test'
+  ...
+# Subtest: load → analyze → price, reload and full cards on mobile
+ok 2 - load → analyze → price, reload and full cards on mobile
+  ---
+  duration_ms: 2652.807708
+  type: 'test'
+  ...
+# Subtest: two initial load failures can be retried without losing the page
+ok 3 - two initial load failures can be retried without losing the page
+  ---
+  duration_ms: 380.064546
+  type: 'test'
+  ...
+# Subtest: price failure keeps the card; Retry handles unavailable prices and unsafe links
+ok 4 - price failure keeps the card; Retry handles unavailable prices and unsafe links
+  ---
+  duration_ms: 534.930176
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5538.197159
+
+> test:live
+> node tests/live.cjs
+
+{"passed":true,"scope":"real platform and deployed app","completed":105,"card":"Clefairy Doll","trace_url":"https://rh-ai.apps.o578n620.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-00b1eec9eda2432ef679fbb7f650bb95&workspace=card-scout-dev"}

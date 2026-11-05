@@ -1,3 +1,4 @@
+// Historical paginated UI checks. The minimal contract uses the template acceptance tests.
 const {expect}=require('@playwright/test');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 module.exports=async function runFixtures(browser,base,batch,dir,outputName='app-fixtures.json'){

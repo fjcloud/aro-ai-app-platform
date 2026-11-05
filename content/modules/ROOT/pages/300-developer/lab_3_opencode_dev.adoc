@@ -28,32 +28,25 @@ opencode
 Expect both permissions to be `yes`. OpenCode reads `AGENTS.md`. Use kbd:[Tab]
 to switch between plan and build modes; `/exit` returns to the shell.
 
-== Step 2: Plan
+== Step 2: Generate, test and ship
 
-In *plan* mode, paste:
-
-[source,text,role=execute]
-----
-Build Card Scout from scratch in Go using APP_CONTRACT.md and AGENTS.md. Keep the prepared delivery scaffold and technical app name card-scout. Use only the prepared CARD_SCOUT_URL API from the Go backend. Plan a simple responsive card grid with Analyze batch, rarity filters, Check price, dated source evidence and MLflow trace links. Do not fetch or copy an existing app, implement model orchestration, add credentials, or change privileges.
-----
-
-The plan should contain a small standard-library Go server and embedded UI.
-It should not contain a new model client, MCP server, database or price scraper.
-
-== Step 3: Build and deploy
-
-Switch to *build*:
+Use *build* mode and paste this single prompt:
 
 [source,text,role=execute]
 ----
-Implement the plan from scratch and deploy using AGENTS.md. Preserve the scaffold, exact internal registry image, restricted-v2 and HTTPS Route. Test proxy errors, images and fixed-route validation; run go test -race ./..., go vet ./... and a local build. Commit and push all generated application source. Wait for Tekton success, the pushed image, matching Argo CD Git revision and running image digest. Print the app and Argo CD URLs. Never print credentials or fetch reference app code.
+Build and deploy the minimal Card Scout app from scratch using APP_CONTRACT.md and AGENTS.md. Keep the prepared tests and scaffold unchanged. Run the provided acceptance tests, fix the app until they pass, ship using DELIVERY.md, and run the live test. Do not read or copy other application source. Finish with the actual test results, app URL, deployed Git revision and image digest.
 ----
+
+OpenCode runs the fixed acceptance tests and uses their failures to correct the
+application. A passing local test is followed by real delivery and the live check.
+If access or tooling is unavailable, it must report the blocker instead of
+changing permissions or weakening the tests.
 
 Keep `image-registry.openshift-image-registry.svc:5000/card-scout-build/card-scout:latest`
 with `imagePullPolicy: Always`. A local build or an older healthy revision is not
 a successful deployment. The app has no model key or Kubernetes token.
 
-== Step 4: Analyze a collection
+== Step 3: Analyze a collection
 
 Open the public HTTPS app Route.
 
@@ -66,11 +59,10 @@ Open the public HTTPS app Route.
 . Check that every card is shown in full, including its borders, edition stamp
   and rarity symbol, on desktop and mobile. Images must retain their portrait
   proportions without cropping.
-. Compare *Rare*, *Needs review* and *Other*. The three controls should appear under *Other* with no Pokémon price action.
-  A model can still make mistakes; uncertainty stays visible.
+. The grid follows the API ranking. Non-Pokémon controls must not offer a Pokémon price action. A model can still make mistakes.
 . Click *Check price* on a Pokémon card. The native OpenShift AI agent calls the
   prepared MCP tool and verifies the dataset's exact catalogue reference.
-. Read the catalogue rarity, Cardmarket EUR trend and 7-day average. Compare
+. Read the catalogue rarity, Cardmarket EUR trend. Compare
   provider dates and follow *Source*. Missing prices must show *Unavailable*.
 . Open *View MLflow trace* and inspect the model and actual tool call.
 
@@ -79,18 +71,19 @@ prices. A rare card is not necessarily valuable. The source data concerns known
 catalogue references; this exercise does not authenticate a physical card or
 recognize arbitrary uploaded editions.
 
-Review the generated UI against the contract before continuing: full cards on mobile,
-working retries, a selected card that stays visible on errors, and HTTPS-only source
-and trace links. If a check fails, describe it to OpenCode and ask it to fix, test and
-ship the correction through the same pipeline. Generated code still needs review.
+The template provides acceptance tests before generation. `npm test` checks the
+actual Go server and UI against local fixture responses, including errors and retries.
+`test:live` checks the delivered app against the real platform. OpenCode must run
+both and fix application failures without changing the tests. No filters,
+pagination or saved preferences are required for this minimal app.
 
-== Step 5: Ship a small change
+== Step 4: Ship a small change
 
 Ask OpenCode, in *build* mode:
 
 [source,text,role=execute]
 ----
-Remember the selected card filter in localStorage and restore it on reload. Keep filtering before pagination, the matching count, progress, price evidence and trace links. Add a useful empty state. Test, commit and push, then rebuild and deploy using AGENTS.md. Verify the exact new Git revision and running image digest.
+Add the sentence "Rarity is not market value." below the page title. Keep the existing behavior and test hooks. Run npm test, commit and push, then rebuild and deploy using DELIVERY.md. Run the live test and verify the exact new Git revision and running image digest.
 ----
 
 Verify the new UI on the Route. In the Dev Spaces terminal:
