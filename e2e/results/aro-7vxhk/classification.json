@@ -1,0 +1,71 @@
+{
+  "total": 105,
+  "correct_kind": 104,
+  "exact_kind_and_rarity": 97,
+  "rarity_counts": {
+    "rare_or_higher": 32,
+    "uncommon": 25,
+    "common": 44,
+    "not_applicable": 4
+  },
+  "needs_review": 0,
+  "differences": [
+    {
+      "id": "item-134",
+      "predicted_kind": "pokemon_tcg",
+      "expected_kind": "pokemon_tcg",
+      "predicted_rarity": "common",
+      "expected_rarity": "uncommon"
+    },
+    {
+      "id": "item-139",
+      "predicted_kind": "pokemon_tcg",
+      "expected_kind": "pokemon_tcg",
+      "predicted_rarity": "common",
+      "expected_rarity": "uncommon"
+    },
+    {
+      "id": "item-127",
+      "predicted_kind": "pokemon_tcg",
+      "expected_kind": "pokemon_tcg",
+      "predicted_rarity": "common",
+      "expected_rarity": "uncommon"
+    },
+    {
+      "id": "item-133",
+      "predicted_kind": "pokemon_tcg",
+      "expected_kind": "pokemon_tcg",
+      "predicted_rarity": "common",
+      "expected_rarity": "uncommon"
+    },
+    {
+      "id": "item-132",
+      "predicted_kind": "pokemon_tcg",
+      "expected_kind": "pokemon_tcg",
+      "predicted_rarity": "common",
+      "expected_rarity": "uncommon"
+    },
+    {
+      "id": "item-130",
+      "predicted_kind": "pokemon_tcg",
+      "expected_kind": "pokemon_tcg",
+      "predicted_rarity": "common",
+      "expected_rarity": "uncommon"
+    },
+    {
+      "id": "item-131",
+      "predicted_kind": "pokemon_tcg",
+      "expected_kind": "pokemon_tcg",
+      "predicted_rarity": "common",
+      "expected_rarity": "uncommon"
+    },
+    {
+      "id": "item-199",
+      "predicted_kind": "other_card",
+      "expected_kind": "pokemon_tcg",
+      "predicted_rarity": "not_applicable",
+      "expected_rarity": "common"
+    }
+  ],
+  "scope": "Curated Base Set collection and three controls; labels held out from inference"
+}

@@ -1,0 +1,34 @@
+{
+  "synthetic_fixtures": true,
+  "simulated_timeout_clock": true,
+  "results": [
+    {
+      "name": "repeated initial failures remain retryable and recover",
+      "passed": true
+    },
+    {
+      "name": "unsafe protocols rejected; zero/null/HTML remain distinct",
+      "passed": true
+    },
+    {
+      "name": "price error preserves selection and retries successfully",
+      "passed": true
+    },
+    {
+      "name": "refresh error survives filtering and recovers",
+      "passed": true
+    },
+    {
+      "name": "research timeout recovers after 210 seconds of simulated browser time",
+      "passed": true
+    },
+    {
+      "name": "card images use only fixed same-origin assets",
+      "passed": true
+    },
+    {
+      "name": "HTTPS links cannot inject HTML attributes",
+      "passed": true
+    }
+  ]
+}

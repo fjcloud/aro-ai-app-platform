@@ -15,6 +15,7 @@ resources:
   - nvidia-subscription.yaml
   # OpenShift Dev Spaces
   - devspaces-subscription.yaml
+  - image-puller-subscription.yaml
   # OpenShift GitOps (Argo CD)
   - gitops-namespace.yaml
   - gitops-operatorgroup.yaml

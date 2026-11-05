@@ -102,4 +102,24 @@ oc wait nodes -l node.kubernetes.io/instance-type=Standard_NC8as_T4_v3 \
 
 The cluster now has an IDE, delivery operators, the model platform and one allocatable GPU. Stop after any readiness failure; inspect Pending pods, operator conditions and capacity. No model is deployed yet.
 
+== Cache the workspace images
+
+Start the documented https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html-single/administration_guide/index#caching-images-for-faster-workspace-start[Kubernetes Image Puller] now. It downloads the developer, editor and OpenCode images on CPU workers while you prepare the models. Lab 1.1 installs its operator. Read the editor image from the installed Dev Spaces version rather than maintaining another image version.
+
+[source,sh,role=execute]
+----
+EDITOR_IMAGE=$(oc exec -n openshift-operators deployment/devspaces-operator -- \
+  cat /tmp/external_images.txt | sed -n '\|/code-rhel9@|{p;q;}')
+OPENCODE_IMAGE=$(oc get configmap ai-tool-registry -n openshift-operators -o json | \
+  jq -er '.data["registry.json"] | fromjson | .tools[] | select(.providerId=="opencodeai/opencode") | .injectorImage')
+test -n "$EDITOR_IMAGE" && test -n "$OPENCODE_IMAGE"
+oc patch checluster devspaces -n openshift-operators --type=merge -p \
+  "$(jq -cn --arg images "dev=quay.io/devfile/universal-developer-image:latest;editor=${EDITOR_IMAGE};opencode=${OPENCODE_IMAGE}" \
+    '{spec:{components:{imagePuller:{enable:true,spec:{images:$images}}}}}')"
+oc wait --for=create daemonset/kubernetes-image-puller -n openshift-operators --timeout=180s
+oc get daemonset kubernetes-image-puller -n openshift-operators
+----
+
+The first download still takes time; it happens before the developer starts. The GPU taint keeps this cache on CPU workers. Leave it running and continue with Foundry.
+
 Continue to xref:200-platform/lab_2_foundry.adoc[Lab 1.4 — Deploy DeepSeek on Foundry].

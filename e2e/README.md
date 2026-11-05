@@ -103,3 +103,9 @@ live/fixture browser checks. It was not a one-shot generation success.
 
 The [Flash regeneration](results/card-scout-flash-vmffl/README.md) records a fresh
 frontend replacement using V4.1 Flash, its required corrections and final checks.
+
+The [7vxhk participant run](results/aro-7vxhk/README.md) covers a fresh cluster,
+Acts 0–3, DeepSeek Pro generation and three actual deliveries, API/browser/trace
+checks, model errors, workspace startup measurements and a real Git push after
+restart. It records the fresh-workspace injector fix, image caching and persistent
+Git helper, plus portable browser checks for that generated implementation.

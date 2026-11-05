@@ -1,0 +1,35 @@
+{
+  "changed_files": [
+    "AGENTS.md",
+    "Dockerfile",
+    "go.mod",
+    "main.go",
+    "proxy.go",
+    "proxy_test.go",
+    "ui/index.html"
+  ],
+  "local_helper_persisted": true,
+  "local_use_http_path": true,
+  "go_checks": [
+    {
+      "command": "CGO_ENABLED=0 go build -buildvcs=false -o /dev/null . 2>&1",
+      "status": "completed",
+      "metadata_exit": 0,
+      "failed": false
+    },
+    {
+      "command": "CGO_ENABLED=1 go test -race ./... -v 2>&1",
+      "status": "completed",
+      "metadata_exit": 0,
+      "failed": false
+    },
+    {
+      "command": "go vet ./... 2>&1",
+      "status": "completed",
+      "metadata_exit": 0,
+      "failed": false
+    }
+  ],
+  "gitpop_reinitialized_after_final_restart": false,
+  "network_source_fetch_review": "No completed app source fetched; generated files created in fresh template checkout."
+}

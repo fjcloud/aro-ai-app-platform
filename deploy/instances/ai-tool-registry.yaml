@@ -1,6 +1,9 @@
 # Dev Spaces 3.29+ Technology Preview: AI tool registry.
 # Creates the dashboard AI Selector and injects OpenCode into workspaces
 # (no postStart curl | bash). CheCluster lives in openshift-operators.
+# Use the versioned tag: Dev Spaces 3.31 derives component names from this
+# reference and produces invalid names for @sha256 digests. This tag resolves
+# to multiarch sha256:11be643a79b29935ca0b7a8835201fce165dbe6aca646cec8dd05c742d43ee5b.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -31,7 +34,7 @@ data:
           "url": "https://opencode.ai",
           "binary": "opencode",
           "pattern": "init",
-          "injectorImage": "quay.io/che-incubator/dashboard-ai/opencode@sha256:11be643a79b29935ca0b7a8835201fce165dbe6aca646cec8dd05c742d43ee5b",
+          "injectorImage": "quay.io/che-incubator/dashboard-ai/opencode:1.18.14-20260826-3ea5bb0",
           "envVarName": "OPENAI_API_KEY",
           "arch": ["amd64", "arm64"]
         }

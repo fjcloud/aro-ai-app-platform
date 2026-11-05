@@ -25,6 +25,7 @@ The models and runtime agent backend are now ready. In the *bastion terminal*, g
 [source,sh,role=execute]
 ----
 DEVSPACES_URL=$(oc get checluster devspaces -n openshift-operators -o jsonpath='{.status.cheURL}')
+oc rollout status daemonset/kubernetes-image-puller -n openshift-operators --timeout=600s
 TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-card-scout
 printf '%s/#%s?ai-provider=opencodeai/opencode\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL"
 ----
@@ -49,6 +50,8 @@ Choose the *workshop* identity provider and sign in as `workshop-admin` with the
 . On first access, click *Log in with OpenShift* if prompted, then *Allow selected permissions* for the Dev Spaces client. The redirect should return to your lab's Dev Spaces address.
 
 . If Dev Spaces asks whether you trust the repository, confirm *Continue* for `fjcloud/go-app-template`. This starts workspace creation.
+
+If the factory reports *Devfile hasn't been resolved in the last 20 seconds*, use *Click to try again*. Keep the repository's devfile; do not choose *Continue with default devfile*.
 
 . The launch URL selects **OpenCode** automatically. If a Create Workspace form appears, confirm **OpenCode** under *AI Provider*. This injects the CLI at start; you do not install it yourself. You will see a progress screen:
 +

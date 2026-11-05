@@ -1,0 +1,9 @@
+{
+  "cold_workspace_created_to_ready_seconds": 256,
+  "warm_first_click_to_ready_seconds": 78.489,
+  "warm_second_click_to_ready_seconds": 88.805,
+  "cold_udi_pull_seconds": 145.857,
+  "warm_udi_manifest_check_seconds": 0.803,
+  "warm_third_click_to_usable_editor_seconds": 75.717,
+  "scope": "Cold first provisioning includes image download and home initialization; warm restarts reuse both. These measurements do not isolate preloading alone."
+}

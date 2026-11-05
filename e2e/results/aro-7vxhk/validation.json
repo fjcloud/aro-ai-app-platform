@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-05",
+  "lab": "7vxhk",
+  "starting_guide_revision": "9d5878687ce4b7cb132824e8524d189c0c570cc7",
+  "starting_template_revision": "3e02f53269c91f1a2d9065c7b6ae0d10b58b09bc",
+  "final_app_revision": "d9fb602fae825c5e9f07f2d4d571b3dcfed43243",
+  "app_sync": "Synced",
+  "app_health": "Healthy",
+  "pipeline": "build-app-4qvwb",
+  "app_scc": [
+    "restricted-v2"
+  ],
+  "image_ids": [
+    "image-registry.openshift-image-registry.svc:5000/card-scout-build/card-scout@sha256:a00c10d66a1753bed9df5d6e71922a281abd3f4b8d6c5b6335e8e8cda3d1b5e5"
+  ],
+  "deepseek": "DeepSeek-V4-Pro 2026-04-23 GlobalStandard",
+  "source_generated_from_scratch": true,
+  "delivery_cycles": 3,
+  "one_shot_generation": false,
+  "same_personal_origin_reused": true,
+  "real_push_after_restart_with_local_helper": "passed without401 or gitpop reinitialization",
+  "live_browser": "passed",
+  "synthetic_browser_fixtures": 7,
+  "synthetic_fixture_failures": 0,
+  "initial_ui_failures": [
+    {
+      "name": "initial failure offers a visible retry",
+      "passed": false,
+      "error": "No Retry button; only refresh-page prose"
+    },
+    {
+      "name": "only HTTPS source and trace links",
+      "passed": false,
+      "error": "Unsafe links rendered: javascript,data"
+    },
+    {
+      "name": "price error preserves selected card",
+      "passed": false,
+      "error": "Selected-card name disappears on price error"
+    },
+    {
+      "name": "refresh error stays visible with cached cards",
+      "passed": false,
+      "error": "Changing the filter hides the refresh failure"
+    }
+  ],
+  "notes": [
+    "Guide corrections were applied and retested on this lab; not a second complete pristine provisioning.",
+    "An image transfer was interrupted while the harness simultaneously forced the Step5 pod restart. The sequential stable-deployment comparison passed for all3images."
+  ]
+}

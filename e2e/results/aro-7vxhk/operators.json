@@ -1,0 +1,87 @@
+[
+  {
+    "namespace": "cert-manager-operator",
+    "name": "cert-manager-operator.v1.20.1",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "kuadrant-system",
+    "name": "authorino-operator.v1.4.3",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "kuadrant-system",
+    "name": "dns-operator.v1.4.2",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "kuadrant-system",
+    "name": "limitador-operator.v1.4.2",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "kuadrant-system",
+    "name": "rhcl-operator.v1.4.3",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "nvidia-gpu-operator",
+    "name": "gpu-operator-certified.v26.7.2",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-cluster-observability-operator",
+    "name": "cluster-observability-operator.v1.5.4",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-gitops-operator",
+    "name": "openshift-gitops-operator.v1.22.3",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-lws-operator",
+    "name": "leader-worker-set.v1.0.1",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-nfd",
+    "name": "nfd.4.21.0-202610271414",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-opentelemetry-operator",
+    "name": "opentelemetry-operator.v0.158.0-202611022311",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-operator-lifecycle-manager",
+    "name": "packageserver",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-operators",
+    "name": "devspacesoperator.v3.31.2",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-operators",
+    "name": "devworkspace-operator.v1.0.0",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-operators",
+    "name": "kubernetes-imagepuller-operator.v1.1.2",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "openshift-operators",
+    "name": "openshift-pipelines-operator-rh.v1.24.3",
+    "phase": "Succeeded"
+  },
+  {
+    "namespace": "redhat-ods-operator",
+    "name": "rhods-operator.3.5.2",
+    "phase": "Succeeded"
+  }
+]
