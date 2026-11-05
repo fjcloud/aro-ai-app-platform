@@ -1,0 +1,5 @@
+{
+  "limited_calls": 1,
+  "limitador_namespace": "llm-serving/deepseekv4pro",
+  "note": "Observed after scrape propagation; the immediate post-probe snapshot still showed zero."
+}

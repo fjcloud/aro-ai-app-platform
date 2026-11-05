@@ -79,6 +79,11 @@ prices. A rare card is not necessarily valuable. The source data concerns known
 catalogue references; this exercise does not authenticate a physical card or
 recognize arbitrary uploaded editions.
 
+Review the generated UI against the contract before continuing: full cards on mobile,
+working retries, a selected card that stays visible on errors, and HTTPS-only source
+and trace links. If a check fails, describe it to OpenCode and ask it to fix, test and
+ship the correction through the same pipeline. Generated code still needs review.
+
 == Step 5: Ship a small change
 
 Ask OpenCode, in *build* mode:

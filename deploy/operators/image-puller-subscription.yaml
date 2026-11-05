@@ -1,0 +1,12 @@
+# Image caching for Dev Spaces; the community Image Puller is documented by Red Hat.
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: kubernetes-imagepuller-operator
+  namespace: openshift-operators
+spec:
+  channel: stable
+  name: kubernetes-imagepuller-operator
+  source: community-operators
+  sourceNamespace: openshift-marketplace
+  installPlanApproval: Automatic

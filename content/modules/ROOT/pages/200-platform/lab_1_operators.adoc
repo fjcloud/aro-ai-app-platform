@@ -11,12 +11,12 @@ oc wait --for=create crd/envoyfilters.networking.istio.io --timeout=300s
 oc wait crd/envoyfilters.networking.istio.io --for=condition=Established --timeout=60s
 oc apply -k deploy/operators
 oc get subscriptions -A
-oc get csv -A
+oc get csv -A -l '!olm.copiedFrom'
 ----
 
 The GatewayClass starts the OpenShift Gateway API controller first. Waiting for its Istio CRDs before installing Connectivity Link lets Kuadrant discover them on its initial startup.
 
-The manifests install OpenShift AI, Dev Spaces, Pipelines, GitOps, Connectivity Link, cert-manager, LeaderWorkerSet, Node Feature Discovery, NVIDIA GPU Operator, Cluster Observability and OpenTelemetry. OpenShift AI manages the additional MLflow and TrustyAI operators when its components are enabled in Lab 1.3.
+The manifests install OpenShift AI, Dev Spaces, Kubernetes Image Puller, Pipelines, GitOps, Connectivity Link, cert-manager, LeaderWorkerSet, Node Feature Discovery, NVIDIA GPU Operator, Cluster Observability and OpenTelemetry. Image Puller caches workspace images before Act 2. The CSV list excludes OLM's copied entries. OpenShift AI manages the additional MLflow and TrustyAI operators when its components are enabled in Lab 1.3.
 
 OLM resolves dependencies and pulls the controllers in the background. A subscription is not proof that its operator is ready. Next, add CPU capacity and one GPU worker, then wait for the complete operator inventory before creating platform instances.
 

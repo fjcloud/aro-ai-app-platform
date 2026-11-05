@@ -1,0 +1,17 @@
+application.argoproj.io/card-scout annotated
+application.argoproj.io/card-scout condition met
+{
+  "revision": "d9fb602fae825c5e9f07f2d4d571b3dcfed43243",
+  "sync": "Synced",
+  "health": "Healthy"
+}
+deployment.apps/card-scout restarted
+Waiting for deployment "card-scout" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "card-scout" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "card-scout" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "card-scout" rollout to finish: 0 of 1 updated replicas are available...
+deployment "card-scout" successfully rolled out
+true
+{
+  "status": "ok"
+}

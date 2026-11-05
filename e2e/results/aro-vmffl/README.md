@@ -4,6 +4,12 @@ Validated November 5, 2026 against a fresh RHDP classic ARO lab. This is a
 configuration validation, not a claim that the entire generated-application
 workshop was rerun.
 
+Follow-up: the [fresh 7vxhk participant run](../aro-7vxhk/README.md) found that
+Dev Spaces derives invalid component names when creating a workspace from the
+digest-pinned OpenCode injector. The current manifest uses a versioned tag for
+the same image. The earlier image-pull check below did not establish fresh
+factory creation with that digest reference.
+
 ## Environment
 
 - OpenShift 4.21.22; OpenShift AI 3.5.2; OGX 1.2.5.1+rhaiv.0.

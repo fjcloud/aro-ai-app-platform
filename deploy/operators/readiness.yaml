@@ -7,6 +7,14 @@
       "apiVersion": "apps/v1",
       "kind": "Deployment",
       "metadata": {
+        "name": "kubernetes-image-puller-operator-manager",
+        "namespace": "openshift-operators"
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
         "name": "devspaces-operator",
         "namespace": "openshift-operators"
       }
