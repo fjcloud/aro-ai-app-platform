@@ -1,0 +1,6 @@
+...............................................
+----------------------------------------------------------------------
+Ran 47 tests in 9.944s
+
+OK
+Card Scout configured: native agent, scoped runtime key, fixed model endpoints and MLflow. No keys printed.

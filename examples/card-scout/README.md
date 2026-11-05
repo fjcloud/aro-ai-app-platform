@@ -3,7 +3,7 @@
 Prepared ARO platform: classify the complete **English Base Set (1999)**, rank
 likely rare cards, then ask the native OpenShift AI agent to verify a catalogue
 reference and retrieve dated market data. The developer generates a small Go UI
-[from its contract](https://github.com/fjcloud/go-app-template/blob/aro-signal-desk/APP_CONTRACT.md).
+[from its contract](https://github.com/fjcloud/go-app-template/blob/aro-card-scout/APP_CONTRACT.md).
 No finished application source is supplied here to copy.
 
 ## Dataset

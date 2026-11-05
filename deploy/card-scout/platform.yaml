@@ -27,7 +27,7 @@ spec:
       labels:
         app.kubernetes.io/name: card-scout-platform
     spec:
-      serviceAccountName: signal-desk
+      serviceAccountName: card-scout
       securityContext:
         runAsNonRoot: true
         seccompProfile:
@@ -38,7 +38,7 @@ spec:
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
-            name: signal-desk-config
+            name: card-scout-config
         env:
         - name: DATA_DIR
           value: /data
@@ -85,10 +85,10 @@ spec:
           claimName: card-scout-data
       - name: model
         secret:
-          secretName: signal-desk-model
+          secretName: card-scout-model
       - name: service-ca
         configMap:
-          name: signal-desk-service-ca
+          name: card-scout-service-ca
 ---
 apiVersion: v1
 kind: Service

@@ -106,7 +106,7 @@ def speech():
 
 
 def developer():
-    app = os.environ.get('APP_NAME', 'signal-desk')
+    app = os.environ.get('APP_NAME', 'card-scout')
     ns = app + '-dev'
     deployment = resource('deployment', app, ns)
     require(deployment.get('status', {}).get('availableReplicas', 0) >= 1, 'Application available')
@@ -148,7 +148,7 @@ def developer():
     resources = container.get('resources', {})
     require(resources.get('requests') == {'cpu': '50m', 'memory': '64Mi'} and resources.get('limits') == {'cpu': '500m', 'memory': '512Mi'}, 'Resource requests and limits match AGENTS.md')
     require(all(container.get(probe, {}).get('httpGet', {}).get('path') == '/healthz' and container[probe]['httpGet'].get('port') == 'http' and container[probe]['httpGet'].get('scheme') == 'HTTP' for probe in ['livenessProbe', 'readinessProbe']), 'Liveness and readiness probes reach the app directly over HTTP')
-    require(spec.get('serviceAccountName') == 'signal-desk', 'Dedicated runtime identity')
+    require(spec.get('serviceAccountName') == 'card-scout', 'Dedicated runtime identity')
     require(any(e.get('name')=='LISTEN_ADDR' and e.get('value')==':8080' for e in container.get('env',[])), 'Go backend listens on the Service port')
     require(len(spec['containers']) == 1 and spec['containers'][0]['name'] == app, 'One app container without an authentication proxy')
     require(spec.get('automountServiceAccountToken') is False
@@ -191,7 +191,7 @@ def model_apis():
     model = resource('inferenceservice', 'd3-mini', 'decision-serving')
     require(any(c['type'] == 'Ready' and c['status'] == 'True' for c in model.get('status', {}).get('conditions', [])), 'D3 inference service is Ready')
     require(not json.loads(oc('get', 'routes', '-n', 'decision-serving', '-o', 'json'))['items'], 'Decision model API has no public Route')
-    identity = 'system:serviceaccount:signal-desk-dev:workshop-developer'
+    identity = 'system:serviceaccount:card-scout-dev:workshop-developer'
     for verb, kind in [('get', 'secrets'), ('patch', 'inferenceservices')]:
         denied = subprocess.run(['oc', 'auth', 'can-i', verb, kind, '-n', 'decision-serving', '--as=' + identity], text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=30)
         require(denied.returncode == 1 and denied.stdout.strip() == 'no', 'Developer cannot ' + verb + ' ' + kind + ' in the model namespace')

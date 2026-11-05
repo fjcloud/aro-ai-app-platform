@@ -34,7 +34,7 @@ In *plan* mode, paste:
 
 [source,text,role=execute]
 ----
-Build Card Scout from scratch in Go using APP_CONTRACT.md and AGENTS.md. Keep the prepared delivery scaffold and technical app name signal-desk. Use only the prepared CARD_SCOUT_URL API from the Go backend. Plan a simple responsive card grid with Analyze batch, rarity filters, Check price, dated source evidence and MLflow trace links. Do not fetch or copy an existing app, implement model orchestration, add credentials, or change privileges.
+Build Card Scout from scratch in Go using APP_CONTRACT.md and AGENTS.md. Keep the prepared delivery scaffold and technical app name card-scout. Use only the prepared CARD_SCOUT_URL API from the Go backend. Plan a simple responsive card grid with Analyze batch, rarity filters, Check price, dated source evidence and MLflow trace links. Do not fetch or copy an existing app, implement model orchestration, add credentials, or change privileges.
 ----
 
 The plan should contain a small standard-library Go server and embedded UI.
@@ -49,7 +49,7 @@ Switch to *build*:
 Implement the plan from scratch and deploy using AGENTS.md. Preserve the scaffold, exact internal registry image, restricted-v2 and HTTPS Route. Test proxy errors, images and fixed-route validation; run go test -race ./..., go vet ./... and a local build. Commit and push all generated application source. Wait for Tekton success, the pushed image, matching Argo CD Git revision and running image digest. Print the app and Argo CD URLs. Never print credentials or fetch reference app code.
 ----
 
-Keep `image-registry.openshift-image-registry.svc:5000/signal-desk-build/signal-desk:latest`
+Keep `image-registry.openshift-image-registry.svc:5000/card-scout-build/card-scout:latest`
 with `imagePullPolicy: Always`. A local build or an older healthy revision is not
 a successful deployment. The app has no model key or Kubernetes token.
 

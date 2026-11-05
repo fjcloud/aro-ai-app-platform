@@ -13,7 +13,7 @@ spec:
   - from:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: signal-desk-dev
+          kubernetes.io/metadata.name: card-scout-dev
       podSelector:
         matchLabels:
           app.kubernetes.io/name: card-scout-platform

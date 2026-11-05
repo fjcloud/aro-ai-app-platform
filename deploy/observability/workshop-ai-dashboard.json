@@ -36,7 +36,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (model, subscription) (authorized_hits{model=\"deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|signal-desk)\"})",
+          "expr": "sum by (model, subscription) (authorized_hits{model=\"deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|card-scout)\"})",
           "refId": "A",
           "legendFormat": "{{model}} {{subscription}}"
         }
@@ -75,7 +75,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (subscription) (authorized_calls{limitador_namespace=\"llm-serving/deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|signal-desk)\"})",
+          "expr": "sum by (subscription) (authorized_calls{limitador_namespace=\"llm-serving/deepseekv4pro\",subscription=~\"deepseekv4pro-(workshop|card-scout)\"})",
           "refId": "A",
           "legendFormat": "{{subscription}}"
         }

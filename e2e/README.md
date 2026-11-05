@@ -7,7 +7,7 @@ and delivering it through Tekton and Argo CD. Fixtures alone are not acceptance.
 
 Run the shell blocks from the guide in order. Act 0 and Act 1 use the bastion;
 Act 2 uses the scoped Dev Spaces identity. The Playground tests the CLI-created
-`OGXServer/lsd-genai-playground` in `signal-desk-dev`; it does not provision it.
+`OGXServer/lsd-genai-playground` in `card-scout-dev`; it does not provision it.
 
 ## Platform and developer APIs
 

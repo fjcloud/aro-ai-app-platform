@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-NS, BUILD, APP = 'decision-serving', 'signal-desk-build', 'signal-desk-dev'
+NS, BUILD, APP = 'decision-serving', 'card-scout-build', 'card-scout-dev'
 IMAGE = (ROOT / 'deploy/decision/runtime-image.txt').read_text().strip()
 MODEL_REVISION = 'a475367de0d8133a3c1a2a0dc12303d89cfa2ab4'
 

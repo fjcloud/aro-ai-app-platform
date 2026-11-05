@@ -49,7 +49,7 @@ Wait 2–3 minutes for scraping on a fresh lab. Use *last hour* in the OpenShift
 [cols="2,3",options="header"]
 |===
 | Panel | Interpretation
-| Model tokens by subscription | `deepseekv4pro-workshop` is OpenCode/coding; `deepseekv4pro-signal-desk` is app/Playground research. Input and output tokens are aggregated.
+| Model tokens by subscription | `deepseekv4pro-workshop` is OpenCode/coding; `deepseekv4pro-card-scout` is app/Playground research. Input and output tokens are aggregated.
 | Model requests accepted by quota checks | Allowed requests, not necessarily successful completions.
 | Quota rejections (HTTP 429) | MaaS quota rejections; Foundry's separate tokens-per-minute quota may also reject calls.
 | D3 completed scoring requests | Successful native `/v1/systemone` requests, not generated text tokens.
@@ -75,7 +75,7 @@ In *Observe → Metrics*:
 
 [source,promql]
 ----
-sum by (model, subscription) (authorized_hits{model="deepseekv4pro",subscription=~"deepseekv4pro-(workshop|signal-desk)"})
+sum by (model, subscription) (authorized_hits{model="deepseekv4pro",subscription=~"deepseekv4pro-(workshop|card-scout)"})
 ----
 
 This is cumulative token usage, not remaining balance or a provider invoice.

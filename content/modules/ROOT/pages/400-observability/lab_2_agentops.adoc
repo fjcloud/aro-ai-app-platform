@@ -6,7 +6,7 @@ The same prepared MCP tool is available in the OpenShift AI Playground.
 == Follow one price check
 
 In Card Scout, click *Check price* on an analyzed Pokémon card, then open its
-*View MLflow trace* link. The link selects workspace `signal-desk-dev`, experiment
+*View MLflow trace* link. The link selects workspace `card-scout-dev`, experiment
 `card-scout` and that exact trace.
 
 Open *Details & Timeline → Graph*. Expect `card.research`, `agent.responses` and
@@ -29,10 +29,13 @@ a visible UI answer alone does not prove trace export succeeded.
 == Test the agent in the Playground
 
 Open *Red Hat OpenShift AI → Gen AI studio → Playground*. Select project
-`signal-desk-dev`. In *Settings → Model*, select
+`card-scout-dev`. In *Settings → Model*, select
 `maas-vllm-inference-1/deepseekv4pro` and *Card Scout runtime*.
 
-image::signal-desk-playground-model.png[Playground model and Card Scout runtime subscription]
+The captures illustrate the Playground controls from an earlier session. Use
+the current project `card-scout-dev` when following these steps.
+
+image::card-scout-playground-model.png[Playground model and Card Scout runtime subscription]
 
 Open *Prompt* and paste the xref:attachment$card-scout-agent-prompt.txt[agent instructions]:
 
@@ -41,15 +44,15 @@ Open *Prompt* and paste the xref:attachment$card-scout-agent-prompt.txt[agent in
 include::ROOT:attachment$card-scout-agent-prompt.txt[]
 ----
 
-image::signal-desk-playground-prompt.png[Card Scout agent instructions]
+image::card-scout-playground-prompt.png[Card Scout agent instructions]
 
 Open *MCP*, select *Card-Scout*, confirm the single `get_card_market_data` tool
 is active and click *Save*. No separate tool token is required. The prepared
 service is available before the generated application is deployed.
 
-image::signal-desk-playground-mcp.png[Select the Card-Scout MCP service]
-image::signal-desk-playground-connected.png[Successful connection with one active tool]
-image::signal-desk-playground-tools.png[The read-only catalogue and price tool]
+image::card-scout-playground-mcp.png[Select the Card-Scout MCP service]
+image::card-scout-playground-connected.png[Successful connection with one active tool]
+image::card-scout-playground-tools.png[The read-only catalogue and price tool]
 
 Ask:
 
@@ -58,7 +61,7 @@ Ask:
 Use get_card_market_data exactly once for item-104. Verify its catalogue identity and rarity, then report Cardmarket EUR trend, 7-day average, update timestamp and source. Stop after this lookup. Never invent missing prices.
 ----
 
-image::signal-desk-playground-answer.png[A real native agent answer with catalogue and price evidence]
+image::card-scout-playground-answer.png[A real native agent answer with catalogue and price evidence]
 
 Expand *Tool response*. Check the actual call and returned data. A sentence with
 no tool execution is not a successful test. The CLI probe in Lab 2.2 explicitly
@@ -73,8 +76,8 @@ external MaaS models are Technology Preview in OpenShift AI 3.5.
 [cols="2,3",options="header"]
 |===
 | Test | Expected behavior
-| Rare and common cards from different eras | Predictions are distinct from held-out catalogue labels; unknowns remain visible.
-| Yu-Gi-Oh!, receipt, Pokémon illustration | Classified as controls, with no Pokémon price button.
+| Rare and common English Base Set cards | Predictions are distinct from held-out catalogue labels; unknowns remain visible.
+| Yu-Gi-Oh!, Magic Black Lotus, Pokémon illustration | Classified as controls, with no Pokémon price button.
 | Check a known Pokémon item | Actual tool call, exact catalogue reference, dated prices or explicit unavailability.
 | D3 rarity differs from catalogue | Both values remain visible; the prediction is not silently rewritten.
 | Unknown item or arbitrary URL | Rejected; no caller-selected URL, shell or purchase tool exists.

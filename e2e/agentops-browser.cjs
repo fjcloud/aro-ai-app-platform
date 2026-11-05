@@ -4,9 +4,9 @@ const{chromium,expect}=require('@playwright/test');
 const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),images=path.join(root,'content/modules/ROOT/assets/images');
 const base=process.env.RHOAI_URL?.replace(/\/$/,''),state=process.env.BROWSER_STATE;
-const namespace=process.env.APP_NAMESPACE||'signal-desk-dev';
+const namespace=process.env.APP_NAMESPACE||'card-scout-dev';
 assert.ok(base&&state,'Set RHOAI_URL and BROWSER_STATE');
-const screenshot=async(page,name)=>{if(process.env.CAPTURE_GUIDE==='true')await page.screenshot({path:path.join(images,'signal-desk-playground-'+name+'.png'),fullPage:true})};
+const screenshot=async(page,name)=>{if(process.env.CAPTURE_GUIDE==='true')await page.screenshot({path:path.join(images,'card-scout-playground-'+name+'.png'),fullPage:true})};
 (async()=>{const browser=await chromium.launch({headless:true,args:['--use-mock-keychain']});
 try{const context=await browser.newContext({storageState:state,viewport:{width:1440,height:1000}}),page=await context.newPage();
 await page.addLocatorHandler(page.getByTestId('whats-new-skip-tour'),async()=>{

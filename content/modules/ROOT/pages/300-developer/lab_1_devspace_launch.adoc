@@ -25,7 +25,7 @@ The models and runtime agent backend are now ready. In the *bastion terminal*, g
 [source,sh,role=execute]
 ----
 DEVSPACES_URL=$(oc get checluster devspaces -n openshift-operators -o jsonpath='{.status.cheURL}')
-TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-signal-desk
+TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-card-scout
 printf '%s/#%s?ai-provider=opencodeai/opencode\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL"
 ----
 

@@ -25,7 +25,7 @@ Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are 
 
 image::content/modules/ROOT/assets/images/architecture-overview.svg["Card Scout architecture: governed coding, local image inference and agent price verification",align="center",link=self]
 
-Use the https://github.com/fjcloud/go-app-template/tree/aro-signal-desk[Card Scout template branch]. `AGENTS.md` defines delivery rules; `APP_CONTRACT.md` defines the application and fixed APIs. The prepared service and dataset are in `examples/card-scout`; its manifests are `deploy/card-scout`, and model manifests are `deploy/decision`. The template contains no completed app to copy. Clone this workshop's `main` branch.
+Use the https://github.com/fjcloud/go-app-template/tree/aro-card-scout[Card Scout template branch]. `AGENTS.md` defines delivery rules; `APP_CONTRACT.md` defines the application and fixed APIs. The prepared service and dataset are in `examples/card-scout`; its manifests are `deploy/card-scout`, and model manifests are `deploy/decision`. The template contains no completed app to copy. Clone this workshop's `main` branch.
 
 The platform path is: apply all operator manifests; add one D8 CPU worker and one `Standard_NC8as_T4_v3` worker with explicit MachineSet commands; enable the platform services; deploy DeepSeek and d3-mini. The developer tests D3, MaaS Chat Completions and native Responses independently from Dev Spaces with `curl | jq`, then builds the app from its contract through the existing GitOps path. Model predictions, catalogue verification and dated market references stay visible.
 
@@ -33,7 +33,7 @@ The platform path is: apply all operator manifests; add one D8 CPU worker and on
 
 Prefer direct `oc`, `az` and `curl | jq` commands in the labs. Keep helpers for discovery, temporary identity/credential injection and dynamic MaaS/MLflow setup; define ordinary Kubernetes resources in `deploy/`.
 
-`deploy/briefing/agent` defines the operator-managed native Responses backend in `signal-desk-dev`. Lab 1.8 supplies the cluster's MaaS URL and applies it with the CLI; the Playground UI is reserved for tests.
+`deploy/card-scout/agent` defines the operator-managed native Responses backend in `card-scout-dev`. Lab 1.8 supplies the cluster's MaaS URL and applies it with the CLI; the Playground UI is reserved for tests.
 
 Install the local test dependencies with a virtual environment and `pip install -r e2e/requirements.txt`, as shown in `e2e/README.md`. `make test` runs the helper and reference-app tests. `make docs` builds the guide; `make serve` previews it at http://localhost:8443.
 
