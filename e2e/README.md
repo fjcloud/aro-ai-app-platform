@@ -100,3 +100,6 @@ configuration tests, rejected hypotheses and precise validation scope.
 The [vmffl generation run](results/card-scout-generation-vmffl/README.md) records
 DeepSeek/OpenCode generation, review findings, two real deliveries and independent
 live/fixture browser checks. It was not a one-shot generation success.
+
+The [Flash regeneration](results/card-scout-flash-vmffl/README.md) records a fresh
+frontend replacement using V4.1 Flash, its required corrections and final checks.

@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "trace_id": "tr-b2528020dc1a2b2167418c400cfd1a8d",
+  "trace_url": "https://rh-ai.apps.h02mzao2.eastus.aroapp.io/mlflow/#/experiments/1/traces?selectedEvaluationId=tr-b2528020dc1a2b2167418c400cfd1a8d&workspace=card-scout-dev",
+  "verified_graph_spans": [
+    "card.research",
+    "agent.responses",
+    "tool.get_card_market_data"
+  ],
+  "source_url": "https://api.tcgdex.net/v2/en/cards/base1-18"
+}

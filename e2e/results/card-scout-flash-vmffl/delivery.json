@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "at": "2026-11-05T13:10:08.410436+00:00",
+  "coding_model": "deepseek/deepseekv41flash",
+  "app_url": "https://card-scout-card-scout-dev.apps.h02mzao2.eastus.aroapp.io",
+  "git_revision": "b9ad750e00458365f444c7bb9debc672b4f9199b",
+  "argocd_sync": "Synced",
+  "argocd_health": "Healthy",
+  "pipeline": "build-app-6jnrc",
+  "pipeline_conditions": [
+    {
+      "lastTransitionTime": "2026-11-05T13:05:45Z",
+      "message": "Tasks Completed: 3 (Failed: 0, Cancelled 0), Skipped: 0",
+      "reason": "Succeeded",
+      "status": "True",
+      "type": "Succeeded"
+    }
+  ],
+  "built_image_digest": "sha256:f0ce65a883317c0cf4516fe3313e15e4ccd0efe94422a63fe060fa6ec9b02fe7",
+  "running_containers": [
+    {
+      "name": "card-scout",
+      "image_id": "image-registry.openshift-image-registry.svc:5000/card-scout-build/card-scout@sha256:f0ce65a883317c0cf4516fe3313e15e4ccd0efe94422a63fe060fa6ec9b02fe7",
+      "ready": true
+    }
+  ],
+  "admitted_scc": [
+    "restricted-v2"
+  ]
+}
