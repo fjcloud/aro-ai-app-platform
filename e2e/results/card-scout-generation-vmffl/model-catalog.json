@@ -1,0 +1,79 @@
+{
+  "checked_at": "2026-11-05T12:30:32.809592+00:00",
+  "region": "eastus2",
+  "deployment": {
+    "model": {
+      "format": "DeepSeek",
+      "name": "DeepSeek-V4-Pro",
+      "version": "2026-04-23"
+    },
+    "sku": {
+      "capacity": 500,
+      "name": "GlobalStandard"
+    },
+    "state": "Succeeded"
+  },
+  "available_deepseek_models": [
+    {
+      "lifecycleStatus": "Deprecated",
+      "name": "DeepSeek-R1",
+      "skus": [
+        "GlobalStandard",
+        "GlobalProvisionedManaged"
+      ],
+      "version": "1"
+    },
+    {
+      "lifecycleStatus": "GenerallyAvailable",
+      "name": "DeepSeek-V3.2",
+      "skus": [
+        "GlobalStandard",
+        "DataZoneProvisionedManaged",
+        "GlobalProvisionedManaged"
+      ],
+      "version": "1"
+    },
+    {
+      "lifecycleStatus": "GenerallyAvailable",
+      "name": "DeepSeek-V3.2-Speciale",
+      "skus": [
+        "GlobalStandard"
+      ],
+      "version": "1"
+    },
+    {
+      "lifecycleStatus": "GenerallyAvailable",
+      "name": "DeepSeek-V4-Flash",
+      "skus": [
+        "GlobalStandard",
+        "DataZoneStandard"
+      ],
+      "version": "2026-04-23"
+    },
+    {
+      "lifecycleStatus": "GenerallyAvailable",
+      "name": "DeepSeek-V4-Pro",
+      "skus": [
+        "GlobalStandard",
+        "DataZoneStandard"
+      ],
+      "version": "2026-04-23"
+    },
+    {
+      "lifecycleStatus": "Preview",
+      "name": "DeepSeek-V4-Flash-0731",
+      "skus": [
+        "GlobalStandard"
+      ],
+      "version": "2026-07-31"
+    },
+    {
+      "lifecycleStatus": "Preview",
+      "name": "DeepSeek-V4.1-Flash",
+      "skus": [
+        "GlobalStandard"
+      ],
+      "version": "2026-09-10"
+    }
+  ]
+}

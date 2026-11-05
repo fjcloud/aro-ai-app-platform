@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "checks": [
+    "initial load failure is visible and has Retry",
+    "apostrophe name works and zero/null prices remain distinct",
+    "price failure preserves selected item and Retry",
+    "empty filter stays recoverable"
+  ],
+  "failures": [],
+  "browser_errors": [],
+  "at": "2026-11-05T12:32:58.603Z"
+}

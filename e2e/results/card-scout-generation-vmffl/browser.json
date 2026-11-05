@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "at": "2026-11-05T12:33:07.746Z",
+  "url": "https://card-scout-card-scout-dev.apps.h02mzao2.eastus.aroapp.io",
+  "dataset": {
+    "name": "Base Set — English 1st Edition + controls",
+    "snapshot_at": "2026-11-04T19:10:13.161145+00:00",
+    "items": 105,
+    "pokemon_cards": 102,
+    "controls": 3,
+    "years": "1999",
+    "identity_method": "Known catalogue references in the prepared dataset"
+  },
+  "completed": 105,
+  "failed": 0,
+  "research_item": "item-107",
+  "trace_id": "tr-821e76dc7f90091f0dc48141c6e6af80",
+  "checks": [
+    "same-origin API and fixed routes",
+    "12 cards and pagination",
+    "whole-batch rarity/review/other filters",
+    "filter persists on reload",
+    "controls cannot request prices",
+    "actual native agent research and evidence prices",
+    "source and exact MLflow links",
+    "whole cards desktop/mobile",
+    "no mobile overflow",
+    "no browser JavaScript errors"
+  ]
+}

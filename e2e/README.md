@@ -96,3 +96,7 @@ not requirements of the current Card Scout workshop.
 
 See [vmffl validation](results/aro-vmffl/README.md) for the November 5, 2026
 configuration tests, rejected hypotheses and precise validation scope.
+
+The [vmffl generation run](results/card-scout-generation-vmffl/README.md) records
+DeepSeek/OpenCode generation, review findings, two real deliveries and independent
+live/fixture browser checks. It was not a one-shot generation success.
