@@ -4,16 +4,17 @@
 
 == Create the platform instances
 
-Start the disposable MaaS database before enabling MaaS:
+Generate database credentials once, then start PostgreSQL before enabling MaaS:
 
 [source,sh,role=execute]
 ----
+bash deploy/instances/configure-maas-database.sh
 oc apply -f deploy/instances/maas-postgres.yaml
 oc rollout status deployment/postgres -n redhat-ai-gateway-infra --timeout=300s
 oc apply -k deploy/instances
 ----
 
-This creates Dev Spaces, OpenShift AI/KServe, MaaS, NFD and the NVIDIA ClusterPolicy. The OpenShift AI instance also enables MLflow, Gen AI studio and TrustyAI. PostgreSQL uses ephemeral storage for this disposable workshop: do not restart its storage; it contains the MaaS keys.
+This creates Dev Spaces, OpenShift AI/KServe, MaaS, NFD and the NVIDIA ClusterPolicy. The OpenShift AI instance also enables MLflow, Gen AI studio and TrustyAI. PostgreSQL keeps MaaS keys on a 1 GiB persistent volume. The small helper generates or reuses credentials without printing them. This setup targets a fresh lab; it does not migrate an existing ephemeral database.
 
 == Bind the MaaS gateway to this cluster
 
@@ -42,11 +43,17 @@ The passthrough Route sends ARO wildcard DNS traffic to the HTTPS gateway. The p
 
 == Trust the cluster service CA
 
-Authorino authenticates MaaS requests and calls internal HTTPS services. Mount the service CA without changing its listeners or disabling verification. The JSON patch preserves any existing volumes.
+Authorino authenticates MaaS requests and calls internal HTTPS services. Enable the service-CA-signed Authorino listener and trust the service CA for its outbound callbacks. The JSON patch preserves any existing volumes.
 
 [source,sh,role=execute]
 ----
 oc wait --for=create deployment/authorino -n kuadrant-system --timeout=600s
+oc annotate service authorino-authorino-authorization -n kuadrant-system \
+  service.beta.openshift.io/serving-cert-secret-name=authorino-server-cert --overwrite
+oc patch authorino authorino -n kuadrant-system --type=merge \
+  -p '{"spec":{"listener":{"tls":{"enabled":true,"certSecretRef":{"name":"authorino-server-cert"}}}}}'
+oc annotate gateway maas-default-gateway -n openshift-ingress \
+  security.opendatahub.io/authorino-tls-bootstrap=true --overwrite
 oc get authorino authorino -n kuadrant-system -o json | jq '{spec:{volumes:
   ((.spec.volumes // {}) | .items =
     ((.items // [] | map(select(.name != "workshop-service-ca"))) + [{
@@ -63,18 +70,7 @@ oc set env deployment/authorino -n kuadrant-system \
 oc rollout status deployment/authorino -n kuadrant-system --timeout=180s
 ----
 
-On first installation, Gateway API creates its Istio CRDs after Connectivity Link has started. Recycle the Kuadrant controller only if its gateway filters are missing:
-
-[source,sh,role=execute]
-----
-oc wait --for=create crd/envoyfilters.networking.istio.io --timeout=300s
-oc wait crd/envoyfilters.networking.istio.io --for=condition=Established --timeout=60s
-if ! oc get envoyfilter -n openshift-ingress -o json | \
-  jq -e '.items | any(.metadata.name | contains("kuadrant"))' >/dev/null; then
-  oc delete pod -n kuadrant-system -l app=kuadrant --wait=true
-fi
-oc rollout status deployment/kuadrant-operator-controller-manager -n kuadrant-system --timeout=180s
-----
+Gateway API CRDs were prepared in Lab 1.1. Kuadrant can reconcile its filters without recycling its controller.
 
 == Enable the UI, traces and metrics
 

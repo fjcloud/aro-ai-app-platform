@@ -19,6 +19,7 @@ resources:
   - maas-gateway.yaml
   - lws-operator.yaml
   - kuadrant.yaml
+  - maas-namespace.yaml
   - maas-postgres.yaml
 
 configMapGenerator:

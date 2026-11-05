@@ -49,7 +49,34 @@ az group show --name "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" --query '{n
 
 This is the group containing the ARO resource, where the workshop creates Foundry resources. It is distinct from the managed group containing ARO’s machines. Detection stops if the Azure subscription is wrong, the cluster cannot be matched uniquely, or read access is missing. Do not continue after an error. The Azure identity also needs permission to create Foundry resources in this group.
 
-Keep the OpenShift browser credentials from the RHDP assignment for Act 2. The catalog workshop password and the OpenShift password are different. Lab 2.1 shows how to retrieve the ARO `kubeadmin` password from this Azure-authenticated bastion if needed.
+== Create a named platform administrator
+
+Use a named identity for OpenShift AI and Dev Spaces. The ARO `kubeadmin` login above bootstraps this setup; continue the platform labs as `workshop-admin`.
+
+[source,sh,role=execute]
+----
+umask 077
+mkdir -p state
+oc get secret workshop-htpasswd -n openshift-config --ignore-not-found \
+  -o jsonpath='{.data.htpasswd}' 2>/dev/null | base64 -d > state/workshop.htpasswd
+read -rsp 'Choose the workshop-admin password: ' WORKSHOP_PASSWORD; echo
+printf '%s\n' "$WORKSHOP_PASSWORD" | htpasswd -iB state/workshop.htpasswd workshop-admin
+unset WORKSHOP_PASSWORD
+oc create secret generic workshop-htpasswd -n openshift-config \
+  --from-file=htpasswd=state/workshop.htpasswd --dry-run=client -o yaml | oc apply -f -
+oc get oauth cluster -o json | jq '{spec:{identityProviders:
+  ((.spec.identityProviders // [] | map(select(.name != "workshop"))) + [{
+    name:"workshop",mappingMethod:"claim",type:"HTPasswd",
+    htpasswd:{fileData:{name:"workshop-htpasswd"}}
+  }])}}' > state/workshop-idp.json
+oc patch oauth cluster --type=merge --patch-file=state/workshop-idp.json
+oc adm policy add-cluster-role-to-user cluster-admin workshop-admin
+oc rollout status deployment/oauth-openshift -n openshift-authentication --timeout=300s
+oc login -u workshop-admin
+oc whoami
+----
+
+Enter the chosen password when prompted. If OAuth is still reconciling the new identity provider, wait for its rollout and retry the login. Keep this password for the browser. Developer terminals receive a separate scoped service account in Act 2; the administrator password must never be given to OpenCode.
 
 == Checkpoint
 

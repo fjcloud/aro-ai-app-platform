@@ -37,7 +37,7 @@ APP_URL=https://your-app-route node e2e/card-scout-browser.cjs
 ```
 
 The delivery check compares workspace source, pushed main, Argo CD revision,
-Tekton target and running image digest. The browser check requires 57 completed
+Tekton target and running image digest. The browser check requires 105 completed
 real image analyses, full-batch filters, pagination, no price action for controls,
 a native price lookup, exact tool-derived prices, dated source and trace links,
 filter persistence and a mobile layout. Its separate fixtures exercise errors,
@@ -91,3 +91,8 @@ agent, delivery and browser runs from fixtures and local checks. Record the lab,
 date, source revision and actual result of a new run; retain earlier evidence as
 historical. The finance, speech and game directories are earlier experiments,
 not requirements of the current Card Scout workshop.
+
+## Configuration review on a fresh lab
+
+See [vmffl validation](results/aro-vmffl/README.md) for the November 5, 2026
+configuration tests, rejected hypotheses and precise validation scope.

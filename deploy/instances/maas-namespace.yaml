@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: redhat-ai-gateway-infra
+  labels:
+    app.kubernetes.io/part-of: maas
+    maas.opendatahub.io/gateway-access: "true"
