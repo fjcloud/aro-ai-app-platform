@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-11-05T13:09:20.533937+00:00",
+  "region": "eastus2",
+  "deployment": {
+    "model": {
+      "format": "DeepSeek",
+      "name": "DeepSeek-V4.1-Flash",
+      "version": "2026-09-10"
+    },
+    "sku": {
+      "capacity": 500,
+      "name": "GlobalStandard"
+    },
+    "state": "Succeeded"
+  }
+}

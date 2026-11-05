@@ -1,0 +1,10 @@
+{
+  "model": "deepseekv41flash",
+  "marker_verified": true,
+  "usage": {
+    "prompt_tokens": 13,
+    "completion_tokens": 6,
+    "total_tokens": 19,
+    "audio_prompt_tokens": 0
+  }
+}

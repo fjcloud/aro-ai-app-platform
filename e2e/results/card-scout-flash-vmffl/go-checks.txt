@@ -1,0 +1,2 @@
+ok  	card-scout	(cached)
+Vet, production build and clean committed source verified.
