@@ -120,15 +120,7 @@ only image bytes, with labels held out. It does not authenticate physical cards
 or establish their condition. Provider aggregate prices must not be presented
 as verified 1st Edition quotes.
 
-[source,text]
-----
-Browser → generated Go UI/proxy → prepared Card Scout service
-                                    ├→ fixed images → D3 on T4 → rarity ranking
-                                    └→ native OGX Responses → DeepSeek through MaaS
-                                                   ↕ read-only price MCP → TCGdex
-Model and tool spans → MLflow
-Git → Tekton → Argo CD → generated Go app
-----
+image::card-scout-workflow.svg["Analyze the fixed batch, then verify a selected card through the native agent and MCP",align="center",link=self]
 
 The price tool looks up the selected dataset reference and retains provider,
 currency, update timestamp and variant information. The agent must call it before

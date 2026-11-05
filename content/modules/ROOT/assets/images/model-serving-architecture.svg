@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="650" viewBox="0 0 1120 650" role="img" aria-labelledby="title desc">
+<title id="title">Local image inference on one T4</title><desc id="desc">OpenShift AI / KServe manages the model. Allowed callers use a private service.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0,0 L 10,5 L 0,10 z" fill="#687683"/></marker><marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0,0 L 10,5 L 0,10 z" fill="#0066cc"/></marker></defs><style>text{font-family:Arial,Helvetica,sans-serif}svg{background:white}</style>
+<rect width="1120" height="650" rx="16" fill="white"/>
+<rect x="40" y="36" width="38" height="5" rx="2" fill="#ee0000"/>
+<text x="40" y="77" font-size="30" fill="#151515" font-weight="700" text-anchor="start" class="">Local image inference on one T4</text>
+<text x="40" y="108" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="">OpenShift AI / KServe manages the model. Allowed callers use a private service.</text>
+<rect x="20" y="150" width="1080" height="390" rx="12" fill="#f6f7f9" stroke="#d5dbe1" stroke-width="1.5"/>
+<text x="40" y="179" font-size="17" fill="#52606d" font-weight="600" text-anchor="start" class="">ARO cluster</text>
+<rect x="410" y="205" width="670" height="270" rx="12" fill="#f6f7f9" stroke="#d5dbe1" stroke-width="1.5"/>
+<text x="430" y="234" font-size="17" fill="#52606d" font-weight="600" text-anchor="start" class="">decision-serving</text>
+<g data-role="node" data-node="clients">
+<rect x="60" y="280" width="260" height="145" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="61" y="298" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="80" y="330.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Allowed callers</text>
+<text x="80" y="367.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Card Scout platform</text>
+<text x="80" y="391.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Dev Spaces</text>
+</g>
+<g data-role="node" data-node="service">
+<rect x="440" y="280" width="280" height="145" rx="12" fill="white" stroke="#ee0000" stroke-width="1.5"/>
+<rect x="441" y="298" width="4" height="25" rx="2" fill="#ee0000"/>
+<text x="460" y="318.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Internal Service</text>
+<text x="460" y="355.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">NetworkPolicy</text>
+<text x="460" y="379.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">No API key needed</text>
+<text x="460" y="403.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">No public Route</text>
+</g>
+<g data-role="node" data-node="model">
+<rect x="800" y="280" width="260" height="145" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="801" y="298" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="820" y="318.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">d3-mini</text>
+<text x="820" y="355.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Native runtime on one</text>
+<text x="820" y="379.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">T4</text>
+<text x="820" y="403.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Weights cached on PVC</text>
+</g>
+<path data-role="connector" data-source="clients" data-target="service" data-points="[[320, 352.5], [440, 352.5]]" d="M 320,352.5 L 440,352.5" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<g data-role="edge-label">
+<rect x="344.9" y="320.5" width="70.19999999999999" height="26" rx="5" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="380.0" y="339.5" font-size="17" fill="#687683" font-weight="400" text-anchor="middle" class="">images</text>
+</g>
+<path data-role="connector" data-source="service" data-target="model" data-points="[[720, 352.5], [800, 352.5]]" d="M 720,352.5 L 800,352.5" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="60" y="514" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="">Wait for InferenceService / Ready. GPU-node readiness alone is not model readiness.</text>
+<path d="M 40,594 H 1080" stroke="#d5dbe1"/>
+<text x="40" y="625" font-size="16" fill="#52606d" font-weight="400" text-anchor="start" class="">D3 classifies images inside ARO. NetworkPolicy limits access to its internal service.</text>
+</svg>

@@ -18,6 +18,8 @@ The published runtime is built from the *Red Hat AI Inference Server* image `reg
 
 FP16 fits on a single 16 GB T4. Do not run another GPU model on the same card for this exercise.
 
+image::model-serving-architecture.svg["Private D3 inference on one T4, managed by OpenShift AI and KServe",align="center",link=self]
+
 == Check GPU discovery and the driver
 
 The operators were installed in Lab 1.1 and their instances enabled in Lab 1.3. The NVIDIA operator now configures the new T4 node.

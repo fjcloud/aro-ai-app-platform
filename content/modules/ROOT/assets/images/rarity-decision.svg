@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="820" viewBox="0 0 1120 820" role="img" aria-labelledby="title desc">
+<title id="title">Read the mark, then map the rarity</title><desc id="desc">One D3 request; card-kind eligibility gates the rarity shown in the application.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0,0 L 10,5 L 0,10 z" fill="#687683"/></marker><marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0,0 L 10,5 L 0,10 z" fill="#0066cc"/></marker></defs><style>text{font-family:Arial,Helvetica,sans-serif}svg{background:white}</style>
+<rect width="1120" height="820" rx="16" fill="white"/>
+<rect x="40" y="36" width="38" height="5" rx="2" fill="#ee0000"/>
+<text x="40" y="77" font-size="30" fill="#151515" font-weight="700" text-anchor="start" class="">Read the mark, then map the rarity</text>
+<text x="40" y="108" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="">One D3 request; card-kind eligibility gates the rarity shown in the application.</text>
+<g data-role="node" data-node="image">
+<rect x="40" y="170" width="260" height="140" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="41" y="188" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="60" y="217.5" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Source image</text>
+<text x="60" y="254.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">102 Base Set cards</text>
+<text x="60" y="278.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">3 negative controls</text>
+</g>
+<g data-role="node" data-node="kind">
+<rect x="430" y="170" width="260" height="140" rx="12" fill="white" stroke="#ee0000" stroke-width="1.5"/>
+<rect x="431" y="188" width="4" height="25" rx="2" fill="#ee0000"/>
+<text x="450" y="217.5" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Pokémon TCG card?</text>
+<text x="450" y="254.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Recognize the printed</text>
+<text x="450" y="278.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">layout</text>
+</g>
+<g data-role="node" data-node="mark">
+<rect x="820" y="170" width="260" height="140" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="821" y="188" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="840" y="205.5" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Bottom-right mark</text>
+<text x="840" y="242.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Read the small symbol</text>
+<text x="840" y="266.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">Beside the collector</text>
+<text x="840" y="290.5" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">number</text>
+</g>
+<path data-role="connector" data-source="image" data-target="kind" data-points="[[300, 240.0], [430, 240.0]]" d="M 300,240.0 L 430,240.0" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<g data-role="edge-label">
+<rect x="329.9" y="208.0" width="70.19999999999999" height="26" rx="5" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="365.0" y="227.0" font-size="17" fill="#687683" font-weight="400" text-anchor="middle" class="">pixels</text>
+</g>
+<path data-role="connector" data-source="kind" data-target="mark" data-points="[[690, 240.0], [820, 240.0]]" d="M 690,240.0 L 820,240.0" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<g data-role="edge-label">
+<rect x="732.95" y="208.0" width="44.099999999999994" height="26" rx="5" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="755.0" y="227.0" font-size="17" fill="#687683" font-weight="400" text-anchor="middle" class="">yes</text>
+</g>
+<g data-role="node" data-node="other">
+<rect x="430" y="440" width="260" height="150" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<rect x="431" y="458" width="4" height="25" rx="2" fill="#d5dbe1"/>
+<text x="450" y="479.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">Other / needs</text>
+<text x="450" y="506.0" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="node-title">review</text>
+<text x="450" y="543.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">No Pokémon rarity</text>
+<text x="450" y="567.0" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="node-body">No Pokémon price lookup</text>
+</g>
+<path data-role="connector" data-source="kind" data-target="other" data-points="[[560.0, 310], [560.0, 440]]" d="M 560.0,310 L 560.0,440" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<g data-role="edge-label">
+<rect x="583.8" y="357" width="122.39999999999999" height="26" rx="5" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="645" y="376" font-size="17" fill="#687683" font-weight="400" text-anchor="middle" class="">no / unknown</text>
+</g>
+<g data-role="node" data-node="mapping">
+<rect x="800" y="415" width="300" height="275" rx="12" fill="white" stroke="#d5dbe1" stroke-width="1.5"/>
+<text x="820" y="450" font-size="22" fill="#151515" font-weight="650" text-anchor="start" class="">Base Set mapping</text>
+<circle cx="831" cy="482" r="6" fill="#151515"/>
+<text x="855" y="488" font-size="19" fill="#151515" font-weight="400" text-anchor="start" class="">Common</text>
+<path d="M831,513 l8,8 -8,8 -8,-8 z" fill="#151515"/>
+<text x="855" y="527" font-size="19" fill="#151515" font-weight="400" text-anchor="start" class="">Uncommon</text>
+<polygon points="831.0,550.0 833.3511410091699,556.7639320225002 840.5105651629515,556.9098300562505 834.8042260651806,561.2360679774998 836.8778525229247,568.0901699437495 831.0,564.0 825.1221474770753,568.0901699437495 827.1957739348194,561.2360679774998 821.4894348370485,556.9098300562505 828.6488589908301,556.7639320225002" fill="#151515"/>
+<text x="855" y="566" font-size="19" fill="#151515" font-weight="400" text-anchor="start" class="">Rare</text>
+<text x="831" y="605" font-size="22" fill="#151515" font-weight="600" text-anchor="middle" class="">∅</text>
+<text x="855" y="605" font-size="19" fill="#151515" font-weight="400" text-anchor="start" class="">Common*</text>
+<text x="831" y="644" font-size="22" fill="#151515" font-weight="600" text-anchor="middle" class="">?</text>
+<text x="855" y="644" font-size="19" fill="#151515" font-weight="400" text-anchor="start" class="">Uncertain</text>
+</g>
+<path data-role="connector" data-source="mark" data-target="mapping" data-points="[[950.0, 310], [950.0, 415]]" d="M 950.0,310 L 950.0,415" fill="none" stroke="#687683" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="40" y="650" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="">Ignore large Energy icons, artwork and the 1st Edition stamp.</text>
+<text x="40" y="683" font-size="18" fill="#52606d" font-weight="400" text-anchor="start" class="">A diamond is a square rotated 45°. An unreadable corner is not an absent mark.</text>
+<path d="M 40,764 H 1080" stroke="#d5dbe1"/>
+<text x="40" y="795" font-size="16" fill="#52606d" font-weight="400" text-anchor="start" class="">* No mark → Common applies only to this known Base Set, with a fully visible corner.</text>
+</svg>

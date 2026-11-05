@@ -23,15 +23,7 @@ Instruction pages are in `content/modules/ROOT/pages`; Kubernetes manifests are 
 
 == Architecture
 
-[source,text]
-----
-Dev Spaces / OpenCode → OpenShift AI MaaS → DeepSeek on Foundry
-Browser → generated Go UI/proxy → prepared Card Scout service
-                                  ├→ fixed images → d3-mini on T4 → rarity ranking
-                                  └→ OpenShift AI Responses → DeepSeek + price MCP
-Playground → same MCP tool              Model and tool spans → MLflow
-Git → Tekton → Argo CD → same app
-----
+image::content/modules/ROOT/assets/images/architecture-overview.svg["Card Scout architecture: governed coding, local image inference and agent price verification",align="center",link=self]
 
 Use the https://github.com/fjcloud/go-app-template/tree/aro-signal-desk[Card Scout template branch]. `AGENTS.md` defines delivery rules; `APP_CONTRACT.md` defines the application and fixed APIs. The prepared service and dataset are in `examples/card-scout`; its manifests are `deploy/card-scout`, and model manifests are `deploy/decision`. The template contains no completed app to copy. Clone this workshop's `main` branch.
 
