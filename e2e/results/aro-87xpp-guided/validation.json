@@ -1,0 +1,88 @@
+{
+  "lab": "87xpp",
+  "date": "2026-11-09",
+  "openshift": "4.21.22",
+  "baseline": "Existing operator subscriptions and CPU/T4 pools; platform instances and developer workspace created during validation.",
+  "platform_steps": {
+    "04-operators": {
+      "exit": 0,
+      "seconds": 4.79
+    },
+    "05-workers": {
+      "exit": 0,
+      "seconds": 115.04
+    },
+    "06-services": {
+      "exit": 0,
+      "seconds": 466.33
+    },
+    "07-foundry": {
+      "exit": 0,
+      "seconds": 32.12
+    },
+    "08-maas": {
+      "exit": 0,
+      "seconds": 10.19
+    },
+    "09-decision": {
+      "exit": 0,
+      "seconds": 337.71
+    },
+    "10-developer": {
+      "exit": 0,
+      "seconds": 5.93
+    },
+    "11-card-scout": {
+      "exit": 0,
+      "seconds": 239.81
+    },
+    "13-tls-helpers": {
+      "exit": 0,
+      "seconds": 3.71
+    }
+  },
+  "simplified_start": {
+    "exit": 0,
+    "password_prompts_answered": 4,
+    "existing_admin_preserved": true
+  },
+  "browser_accounts": [
+    "workshop-admin",
+    "dev"
+  ],
+  "workspace_namespace": "dev-devspaces",
+  "cli_identity": "system:serviceaccount:card-scout-dev:workshop-developer",
+  "opencode_version": "1.18.14",
+  "model_api_blocks": "All four documented developer blocks passed; five JSON responses verified.",
+  "native_agent": {
+    "passed": true,
+    "project": "card-scout-dev",
+    "backend_created_by": "CLI OGXServer",
+    "ui_creation_used": false,
+    "live_model": true,
+    "model": "maas-vllm-inference-1/deepseekv4pro",
+    "subscription": "Card Scout runtime",
+    "response_status": "completed",
+    "marker_verified": true,
+    "at": "2026-11-09T16:28:04.156Z"
+  },
+  "playground": {
+    "passed": true,
+    "project": "card-scout-dev",
+    "model": "maas-vllm-inference-1/deepseekv4pro",
+    "status": "completed",
+    "response_ids": [
+      "resp_c807ea3c-2775-4920-933f-f8d456733631"
+    ],
+    "tools": [
+      "get_card_market_data"
+    ],
+    "mcp_authentication": "none",
+    "at": "2026-11-09T16:29:15.552Z"
+  },
+  "limitations": [
+    "Existing CPU/T4 pools were reused; no additional VMs were created.",
+    "Gateway/TLS helpers were retested idempotently after equivalent manual setup.",
+    "Application generation, Tekton delivery and Argo CD rollout were not repeated in this documentation validation."
+  ]
+}

@@ -2,16 +2,9 @@
 
 include::ROOT:partial$pr-preview.adoc[]
 
+== Goal
 
-== What you will do and why
-
-*Goal: Explain which activity consumes which resources.*
-Use the dashboard already installed on the platform to compare coding tokens, runtime-agent tokens and local GPU activity. You will connect one visible app action to the graphs, so consumption is understandable without writing PromQL or collecting metrics manually.
-
-
-Explore the dashboard already installed in Lab 1.3. It shows DeepSeek token
-consumption through MaaS and d3-mini activity on the cluster's T4.
-No additional installation or metrics commands are needed.
+Explore the installed dashboard to compare coding tokens, runtime-agent tokens and local GPU activity. Connect one app action to its usage graphs.
 
 [NOTE]
 ====
@@ -22,9 +15,9 @@ No additional installation or metrics commands are needed.
 
 == Recover the console URL and choose the right account
 
-Return to the *bastion terminal*, still signed in as `workshop-admin`:
+Return to the *cluster terminal*, still signed in as `workshop-admin`:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -34,9 +27,7 @@ oc whoami --show-console
 
 Open that URL in the administrator browser profile, or sign out of the developer
 session first. Select identity provider *workshop*, username *workshop-admin*,
-and the administrator password you chose in Act 0. This is not the `dev` password,
-not the workshop catalog password and not a MaaS API key. Passwords are hashed;
-you cannot retrieve the plaintext from a Secret.
+and the administrator password you chose in Act 0.
 
 == Open the dashboard
 
@@ -69,7 +60,7 @@ image::card-scout-dashboard-tokens.png["OpenShift dashboard with the Last 1 hour
 |===
 | Look at | What to identify
 | Model tokens by subscription | Compare `deepseekv4pro-workshop` (OpenCode/coding) with `deepseekv4pro-card-scout` (app/Playground research). These are cumulative totals combining input and output tokens.
-| Model requests accepted by quota checks | Find the activity around generation and price checks. An accepted request is not necessarily a successful model completion.
+| Model requests accepted by quota checks | Find the activity around generation and price checks.
 | Quota rejections (HTTP 429) | Check whether MaaS rejected requests. Zero rejections is normal; no quota test is required. Foundry has a separate tokens-per-minute limit.
 | D3 completed scoring requests / request latency p95 / queued requests | Find the batch-analysis activity. D3 scores images rather than generating text tokens; latency can be empty when no requests completed in the recent window.
 | T4 utilization / memory | Compare the batch activity with quieter periods. Model memory remains allocated while idle. DeepSeek runs on Foundry, so a coding request does not use this T4.
@@ -99,9 +90,9 @@ fall between GPU samples; low utilization alone does not mean it never ran.
 
 == Understand the limits and cost
 
-In *OpenShift AI → Settings → MaaS governance → Subscriptions*, open the coding and runtime
-subscriptions. Expand each model in its details to see the token limit and time
-window. These are administrator views; use the `workshop-admin` session. Their allowances are ten million and one million tokens per
+In *OpenShift AI → Settings → MaaS governance → Subscriptions*, find the coding and runtime
+subscriptions. Click the count in each row’s *Models* column to see its token
+limit and time window. These are administrator views; use the `workshop-admin` session. Their allowances are ten million and one million tokens per
 24 hours respectively. They govern consumption, not spending caps; the shared
 coding key reports workshop-level usage rather than individual participants.
 

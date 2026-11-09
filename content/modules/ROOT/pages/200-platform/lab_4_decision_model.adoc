@@ -3,14 +3,9 @@
 
 include::ROOT:partial$pr-preview.adoc[]
 
+== Goal
 
-== What you will do and why
-
-*Goal: Add the focused image-decision capability.*
-DeepSeek is the language model; D3 is a smaller multimodal model used for a narrow decision task. It evaluates an image against explicit candidate choices and returns probabilities. Here those choices describe the card type and the printed rarity symbol. Keeping this focused task on the local T4 separates visual decisions from language generation and lets you observe their latency and GPU cost independently. It complements DeepSeek rather than replacing it.
-
-
-DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 and classifies card images and their printed rarity. The developer will compare it with the language model using curl + jq in Lab 2.2.
+Serve a focused image-decision model on the local T4. Unlike DeepSeek, D3 selects among supplied choices and returns probabilities: here it identifies Pokémon cards and their printed rarity symbols.
 
 [NOTE]
 ====
@@ -20,8 +15,6 @@ DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 an
 ====
 
 d3-mini is a 4.54B-parameter community decision model from https://huggingface.co/vllm-sr/d3-mini[vLLM Semantic Router], Apache-2.0 licensed. It returns choices or ordinal scores without generating a paragraph. OpenShift AI/KServe manages its native runtime. DeepSeek remains the managed language model.
-
-Red Hat https://www.redhat.com/en/about/press-releases/red-hat-completes-acquisition-neural-magic-fuel-optimized-generative-ai-innovation-across-hybrid-cloud[acquired Neural Magic], a leading contributor to vLLM, in January 2025.
 
 The published runtime is built from the *Red Hat AI Inference Server* image `registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5.0`, pinned by digest in `deploy/decision/runtime/Dockerfile`. It adds the pinned vLLM Semantic Router decision engine. The resulting image is built before the workshop and pinned by digest in `servingruntime.yaml`.
 
@@ -35,7 +28,7 @@ The operators were installed in Lab 1.1 and their instances enabled in Lab 1.3. 
 
 Inspect GPU discovery and the driver:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -61,7 +54,7 @@ OpenShift AI/KServe manages two resources: `ServingRuntime/d3-native` defines th
 
 Update the workshop checkout before applying the model manifests, then inspect and deploy them with the CLI:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -75,10 +68,9 @@ cat deploy/decision/inferenceservice.yaml
 oc apply -k deploy/decision
 # Wait for the model runtime to load its weights and serve requests.
 oc wait inferenceservice/d3-mini -n decision-serving --for=condition=Ready --timeout=1800s
-# Verify the required app identity/storage resources and their state.
+# Check the created resources and their status.
 oc get inferenceservice,servingruntime,pvc -n decision-serving
-# Inspect pod readiness; for an app digest check, compare the running image with the build
-# result.
+# Inspect the model pods and their readiness.
 oc get pods -n decision-serving
 ----
 
@@ -100,18 +92,11 @@ Expect a Ready `d3-mini` inference service and no public model Route. The decisi
 http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone
 ----
 
-A Ready GPU node does not establish model readiness. Wait for `InferenceService/Ready` before handing the endpoint to the developer. If Azure reports a failed VM, inspect `oc describe machine` and Machine API events; OpenShift may replace an unhealthy new machine automatically. Do not continue after the readiness timeout or add a second T4 to hide a provisioning error.
-
 == Make the model available to developers
 
 Developers and the prepared Card Scout service call the same internal model directly. d3-mini requires no API key or authentication proxy in this workshop. Its NetworkPolicy allows the Card Scout platform service, Dev Spaces and monitoring namespaces; no public Route is created.
 
-[source,text]
-----
-http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone
-----
-
-The model is visible as `d3-mini` under project `decision-serving` in OpenShift AI. Wait for Ready; a provisioned GPU alone does not prove model readiness. The developer tests both APIs in Lab 2.2 before coding.
+The developer tests this endpoint in Lab 2.2 before coding.
 
 == Check in OpenShift AI
 
@@ -123,6 +108,5 @@ Check its deployment status and the requested single GPU. In the OpenShift conso
 The web UI helps you inspect the CLI-created service; do not deploy another
 copy from the UI. The two successful outcomes are a Ready inference service and
 an internal endpoint. The absence of a public Route is intentional.
-
 
 Continue to xref:200-platform/lab_5_agents_md.adoc[Lab 1.7 — Prepare Developer Access].

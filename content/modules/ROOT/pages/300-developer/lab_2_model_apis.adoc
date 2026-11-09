@@ -2,12 +2,9 @@
 
 include::ROOT:partial$pr-preview.adoc[]
 
+== Goal
 
-== What you will do and why
-
-*Goal: Prove each API works before asking AI to build the application.*
-Send small, independent requests to D3, DeepSeek and the native agent. Seeing a model choice, a language answer and an actual tool call makes their responsibilities concrete. It also separates API or credential failures from application-code failures, so you do not ask the code generator to debug the wrong layer.
-
+Test D3, DeepSeek and the native agent independently with `curl | jq`. Check an image prediction, a language response and a real tool call before generating the application.
 
 *Developer · Dev Spaces terminal.* Test each capability before writing the app.
 Format JSON responses with `jq`. Keep the injected MaaS key out of Git, OpenCode
@@ -120,13 +117,12 @@ curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"In one sentence, explain why a trading card rarity is different from its market value."}],"max_completion_tokens":256}' | jq '{model,answer:.choices[0].message.content,usage}'
 ----
 
-Expect an actual answer and measured usage. A quota error is a visible failure;
-do not switch the workshop model or substitute a keyword rule.
+Expect an actual answer and measured usage. If you receive a quota error, check the MaaS subscription and Foundry limits.
 
 [TIP]
 ====
 MaaS keys expire after 24 hours. If a previously working request returns `403`,
-renew the developer key in the *bastion terminal*:
+renew the developer key in the *cluster terminal*:
 
 [source,sh,role=execute]
 ----

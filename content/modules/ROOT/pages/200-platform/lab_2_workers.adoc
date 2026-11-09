@@ -3,20 +3,17 @@
 
 include::ROOT:partial$pr-preview.adoc[]
 
+== Goal
 
-== What you will do and why
+Add CPU capacity for the IDE and platform services, and reserve one T4 for image inference. A MachineSet defines the VM template and worker count for each pool.
 
-*Goal: Make room for the platform and reserve one GPU.*
-The original cluster is sized for a base environment. Add one CPU worker for the IDE and platform services, plus one T4 worker for D3 image decisions. Separate pools let you place workloads deliberately and see which infrastructure is responsible for each cost. A MachineSet is OpenShift’s template and replica count for a group of worker VMs.
-
-
-*Platform Engineer · bastion terminal.* Add one CPU worker and one single-T4 worker to the existing ARO cluster. Keep the original pools. If the additional D8 or T4 pool already exists, reuse it and skip that creation block.
+*Platform Engineer · cluster terminal.* Add one CPU worker and one single-T4 worker to the existing ARO cluster. Keep the original pools. If the additional D8 or T4 pool already exists, reuse it and skip that creation block.
 
 Classic ARO manages worker pools with OpenShift MachineSets, following the https://learn.microsoft.com/en-us/azure/openshift/howto-gpu-workloads[Microsoft GPU guide]. ARO HCP node-pool commands do not apply to this cluster.
 
 == Inspect the cluster and quota
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -32,13 +29,13 @@ INFRA=$(oc get infrastructure cluster -o jsonpath='{.status.infrastructureName}'
 REGION=$(az aro show --name "$ARO_NAME" --resource-group "$RESOURCEGROUP" \
   --subscription "$SUBSCRIPTION" --query location -o tsv)
 
-# Inspect the named resource and its reported status before proceeding.
+# Inspect machinesets status.
 oc get machinesets -n openshift-machine-api \
   -o 'custom-columns=NAME:.metadata.name,SIZE:.spec.template.spec.providerSpec.value.vmSize,ZONE:.spec.template.spec.providerSpec.value.zone,DESIRED:.spec.replicas,READY:.status.readyReplicas'
 # Identify the storage zone that constrains CPU placement for an existing workspace.
 oc get pv -o 'custom-columns=CLAIM:.spec.claimRef.name,NAMESPACE:.spec.claimRef.namespace,ZONE:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values'
 ----
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -57,7 +54,7 @@ The CPU worker needs 8 free DSv3 vCPUs; the T4 worker needs 8 free NCasT4_v3 vCP
 
 Use `Standard_D8s_v3` for platform and developer workloads. Choose a zone containing an original CPU MachineSet. An existing Dev Spaces PVC requires CPU capacity in its own zone; adapt `CPU_ZONE=3` to the PV zone shown above.
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -105,7 +102,7 @@ preserves its matching subnet, image and bootstrap settings. The workspace PVC
 belongs to CPU storage; it does not have to share the GPU node’s zone. Keep the
 CPU worker in the PVC’s zone, and choose the GPU zone independently.
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -138,13 +135,13 @@ oc get machineset "$GPU_TEMPLATE" -n openshift-machine-api -o json | \
 # Wait for the newly provisioned worker to join OpenShift and become Ready.
 oc wait machineset/"$GPU_POOL" -n openshift-machine-api \
   --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
-# Inspect the named resource and its reported status before proceeding.
+# Inspect machines status.
 oc get machines -n openshift-machine-api
 # Inspect the worker/GPU labels and reported allocatable resources.
 oc get nodes -l workshop.fjcloud.io/gpu=t4
 ----
 
-The taint reserves this worker for workloads tolerating `nvidia.com/gpu=present:NoSchedule`. Node readiness confirms provisioning. Lab 1.3 enables the ClusterPolicy and waits for the NVIDIA driver to advertise one GPU. Do not substitute a four-T4 VM: requesting one GPU in a pod still incurs the cost of the entire VM.
+The taint reserves this worker for workloads tolerating `nvidia.com/gpu=present:NoSchedule`. Node readiness confirms provisioning. Lab 1.3 enables the ClusterPolicy and waits for the NVIDIA driver to advertise one GPU.
 
 [IMPORTANT]
 ====
@@ -159,13 +156,13 @@ separate check in Lab 1.3. Do not paste the creation command again while waiting
 As `workshop-admin`, open *Compute → Nodes*. Compare the new CPU and GPU nodes
 with the original workers. Open the GPU node and inspect its labels and taints:
 `workshop.fjcloud.io/gpu=t4` identifies it, and the GPU taint prevents ordinary
-platform pods from taking its capacity. Return to the bastion for the next checks.
+platform pods from taking its capacity. Return to the cluster terminal for the next checks.
 
 == Wait for all operators
 
-Use the bastion's OpenShift 4.21+ CLI. `readiness.yaml` lists Deployments to observe; it is an inventory for `oc wait`, not a manifest to apply.
+Use the OpenShift 4.21+ CLI in the cluster terminal. `readiness.yaml` lists Deployments to observe; it is an inventory for `oc wait`, not a manifest to apply.
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -181,7 +178,7 @@ oc wait tektonconfig/config --for=condition=Ready --timeout=600s
 python3 scripts/install-pipeline-tasks.py
 ----
 
-The helper reuses the installed Red Hat `git-clone` and `buildah` task images and scripts. It adapts only the workspace mount and initial working directory for ARO user namespaces. The application pipeline passes `/source` as its build context. It does not need a privileged SCC.
+The helper reuses the installed Red Hat `git-clone` and `buildah` task images and scripts. It adapts only the workspace mount and initial working directory for ARO user namespaces. The application pipeline passes `/source` as its build context.
 
 Do not continue after a timeout. Inspect Pending pods, quota and OLM conditions before creating platform instances.
 

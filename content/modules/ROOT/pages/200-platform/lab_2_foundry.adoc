@@ -2,14 +2,9 @@
 
 include::ROOT:partial$pr-preview.adoc[]
 
+== Goal
 
-== What you will do and why
-
-*Goal: Give the workshop a language model for coding and tool use.*
-Create a managed DeepSeek deployment in Microsoft Foundry, then verify it directly before adding the OpenShift gateway. This isolates provider-access or quota problems from MaaS configuration problems. DeepSeek writes and explains code and runs the price agent; it does not use the cluster’s T4.
-
-
-The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode uses that endpoint in Act 2. d3-mini will run separately on one T4 in Lab 1.6 to classify card images; it is not OpenCode’s coding model.
+Deploy DeepSeek on Microsoft Foundry for code generation and agent tool use. Test the provider directly before publishing it through the OpenShift AI gateway; DeepSeek runs on Azure, leaving the T4 for D3.
 
 [NOTE]
 ====
@@ -42,7 +37,7 @@ This deployment uses Global Standard, pay-per-token pricing in East US 2. Reason
 | `GlobalStandard`, capacity `500` (500 000 tokens/minute)
 |===
 
-Act 0 detected the subscription and the resource group containing your ARO resource. Load `state/workshop.env` below; no names or IDs need replacing. If you changed your Azure or OpenShift login since Act 0, rerun `make onboard` first.
+Act 0 detected the subscription and the resource group containing your ARO resource. Load `state/workshop.env` below; no names or IDs need replacing. If your session expired, run `oc login -u workshop-admin`. If you changed Azure subscriptions, repeat the resource discovery in Act 0.
 
 Capacity controls throughput, not a fixed hourly charge. Capacity `1` only allows 1 000 tokens/minute in this lab: a short curl works, but coding prompts receive HTTP 429. Allocate `500` for this single-participant run; check the model quota before sharing the endpoint with a group.
 
@@ -59,14 +54,14 @@ endpoint startup errors with a 10-second delay and allows 3 minutes per attempt.
 
 == Create the account and the deployment
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
 # Load the subscription, resource group and cluster ID detected in Act 0.
 source state/workshop.env
 # Stop with a clear message if the resource-group discovery from Act 0 was not run.
-: "${RESOURCEGROUP:?Run make onboard successfully before this lab}"
+: "${RESOURCEGROUP:?Complete the resource discovery in Act 0 first}"
 # Verify access to the detected lab resource group; do not type another group ID.
 az group show --name "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" --output none
 # Derive a lab suffix from the detected resource group.
@@ -111,7 +106,7 @@ az rest --method get \
 
 The table should show format `DeepSeek`, version `2026-04-23`, SKU `GlobalStandard`. Then create the deployment:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -128,7 +123,7 @@ wait_foundry "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourc
 
 The key stays in the shell variable. Do not paste it into the chat or the workshop repo.
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----

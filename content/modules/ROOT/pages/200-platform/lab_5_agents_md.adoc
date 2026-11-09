@@ -2,14 +2,9 @@
 
 include::ROOT:partial$pr-preview.adoc[]
 
+== Goal
 
-== What you will do and why
-
-*Goal: Hand over a working platform without handing over administration.*
-Prepare the developer’s projects and permissions, then inspect the small app contract and delivery scaffold. You will enable the browser account dev to use an existing workspace project. OpenCode receives a separate limited CLI identity, so generating an application does not require an administrator password or cluster-wide permissions.
-
-
-DeepSeek-V4 Pro is already answering. Prepare the scoped developer access and project runbook for the developer in Act 2.
+Prepare the developer projects, permissions and app template. The browser account `dev` will own its workspace; a limited service account gives OpenCode CLI access to build and deploy the app.
 
 The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-card-scout[fjcloud/go-app-template].
 
@@ -48,15 +43,15 @@ The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-
 | Golden-path Kustomize. The Deployment already names the internal Tekton image. The pipeline validates that image before building; the model keeps the scaffold intact.
 |===
 
-`APP_CONTRACT.md` defines the application, APIs and acceptance checks. `AGENTS.md` defines the short test-and-fix workflow; `DELIVERY.md` contains the detailed delivery commands. There is no app `scripts/` directory and no Ansible.
+`APP_CONTRACT.md` defines the application, APIs and acceptance checks. `AGENTS.md` defines the short test-and-fix workflow; `DELIVERY.md` contains the detailed delivery commands.
 
 == Prepare the developer's permissions
 
 Prepare the two application namespaces and inject a scoped developer identity into Dev Spaces. This helper waits for namespace security allocation, creates the limited permissions and mounts a temporary kubeconfig without printing its token.
 
-Run from the bastion before opening Dev Spaces:
+Run from the cluster terminal before opening Dev Spaces:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -67,10 +62,9 @@ oc auth can-i create pipelineruns -n card-scout-build \
   --as=system:serviceaccount:card-scout-dev:workshop-developer
 ----
 
-The developer can build and deploy in the two application namespaces. That injected CLI identity cannot create namespaces, change Security Context
-Constraints (SCCs) or create cluster-wide role bindings. Image-pull permission is prepared here, not by the model. The Pipelines operator supplies its standard, non-privileged build service account permissions.
-
-The injected developer token is valid for 24 hours. Preparation must run before opening Dev Spaces; restart an existing workspace to receive the scoped kubeconfig.
+The injected CLI identity can build and deploy in the two application projects.
+Its token is valid for 24 hours. Run preparation before opening Dev Spaces;
+restart an existing workspace to load the updated credentials.
 
 == Give the browser user a prepared workspace project
 
@@ -80,7 +74,7 @@ manifest pre-creates *dev-devspaces*, labels it for Dev Spaces discovery, and
 associates it with username `dev`. It grants namespace administration only in
 that workspace project, and `edit` only in *card-scout-dev* and *card-scout-build*.
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -94,34 +88,24 @@ oc get namespace dev-devspaces -o json | jq '{name:.metadata.name,labels:.metada
 oc auth can-i create devworkspaces.workspace.devfile.io -n dev-devspaces --as=dev
 # Expect yes: this identity can deploy in the application project.
 oc auth can-i create deployments -n card-scout-dev --as=dev
-# An intentional denial: dev must not be able to create cluster-wide role bindings.
-oc auth can-i create clusterrolebindings --as=dev
 ----
 
-Expect `yes`, `yes`, then `no`. The last command returns exit status 1 because
-it is deliberately testing a denied permission. `admin` in a *RoleBinding* is
-limited to that namespace; it is not the cluster-wide `cluster-admin` role.
+Expect `yes` for both permission checks. The workspace role is limited to
+*dev-devspaces*; the application roles are limited to the two app projects.
 The supplied https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/administration_guide/assembly_configuring-projects_administration_guide[Dev Spaces project labels and username annotation]
 allow the existing project to be reused.
 
-*SCC* means *Security Context Constraints*: the OpenShift admission policies that
-control pod privileges, users and capabilities. This flow grants no privileged
-SCC and no cluster-wide binding to `dev`. *DSC* means *DataScienceCluster*, the
-platform configuration created by `workshop-admin` in Lab 1.3. The developer does
-not need to create or modify either type of resource.
+== Read the application contract
 
-== Step 1: Read AGENTS.md
+Inspect the agent instructions and app contract. The developer will use these
+same files in Dev Spaces.
 
-Clone only if you want it on disk. On a shared workshop cluster you can also open the file on GitHub. Either way, *read it* — it is short.
-
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
 # Clone the application template for inspection; do not copy a completed app.
 git clone --depth 1 --branch aro-card-scout https://github.com/fjcloud/go-app-template "$HOME/card-scout-template"
-# Check the size of the short agent instructions before reading them.
-wc -l "$HOME/card-scout-template/AGENTS.md"
 # Read the short generation, test and delivery rules for the coding agent.
 cat "$HOME/card-scout-template/AGENTS.md"
 # Read the required minimal UI and the platform API it must call.
@@ -151,11 +135,11 @@ until it passes and keep the supplied tests unchanged. The detailed Git → Tekt
 
 image::cicd-gitops.svg["Prompt to deployment",align="center",link=self]
 
-== Step 2: Confirm OpenCode is wired to MaaS
+== Confirm OpenCode is configured for MaaS
 
 OpenCode is injected from the AI tool registry enabled in Lab 1.3. The *binary* comes from the platform. The platform model pin is the ConfigMap. The project and platform files both pin DeepSeek through MaaS. Lab 2.1 checks they agree.
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -199,7 +183,7 @@ https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/h
 
 == Verify the handoff in the console
 
-Keep the bastion as `workshop-admin`. In a *separate browser profile or private
+Keep the cluster terminal as `workshop-admin`. In a *separate browser profile or private
 window*, open the console URL from `oc whoami --show-console`, choose the
 *workshop* identity provider and sign in as *dev*, using the developer password
 from Act 0. A separate browser session avoids silently reusing the administrator’s
@@ -207,5 +191,4 @@ single sign-on session when you open Dev Spaces.
 
 Use the project selector to find *dev-devspaces*, *card-scout-dev* and
 *card-scout-build*. The platform namespaces do not need to be editable by this
-user. Keep this developer browser window for Act 2; do not paste an administrator
-token into it or into OpenCode.
+user. Keep this developer browser window for Act 2.

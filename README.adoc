@@ -1,13 +1,13 @@
 = AI Developer Platform on ARO
 
-Start with an *existing ARO cluster* and a WeTTY bastion from Red Hat Demo Platform. Cloud SSAs use this guide to prepare access and lead participants through the platform and developer roles.
+Start with an *existing ARO cluster* and a browser terminal from Red Hat Demo Platform. Cloud SSAs use this guide to prepare access and lead participants through the platform and developer roles.
 
 == Run the workshop
 
 . Prepare and assign an RHDP environment with a ready classic ARO cluster, OpenShift 4.21 or later, and a browser terminal. An Azure Blank Environment alone does not include these.
 . Open https://fjcloud.github.io/cloud-terminal-pages/[Cloud Terminal], select *Azure · AI developer platform on ARO*, and enter the *workshop ID, assigned email, and workshop password*.
 . The launcher retrieves the assigned Showroom URL. Shared links contain only the guide and workshop ID; each participant signs in separately.
-. Follow Act 0 to clone the repository and run `make onboard` to sign in to the existing cluster.
+. Follow Act 0 to create `workshop-admin` and `dev`, then sign in as `workshop-admin`.
 
 Platform labs prepare OpenShift AI, DeepSeek through MaaS, and one T4 running
 d3-mini. Developers generate *Card Scout* from scratch with OpenCode: analyze an
@@ -15,7 +15,7 @@ English Base Set collection, browse the rarity ranking and check a price through
 an OpenShift AI agent. The platform owns the dataset, read-only MCP tool, state
 and MLflow traces. The generated Go app is a small UI and same-origin proxy.
 
-`make onboard` signs in using the existing ARO credentials retrieved from Azure, then detects the resource group containing that resource and writes its name, ID and subscription to `state/workshop.env`. The instructions load this file; participants do not type a resource group name or select the first group in a subscription.
+Act 0 detects the resource group from the connected cluster and saves it in `state/workshop.env` for the Azure commands.
 
 Use one assigned cluster per participant. On a shared cluster, the facilitator prepares the platform once and isolates each app’s namespaces and access.
 

@@ -1,7 +1,4 @@
 [NOTE]
 ====
-*Run inside Dev Spaces*, not in the bastion: open *Terminal → New Terminal* in
-the browser editor and use the project directory (`$PROJECT_SOURCE`). Sign in
-to the Dev Spaces website as `dev`; its terminal receives a separate, limited
-`workshop-developer` service account for CLI commands.
+*Terminal: Dev Spaces* — in the editor, choose *Terminal → New Terminal*.
 ====

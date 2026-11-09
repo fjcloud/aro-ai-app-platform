@@ -2,14 +2,9 @@
 
 include::ROOT:partial$pr-preview.adoc[]
 
+== Goal
 
-== What you will do and why
-
-*Goal: Offer a model as a governed platform API.*
-Register the external DeepSeek deployment in OpenShift AI and expose it through Models-as-a-Service (MaaS). The value for a developer is a stable model name and endpoint with a limited client key. The value for the platform team is centralized access policy, token allowances and usage tracking, while the provider credential stays on the platform.
-
-
-Give developers the same access pattern whether a model runs on the cluster or at a cloud provider. Register DeepSeek on Foundry as an *external model* in OpenShift AI, then publish it through *Models-as-a-Service*: one HTTPS endpoint, a MaaS API key and a token quota.
+Publish DeepSeek through Models-as-a-Service (MaaS). Developers receive a stable endpoint and a limited client key; the platform retains the Azure provider key and controls token allowances.
 
 [NOTE]
 ====
@@ -33,15 +28,15 @@ For this single-participant cluster, the workshop grants `system:authenticated` 
 
 == Step 1: Register the Foundry provider
 
-Run from the workshop repository in the *bastion terminal*. Keep shell tracing (`set -x`) off.
+Run from the workshop repository in the *cluster terminal*. Keep shell tracing (`set -x`) off.
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
 # Register the Foundry endpoint and store its provider key only on the platform.
 bash scripts/configure-coding-provider.sh
-# Inspect the named resource and its reported status before proceeding.
+# Inspect externalprovider.inference.opendatahub.io status.
 oc get externalprovider.inference.opendatahub.io foundry -n llm-serving
 ----
 
@@ -49,7 +44,7 @@ The helper reads the existing Azure key without printing it, stores it in `llm-s
 
 == Step 2: Publish the model, access policy and subscription
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -82,7 +77,7 @@ Inspect `deploy/coding/external-model.yaml`: the client model is `deepseekv4pro`
 *Allow 2–5 minutes for a fresh registration and its access policy to reconcile.*
 Each wait above permits 5 minutes. A short-lived `Degraded` label while supporting
 components start is not the final result. Continue only when the model/provider
-checks are Ready and the workshop subscription is Active/Ready. If a wait times
+checks are Ready and the workshop subscription is Ready. If a wait times
 out or `Degraded` persists, inspect the conditions below; do not mint more keys,
 grant administrator access, or silently switch model providers.
 ====
@@ -90,7 +85,7 @@ grant administrator access, or silently switch model providers.
 If everything is Ready, continue to Step 3. For persistent `Degraded` or a timeout,
 use the status message to identify the failing layer:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -98,7 +93,7 @@ include::ROOT:partial$run-bastion.adoc[]
 oc get externalprovider.inference.opendatahub.io foundry -n llm-serving -o json | jq '{phase:.status.phase,conditions:.status.conditions}'
 # Inspect the external deployment and the model published through MaaS.
 oc get externalmodel.inference.opendatahub.io deepseekv4pro -n llm-serving -o json | jq '{phase:.status.phase,conditions:.status.conditions}'
-# Inspect the named resource and its reported status before proceeding.
+# Inspect maasmodelref status.
 oc get maasmodelref deepseekv4pro -n llm-serving -o json | jq '{phase:.status.phase,conditions:.status.conditions}'
 # Inspect the tenant's component readiness and its reported failure reasons.
 oc get maastenantconfig default-tenant -n models-as-a-service -o json | jq '{phase:.status.phase,conditions:.status.conditions}'
@@ -117,9 +112,9 @@ that every monitoring or UI component is healthy.
 
 == Step 3: Give Dev Spaces a MaaS key
 
-Act 0 signs the bastion in automatically. If the session has expired, run `make onboard` again before creating the key.
+If your session has expired, run `oc login -u workshop-admin` before creating the key.
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -133,7 +128,7 @@ This creates a key for subscription `deepseekv4pro-workshop`, valid for 24 hours
 
 Load only the Dev Spaces credential into the shell, then call the gateway:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -158,9 +153,9 @@ The URL is `https://maas.<apps-domain>/v1`. Clients send a Bearer MaaS key; they
 
 == Open OpenShift AI and verify the published model
 
-First recover the URLs from the *bastion terminal*, still as `workshop-admin`:
+First recover the URLs from the *cluster terminal*, still as `workshop-admin`:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -180,23 +175,25 @@ This is not the catalog password or a model API key. Close the welcome tour.
 . Go to *AI hub → Models → External models*.
 . Set the *Project* selector to *llm-serving*. Leaving another project selected
   can hide the model even though the CLI deployment succeeded.
-. Open *DeepSeek-V4 Pro (Microsoft Foundry)* (`deepseekv4pro`) and inspect provider
-  *foundry*. The external registration means inference still runs on Azure; no
-  local DeepSeek GPU pod is expected.
+. Find *DeepSeek-V4 Pro (Microsoft Foundry)* (`deepseekv4pro`), provider
+  *foundry*, with status *Ready*. Expand its row to inspect the provider details.
+  Inference runs on Azure.
 . Go to *Settings → MaaS governance → Subscriptions*. Find
-  *deepseekv4pro-workshop*. It should be *Active*.
-. Click the subscription name. In its model details, expand *deepseekv4pro* to
-  inspect its token limit and window. If the list shows a *Models* count instead,
-  click that count to expand the associated model and token limits.
-. Verify *10,000,000 tokens per 24 hours*. This is the configured allowance,
-  not a remaining-balance display or an Azure spending limit. You do not need to
-  edit the subscription to inspect it.
+  *DeepSeek-V4 Pro workshop subscription* (`deepseekv4pro-workshop`), with
+  status *Ready*.
+. In that row, click *1* in the *Models* column. This expands the model's
+  *Token limits*: verify *10,000,000 / 24 hours*. This is the configured
+  allowance; remaining usage is explored in Lab 3.1.
 . In *Gen AI studio → AI asset endpoints*, find the published model endpoint.
   Act 2 will use it from OpenCode; the Playground is exercised in Lab 3.2.
 
+image::workshop-external-deepseek.png[External DeepSeek model in the llm-serving project,align="center",link=self]
+
+image::workshop-maas-token-limits.png[MaaS subscription with the Models column expanded to show token limits,align="center",link=self]
+
 For reference, the same configuration can be inspected without changing it:
 
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----

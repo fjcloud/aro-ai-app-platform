@@ -3,16 +3,13 @@
 
 include::ROOT:partial$pr-preview.adoc[]
 
+== Goal
 
-== What you will do and why
+Install the operators that manage the IDE, AI services and delivery tools. Their downloads run while you add worker capacity in the next lab; Lab 1.3 then creates the services they manage.
 
-*Goal: Install the controllers the platform needs.*
-An operator is a controller that installs and maintains a product. In this lab you submit the operator subscriptions together, so their downloads can run while you add worker capacity. This saves setup time and gives the next labs the APIs they need. You are installing the managers here, not creating every running service yet.
+*Platform Engineer · cluster terminal.* Submit all operator subscriptions together. No installation script is needed.
 
-
-*Platform Engineer · bastion terminal.* Submit all operator subscriptions together. No installation script is needed.
-
-include::ROOT:partial$run-bastion.adoc[]
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
@@ -38,7 +35,7 @@ The manifests install OpenShift AI, Dev Spaces, Kubernetes Image Puller, Pipelin
 
 OLM resolves dependencies and pulls the controllers in the background. A subscription is not proof that its operator is ready. Next, add CPU capacity and one GPU worker, then wait for the complete operator inventory before creating platform instances.
 
-If a subscription reports an error, inspect it with `oc describe subscription <name> -n <namespace>`. Do not bypass dependency errors or grant privileged SCCs.
+If a subscription reports an error, inspect it with `oc describe subscription <name> -n <namespace>`. Resolve the reported dependency before continuing.
 
 == What you should see, and why
 
@@ -75,5 +72,6 @@ Find OpenShift AI, Dev Spaces, Pipelines and GitOps. Open an operator to see its
 *Subscription* and installed version. Do not create product instances through
 this screen: Lab 1.3 applies their prepared configuration with the CLI.
 
+image::workshop-installed-operators.png[Installed operators with Succeeded status,align="center",link=self]
 
 Continue to xref:200-platform/lab_2_workers.adoc[Lab 1.2 — Add CPU and GPU Workers].
