@@ -1,5 +1,12 @@
 = Act 0 — Get in
 
+ifndef::workshop-branch[]
+:workshop-branch: main
+endif::[]
+
+include::ROOT:partial$pr-preview.adoc[]
+
+
 Your assigned RHDP environment already contains an ARO cluster and a bastion with a WeTTY browser terminal. This lab connects to that cluster; it does not deploy another one.
 
 [NOTE]
@@ -23,23 +30,44 @@ The guide opens beside the existing WeTTY terminal. If the terminal stays blank
 or asks for a login, use *Open in new tab* and the access details supplied by your
 facilitator. Closing the page does not extend the environment's lifetime.
 
+== Know which terminal you are using
+
+The *bastion* is an existing management VM supplied with your environment. Its
+*WeTTY terminal* is the browser shell beside this guide in Cloud Terminal.
+It already contains `az`, `oc`, Git and the assigned Azure login. We do not create
+another bastion. Use this terminal for Acts 0 and 1.
+
+In Act 2 you will switch to a different terminal, inside the Dev Spaces browser
+editor. Its identity and permissions are intentionally more limited. Do not run
+platform installation commands there.
+
+*What you will do:* connect to the supplied cluster and create two named logins.
+*Why:* separate platform administration from the developer experience before
+installing anything. The resulting accounts are reused throughout the workshop.
+
 == Check Azure access
 
 The bastion is already configured for the assigned environment.
 
 [source,sh,role=execute]
 ----
+# Confirm the bastion’s assigned Azure subscription and identity before creating resources.
 az account show --query '{subscription:id, identity:user.name}' --output table
 ----
 
 == Clone and connect
 
-[source,sh,role=execute]
+[source,sh,role=execute,subs="+attributes"]
 ----
+# Use the home directory before cloning the workshop.
 cd "$HOME"
-git clone --branch main https://github.com/fjcloud/aro-ai-app-platform.git
+# Clone the workshop repository and its prepared manifests.
+git clone --branch {workshop-branch} https://github.com/fjcloud/aro-ai-app-platform.git
+# Use the workshop checkout for all relative manifest paths.
 cd aro-ai-app-platform
+# Discover the assigned ARO resource, log in and validate the existing cluster.
 make onboard
+# Show the CLI identity actually used by this terminal.
 oc whoami
 ----
 
@@ -49,40 +77,131 @@ Load the detected values; there is no resource group name or ID to type:
 
 [source,sh,role=execute]
 ----
+# Load the subscription, resource group and cluster ID detected in Act 0.
 source state/workshop.env
+# Verify access to the detected lab resource group; do not type another group ID.
 az group show --name "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" --query '{name:name,id:id,location:location}' -o table
 ----
 
 This is the group containing the ARO resource, where the workshop creates Foundry resources. It is distinct from the managed group containing ARO’s machines. Detection stops if the Azure subscription is wrong, the cluster cannot be matched uniquely, or read access is missing. Do not continue after an error. The Azure identity also needs permission to create Foundry resources in this group.
 
-== Create a named platform administrator
+== Create the administrator and developer logins
 
-Use a named identity for OpenShift AI and Dev Spaces. The ARO `kubeadmin` login above bootstraps this setup; continue the platform labs as `workshop-admin`.
+OpenShift's OAuth server can authenticate users against an *HTPasswd identity
+provider*: a file of usernames and password hashes, stored in a Kubernetes Secret.
+We use it for two workshop personas; this is a lab identity setup rather than an
+enterprise identity service.
+
+[cols="1,2,2",options="header"]
+|===
+| Login | Job | Password
+| `workshop-admin` | Prepare operators, services, models and developer access. | Choose it below; keep it for the console and OpenShift AI.
+| `dev` | Use the prepared projects and Dev Spaces in Act 2. No cluster-admin grant. | Choose a different password below; keep it for the developer browser session.
+|===
+
+The initial `kubeadmin` session established by `make onboard` bootstraps these
+accounts. Creating a password does not grant permissions: we grant administration
+only to `workshop-admin` here and prepare `dev`'s project access in Lab 1.7.
+
+=== Build the password file
+
+*Run in the bastion terminal.* Keep shell tracing off and enter passwords only
+at the hidden prompts. `htpasswd -iB` reads the password from standard input and
+stores a bcrypt hash; the plaintext is not written into the file.
 
 [source,sh,role=execute]
 ----
+# Restrict newly created state files to your user; state/ is excluded from Git.
 umask 077
+# Keep the local password file alongside the other temporary workshop state.
 mkdir -p state
+# Preserve existing workshop entries when rerunning; a missing Secret gives an empty file.
 oc get secret workshop-htpasswd -n openshift-config --ignore-not-found \
   -o jsonpath='{.data.htpasswd}' 2>/dev/null | base64 -d > state/workshop.htpasswd
+# Read the administrator password without showing it on screen.
 read -rsp 'Choose the workshop-admin password: ' WORKSHOP_PASSWORD; echo
+# Add or update only workshop-admin in the file, using a bcrypt hash.
 printf '%s\n' "$WORKSHOP_PASSWORD" | htpasswd -iB state/workshop.htpasswd workshop-admin
+# Remove the plaintext value from the shell variable.
 unset WORKSHOP_PASSWORD
+----
+
+Now add the developer to the *same file*. Do not use `htpasswd -c`, which would
+replace the file and remove the administrator you just added.
+
+[source,sh,role=execute]
+----
+# Choose the separate developer password without echoing it.
+read -rsp 'Choose the dev password: ' DEV_PASSWORD; echo
+# Append or update dev while keeping workshop-admin's existing hash.
+printf '%s\n' "$DEV_PASSWORD" | htpasswd -iB state/workshop.htpasswd dev
+# Remove the plaintext developer password from the shell.
+unset DEV_PASSWORD
+----
+
+=== Tell OpenShift to use the file
+
+The Secret contains both hashes. The OAuth patch adds the provider named
+*workshop* while retaining other identity providers already configured on the lab.
+
+[source,sh,role=execute]
+----
+# Create or update the Secret consumed by the HTPasswd provider.
 oc create secret generic workshop-htpasswd -n openshift-config \
   --from-file=htpasswd=state/workshop.htpasswd --dry-run=client -o yaml | oc apply -f -
+# Build a patch that replaces only our provider entry, keeping all other providers.
 oc get oauth cluster -o json | jq '{spec:{identityProviders:
   ((.spec.identityProviders // [] | map(select(.name != "workshop"))) + [{
     name:"workshop",mappingMethod:"claim",type:"HTPasswd",
     htpasswd:{fileData:{name:"workshop-htpasswd"}}
   }])}}' > state/workshop-idp.json
+# Ask the authentication operator to reconcile the new identity provider.
 oc patch oauth cluster --type=merge --patch-file=state/workshop-idp.json
+# Give cluster administration only to the platform persona, never to dev.
 oc adm policy add-cluster-role-to-user cluster-admin workshop-admin
+----
+
+[IMPORTANT]
+====
+*Wait for authentication to reconcile: usually 1–3 minutes; the rollout command
+below waits up to 5 minutes.* It can initially observe the old deployment before
+the operator starts its update. If the first login returns `401 Unauthorized`,
+wait about a minute, rerun the rollout check and retry the login. Do not recreate
+the password file or change permissions to work around this delay.
+A warning that `workshop-admin` is not yet found is possible before its first
+login; the role binding is still created for that username.
+====
+
+[source,sh,role=execute]
+----
+# Wait for the OAuth pods to finish updating before trying the new provider.
 oc rollout status deployment/oauth-openshift -n openshift-authentication --timeout=300s
+# Enter the workshop-admin password chosen above when prompted.
 oc login -u workshop-admin
+# Confirm the named administrator session; expect workshop-admin.
 oc whoami
 ----
 
-Enter the chosen password when prompted. If OAuth is still reconciling the new identity provider, wait for its rollout and retry the login. Keep this password for the browser. Developer terminals receive a separate scoped service account in Act 2; the administrator password must never be given to OpenCode.
+=== Check in the web console
+
+[source,sh,role=execute]
+----
+# Print this cluster's console URL; no password is included in the output.
+oc whoami --show-console
+----
+
+Open the printed URL, choose the *workshop* identity provider, and log in as
+`workshop-admin` with the password you chose. Check the user menu at the top
+right: it must show `workshop-admin`. The catalog workshop password is a
+*different credential*. Keep `dev` for the separate developer session in Act 2.
+
+[NOTE]
+====
+HTPasswd stores hashes, so there is no command to retrieve these plaintext
+passwords later. Keep the two passwords privately. If you forget one, use the
+existing administrator/bastion session to repeat the matching `htpasswd` step and
+update the Secret; do not print Secrets into OpenCode or commit `state/`.
+====
 
 == Checkpoint
 
@@ -91,5 +210,7 @@ Enter the chosen password when prompted. If OAuth is still reconciling the new i
 * [x] Workers Ready
 * [x] Azure identity and assigned resource group available
 * [x] Workshop repository cloned
+* [x] Both HTPasswd logins created; only workshop-admin has cluster-admin
+* [x] Console login verified as workshop-admin
 
 Continue to *Lab 1.1 — Install All Operators*.

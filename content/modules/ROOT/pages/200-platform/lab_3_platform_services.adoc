@@ -1,16 +1,46 @@
 = Lab 1.3 — Enable Platform Services
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
+== What you will do and why
+
+*Goal: Turn installed operators into usable services.*
+A platform service is a running capability that applications and developers consume. You will create the browser IDE, OpenShift AI model-serving components, the Models-as-a-Service (MaaS) gateway and trace storage. MaaS puts one governed API in front of models: callers use a client API key and token allowance rather than the cloud provider’s account key. These services are shared prerequisites for the developer, not code that the developer must rebuild in every app.
+
+
 *Platform Engineer · bastion terminal.* Operators reconcile instances; installing a subscription alone does not create an IDE or model platform. Enable the services now that the additional workers are ready. These are direct CLI calls against the supplied manifests.
+
+== Which services are being enabled?
+
+[cols="1,2,2",options="header"]
+|===
+| Capability | What starts | Why it matters for the app
+| Browser development | Dev Spaces and its workspace controller | The developer gets an editor and tools without configuring a laptop.
+| Model serving | OpenShift AI, KServe, NFD and the NVIDIA ClusterPolicy | KServe will start D3; the GPU components make the T4 allocatable.
+| Governed model access | MaaS, an HTTPS gateway, Authorino and PostgreSQL | Developers receive a client key and allowance, while provider keys remain on the platform.
+| Agent and evidence | Gen AI studio, OGX, MLflow and monitoring | The app can use tools and expose a trace that proves what happened.
+|===
+
+The *DataScienceCluster (DSC)* is the administrator’s OpenShift AI configuration.
+Its operator turns enabled components into running controllers and services.
+This is created once here; the `dev` user will not recreate it in Dev Spaces.
 
 == Create the platform instances
 
 Generate database credentials once, then start PostgreSQL before enabling MaaS:
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Generate or reuse the private database credentials without printing them.
 bash deploy/instances/configure-maas-database.sh
+# Start the persistent database required by MaaS key storage.
 oc apply -f deploy/instances/maas-postgres.yaml
+# Wait for the named deployment’s new pods to become available within the displayed timeout.
 oc rollout status deployment/postgres -n redhat-ai-gateway-infra --timeout=300s
+# Create the configured platform instances; their operators reconcile the running services.
 oc apply -k deploy/instances
 ----
 
@@ -20,20 +50,30 @@ This creates Dev Spaces, OpenShift AI/KServe, MaaS, NFD and the NVIDIA ClusterPo
 
 Read the actual apps domain and ingress certificate; there are no cluster IDs to replace.
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Read the cluster’s actual application domain, rather than copying another lab’s URL.
 APPS_DOMAIN=$(oc get ingress.config.openshift.io cluster -o jsonpath='{.spec.domain}')
+# Build the public MaaS hostname under that application domain.
 MAAS_HOST="maas.${APPS_DOMAIN}"
+# Read the configured ingress TLS Secret, or use the router’s default when none is named.
 INGRESS_CERT=$(oc get ingresscontroller default -n openshift-ingress-operator \
   -o jsonpath='{.spec.defaultCertificate.name}')
+# Read the configured ingress TLS Secret, or use the router’s default when none is named.
 INGRESS_CERT=${INGRESS_CERT:-router-certs-default}
+# Confirm the named Secret exists; this command does not decode or print its credentials.
 oc get secret "$INGRESS_CERT" -n openshift-ingress
 
+# Build a JSON patch using this cluster’s host and certificate names.
 GATEWAY_PATCH=$(jq -cn --arg host "$MAAS_HOST" --arg cert "$INGRESS_CERT" '[
   {op:"replace",path:"/spec/listeners/0/hostname",value:$host},
   {op:"replace",path:"/spec/listeners/0/tls/certificateRefs/0/name",value:$cert}
 ]')
+# Bind the MaaS HTTPS listener to this cluster’s host and ingress certificate.
 oc patch gateway maas-default-gateway -n openshift-ingress --type=json -p "$GATEWAY_PATCH"
+# Expose the HTTPS gateway through a TLS-passthrough OpenShift Route.
 oc create route passthrough maas-gateway -n openshift-ingress \
   --service=maas-default-gateway-openshift-default --hostname="$MAAS_HOST" \
   --port=https --insecure-policy=Redirect --dry-run=client -o yaml | oc apply -f -
@@ -41,19 +81,33 @@ oc create route passthrough maas-gateway -n openshift-ingress \
 
 The passthrough Route sends ARO wildcard DNS traffic to the HTTPS gateway. The provider model is not deployed yet.
 
+The patch sets the listener hostname and the certificate reference from the
+values just read. `passthrough` forwards TLS to the gateway; `Redirect` upgrades
+plain HTTP. This is gateway access for the external DeepSeek model; it does not
+make the local D3 endpoint public.
+
 == Trust the cluster service CA
 
 Authorino authenticates MaaS requests and calls internal HTTPS services. Enable the service-CA-signed Authorino listener and trust the service CA for its outbound callbacks. The JSON patch preserves any existing volumes.
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Wait for the authentication service deployment to exist before configuring it.
 oc wait --for=create deployment/authorino -n kuadrant-system --timeout=600s
+# Record the serving-certificate or bootstrap setting used by the gateway authentication
+# service.
 oc annotate service authorino-authorino-authorization -n kuadrant-system \
   service.beta.openshift.io/serving-cert-secret-name=authorino-server-cert --overwrite
+# Configure Authorino’s TLS or service-CA trust for internal HTTPS callbacks.
 oc patch authorino authorino -n kuadrant-system --type=merge \
   -p '{"spec":{"listener":{"tls":{"enabled":true,"certSecretRef":{"name":"authorino-server-cert"}}}}}'
+# Record the serving-certificate or bootstrap setting used by the gateway authentication
+# service.
 oc annotate gateway maas-default-gateway -n openshift-ingress \
   security.opendatahub.io/authorino-tls-bootstrap=true --overwrite
+# Build a CA-volume patch that preserves any existing Authorino volumes.
 oc get authorino authorino -n kuadrant-system -o json | jq '{spec:{volumes:
   ((.spec.volumes // {}) | .items =
     ((.items // [] | map(select(.name != "workshop-service-ca"))) + [{
@@ -62,40 +116,70 @@ oc get authorino authorino -n kuadrant-system -o json | jq '{spec:{volumes:
       items:[{key:"service-ca.crt",path:"service-ca-bundle.crt"}]
     }]))
 }}' > state/authorino-service-ca.json
+# Configure Authorino’s TLS or service-CA trust for internal HTTPS callbacks.
 oc patch authorino authorino -n kuadrant-system --type=merge \
   --patch-file=state/authorino-service-ca.json
+# Make Authorino trust the mounted cluster service CA on outbound TLS requests.
 oc set env deployment/authorino -n kuadrant-system \
   SSL_CERT_FILE=/etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt \
   REQUESTS_CA_BUNDLE=/etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt
+# Wait for the named deployment’s new pods to become available within the displayed timeout.
 oc rollout status deployment/authorino -n kuadrant-system --timeout=180s
 ----
 
 Gateway API CRDs were prepared in Lab 1.1. Kuadrant can reconcile its filters without recycling its controller.
 
+[IMPORTANT]
+====
+*Initial service startup usually takes 5–15 minutes.* PostgreSQL’s first wait
+allows 5 minutes; OpenShift AI initialization/component waits each allow 20
+minutes; MLflow’s first migration and startup allow 15 minutes. Output that says
+`Waiting for ...` is expected during downloads and reconciliation. A timeout is
+not success: inspect the named resource and its pod events before continuing.
+====
+
 == Enable the UI, traces and metrics
+
+include::ROOT:partial$run-bastion.adoc[]
 
 [source,sh,role=execute]
 ----
+# Wait for OpenShift AI initialization to complete.
 oc wait dsci/default-dsci --for=condition=Ready --timeout=1200s
+# Wait until the enabled OpenShift AI components report Ready.
 oc wait dsc/default-dsc --for=condition=Ready --timeout=1200s
+# Wait for the prerequisite object to exist before configuring or using it.
 oc wait --for=create odhdashboardconfig/odh-dashboard-config -n redhat-ods-applications --timeout=300s
+# Enable the model/MaaS and Gen AI studio pages in the operator-managed dashboard.
 oc patch odhdashboardconfig odh-dashboard-config -n redhat-ods-applications \
   --type=merge --patch-file=deploy/instances/odh-dashboard-config.yaml
+# Wait for the custom-resource API needed by the next configuration step.
 oc wait crd/mlflows.mlflow.opendatahub.io --for=condition=Established --timeout=300s
+# Inspect the trace service’s readiness and web URL.
 oc get mlflow/mlflow >/dev/null 2>&1 || oc apply -f deploy/agentops/mlflow.yaml
+# Wait for MLflow’s migration and serving deployment to become Available.
 oc wait mlflow/mlflow --for=condition=Available --timeout=900s
+# Wait for the prerequisite object to exist before configuring or using it.
 oc wait maastenantconfig/default-tenant -n models-as-a-service --for=condition=Ready --timeout=600s
+# Enable gateway authentication/quota observability for the supplied dashboard.
 oc patch kuadrant kuadrant -n kuadrant-system --type=merge \
   -p '{"spec":{"observability":{"enable":true}}}'
+# Enable usage telemetry while avoiding individual-user metric labels.
 oc patch maastenantconfig default-tenant -n models-as-a-service --type=merge \
   -p '{"spec":{"telemetry":{"enabled":true,"metrics":{"captureOrganization":true,"captureModelUsage":true,"captureUser":false,"captureGroup":false}}}}'
+# Install the prepared console dashboard; the queries are already supplied.
 oc apply -k deploy/observability
+# Make Authorino trust the mounted cluster service CA on outbound TLS requests.
 oc set env deployment/authorino -n kuadrant-system \
   SSL_CERT_FILE=/etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt \
   REQUESTS_CA_BUNDLE=/etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt
+# Wait for the named deployment’s new pods to become available within the displayed timeout.
 oc rollout status deployment/authorino -n kuadrant-system --timeout=180s
+# Wait until the HTTPS gateway has been programmed.
 oc wait gateway/maas-default-gateway -n openshift-ingress --for=condition=Programmed --timeout=600s
+# Wait for the browser IDE platform to become Active.
 oc wait checluster/devspaces -n openshift-operators --for=jsonpath='{.status.chePhase}'=Active --timeout=900s
+# Wait for the NVIDIA driver/device plugin to advertise one allocatable GPU.
 oc wait nodes -l node.kubernetes.io/instance-type=Standard_NC8as_T4_v3 \
   --for=jsonpath='{.status.allocatable.nvidia\.com/gpu}'=1 --timeout=900s
 ----
@@ -104,22 +188,76 @@ The cluster now has an IDE, delivery operators, the model platform and one alloc
 
 == Cache the workspace images
 
-Start the documented https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html-single/administration_guide/index#caching-images-for-faster-workspace-start[Kubernetes Image Puller] now. It downloads the developer, editor, OpenCode and test-browser images on CPU workers while you prepare the models. Lab 1.1 installs its operator. Read the editor image from the installed Dev Spaces version rather than maintaining another image version.
+Workspace images include a multi-gigabyte developer toolchain. Without a cache,
+the first developer has to wait for that download after opening the workspace.
+Caching moves the download into platform preparation, while the next model labs
+are running. It speeds up the handoff; it does not eliminate first-time home
+initialization or storage setup.
+
+Start the documented https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/administration_guide/assembly_caching-images-for-faster-workspace-start_administration_guide[Kubernetes Image Puller] now. It downloads the developer, editor, OpenCode and test-browser images on CPU workers while you prepare the models. Lab 1.1 installs its operator. Read the editor image from the installed Dev Spaces version rather than maintaining another image version.
+
+include::ROOT:partial$run-bastion.adoc[]
 
 [source,sh,role=execute]
 ----
+# Read the editor image supplied by the installed Dev Spaces operator version.
 EDITOR_IMAGE=$(oc exec -n openshift-operators deployment/devspaces-operator -- \
   cat /tmp/external_images.txt | sed -n '\|/code-rhel9@|{p;q;}')
+# Read the platform’s pinned OpenCode injector image from its tool registry.
 OPENCODE_IMAGE=$(oc get configmap ai-tool-registry -n openshift-operators -o json | \
   jq -er '.data["registry.json"] | fromjson | .tools[] | select(.providerId=="opencodeai/opencode") | .injectorImage')
+# Stop before patching the cache if the installed image names could not be discovered.
 test -n "$EDITOR_IMAGE" && test -n "$OPENCODE_IMAGE"
+# Configure image caching through the installed Dev Spaces instance.
 oc patch checluster devspaces -n openshift-operators --type=merge -p \
   "$(jq -cn --arg images "dev=quay.io/devfile/universal-developer-image:latest;editor=${EDITOR_IMAGE};opencode=${OPENCODE_IMAGE};test-browser=mcr.microsoft.com/playwright:v1.56.1-noble" \
     '{spec:{components:{imagePuller:{enable:true,spec:{images:$images,cachingCPURequest:"10m"}}}}}')"
+# Wait for the prerequisite object to exist before configuring or using it.
 oc wait --for=create daemonset/kubernetes-image-puller -n openshift-operators --timeout=180s
+# Inspect the named resource and its reported status before proceeding.
 oc get daemonset kubernetes-image-puller -n openshift-operators
 ----
 
+[IMPORTANT]
+====
+*Allow 3–10 minutes for the first cache download; slow registries can take longer.*
+The initial DaemonSet `READY` count may be `0`. Leave it running during Labs
+1.4–1.8. Lab 2.1 waits up to 10 minutes for all cache pods before opening Dev Spaces.
+====
+
 The first download still takes time; it happens before the developer starts. The GPU taint keeps this cache on CPU workers. Leave it running and continue with Foundry.
+
+== Open the platform UIs
+
+Print the URLs rather than trying to guess this lab’s cluster domain:
+
+include::ROOT:partial$run-bastion.adoc[]
+
+[source,sh,role=execute]
+----
+# Show the OpenShift console for the current cluster.
+oc whoami --show-console
+# Read the wildcard domain assigned to applications on this cluster.
+APPS_DOMAIN=$(oc get ingress.config.openshift.io cluster -o jsonpath='{.spec.domain}')
+# Print the OpenShift AI 3.5 entry point; this contains no credential.
+printf 'OpenShift AI: https://rh-ai.%s\n' "$APPS_DOMAIN"
+----
+
+. Open the console as `workshop-admin`, using your password from Act 0.
+. Click the *nine-dot application launcher* in the top-right header and choose
+  *Red Hat OpenShift AI*, or use the printed OpenShift AI URL.
+. If asked to authenticate, select *workshop* and use the same `workshop-admin`
+  password. Close the welcome tour. Verify the account in the user menu.
+. Look for *AI hub*, *Gen AI studio* and *Settings*. No workshop model should be
+  expected yet; Labs 1.4–1.6 create and publish those models.
+
+.Example OpenShift console from a completed lab: the nine-dot application launcher is in the top-right header. Metrics appear later in the workshop.
+image::card-scout-dashboard-tokens.png["OpenShift console layout with the application launcher at the top right",align="center",link=self]
+
+If a navigation item is missing, stay in the bastion: check DSC readiness and the
+`odh-dashboard-config` patch above. Do not install a second OpenShift AI instance.
+The documented https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/html/installing_and_uninstalling_openshift_ai_self-managed/accessing-the-dashboard_install[dashboard access procedure]
+uses the same application launcher and OpenShift credentials.
+
 
 Continue to xref:200-platform/lab_2_foundry.adoc[Lab 1.4 — Deploy DeepSeek on Foundry].

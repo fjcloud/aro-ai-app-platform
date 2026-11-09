@@ -1,5 +1,14 @@
 = Lab 2.1 — Launch Your Dev Space
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
+== What you will do and why
+
+*Goal: Start the developer experience with the dev account.*
+Open an isolated browser workspace containing the editor, CLI tools, model configuration and app template. You consume the platform built in Act 1; you do not install OpenShift AI, create a DataScienceCluster, or grant pod security permissions. This is the handoff from platform engineering to application development.
+
+
 Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is published through the OpenShift AI MaaS gateway prepared in Act 1.
 
 [NOTE]
@@ -22,11 +31,17 @@ OpenShift Dev Spaces provides *cloud-based developer workspaces* — VS Code-com
 
 The models and runtime agent backend are now ready. In the *bastion terminal*, generate the workspace launch link:
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Read the operator-reported browser IDE URL for this cluster.
 DEVSPACES_URL=$(oc get checluster devspaces -n openshift-operators -o jsonpath='{.status.cheURL}')
+# Wait for all CPU-node image caches before launching the workspace.
 oc rollout status daemonset/kubernetes-image-puller -n openshift-operators --timeout=600s
+# Select the ARO template branch; it contains scaffolding and tests, not a finished app.
 TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-card-scout
+# Print the prepared browser launch URL; no credential is included.
 printf '%s/#%s?ai-provider=opencodeai/opencode\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL"
 ----
 
@@ -39,13 +54,16 @@ The `#<template-url>` suffix tells Dev Spaces to clone the template and create a
 
 . Open that URL in your browser.
 
-== Use the named workshop account
+== Switch to the developer account
 
-Choose the *workshop* identity provider and sign in as `workshop-admin` with the password created in Act 0. The RHDP catalog password is different. Keep the OpenShift password out of OpenCode and Git; the developer terminal receives its own scoped identity.
+Choose the *workshop* identity provider and sign in as `dev` with the developer password created in Act 0. The workshop catalog password is different. Use the separate developer browser
+profile/private window from Lab 1.7. If the browser logs you straight in as
+`workshop-admin`, sign out or change browser profile before creating a workspace.
+The project *dev-devspaces* is already prepared for `dev`. Keep the OpenShift password out of OpenCode and Git; the developer terminal receives its own scoped identity.
 
 == Log In and Create Your Workspace
 
-. You will be redirected to OpenShift SSO. Choose *workshop* and log in as `workshop-admin`.
+. You will be redirected to OpenShift SSO. Choose *workshop* and log in as `dev`.
 
 . On first access, click *Log in with OpenShift* if prompted, then *Allow selected permissions* for the Dev Spaces client. The redirect should return to your lab's Dev Spaces address.
 
@@ -64,7 +82,14 @@ Running postStart commands...
   ✓ Installing the ephemeral Git client
 ----
 +
-The first launch can take up to 15 minutes while the images are pulled. *Subsequent launches are faster* — the images are cached.
+[IMPORTANT]
+====
+*Allow 2–5 minutes with cached images; the first start can take up to 15 minutes.*
+Storage and the persistent home still need initialization. The cache wait above
+permits 10 minutes before launch. Keep the start screen open; do not create extra
+workspaces while one is starting. A timeout or an error in *Events* is a failure
+to inspect, not proof that the IDE is ready.
+====
 
 . When the workspace is ready, a VS Code-like editor opens in the browser. You will see:
 ** A file explorer on the left
@@ -75,15 +100,31 @@ Do **not** sign in to GitHub Copilot. Che Code ships Copilot as a built-in; the 
 
 If the editor opens in *Restricted Mode*, open *Manage Workspace Trust*, trust this repository, and confirm. The IDE may reload before its terminal becomes available.
 
+== Open the terminal inside Dev Spaces
+
+In the browser editor’s top menu, choose *Terminal → New Terminal*. A shell opens
+in the bottom panel. If the menu is collapsed, use the editor’s main menu or
+kbd:[Ctrl+Shift+P], then run *Terminal: Create New Terminal*. This is the Dev Spaces
+terminal; the WeTTY terminal beside this guide is still the bastion.
+
+Run developer commands here, in `$PROJECT_SOURCE`. Shell blocks go into this
+terminal; natural-language prompt blocks go into OpenCode after it starts.
+
 == Check your scoped CLI access
 
 The platform injects a separate developer kubeconfig into the workspace. Browser SSO and CLI access are separate; you do not paste an administrator token into the terminal or OpenCode.
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Show the CLI identity actually used by this terminal.
 oc whoami
+# Expect yes: the scoped identity can start application builds.
 oc auth can-i create pipelineruns -n "${APP_NAME}-build"
+# Expect yes: this identity can deploy in the application project.
 oc auth can-i create deployments -n "${APP_NAME}-dev"
+# Expect no: the developer has no permission to run privileged build pods.
 oc auth can-i use scc/privileged -n "${APP_NAME}-build"
 ----
 
@@ -99,8 +140,11 @@ is needed in the developer container. The generated app remains a Go application
 
 . Check that OpenCode is on `PATH` (injected) and that ephemeral Git is configured (`$GIT_SERVER`):
 +
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Verify that OpenCode and the platform Git client are available in this workspace.
 opencode --version && command -v gitpop && echo "GIT_SERVER=$GIT_SERVER"
 ----
 +
@@ -114,12 +158,20 @@ GIT_SERVER=https://git.<workshop-domain>
 
 . Check the project model configuration against the platform. The template's `opencode.json` wins over the platform file; both should pin DeepSeek through MaaS. The following also updates older workspaces when needed. This file contains environment references; it contains no key. From the workspace terminal:
 +
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Use the cloned project directory inside Dev Spaces.
 cd "${PROJECT_SOURCE}"
+# Align the project’s model configuration with the injected platform configuration; it
+# contains environment references, not a key.
 cp "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/opencode.json" opencode.json
+# Commit only when the injected configuration differs from the template.
 if ! git diff --quiet HEAD -- opencode.json; then
+  # Stage only the intended model-configuration update.
   git add opencode.json
+  # Commit the configuration change using the workshop developer identity.
   git -c user.name="Workshop Developer" -c user.email="dev@workshop.local" \
     commit -m "Use DeepSeek through the workshop MaaS gateway"
 fi
@@ -127,12 +179,24 @@ fi
 +
 . Test both model APIs in *Lab 2.2* before starting OpenCode. Your MaaS key is already injected; do not print it.
 
+== Check the workspace identity in the UI
+
+Open the Dev Spaces dashboard in the same developer browser session. Confirm
+that the user menu shows *dev* and that the workspace belongs to *dev-devspaces*.
+In the editor, `oc whoami` should show
+`system:serviceaccount:card-scout-dev:workshop-developer`. These different names
+are expected: the browser creates the workspace as the person; the CLI uses a
+limited service account so OpenCode cannot administer the cluster.
+
 == Understanding the OpenCode Configuration
 
 OpenCode reads **project** `opencode.json` first (it overrides the platform mount under `~/.config/opencode`). Verify the file in the template:
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Inspect the configured provider/model names without printing the injected API key.
 jq . "${PROJECT_SOURCE}/opencode.json"
 ----
 
@@ -174,9 +238,13 @@ OpenCode still reads `AGENTS.md` from the project directory at the start of ever
 
 == ✅ Checkpoint
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Use the cloned project directory inside Dev Spaces.
 cd ${PROJECT_SOURCE}
+# Verify that OpenCode and the platform Git client are available in this workspace.
 opencode --version && \
 echo "GIT_SERVER=$GIT_SERVER" && \
 jq -r .model opencode.json

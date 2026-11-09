@@ -1,0 +1,11 @@
+ifdef::pr-number[]
+[IMPORTANT]
+====
+*Review preview — PR {pr-number}, not the published workshop.*
+This page comes from commit `{preview-sha}` on branch `{workshop-branch}`.
+Read the changes and leave feedback in
+https://github.com/fjcloud/aro-ai-app-platform/pull/{pr-number}[the pull request].
+The production workshop on `main` is unchanged. The clone command in Act 0
+uses this review branch so its proposed manifests can be reviewed together.
+====
+endif::[]

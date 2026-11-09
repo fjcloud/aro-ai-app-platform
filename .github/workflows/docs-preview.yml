@@ -1,0 +1,76 @@
+name: documentation preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'content/**'
+      - 'default-site.yml'
+      - 'docs/**'
+      - '.github/workflows/docs-preview.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: docs-preview-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the reviewed documentation
+        env:
+          PREVIEW_NUMBER: ${{ github.event.number }}
+          PREVIEW_SHA: ${{ github.event.pull_request.head.sha }}
+          PREVIEW_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          npx --yes --package @antora/cli@3.1 --package @antora/site-generator@3.1 antora generate \
+            --attribute "pr-number=$PREVIEW_NUMBER" \
+            --attribute "preview-sha=$PREVIEW_SHA" \
+            --attribute "workshop-branch=$PREVIEW_BRANCH" \
+            default-site.yml --clean
+          touch www/.nojekyll
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aro-docs-pr-${{ github.event.number }}
+          path: www
+          include-hidden-files: true
+      # Publish only same-repository PRs. Forks get the downloadable artifact;
+      # no preview-repository deploy credential is supplied to fork code.
+      - name: Publish to the separate preview site
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453
+        with:
+          deploy_key: ${{ secrets.DOCS_PREVIEW_DEPLOY_KEY }}
+          external_repository: fjcloud/workshop-previews
+          publish_branch: main
+          publish_dir: www
+          destination_dir: aro/pr-${{ github.event.number }}
+          keep_files: true
+          full_commit_message: 'Preview ARO PR ${{ github.event.number }} at ${{ github.event.pull_request.head.sha }}'
+      - name: Link the rendered guide in the PR
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const number = context.issue.number;
+            const marker = '<!-- aro-docs-preview -->';
+            const url = `https://fjcloud.github.io/workshop-previews/aro/pr-${number}/`;
+            const sha = context.payload.pull_request.head.sha;
+            const body = `${marker}\n**Rendered workshop preview:** [Open the guide](${url})\n\nSource: \`${sha}\`. Pages publication can take a minute. This preview does not deploy the production workshop.\n\nReview the page layout and commands here; leave feedback in this PR.`;
+            const args = {owner: context.repo.owner, repo: context.repo.repo, issue_number: number};
+            const comments = await github.paginate(github.rest.issues.listComments, args);
+            const existing = comments.find(c => c.user.type === 'Bot' && c.body.includes(marker));
+            if (existing) await github.rest.issues.updateComment({...args, comment_id: existing.id, body});
+            else await github.rest.issues.createComment({...args, body});
+            await core.summary.addHeading('Documentation preview').addLink('Open the rendered guide', url).addRaw(`\n\nCommit: ${sha}`).write();

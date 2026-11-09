@@ -1,29 +1,51 @@
 = Lab 1.2 — Add CPU and GPU Workers
 :page-aliases: 200-platform/lab_1_gpu_nodepool.adoc
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
+== What you will do and why
+
+*Goal: Make room for the platform and reserve one GPU.*
+The original cluster is sized for a base environment. Add one CPU worker for the IDE and platform services, plus one T4 worker for D3 image decisions. Separate pools let you place workloads deliberately and see which infrastructure is responsible for each cost. A MachineSet is OpenShift’s template and replica count for a group of worker VMs.
+
+
 *Platform Engineer · bastion terminal.* Add one CPU worker and one single-T4 worker to the existing ARO cluster. Keep the original pools. If the additional D8 or T4 pool already exists, reuse it and skip that creation block.
 
 Classic ARO manages worker pools with OpenShift MachineSets, following the https://learn.microsoft.com/en-us/azure/openshift/howto-gpu-workloads[Microsoft GPU guide]. ARO HCP node-pool commands do not apply to this cluster.
 
 == Inspect the cluster and quota
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Load the subscription, resource group and cluster ID detected in Act 0.
 source state/workshop.env
+# Make a failed command in a pipeline visible instead of hiding it behind the last command.
 set -o pipefail
+# Extract the ARO resource name from its full Azure resource ID.
 ARO_NAME="${ARO_CLUSTER_ID##*/}"
+# Read the infrastructure prefix used by this cluster’s original MachineSets.
 INFRA=$(oc get infrastructure cluster -o jsonpath='{.status.infrastructureName}')
+# Read the ARO region from Azure so the new worker pool names remain consistent.
 REGION=$(az aro show --name "$ARO_NAME" --resource-group "$RESOURCEGROUP" \
   --subscription "$SUBSCRIPTION" --query location -o tsv)
 
+# Inspect the named resource and its reported status before proceeding.
 oc get machinesets -n openshift-machine-api \
   -o 'custom-columns=NAME:.metadata.name,SIZE:.spec.template.spec.providerSpec.value.vmSize,ZONE:.spec.template.spec.providerSpec.value.zone,DESIRED:.spec.replicas,READY:.status.readyReplicas'
+# Identify the storage zone that constrains CPU placement for an existing workspace.
 oc get pv -o 'custom-columns=CLAIM:.spec.claimRef.name,NAMESPACE:.spec.claimRef.namespace,ZONE:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values'
 ----
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Check free regional, CPU-family and T4-family quota for the requested VMs.
 az vm list-usage --location "$REGION" --subscription "$SUBSCRIPTION" \
   --query "[?name.value=='cores' || name.value=='standardDSv3Family' || contains(name.value, 'T4')].{quota:name.localizedValue,used:currentValue,limit:limit}" -o table
+# Check which zones offer the T4 VM and whether Azure lists restrictions.
 az vm list-skus --location "$REGION" --subscription "$SUBSCRIPTION" \
   --resource-type virtualMachines --size Standard_NC8as_T4_v3 --all \
   --query '[].{size:name,zones:locationInfo[0].zones,restrictions:restrictions}' -o json | jq .
@@ -35,17 +57,23 @@ The CPU worker needs 8 free DSv3 vCPUs; the T4 worker needs 8 free NCasT4_v3 vCP
 
 Use `Standard_D8s_v3` for platform and developer workloads. Choose a zone containing an original CPU MachineSet. An existing Dev Spaces PVC requires CPU capacity in its own zone; adapt `CPU_ZONE=3` to the PV zone shown above.
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Choose the CPU worker zone; change it to match the existing workspace PVC when required.
 CPU_ZONE=3
+# Select an original CPU MachineSet in the chosen CPU zone; stop if none exists.
 CPU_TEMPLATE=$(oc get machinesets -n openshift-machine-api -o json |
   jq -er --arg zone "$CPU_ZONE" '
     [.items[] | select(.spec.template.spec.providerSpec.value.zone == $zone)
      | select(.spec.template.spec.providerSpec.value.vmSize | startswith("Standard_D"))]
     | sort_by(.metadata.name) | .[0].metadata.name // error("No CPU template in this zone")
   ')
+# Give the extra CPU MachineSet a unique, cluster-specific name.
 CPU_POOL="${INFRA}-workshop-cpu-${REGION}${CPU_ZONE}"
 
+# Copy the original worker template; the jq changes below define one new pool.
 oc get machineset "$CPU_TEMPLATE" -n openshift-machine-api -o json | \
   jq --arg name "$CPU_POOL" '
     del(.status)
@@ -57,27 +85,43 @@ oc get machineset "$CPU_TEMPLATE" -n openshift-machine-api -o json | \
     | .spec.template.spec.providerSpec.value.vmSize = "Standard_D8s_v3"
   ' | oc create -f -
 
+# Wait for the newly provisioned worker to join OpenShift and become Ready.
 oc wait machineset/"$CPU_POOL" -n openshift-machine-api \
   --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
 ----
+
+In the `jq` transformation, removing `.status` avoids copying controller-owned
+state. The new metadata and matching selector/template label give the new pool
+its own identity. `.spec.replicas = 1` requests one VM; only `vmSize` changes its
+capacity. The other provider settings retain the source pool’s working bootstrap.
 
 The new MachineSet inherits the cluster image, subnet, disks and bootstrap configuration. It adds one worker with its own hourly cost. The original pools are unchanged; repeating `oc create` reports AlreadyExists.
 
 == Add one T4 worker
 
-`Standard_NC8as_T4_v3` supplies one 16 GB T4, 8 vCPUs and 56 GiB RAM. Choose an available GPU zone that also has an original CPU MachineSet; it may differ from the Dev Spaces PVC zone.
+`Standard_NC8as_T4_v3` supplies one 16 GB T4, 8 vCPUs and 56 GiB RAM. Choose a GPU zone from the Azure SKU output with no applicable restriction and
+an original CPU MachineSet to copy. Copying a MachineSet from that same zone
+preserves its matching subnet, image and bootstrap settings. The workspace PVC
+belongs to CPU storage; it does not have to share the GPU node’s zone. Keep the
+CPU worker in the PVC’s zone, and choose the GPU zone independently.
+
+include::ROOT:partial$run-bastion.adoc[]
 
 [source,sh,role=execute]
 ----
+# Choose an unrestricted T4 zone with an original MachineSet to use as a template.
 GPU_ZONE=1
+# Select an original MachineSet in the chosen GPU zone to inherit its bootstrap settings.
 GPU_TEMPLATE=$(oc get machinesets -n openshift-machine-api -o json |
   jq -er --arg zone "$GPU_ZONE" '
     [.items[] | select(.spec.template.spec.providerSpec.value.zone == $zone)
      | select(.spec.template.spec.providerSpec.value.vmSize | startswith("Standard_D"))]
     | sort_by(.metadata.name) | .[0].metadata.name // error("No CPU template in this zone")
   ')
+# Give the single-T4 MachineSet a unique, cluster-specific name.
 GPU_POOL="${INFRA}-gpu-t4-8-${REGION}${GPU_ZONE}"
 
+# Copy the original worker template; the jq changes below define one new pool.
 oc get machineset "$GPU_TEMPLATE" -n openshift-machine-api -o json | \
   jq --arg name "$GPU_POOL" '
     del(.status)
@@ -91,24 +135,49 @@ oc get machineset "$GPU_TEMPLATE" -n openshift-machine-api -o json | \
     | .spec.template.spec.providerSpec.value.vmSize = "Standard_NC8as_T4_v3"
   ' | oc create -f -
 
+# Wait for the newly provisioned worker to join OpenShift and become Ready.
 oc wait machineset/"$GPU_POOL" -n openshift-machine-api \
   --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
+# Inspect the named resource and its reported status before proceeding.
 oc get machines -n openshift-machine-api
+# Inspect the worker/GPU labels and reported allocatable resources.
 oc get nodes -l workshop.fjcloud.io/gpu=t4
 ----
 
 The taint reserves this worker for workloads tolerating `nvidia.com/gpu=present:NoSchedule`. Node readiness confirms provisioning. Lab 1.3 enables the ClusterPolicy and waits for the NVIDIA driver to advertise one GPU. Do not substitute a four-T4 VM: requesting one GPU in a pod still incurs the cost of the entire VM.
 
+[IMPORTANT]
+====
+*Each new worker usually needs 5–15 minutes; each wait permits up to 20 minutes.*
+`Provisioned` means Azure has created the VM. `Running` on the Machine and `Ready`
+on its node confirm that it has joined OpenShift. GPU driver readiness is a
+separate check in Lab 1.3. Do not paste the creation command again while waiting.
+====
+
+== Check the nodes in the web console
+
+As `workshop-admin`, open *Compute → Nodes*. Compare the new CPU and GPU nodes
+with the original workers. Open the GPU node and inspect its labels and taints:
+`workshop.fjcloud.io/gpu=t4` identifies it, and the GPU taint prevents ordinary
+platform pods from taking its capacity. Return to the bastion for the next checks.
+
 == Wait for all operators
 
 Use the bastion's OpenShift 4.21+ CLI. `readiness.yaml` lists Deployments to observe; it is an inventory for `oc wait`, not a manifest to apply.
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Wait for every required operator in the supplied readiness inventory.
 oc wait --for=create -f deploy/operators/readiness.yaml --timeout=900s
+# Wait for every required operator in the supplied readiness inventory.
 oc wait --for=condition=Available -f deploy/operators/readiness.yaml --timeout=900s
+# Wait for the Pipelines operator’s default configuration to be ready.
 oc wait --for=create tektonconfig/config --timeout=300s
+# Wait for the Pipelines operator’s default configuration to be ready.
 oc wait tektonconfig/config --for=condition=Ready --timeout=600s
+# Adapt the installed Red Hat build tasks for this cluster’s Linux user namespaces.
 python3 scripts/install-pipeline-tasks.py
 ----
 

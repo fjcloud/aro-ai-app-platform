@@ -1,5 +1,14 @@
 = Lab 2.3 — Build and Ship Card Scout
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
+== What you will do and why
+
+*Goal: Generate, test and ship a minimal real application.*
+Use DeepSeek through OpenCode to implement the prepared contract, let the model use fixed acceptance tests to correct its own application, then deliver it through Tekton and Argo CD. The added value is a repeatable route from intent to a verified running image, not a local demo that bypasses delivery. You will then make one small change through the same route.
+
+
 Generate a small Go application from `APP_CONTRACT.md`. The platform already owns
 the dataset, image classification, native agent, MCP tool, persistence and traces.
 The application is an English UI and a same-origin proxy to one prepared API.
@@ -16,17 +25,34 @@ and delivered through Argo CD.
 
 In the *Dev Spaces terminal*:
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Use the cloned project directory inside Dev Spaces.
 cd "${PROJECT_SOURCE}"
+# Read the required app behavior and fixed platform API before generating code.
 cat APP_CONTRACT.md
+# Expect yes: the scoped identity can start application builds.
 oc auth can-i create pipelineruns -n "${APP_NAME}-build"
+# Expect yes: this identity can deploy in the application project.
 oc auth can-i create deployments -n "${APP_NAME}-dev"
+# Start the coding agent; paste the next natural-language prompt into its UI, not into Bash.
 opencode
 ----
 
 Expect both permissions to be `yes`. OpenCode reads `AGENTS.md`. Use kbd:[Tab]
 to switch between plan and build modes; `/exit` returns to the shell.
+
+[IMPORTANT]
+====
+*Allow roughly 5–15 minutes for generation and test-driven corrections.* A first
+draft is not guaranteed to pass; OpenCode should read the fixed test failures and
+correct its own app. Delivery then typically needs 3–5 minutes for Tekton and
+2–3 minutes for Argo CD. Keep the session open while those waits run. A quota or
+permission error is a blocker to report, not a reason to change the model or
+weaken tests. Verify the actual final revision, not just the agent’s success claim.
+====
 
 == Step 2: Generate, test and ship
 
@@ -45,6 +71,14 @@ changing permissions or weakening the tests.
 Keep `image-registry.openshift-image-registry.svc:5000/card-scout-build/card-scout:latest`
 with `imagePullPolicy: Always`. A local build or an older healthy revision is not
 a successful deployment. The app has no model key or Kubernetes token.
+
+[NOTE]
+====
+A fresh analysis of 105 images commonly takes 1–3 minutes. Follow the completed
+count in the app. Saved results are reused on reload; a price request can take
+longer than a page refresh and the contract permits up to 210 seconds. Preserve
+visible errors instead of inventing results or repeatedly restarting the batch.
+====
 
 == Step 3: Analyze a collection
 
@@ -88,21 +122,33 @@ Add the sentence "Rarity is not market value." below the page title. Keep the ex
 
 Verify the new UI on the Route. In the Dev Spaces terminal:
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Request an Argo CD refresh of the repository state.
 oc annotate application "$APP_NAME" -n "${APP_NAME}-dev" \
   argocd.argoproj.io/refresh=hard --overwrite
+# Wait for Argo CD to reconcile the exact local Git commit, not an older healthy revision.
 oc wait application/"$APP_NAME" -n "${APP_NAME}-dev" \
   --for=jsonpath='{.status.sync.revision}'="$(git rev-parse HEAD)" --timeout=180s
+# Inspect Argo CD’s actual revision, synchronization and health.
 oc get application "$APP_NAME" -n "${APP_NAME}-dev" -o json | \
   jq '{revision:.status.sync.revision,sync:.status.sync.status,health:.status.health.status}'
+# Restart the app pods to load the renewed configuration or newly pushed image.
 oc rollout restart deployment/"$APP_NAME" -n "${APP_NAME}-dev"
+# Wait for the named deployment’s new pods to become available within the displayed timeout.
 oc rollout status deployment/"$APP_NAME" -n "${APP_NAME}-dev" --timeout=180s
+# Read the exact built image digest to compare with the running application.
 EXPECTED_DIGEST=$(oc get istag "${APP_NAME}:latest" -n "${APP_NAME}-build" -o jsonpath='{.image.metadata.name}')
+# Inspect pod readiness; for an app digest check, compare the running image with the build
+# result.
 oc get pods -n "${APP_NAME}-dev" -l "app.kubernetes.io/name=${APP_NAME}" -o json | \
   jq -e --arg name "$APP_NAME" --arg digest "$EXPECTED_DIGEST" \
   '[.items[].status.containerStatuses[] | select(.name==$name)] | length > 0 and all(.[]; .ready and (.imageID | endswith("@"+$digest)))'
+# Read the generated app’s HTTPS Route hostname.
 ROUTE=$(oc get route "$APP_NAME" -n "${APP_NAME}-dev" -o jsonpath='{.spec.host}')
+# Verify the deployed app’s health endpoint through its public HTTPS Route.
 curl --fail-with-body -sS "https://${ROUTE}/healthz" | jq .
 ----
 

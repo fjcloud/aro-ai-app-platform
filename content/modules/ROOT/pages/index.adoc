@@ -1,8 +1,40 @@
 = AI-Powered Developer Platform on ARO
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
 Build *Card Scout*: analyze a complete English Base Set collection, rank likely rare cards and ask a native OpenShift AI agent to verify a selected card and retrieve dated market prices.
 
 You play two roles. The *platform engineer* prepares OpenShift AI, a managed DeepSeek endpoint, one local T4 decision model and the delivery tools. The *developer* uses OpenCode and a short app contract to generate and ship a small Go UI from scratch. Finally, inspect model usage, agent tools and MLflow traces.
+
+== Know your roles and screens
+
+*The application is the outcome; the platform is the reusable capability.* You
+will first make models, identity, delivery and observability available once,
+then consume them as a developer without repeating the platform installation.
+
+[cols="1,2,2",options="header"]
+|===
+| Persona | Terminal | Browser login
+| Platform engineer | The existing *bastion / WeTTY terminal* beside this guide. Use `~/aro-ai-app-platform`. | `workshop-admin`, created in Act 0.
+| Developer | *Dev Spaces → Terminal → New Terminal*, in `$PROJECT_SOURCE`. | `dev`, created in Act 0. The CLI inside the workspace uses the limited `workshop-developer` service account.
+|===
+
+The bastion is already supplied by the environment; you do not deploy one.
+The Dev Spaces terminal is a different shell in a pod on OpenShift. Each command
+block identifies where to run it. Passwords chosen in Act 0 are different from
+the catalog workshop password; models use API keys, not those login passwords.
+
+[cols="1,3",options="header"]
+|===
+| Term | What it means here
+| Operator | A controller that installs and maintains a product after you create its configuration resource.
+| Platform service | A running capability shared by developers: browser IDE, model serving, MaaS gateway, delivery or trace storage. An operator subscription alone is not a running service.
+| MaaS | *Models-as-a-Service*: a common model API with access policy, API keys and token allowances, including external models on Foundry.
+| Project / namespace | An isolation boundary for application resources and permissions; for example `llm-serving` or `card-scout-dev`.
+| SCC | *Security Context Constraints*: OpenShift admission rules for how pods may run. Developers use the existing restricted policies; they do not grant privileged SCCs.
+| DSC | *DataScienceCluster*: the administrator's OpenShift AI configuration. It is unrelated to SCCs and is created once for the platform, not by the developer.
+|===
 
 == The workshop in five steps
 
@@ -42,10 +74,23 @@ a catalogue aggregate is not a verified 1st Edition valuation.
 
 Allow roughly half a day including operator installation, GPU provisioning and downloads. Operator installation and worker creation use explicit `oc` / `az` commands and supplied manifests. Run Acts 0 and 1 in the *bastion terminal*. Act 2 runs in the *Dev Spaces terminal*. Paste shell blocks into the named terminal and prompt blocks into OpenCode; use `/exit` to return to the shell. JSON responses are formatted with `jq`.
 
+== How to read the executable examples
+
+Comments beginning with `#` explain the command immediately below them.
+A backslash at the end of a line joins the next line to the *same command*; paste that whole
+command together. JSON bodies stay valid JSON and cannot contain shell comments,
+so their purpose is explained in the surrounding text. `jq` formats or selects
+JSON output; it does not create a successful result when the upstream call fails.
+
+Waits are marked in *IMPORTANT* callouts with a usual duration and a maximum.
+`Waiting for ...` during an image download is different from `ImagePullBackOff`,
+a failed condition, or a timeout. Each lab states the expected result and a web
+checkpoint so you can recognize progress instead of just copying commands.
+
 == Prerequisites
 
 * Assigned RHDP *classic ARO* environment, OpenShift 4.21+, Ready workers and WeTTY browser terminal.
-* Cluster-admin access for the platform role; a separate scoped developer identity is prepared for Act 2.
+* Cluster-admin access for the platform role; Act 0 creates separate `workshop-admin` and `dev` logins, and Lab 1.7 prepares the developer projects.
 * Azure permissions for Foundry in the assigned resource group, plus quota and capacity for one `Standard_NC8as_T4_v3` worker and CPU headroom.
 * A browser; no laptop model, Docker, API key or GitHub account is required from participants.
 

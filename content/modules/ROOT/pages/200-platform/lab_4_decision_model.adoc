@@ -1,6 +1,15 @@
 = Lab 1.6 — Serve d3-mini
 :page-aliases: 200-platform/lab_4_whisper.adoc
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
+== What you will do and why
+
+*Goal: Add the focused image-decision capability.*
+DeepSeek is the language model; D3 is a smaller multimodal model used for a narrow decision task. It evaluates an image against explicit candidate choices and returns probabilities. Here those choices describe the card type and the printed rarity symbol. Keeping this focused task on the local T4 separates visual decisions from language generation and lets you observe their latency and GPU cost independently. It complements DeepSeek rather than replacing it.
+
+
 DeepSeek handles language and tool use through MaaS. *d3-mini* runs on one T4 and classifies card images and their printed rarity. The developer will compare it with the language model using curl + jq in Lab 2.2.
 
 [NOTE]
@@ -26,14 +35,25 @@ The operators were installed in Lab 1.1 and their instances enabled in Lab 1.3. 
 
 Inspect GPU discovery and the driver:
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Inspect whether the NVIDIA operator has completed driver/device setup.
 oc get clusterpolicy gpu-cluster-policy
+# Inspect the worker/GPU labels and reported allocatable resources.
 oc get nodes -l workshop.fjcloud.io/gpu=t4 \
   -o 'custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu'
 ----
 
 Continue when `GPU` is `1`. A Ready node alone does not prove that its GPU driver is ready.
+
+[IMPORTANT]
+====
+*GPU driver setup can take 5–15 minutes on a fresh node.* The previous lab waits
+for one allocatable GPU. If that check failed, inspect the NVIDIA operator and
+node events first; creating a model pod cannot repair an unavailable GPU.
+====
 
 == Deploy d3-mini
 
@@ -41,16 +61,35 @@ OpenShift AI/KServe manages two resources: `ServingRuntime/d3-native` defines th
 
 Update the workshop checkout before applying the model manifests, then inspect and deploy them with the CLI:
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Update this checkout only if it can fast-forward; do not overwrite local changes.
 git pull --ff-only
+# Inspect the model runtime image and startup configuration.
 cat deploy/decision/servingruntime.yaml
+# Inspect the inference service’s resource requests and storage.
 cat deploy/decision/inferenceservice.yaml
+# Create the private D3 inference service, runtime and model-cache PVC.
 oc apply -k deploy/decision
+# Wait for the model runtime to load its weights and serve requests.
 oc wait inferenceservice/d3-mini -n decision-serving --for=condition=Ready --timeout=1800s
+# Verify the required app identity/storage resources and their state.
 oc get inferenceservice,servingruntime,pvc -n decision-serving
+# Inspect pod readiness; for an app digest check, compare the running image with the build
+# result.
 oc get pods -n decision-serving
 ----
+
+[IMPORTANT]
+====
+*The first model start commonly takes 5–15 minutes; the wait permits 30 minutes.*
+The runtime image is large and model weights must be downloaded once. During
+this time `ContainerCreating` or model loading is expected. `ImagePullBackOff`,
+`FailedScheduling` or a readiness timeout requires investigation; it is not a
+reason to add another GPU or continue to the developer labs.
+====
 
 OpenShift AI starts the published runtime on the T4. On its first start, it downloads the pinned model into the persistent cache. Later starts reuse those weights. No image build, Git credentials or Tekton runtime pipeline is needed in this lab.
 
@@ -73,5 +112,17 @@ http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone
 ----
 
 The model is visible as `d3-mini` under project `decision-serving` in OpenShift AI. Wait for Ready; a provisioned GPU alone does not prove model readiness. The developer tests both APIs in Lab 2.2 before coding.
+
+== Check in OpenShift AI
+
+Use the OpenShift AI URL from Lab 1.3, signed in as `workshop-admin`.
+In *AI hub → Models*, select project *decision-serving* and inspect *d3-mini*.
+Check its deployment status and the requested single GPU. In the OpenShift console,
+*Workloads → Pods → decision-serving* shows the runtime pod and its events.
+
+The web UI helps you inspect the CLI-created service; do not deploy another
+copy from the UI. The two successful outcomes are a Ready inference service and
+an internal endpoint. The absence of a public Route is intentional.
+
 
 Continue to xref:200-platform/lab_5_agents_md.adoc[Lab 1.7 — Prepare Developer Access].

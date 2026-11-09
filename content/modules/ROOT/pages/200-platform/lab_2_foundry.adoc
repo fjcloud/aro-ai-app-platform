@@ -1,5 +1,14 @@
 = Lab 1.4 — Publish DeepSeek on Foundry
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
+== What you will do and why
+
+*Goal: Give the workshop a language model for coding and tool use.*
+Create a managed DeepSeek deployment in Microsoft Foundry, then verify it directly before adding the OpenShift gateway. This isolates provider-access or quota problems from MaaS configuration problems. DeepSeek writes and explains code and runs the price agent; it does not use the cluster’s T4.
+
+
 The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Microsoft Foundry. OpenCode uses that endpoint in Act 2. d3-mini will run separately on one T4 in Lab 1.6 to classify card images; it is not OpenCode’s coding model.
 
 [NOTE]
@@ -11,7 +20,7 @@ The operators are ready. Publish *DeepSeek-V4 Pro* as a managed endpoint on Micr
 
 [IMPORTANT]
 ====
-This deployment uses Global Standard, pay-per-token pricing in East US 2. Reasoning tokens count as output. See xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1] for the dated price example. An idle coding deployment has no token usage charge; the cluster and GPU workers have separate infrastructure costs.
+This deployment uses Global Standard, pay-per-token pricing in East US 2. Reasoning tokens count as output. See xref:400-observability/lab_1_llm_metrics.adoc[Lab 3.1] for usage and infrastructure-cost interpretation. An idle coding deployment has no token usage charge; the cluster and GPU workers have separate infrastructure costs.
 ====
 
 == What you are creating
@@ -39,19 +48,39 @@ Capacity controls throughput, not a fixed hourly charge. Capacity `1` only allow
 
 If you resize an existing deployment, https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/quota[quota changes can take up to 15 minutes to propagate]. The inference response headers `x-ratelimit-limit-tokens` and `x-ratelimit-limit-requests` show the limits currently applied; the Azure provisioning status alone does not confirm that change.
 
+[IMPORTANT]
+====
+*Account and deployment provisioning usually take 1–5 minutes each.* The poller
+checks every 10 seconds and permits up to 10 minutes per resource. If Azure
+reports Failed/Canceled or the wait expires, stop and inspect that deployment;
+do not repeat resource creation blindly. The first inference call below retries
+endpoint startup errors with a 10-second delay and allows 3 minutes per attempt.
+====
+
 == Create the account and the deployment
+
+include::ROOT:partial$run-bastion.adoc[]
 
 [source,sh,role=execute]
 ----
+# Load the subscription, resource group and cluster ID detected in Act 0.
 source state/workshop.env
+# Stop with a clear message if the resource-group discovery from Act 0 was not run.
 : "${RESOURCEGROUP:?Run make onboard successfully before this lab}"
+# Verify access to the detected lab resource group; do not type another group ID.
 az group show --name "$RESOURCEGROUP" --subscription "$SUBSCRIPTION" --output none
+# Derive a lab suffix from the detected resource group.
 SUFFIX="${RESOURCEGROUP#openenv-}"
+# Create an alphanumeric Foundry account name unique to this lab.
 FOUNDRY_NAME="$(printf 'arodeepseek%s' "$SUFFIX" | tr -cd '[:alnum:]')"
+# Pin the Azure management API version used for the Foundry resource calls.
 API=2025-06-01
+# Use the stable deployment name later published through MaaS.
 DEPLOYMENT=deepseekv4pro
+# Place the external model deployment in East US 2; this does not move the ARO cluster.
 LOCATION=eastus2
 
+# Define a bounded Azure provisioning poller: check every 10 seconds, for at most 10 minutes.
 wait_foundry() {
   local url=$1 state deadline=$((SECONDS + 600))
   while (( SECONDS < deadline )); do
@@ -66,12 +95,15 @@ wait_foundry() {
   return 1
 }
 
+# Create or update the declared Foundry account/deployment through Azure Resource Manager.
 az rest --method put \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}" \
   --body "{\"location\":\"${LOCATION}\",\"kind\":\"AIServices\",\"sku\":{\"name\":\"S0\"},\"properties\":{\"customSubDomainName\":\"${FOUNDRY_NAME}\",\"publicNetworkAccess\":\"Enabled\"}}" | jq .
 
+# Wait for Azure provisioning to succeed before using the newly created resource.
 wait_foundry "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}"
 
+# List the models/version/SKU offered to this Foundry account.
 az rest --method get \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/models?api-version=${API}" \
   --query "value[?name=='DeepSeek-V4-Pro'].{name:name,format:format,version:version,sku:skus[0].name}" -o table
@@ -79,12 +111,16 @@ az rest --method get \
 
 The table should show format `DeepSeek`, version `2026-04-23`, SKU `GlobalStandard`. Then create the deployment:
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Create or update the declared Foundry account/deployment through Azure Resource Manager.
 az rest --method put \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}" \
   --body '{"sku":{"name":"GlobalStandard","capacity":500},"properties":{"model":{"format":"DeepSeek","name":"DeepSeek-V4-Pro","version":"2026-04-23"}}}' | jq .
 
+# Wait for Azure provisioning to succeed before using the newly created resource.
 wait_foundry "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/deployments/${DEPLOYMENT}?api-version=${API}"
 ----
 
@@ -92,23 +128,31 @@ wait_foundry "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourc
 
 The key stays in the shell variable. Do not paste it into the chat or the workshop repo.
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Read and normalize the provider endpoint saved for the next model-publication lab.
 ENDPOINT=$(az rest --method get \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}?api-version=${API}" \
   --query "properties.endpoint" -o tsv)
+# Read and normalize the provider endpoint saved for the next model-publication lab.
 ENDPOINT="${ENDPOINT%/}/"
+# Read the Foundry key into the shell only; do not print it or paste it into OpenCode.
 KEY=$(az rest --method post \
   --url "https://management.azure.com/subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCEGROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/listKeys?api-version=${API}" \
   --query key1 -o tsv)
 
+# Test the external provider directly before adding gateway and application layers.
 curl --fail-with-body -sS --retry 5 --retry-all-errors --retry-delay 10 \
   --max-time 180 "${ENDPOINT}openai/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "api-key: ${KEY}" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":512,"reasoning_effort":"none"}' | jq .
 
+# Keep non-secret endpoint metadata in the ignored local state directory.
 mkdir -p state
+# Save only non-secret deployment metadata for Lab 1.5; the provider key is omitted.
 cat > state/foundry.env << EOF
 SUBSCRIPTION=${SUBSCRIPTION}
 RESOURCEGROUP=${RESOURCEGROUP}

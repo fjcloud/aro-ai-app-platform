@@ -1,0 +1,6 @@
+[NOTE]
+====
+*Run in the bastion terminal*: the existing browser terminal beside this guide in
+Cloud Terminal. Use the workshop checkout (`~/aro-ai-app-platform`). Stay signed
+in as `workshop-admin` for the platform labs; Act 0 explains the initial login.
+====

@@ -1,16 +1,34 @@
 = Lab 1.1 — Install All Operators
 :page-aliases: 200-platform/lab_2_operators.adoc
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
+== What you will do and why
+
+*Goal: Install the controllers the platform needs.*
+An operator is a controller that installs and maintains a product. In this lab you submit the operator subscriptions together, so their downloads can run while you add worker capacity. This saves setup time and gives the next labs the APIs they need. You are installing the managers here, not creating every running service yet.
+
+
 *Platform Engineer · bastion terminal.* Submit all operator subscriptions together. No installation script is needed.
+
+include::ROOT:partial$run-bastion.adoc[]
 
 [source,sh,role=execute]
 ----
+# Use the workshop checkout for all relative manifest paths.
 cd "$HOME/aro-ai-app-platform"
+# Start the OpenShift Gateway API controller before its dependent operators.
 oc apply -f deploy/instances/gatewayclass.yaml
+# Wait for the custom-resource API needed by the next configuration step.
 oc wait --for=create crd/envoyfilters.networking.istio.io --timeout=300s
+# Wait for the custom-resource API needed by the next configuration step.
 oc wait crd/envoyfilters.networking.istio.io --for=condition=Established --timeout=60s
+# Submit all operator subscriptions together; installation continues asynchronously.
 oc apply -k deploy/operators
+# Inspect the OLM requests submitted for operator installation.
 oc get subscriptions -A
+# List actual operator installations, excluding copied OLM entries in other namespaces.
 oc get csv -A -l '!olm.copiedFrom'
 ----
 
@@ -21,5 +39,41 @@ The manifests install OpenShift AI, Dev Spaces, Kubernetes Image Puller, Pipelin
 OLM resolves dependencies and pulls the controllers in the background. A subscription is not proof that its operator is ready. Next, add CPU capacity and one GPU worker, then wait for the complete operator inventory before creating platform instances.
 
 If a subscription reports an error, inspect it with `oc describe subscription <name> -n <namespace>`. Do not bypass dependency errors or grant privileged SCCs.
+
+== What you should see, and why
+
+`Subscription` records ask OLM (Operator Lifecycle Manager) to install products.
+The `CSV` (ClusterServiceVersion) records report the installed operator version
+and its phase. `Installing` is normal while images and dependencies arrive;
+`Succeeded` means the controller is installed, not that an IDE or model is ready.
+
+[cols="1,2",options="header"]
+|===
+| Operator group | Why this workshop needs it
+| OpenShift AI, Connectivity Link and cert-manager | Serve models, govern access through MaaS and manage certificates.
+| Dev Spaces and Kubernetes Image Puller | Provide the browser IDE and cache large images before its first start.
+| Pipelines and GitOps | Build the generated app and reconcile its deployed Git revision.
+| NFD and NVIDIA GPU Operator | Discover the T4 and install the driver/device plugin used by D3.
+| Cluster Observability and OpenTelemetry | Collect model metrics and traces for the final labs.
+| LeaderWorkerSet | Supply a dependency used by the installed model-serving stack.
+|===
+
+[IMPORTANT]
+====
+*Allow 5–15 minutes for a fresh operator installation.* Continue to the worker
+lab while this runs; its final readiness checks wait for all required operators.
+A `Failed` phase or an unresolved subscription is different from a normal
+`Installing` phase: inspect its conditions rather than carrying on indefinitely.
+====
+
+== Check in the web console
+
+Open the console URL printed in Act 0 (`oc whoami --show-console`), sign in as
+`workshop-admin`, then go to *Ecosystem → Installed Operators*. Select
+*All Projects*. In older navigation the entry is *Operators → Installed Operators*.
+Find OpenShift AI, Dev Spaces, Pipelines and GitOps. Open an operator to see its
+*Subscription* and installed version. Do not create product instances through
+this screen: Lab 1.3 applies their prepared configuration with the CLI.
+
 
 Continue to xref:200-platform/lab_2_workers.adoc[Lab 1.2 — Add CPU and GPU Workers].

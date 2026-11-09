@@ -1,6 +1,15 @@
 = Lab 1.8 — Prepare Card Scout
 :page-aliases: 200-platform/lab_6_cluster_voice.adoc, 200-platform/lab_6_signal_desk.adoc
 
+include::ROOT:partial$pr-preview.adoc[]
+
+
+== What you will do and why
+
+*Goal: Prepare the reusable backend that keeps the generated app small.*
+Deploy the fixed image dataset, persistent analysis state, native OpenShift AI agent and read-only price tool. The developer will consume these prepared capabilities through one API, rather than implement model orchestration, credentials, scraping and trace export in the generated UI. Separating the platform from the UI makes the result easier to generate, test and explain.
+
+
 Prepare the complete English Base Set dataset, local image classification and a native OpenShift AI agent that verifies catalogue references and retrieves dated market prices. The developer will generate only a small Go UI and proxy.
 
 [NOTE]
@@ -16,21 +25,36 @@ Create https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-manage
 
 From the bastion, update the checkout and apply the backend resources:
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Update this checkout only if it can fast-forward; do not overwrite local changes.
 git pull --ff-only
+# Build the native agent’s model base URL from this cluster’s application domain.
 MAAS_URL="https://maas.$(oc get ingress.config.openshift.io cluster -o jsonpath='{.spec.domain}')/v1"
+# Record the native agent’s MaaS endpoint without placing a key in the ConfigMap.
 oc create configmap card-scout-agent-endpoint -n card-scout-dev \
   --from-literal=MAAS_URL="$MAAS_URL" --dry-run=client -o yaml | oc apply -f -
+# Wait for the prerequisite object to exist before configuring or using it.
 oc wait --for=create configmap/odh-trusted-ca-bundle -n card-scout-dev --timeout=180s
+# Allow the agent operator to watch the trusted-CA ConfigMap for updates.
 oc label configmap odh-trusted-ca-bundle -n card-scout-dev ogx.io/watch=true --overwrite
+# Create the native agent backend in card-scout-dev.
 oc apply -k deploy/card-scout/agent
+# Wait for the CLI-created native agent backend to become Ready.
 oc wait ogxserver/lsd-genai-playground -n card-scout-dev \
   --for=jsonpath='{.status.phase}'=Ready --timeout=600s
+# Wait for the named deployment’s new pods to become available within the displayed timeout.
 oc rollout status deployment/lsd-genai-playground -n card-scout-dev --timeout=600s
+# Inspect the named resource and its reported status before proceeding.
 oc get deployment lsd-genai-playground -n card-scout-dev
+# Inspect the named resource and its reported status before proceeding.
 oc get service lsd-genai-playground-service -n card-scout-dev
+# Inspect pod readiness; for an app digest check, compare the running image with the build
+# result.
 oc get pods -n card-scout-dev
+# Inspect the trace service’s readiness and web URL.
 oc get mlflow mlflow -o json | jq '{conditions:.status.conditions,url:.status.url}'
 ----
 
@@ -50,15 +74,28 @@ The NetworkPolicy applied below permits the Dev Spaces namespaces to reach only 
 
 This is the native OpenShift AI agent backend. OpenCode uses the MaaS Chat Completions endpoint for coding; the app uses Responses for model/tool turns. Both reach the same DeepSeek deployment, with separate MaaS credentials.
 
+[IMPORTANT]
+====
+*Allow 3–10 minutes for the initial agent image and startup.* The OGX status wait
+and rollout check each allow 10 minutes. Wait for `Ready` in *card-scout-dev*, not
+in an arbitrary project. If the Service is absent, the backend is not ready:
+inspect this OGXServer and its pod events before running the configuration helper.
+====
+
 == Create application resources
 
 Apply the manifests for the app identity, service CA, image-pull permissions, MaaS subscription and Dev Spaces network access:
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Create app identity, storage, subscription and workspace network access.
 oc apply -k deploy/card-scout/access
+# Wait until the requested token-allowance subscription is usable.
 oc wait maassubscription/deepseekv4pro-card-scout -n models-as-a-service \
   --for=condition=Ready --timeout=180s
+# Verify the required app identity/storage resources and their state.
 oc get serviceaccount,pvc -n card-scout-dev
 ----
 
@@ -68,14 +105,23 @@ A helper handles the dynamic MaaS key and MLflow experiment APIs. The CLI then
 applies the service manifests. Its prebuilt Red Hat UBI image includes the fixed
 dataset and all 105 images; the lab does not download card images at startup.
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Configure the native-agent API, runtime MaaS key, dataset and MLflow experiment.
 python3 scripts/prepare-card-scout.py
+# Deploy the prepared dataset/API service; this is distinct from the generated Go app.
 oc apply -k deploy/card-scout
+# Wait for the named deployment’s new pods to become available within the displayed timeout.
 oc rollout status deployment/card-scout-platform -n card-scout-dev --timeout=600s
+# Inspect the named resource and its reported status before proceeding.
 oc get service card-scout-platform -n card-scout-dev
+# Verify the required app identity/storage resources and their state.
 oc get pvc card-scout-data -n card-scout-dev
+# Inspect the named resource and its reported status before proceeding.
 oc get configmap card-scout-config -n card-scout-dev -o json | jq .data
+# Confirm the named Secret exists; this command does not decode or print its credentials.
 oc get secret card-scout-model -n card-scout-dev
 ----
 
@@ -90,8 +136,11 @@ renew it in the *bastion terminal*:
 
 [source,sh,role=execute]
 ----
+# Configure the native-agent API, runtime MaaS key, dataset and MLflow experiment.
 python3 scripts/prepare-card-scout.py
+# Restart the app pods to load the renewed configuration or newly pushed image.
 oc rollout restart deployment/card-scout-platform -n card-scout-dev
+# Wait for the named deployment’s new pods to become available within the displayed timeout.
 oc rollout status deployment/card-scout-platform -n card-scout-dev --timeout=180s
 ----
 ====
@@ -102,9 +151,13 @@ calls one internal API supplied as `CARD_SCOUT_URL`. Its delivery scaffold uses
 
 == Check the fixed dataset
 
+include::ROOT:partial$run-bastion.adoc[]
+
 [source,sh,role=execute]
 ----
+# Read the prepared Card Scout service’s Route hostname.
 CARD_HOST=$(oc get route card-scout-tools -n card-scout-dev -o jsonpath='{.spec.host}')
+# Read the real dataset and persisted analysis progress from the prepared service.
 curl --fail-with-body -sS "https://${CARD_HOST}/api/batch" |   jq '{dataset,running,completed,failed,first:.items[0]}'
 ----
 
