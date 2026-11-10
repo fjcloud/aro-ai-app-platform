@@ -188,18 +188,18 @@ def model_apis():
     """Execute the documented preflight as the actual scoped workspace user."""
     ns, pod = os.environ.get('E2E_NS'), os.environ.get('DEV_POD')
     require(bool(ns and pod), 'E2E_NS and DEV_POD identify a real Dev Spaces workspace')
+    prefix = ['exec', pod, '-n', ns, '-c', os.environ.get('DEV_CONTAINER', 'dev'), '--', 'bash', '-c']
+    require(oc(*prefix, 'oc whoami') == 'dev', 'Workspace CLI uses the native dev user')
     model = resource('inferenceservice', 'd3-mini', 'decision-serving')
     require(any(c['type'] == 'Ready' and c['status'] == 'True' for c in model.get('status', {}).get('conditions', [])), 'D3 inference service is Ready')
     require(not json.loads(oc('get', 'routes', '-n', 'decision-serving', '-o', 'json'))['items'], 'Decision model API has no public Route')
-    identity = 'system:serviceaccount:card-scout-dev:workshop-developer'
     for verb, kind in [('get', 'secrets'), ('patch', 'inferenceservices')]:
-        denied = subprocess.run(['oc', 'auth', 'can-i', verb, kind, '-n', 'decision-serving', '--as=' + identity], text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=30)
+        denied = subprocess.run(['oc', *prefix, f'oc auth can-i {verb} {kind} -n decision-serving'], text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=30)
         require(denied.returncode == 1 and denied.stdout.strip() == 'no', 'Developer cannot ' + verb + ' ' + kind + ' in the model namespace')
     page = (Path(__file__).resolve().parents[1] / 'content/modules/ROOT/pages/300-developer/lab_2_model_apis.adoc').read_text()
     blocks = [b for b in re.findall(r'\[source,sh,role=execute\]\n----\n(.*?)\n----', page, re.S)
               if 'curl --fail-with-body' in b]
-    require(len(blocks) == 4, 'Select the four developer API blocks, excluding optional bastion key renewal')
-    prefix = ['exec', pod, '-n', ns, '-c', os.environ.get('DEV_CONTAINER', 'dev'), '--', 'bash', '-c']
+    require(len(blocks) == 4, 'Select the four developer API blocks, excluding optional cluster-terminal key renewal')
     raw = subprocess.check_output(['oc', *prefix, 'set -euo pipefail\n' + '\n'.join(blocks)], text=True, stderr=subprocess.DEVNULL, timeout=600).strip()
     remaining, responses, decoder = raw.lstrip(), [], json.JSONDecoder()
     while remaining:

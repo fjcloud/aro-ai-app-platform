@@ -18,7 +18,7 @@ def apply(manifest):
     result = subprocess.run(['oc', 'apply', '-f', '-'], input=json.dumps(manifest),
                             capture_output=True, text=True, timeout=60)
     if result.returncode:
-        # The input can contain the scoped token; do not echo subprocess bodies.
+        # Keep diagnostics focused on the resource that failed.
         raise RuntimeError('Could not apply ' + manifest['kind'] + '/' + manifest['metadata']['name'])
 
 

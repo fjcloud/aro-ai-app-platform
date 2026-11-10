@@ -25,25 +25,19 @@ include::ROOT:partial$run-cluster.adoc[]
 DEVSPACES_URL=$(oc get checluster devspaces -n openshift-operators -o jsonpath='{.status.cheURL}')
 # Select the ARO template branch; it contains scaffolding and tests, not a finished app.
 TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-card-scout
-# Use the exact standard UDI reference already selected for background caching.
-STANDARD_UDI_IMAGE=$(oc exec -n openshift-operators deployment/devspaces-operator -- \
-  cat /tmp/external_images.txt | awk '/^registry\.redhat\.io\/devspaces\/udi-rhel9[:@]/ {sub(/\r$/, ""); print; exit}')
-if [ -n "$STANDARD_UDI_IMAGE" ]; then
-  # Encode the image reference for the factory URL; no credential is included.
-  UDI_PARAM=$(jq -rn --arg image "$STANDARD_UDI_IMAGE" '$image | @uri')
-  printf '%s/#%s?ai-provider=opencodeai/opencode&image=%s\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL" "$UDI_PARAM"
-else
-  printf '%s\n' 'Standard UDI not found. Check the image catalogue in Lab 1.3 before launching.' >&2
-fi
+# Use the standard Red Hat UDI tag, keeping the image digest out of the link.
+UDI_IMAGE=registry.redhat.io/devspaces/udi-rhel9:latest
+# Print the workspace launch URL.
+printf '%s/#%s?ai-provider=opencodeai/opencode&image=%s\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL" "$UDI_IMAGE"
 ----
 
 Open the printed link in a *private window or separate browser profile*.
 This keeps the developer's login separate from your administrator session.
-The documented https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html-single/user_guide/index[image URL parameter]
-replaces the template's first container image with the standard Red Hat UDI from
-the installed operator's catalogue. This keeps the workspace base aligned with
-the background cache without pinning a different Dev Spaces release. The other
-devfile components, including the test browser, remain available.
+The https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/user_guide/optional-parameters-for-urls_user_guide[image URL parameter]
+selects the standard Red Hat UDI using its short `latest` tag. The test-browser
+component remains defined in the template. The operator caches its own image
+catalogue; if the tag resolves to a different image, the workspace downloads it
+on demand.
 The link selects the template and OpenCode; Dev Spaces creates a workspace in
 the prepared *dev-devspaces* project.
 
