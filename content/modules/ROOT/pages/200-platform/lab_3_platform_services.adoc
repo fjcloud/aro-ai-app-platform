@@ -127,6 +127,8 @@ initialization or storage setup.
 
 The supplied `CheCluster` enables the documented https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/administration_guide/assembly_caching-images-for-faster-workspace-start_administration_guide[Kubernetes Image Puller] for the standard Dev Spaces image catalogue. Lab 1.1 installs its operator. Dev Spaces manages the default image list and updates its references when Dev Spaces is upgraded; keep `spec.components.imagePuller.spec.images` empty to retain that behaviour.
 
+Each cache container requests `10m` CPU, leaving capacity for the workspace.
+
 Pre-cache only this standard catalogue. Do not add custom OpenCode injector or
 test-browser entries to the cache. Those workspace components can still pull
 their images on demand. The cache is local to each node, so the required image
@@ -136,9 +138,9 @@ include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
-# Keep the standard catalogue, including on clusters using the earlier custom list.
+# Use the standard catalogue and reserve 10 millicores per cached image.
 oc patch checluster devspaces -n openshift-operators --type=merge -p \
-  '{"spec":{"components":{"imagePuller":{"enable":true,"spec":{"images":""}}}}}'
+  '{"spec":{"components":{"imagePuller":{"enable":true,"spec":{"images":"","cachingCPURequest":"10m"}}}}}'
 # Wait for the prerequisite object to exist before configuring or using it.
 oc wait --for=create daemonset/kubernetes-image-puller -n openshift-operators --timeout=180s
 # Inspect the standard catalogue discovered by the installed Dev Spaces version.
