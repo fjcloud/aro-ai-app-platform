@@ -94,9 +94,17 @@ terminal; natural-language prompt blocks go into OpenCode after it starts.
 
 == Check your scoped CLI access
 
-Dev Spaces automatically injects the logged-in OpenShift user's credentials.
-The terminal and OpenCode use `dev`, the same identity as the browser. No
-additional `oc login` or custom kubeconfig is needed.
+The terminal must use `dev`, the same identity as the browser. Synchronize its
+credentials before running the checks:
+
+. In the Dev Spaces dashboard, select *Workspaces → card-scout-workspace*.
+. Open *Advanced* and click *Refresh Kubeconfig* while signed in as *dev*.
+. Wait for *Kubeconfig refreshed*, then reload the editor tab and open a new terminal.
+
+image::devspaces-refresh-kubeconfig.png[Refresh the workspace kubeconfig as dev,align="center",link=self]
+
+This uses Dev Spaces' native credential injection; no additional `oc login` or
+custom CLI identity is needed.
 
 include::ROOT:partial$run-devspaces.adoc[]
 
@@ -110,12 +118,9 @@ oc auth can-i create pipelineruns -n "${APP_NAME}-build"
 oc auth can-i create deployments -n "${APP_NAME}-dev"
 ----
 
-Expect `dev`, then `yes`
-and `yes`. If access is missing, ask the platform engineer to repeat the
-preparation in Lab 1.7 and restart the workspace. If `oc whoami` still reports
-`system:serviceaccount:card-scout-dev:workshop-developer`, the old kubeconfig
-override is still loaded; follow the migration note in Lab 1.7 and open a new
-terminal after restarting.
+Expect `dev`, then `yes` and `yes`. If `oc whoami` shows a ServiceAccount,
+repeat *Refresh Kubeconfig* from the `dev` dashboard session. If the identity is
+`dev` but either permission is `no`, ask the platform engineer to check Lab 1.7.
 
 The template also includes a local-only browser component for acceptance tests.
 OpenCode prepares it with `npm ci && npm run setup`. No system-package installation
