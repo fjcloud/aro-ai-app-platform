@@ -1,0 +1,14 @@
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "brightside-config",
+    "namespace": "brightside-poc-dev"
+  },
+  "data": {
+    "D3_URL": "http://d3-mini.decision-serving.svc.cluster.local:8080/v1/systemone",
+    "LLM_MODEL": "deepseekv4pro",
+    "LLM_BASE_URL": "https://fjasignaldeskai40e9.services.ai.azure.com/openai/v1",
+    "PUBLIC_ORIGIN": "https://brightside-brightside-poc-dev.apps.ijtxiwk6.eastus.aroapp.io"
+  }
+}
