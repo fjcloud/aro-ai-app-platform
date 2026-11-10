@@ -158,7 +158,7 @@ include::ROOT:partial$run-devspaces.adoc[]
 cd "${PROJECT_SOURCE}"
 # Align the project’s model configuration with the injected platform configuration; it
 # contains environment references, not a key.
-cp "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/opencode.json" opencode.json
+cp "$OPENCODE_CONFIG" opencode.json
 # Commit only when the injected configuration differs from the template.
 if ! git diff --quiet HEAD -- opencode.json; then
   # Stage only the intended model-configuration update.

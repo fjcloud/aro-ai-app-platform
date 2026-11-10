@@ -2,6 +2,9 @@
 
 Validated on 10 November 2026.
 
+Follow-up: the cold-start cause was subsequently reproduced and fixed. See
+[the fresh-home comparison](../devspaces-cold-start-fq27j-20261110/README.md).
+
 ## Startup
 
 The first workspace failed with:
@@ -13,8 +16,8 @@ Container dev has state [postStart hook] Commands forcefully killed by SIGKILL d
 Unlike 44fwd, the image-cache CPU setting was already correct. Restarting the
 same DevWorkspace retained its PVC and reached `Running`; all three containers
 became Ready. Bootstrap installed gitpop and OpenCode reported 1.18.14.
-The precise cause of the first cold-start postStart timeout is still unresolved;
-this run establishes recovery, not a permanent fix for that timeout.
+At this stage, the precise cause of the first cold-start failure had not been
+established; the later fresh-home comparison above identifies and fixes it.
 
 ## Native CLI identity
 
