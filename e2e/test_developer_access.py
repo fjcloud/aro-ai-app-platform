@@ -2,7 +2,6 @@
 import contextlib
 import importlib.util
 import io
-import json
 from pathlib import Path
 import unittest
 from unittest.mock import patch
@@ -14,15 +13,13 @@ spec.loader.exec_module(module)
 
 
 class DeveloperAccess(unittest.TestCase):
-    def prepare(self, token='private-scoped-token'):
+    def prepare(self):
         manifests, calls = [], []
         def oc(*args):
             calls.append(args)
-            if args[:2] == ('whoami', '--show-server'): return 'https://api.lab.example:6443'
             if args[0] == 'get': return '1000000000/10000'
             if args[0] == 'annotate': return ''
-            if args[0] == 'config': return 'public-ca-data'
-            if args[:2] == ('create', 'token'): return token
+            if args[0] == 'delete': return ''
             self.fail('Unexpected command: ' + repr(args))
         output = io.StringIO()
         with patch.object(module, 'oc', oc), patch.object(module, 'apply', manifests.append), contextlib.redirect_stdout(output):
@@ -47,20 +44,28 @@ class DeveloperAccess(unittest.TestCase):
                 self.assertEqual({g for r in m['rules'] for g in r['apiGroups']},{'tekton.dev','argoproj.io'})
         self.assertFalse(any('add-scc-to-user' in c for c in calls))
 
-    def test_scoped_token_only_in_workspace_secret(self):
-        manifests, calls, output = self.prepare()
-        secrets = [m for m in manifests if m['kind']=='Secret']
-        self.assertEqual(len(secrets),1)
-        config=json.loads(secrets[0]['stringData']['config'])
-        self.assertEqual(config['users'][0]['user'],{'token':'private-scoped-token'})
-        self.assertEqual(config['contexts'][0]['context']['namespace'],'test-app-dev')
-        self.assertNotIn('private-scoped-token',output)
-        self.assertIn(('create','token','workshop-developer','-n','test-app-dev','--duration=24h'),calls)
+    def test_native_user_gets_app_and_delivery_permissions_without_credentials_override(self):
+        manifests, calls, _ = self.prepare()
+        user = {'kind':'User','apiGroup':'rbac.authorization.k8s.io','name':'dev'}
+        bindings = [m for m in manifests if m['kind']=='RoleBinding' and m['roleRef']['name'] in ('edit','workshop-delivery')]
+        self.assertEqual(len(bindings),4)
+        self.assertTrue(all(m['subjects']==[user] for m in bindings))
+        self.assertFalse(any(m['kind'] in ('Secret','ConfigMap') for m in manifests))
+        self.assertFalse(any(c[0] in ('create','config') for c in calls))
+        self.assertEqual([(m['metadata']['name'],m['metadata']['namespace']) for m in manifests if m['kind']=='ServiceAccount'], [('pipeline','test-app-build')])
+
+    def test_retires_only_the_legacy_workshop_credentials(self):
+        _, calls, _ = self.prepare()
+        deletions = [c for c in calls if c[0]=='delete']
+        self.assertEqual(deletions,[
+            ('delete','secret/workshop-developer-access','configmap/workshop-developer-env','-n','openshift-operators','--ignore-not-found'),
+            ('delete','secret/workshop-developer-access','configmap/workshop-developer-env','-n','dev-devspaces','--ignore-not-found'),
+            ('delete','serviceaccount/workshop-developer','-n','test-app-dev','--ignore-not-found')])
 
     def test_missing_security_allocation_stops_before_credentials(self):
         with patch.object(module, 'apply'), patch.object(module, 'oc', return_value='') as oc, patch.object(module.time, 'sleep'), self.assertRaises(RuntimeError):
             module.prepare('test-app')
-        self.assertFalse(any(c.args[0] in ('annotate', 'create') for c in oc.call_args_list))
+        self.assertFalse(any(c.args[0] in ('annotate', 'create', 'delete') for c in oc.call_args_list))
 
     def test_rejects_reserved_or_invalid_app_names_before_changes(self):
         for name in ('openshift-system','kube-system','a/b','UPPER','default-dev;bad','a'*41):

@@ -16,7 +16,7 @@ then consume them as a developer without repeating the platform installation.
 |===
 | Persona | Terminal | Browser login
 | Platform engineer | The existing *cluster terminal* beside this guide. Use `~/aro-ai-app-platform`. | `workshop-admin`, created in Act 0.
-| Developer | *Dev Spaces → Terminal → New Terminal*, in `$PROJECT_SOURCE`. | `dev`, created in Act 0. The CLI inside the workspace uses the limited `workshop-developer` service account.
+| Developer | *Dev Spaces → Terminal → New Terminal*, in `$PROJECT_SOURCE`. | `dev`, created in Act 0. Dev Spaces automatically authenticates the CLI as the same user.
 |===
 
 Each command block identifies the terminal to use. Browser logins use the

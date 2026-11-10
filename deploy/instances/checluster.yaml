@@ -13,8 +13,12 @@ spec:
     devWorkspace: {}
     devfileRegistry: {}
     imagePuller:
-      enable: false
-      spec: {}
+      enable: true
+      spec:
+        # An empty list uses the installed operator's standard image catalogue.
+        # Explicitly clear a custom list left by an earlier workshop configuration.
+        images: ""
+        cachingCPURequest: 10m
     metrics:
       enable: true
     pluginRegistry: {}

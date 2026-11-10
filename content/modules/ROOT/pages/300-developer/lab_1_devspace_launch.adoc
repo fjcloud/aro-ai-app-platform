@@ -23,16 +23,27 @@ include::ROOT:partial$run-cluster.adoc[]
 ----
 # Read the operator-reported browser IDE URL for this cluster.
 DEVSPACES_URL=$(oc get checluster devspaces -n openshift-operators -o jsonpath='{.status.cheURL}')
-# Wait for all CPU-node image caches before launching the workspace.
-oc rollout status daemonset/kubernetes-image-puller -n openshift-operators --timeout=600s
 # Select the ARO template branch; it contains scaffolding and tests, not a finished app.
 TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-card-scout
-# Print the prepared browser launch URL; no credential is included.
-printf '%s/#%s?ai-provider=opencodeai/opencode\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL"
+# Use the exact standard UDI reference already selected for background caching.
+STANDARD_UDI_IMAGE=$(oc exec -n openshift-operators deployment/devspaces-operator -- \
+  cat /tmp/external_images.txt | awk '/^registry\.redhat\.io\/devspaces\/udi-rhel9[:@]/ {sub(/\r$/, ""); print; exit}')
+if [ -n "$STANDARD_UDI_IMAGE" ]; then
+  # Encode the image reference for the factory URL; no credential is included.
+  UDI_PARAM=$(jq -rn --arg image "$STANDARD_UDI_IMAGE" '$image | @uri')
+  printf '%s/#%s?ai-provider=opencodeai/opencode&image=%s\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL" "$UDI_PARAM"
+else
+  printf '%s\n' 'Standard UDI not found. Check the image catalogue in Lab 1.3 before launching.' >&2
+fi
 ----
 
 Open the printed link in a *private window or separate browser profile*.
 This keeps the developer's login separate from your administrator session.
+The documented https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html-single/user_guide/index[image URL parameter]
+replaces the template's first container image with the standard Red Hat UDI from
+the installed operator's catalogue. This keeps the workspace base aligned with
+the background cache without pinning a different Dev Spaces release. The other
+devfile components, including the test browser, remain available.
 The link selects the template and OpenCode; Dev Spaces creates a workspace in
 the prepared *dev-devspaces* project.
 
@@ -60,8 +71,9 @@ Running postStart commands...
 [IMPORTANT]
 ====
 *Allow 2–5 minutes with cached images; the first start can take up to 15 minutes.*
-Storage and the persistent home still need initialization. The cache wait above
-permits 10 minutes before launch. Keep the start screen open; do not create extra
+Storage and the persistent home still need initialization. Background caching
+does not block launch; the workspace pulls any required image that is missing
+from its node. Keep the start screen open; do not create extra
 workspaces while one is starting. A timeout or an error in *Events* is a failure
 to inspect, not proof that the IDE is ready.
 ====
@@ -88,7 +100,9 @@ terminal; natural-language prompt blocks go into OpenCode after it starts.
 
 == Check your scoped CLI access
 
-The platform injects a separate developer kubeconfig into the workspace. Browser SSO and CLI access are separate; you do not paste an administrator token into the terminal or OpenCode.
+Dev Spaces automatically injects the logged-in OpenShift user's credentials.
+The terminal and OpenCode use `dev`, the same identity as the browser. No
+additional `oc login` or custom kubeconfig is needed.
 
 include::ROOT:partial$run-devspaces.adoc[]
 
@@ -96,15 +110,18 @@ include::ROOT:partial$run-devspaces.adoc[]
 ----
 # Show the CLI identity actually used by this terminal.
 oc whoami
-# Expect yes: the scoped identity can start application builds.
+# Expect yes: the developer can start application builds.
 oc auth can-i create pipelineruns -n "${APP_NAME}-build"
 # Expect yes: this identity can deploy in the application project.
 oc auth can-i create deployments -n "${APP_NAME}-dev"
 ----
 
-Expect `system:serviceaccount:card-scout-dev:workshop-developer`, then `yes`
+Expect `dev`, then `yes`
 and `yes`. If access is missing, ask the platform engineer to repeat the
-preparation in Lab 1.7 and restart the workspace.
+preparation in Lab 1.7 and restart the workspace. If `oc whoami` still reports
+`system:serviceaccount:card-scout-dev:workshop-developer`, the old kubeconfig
+override is still loaded; follow the migration note in Lab 1.7 and open a new
+terminal after restarting.
 
 The template also includes a local-only browser component for acceptance tests.
 OpenCode prepares it with `npm ci && npm run setup`. No system-package installation
@@ -159,10 +176,8 @@ fi
 
 Open the Dev Spaces dashboard in the same developer browser session. Confirm
 that the user menu shows *dev* and that the workspace belongs to *dev-devspaces*.
-In the editor, `oc whoami` should show
-`system:serviceaccount:card-scout-dev:workshop-developer`. These different names
-are expected: the browser creates the workspace as the person; the CLI uses a
-limited service account so OpenCode cannot administer the cluster.
+In the editor, `oc whoami` should also show `dev`. This user has namespace-scoped
+workspace and application permissions; it does not administer the cluster.
 
 == Model configuration
 

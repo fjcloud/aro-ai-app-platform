@@ -81,10 +81,6 @@ oc get machineset "$CPU_TEMPLATE" -n openshift-machine-api -o json | \
     | .spec.template.metadata.labels["machine.openshift.io/cluster-api-machineset"] = $name
     | .spec.template.spec.providerSpec.value.vmSize = "Standard_D8s_v3"
   ' | oc create -f -
-
-# Wait for the newly provisioned worker to join OpenShift and become Ready.
-oc wait machineset/"$CPU_POOL" -n openshift-machine-api \
-  --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
 ----
 
 In the `jq` transformation, removing `.status` avoids copying controller-owned
@@ -93,6 +89,8 @@ its own identity. `.spec.replicas = 1` requests one VM; only `vmSize` changes it
 capacity. The other provider settings retain the source pool’s working bootstrap.
 
 The new MachineSet inherits the cluster image, subnet, disks and bootstrap configuration. It adds one worker with its own hourly cost. The original pools are unchanged; repeating `oc create` reports AlreadyExists.
+
+Continue directly to the T4 worker below; the CPU VM provisions in the background.
 
 == Add one T4 worker
 
@@ -131,21 +129,37 @@ oc get machineset "$GPU_TEMPLATE" -n openshift-machine-api -o json | \
     | .spec.template.spec.taints = [{key: "nvidia.com/gpu", value: "present", effect: "NoSchedule"}]
     | .spec.template.spec.providerSpec.value.vmSize = "Standard_NC8as_T4_v3"
   ' | oc create -f -
-
-# Wait for the newly provisioned worker to join OpenShift and become Ready.
-oc wait machineset/"$GPU_POOL" -n openshift-machine-api \
-  --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
-# Inspect machines status.
-oc get machines -n openshift-machine-api
-# Inspect the worker/GPU labels and reported allocatable resources.
-oc get nodes -l workshop.fjcloud.io/gpu=t4
 ----
 
 The taint reserves this worker for workloads tolerating `nvidia.com/gpu=present:NoSchedule`. Node readiness confirms provisioning. Lab 1.3 enables the ClusterPolicy and waits for the NVIDIA driver to advertise one GPU.
 
+== Check both workers after creation
+
+Both MachineSets have now been submitted. Their VMs provision in parallel;
+wait for both workers here before continuing.
+If you reused an existing pool, set `CPU_POOL` or `GPU_POOL` to its MachineSet
+name before running this check.
+
+include::ROOT:partial$run-cluster.adoc[]
+
+[source,sh,role=execute]
+----
+# Check readiness only after requesting both the CPU and GPU workers.
+oc wait machineset/"$CPU_POOL" machineset/"$GPU_POOL" \
+  -n openshift-machine-api \
+  --for=jsonpath='{.status.readyReplicas}'=1 --timeout=1200s
+# Inspect the desired and ready replica counts for both new pools.
+oc get machinesets "$CPU_POOL" "$GPU_POOL" -n openshift-machine-api \
+  -o 'custom-columns=NAME:.metadata.name,DESIRED:.spec.replicas,READY:.status.readyReplicas'
+# Inspect provisioning and node status after both workers are ready.
+oc get machines -n openshift-machine-api
+oc get nodes -l workshop.fjcloud.io/gpu=t4
+----
+
 [IMPORTANT]
 ====
-*Each new worker usually needs 5–15 minutes; each wait permits up to 20 minutes.*
+*The CPU and GPU workers provision in parallel, usually taking 5–15 minutes each.*
+The readiness check uses a 20-minute timeout. Do not wait between the two creation blocks.
 `Provisioned` means Azure has created the VM. `Running` on the Machine and `Ready`
 on its node confirm that it has joined OpenShift. GPU driver readiness is a
 separate check in Lab 1.3. Do not paste the creation command again while waiting.

@@ -4,7 +4,7 @@ include::ROOT:partial$pr-preview.adoc[]
 
 == Goal
 
-Prepare the developer projects, permissions and app template. The browser account `dev` will own its workspace; a limited service account gives OpenCode CLI access to build and deploy the app.
+Prepare the developer projects, permissions and app template. The account `dev` owns its workspace and uses the same identity in `oc` and OpenCode to build and deploy the app.
 
 The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-card-scout[fjcloud/go-app-template].
 
@@ -47,7 +47,13 @@ The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-
 
 == Prepare the developer's permissions
 
-Prepare the two application namespaces and inject a scoped developer identity into Dev Spaces. This helper waits for namespace security allocation, creates the limited permissions and mounts a temporary kubeconfig without printing its token.
+Prepare the two application namespaces and grant `dev` the application and
+delivery permissions. The helper also waits for namespace security allocation
+and prepares the pipeline service account and application image-pull access.
+
+Dev Spaces https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/user_guide/assembly_integrating-with-openshift_user_guide[automatically injects the OpenShift user's token]
+for `oc` and `kubectl`. No separate developer ServiceAccount, token creation or
+custom CLI kubeconfig is needed. OpenCode uses the same user permissions.
 
 Run from the cluster terminal before opening Dev Spaces:
 
@@ -55,24 +61,29 @@ include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
-# Create app/build projects and inject a limited CLI kubeconfig, without printing its token.
+# Create app/build projects and grant the developer's namespaced permissions.
 python3 scripts/prepare-developer.py
-# Expect yes: the scoped identity can start application builds.
+# Expect yes: the developer can start application builds.
 oc auth can-i create pipelineruns -n card-scout-build \
-  --as=system:serviceaccount:card-scout-dev:workshop-developer
+  --as=dev
 ----
 
-The injected CLI identity can build and deploy in the two application projects.
-Its token is valid for 24 hours. Run preparation before opening Dev Spaces;
-restart an existing workspace to load the updated credentials.
+These checks run from the platform terminal using impersonation; Lab 2.1 checks
+the actual user identity and permissions inside Dev Spaces. Run preparation
+before opening the workspace.
+
+For workspaces created with the previous guide, the helper removes the old
+`workshop-developer` credentials and `KUBECONFIG` override from the global
+configuration and *dev-devspaces*. Stop and start an existing workspace, then
+open a new terminal so it loads the native user credentials.
 
 == Give the browser user a prepared workspace project
 
-Browser login and terminal credentials are separate. The HTPasswd user `dev`
-exists from Act 0, but still needs access to projects in the browser. The following
+The HTPasswd user `dev` exists from Act 0. The following
 manifest pre-creates *dev-devspaces*, labels it for Dev Spaces discovery, and
 associates it with username `dev`. It grants namespace administration only in
 that workspace project, and `edit` only in *card-scout-dev* and *card-scout-build*.
+These rights apply both in the browser and to the CLI authenticated as `dev`.
 
 include::ROOT:partial$run-cluster.adoc[]
 

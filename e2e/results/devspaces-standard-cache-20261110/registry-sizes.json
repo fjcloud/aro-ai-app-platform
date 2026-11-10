@@ -1,0 +1,66 @@
+{
+  "scope": "Registry manifest comparison and standard-image cache configuration; no live ARO rollout performed.",
+  "platform": "linux/amd64",
+  "measurement": "Sum of compressed OCI/Docker image layer sizes, without downloading blobs. These are not unpacked node sizes or a cold-start timing benchmark.",
+  "images": [
+    {
+      "name": "Upstream UDI previously used by the template (not the Red Hat standard UDI)",
+      "image": "quay.io/devfile/universal-developer-image:latest",
+      "platform": "linux/amd64",
+      "compressedLayerBytes": 3737271128,
+      "compressedGB": 3.737,
+      "layers": 67,
+      "digest": "sha256:f8a161eee874bf0c05596faadc9e4dcbc12b6b7a3dd431a214a771810840af15",
+      "measuredAt": "2026-11-10T08:31:59.204758+00:00"
+    },
+    {
+      "name": "OpenCode injector",
+      "image": "quay.io/che-incubator/dashboard-ai/opencode:1.18.14-20260826-3ea5bb0",
+      "platform": "linux/amd64",
+      "compressedLayerBytes": 94653723,
+      "compressedGB": 0.095,
+      "layers": 3,
+      "digest": "sha256:f81bf9bfeab9de96950803995985e0eab3f3bee4df137a5a4407abdbf7670a5e",
+      "measuredAt": "2026-11-10T08:31:59.328191+00:00"
+    },
+    {
+      "name": "Playwright test browser",
+      "image": "mcr.microsoft.com/playwright:v1.56.1-noble",
+      "platform": "linux/amd64",
+      "compressedLayerBytes": 920794431,
+      "compressedGB": 0.921,
+      "layers": 4,
+      "digest": "sha256:42f02d323c310069b4d54c94bd91a608966a486c3492c48ae0b1cea747ec5ca2",
+      "measuredAt": "2026-11-10T08:31:58.614270+00:00"
+    }
+  ],
+  "configuration": {
+    "imagePullerEnabled": true,
+    "customImages": "",
+    "catalogueOwner": "installed Dev Spaces operator",
+    "customOpenCodeAndPlaywrightEntries": false,
+    "workspaceLaunchWaitsForCache": false,
+    "workspaceBaseSelection": "Exact registry.redhat.io/devspaces/udi-rhel9 reference from installed operator catalogue, via documented factory image= parameter"
+  },
+  "sources": [
+    "https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/administration_guide/assembly_caching-images-for-faster-workspace-start_administration_guide",
+    "https://github.com/eclipse-che/che-operator/blob/main/pkg/deploy/image-puller/imagepuller.go#L139-L148",
+    "https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html-single/user_guide/index"
+  ],
+  "historicalWorkspaceImageBytes": 9546605131,
+  "historicalTimingNote": "Previous cold/warm measurements also changed persistent-home initialization; they do not isolate pre-pulling.",
+  "validation": {
+    "shellSyntaxBlocks": 21,
+    "factoryUrlMockCases": [
+      "cached tag",
+      "cached digest",
+      "missing standard image produces no launch URL"
+    ],
+    "kustomize": "Rendered CheCluster verified locally",
+    "liveCluster": "Not run; current kubecontext is not the target ARO cluster"
+  },
+  "standardRedHatUdiMeasurement": {
+    "image": "registry.redhat.io/devspaces/udi-rhel9:3.28",
+    "status": "Anonymous manifest request returned HTTP 401; compressed size not measured. The upstream UDI measurement must not be attributed to this image."
+  }
+}
