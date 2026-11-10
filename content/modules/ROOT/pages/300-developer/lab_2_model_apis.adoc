@@ -1,5 +1,11 @@
 = Lab 2.2 — Test the Model APIs
 
+include::ROOT:partial$pr-preview.adoc[]
+
+== Goal
+
+Test D3, DeepSeek and the native agent independently with `curl | jq`. Check an image prediction, a language response and a real tool call before generating the application.
+
 *Developer · Dev Spaces terminal.* Test each capability before writing the app.
 Format JSON responses with `jq`. Keep the injected MaaS key out of Git, OpenCode
 prompts and the browser.
@@ -22,14 +28,23 @@ image::rarity-decision.svg["Card-kind eligibility and the bottom-right rarity sy
 
 == Test an image on the T4
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
 D3_URL=http://d3-mini.decision-serving.svc.cluster.local:8080
+# Set the prepared platform API URL used for images, analysis and agent-backed prices.
 CARD_SCOUT_URL=http://card-scout-platform.card-scout-dev.svc.cluster.local:8080
+# Ask the actual local runtime for its model ID, device and numerical precision.
 curl --fail-with-body -sS "$D3_URL/v1/models" | \
   jq '{id:.data[0].id,device:.data[0].device,dtype:.data[0].dtype}'
+# Download the Charizard test image from the prepared dataset.
 curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-104" -o /tmp/card-scout.png
+# Encode the image bytes for the JSON request; this is transport encoding, not a model
+# prediction.
 base64 -w0 /tmp/card-scout.png > /tmp/card-scout.b64
+# Build the D3 image-and-choices request; the file avoids embedding a large base64 string in a
+# command.
 jq -n --rawfile image /tmp/card-scout.b64 '{
   model:"vllm-sr/d3-mini",
   state:"Inspect the attached image and classify the card and its official printed rarity. Judge only from visible evidence.",
@@ -58,6 +73,7 @@ jq -n --rawfile image /tmp/card-scout.b64 '{
     }
   }
 }' > /tmp/card-scout-decision.json
+# Submit the image-decision JSON and format the returned choices/probabilities with jq.
 curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
   -H 'Content-Type: application/json' --data-binary @/tmp/card-scout-decision.json | jq '.answers'
 ----
@@ -72,34 +88,45 @@ have `not_applicable` rarity, without inventing a confidence score.
 Repeat with Fighting Energy. It is a Pokémon TCG card with Common rarity,
 even though Basic Energy has no printed rarity symbol:
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Download the Basic Energy test image from the prepared dataset.
 curl --fail-with-body -sS "$CARD_SCOUT_URL/assets/item-197" -o /tmp/energy-card.png
+# Encode the image bytes for the JSON request; this is transport encoding, not a model
+# prediction.
 base64 -w0 /tmp/energy-card.png > /tmp/energy-card.b64
+# Reuse the same decision rubric and replace only the test image.
 jq --rawfile image /tmp/energy-card.b64 '.images=["data:image/png;base64," + $image]' /tmp/card-scout-decision.json > /tmp/energy-card-decision.json
+# Submit the image-decision JSON and format the returned choices/probabilities with jq.
 curl --fail-with-body -sS --max-time 120 "$D3_URL/v1/systemone" \
   -H 'Content-Type: application/json' --data-binary @/tmp/energy-card-decision.json | jq '.answers'
 ----
 
 == Test DeepSeek through MaaS
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Call the governed language-model endpoint with the client Bearer key and inspect its JSON
+# response.
 curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Authorization: Bearer $OPENAI_API_KEY" -H 'Content-Type: application/json' \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"In one sentence, explain why a trading card rarity is different from its market value."}],"max_completion_tokens":256}' | jq '{model,answer:.choices[0].message.content,usage}'
 ----
 
-Expect an actual answer and measured usage. A quota error is a visible failure;
-do not switch the workshop model or substitute a keyword rule.
+Expect an actual answer and measured usage. If you receive a quota error, check the MaaS subscription and Foundry limits.
 
 [TIP]
 ====
 MaaS keys expire after 24 hours. If a previously working request returns `403`,
-renew the developer key in the *bastion terminal*:
+renew the developer key in the *cluster terminal*:
 
 [source,sh,role=execute]
 ----
+# Mint a separate, time-limited MaaS client key and inject it into future workspaces.
 bash deploy/coding/mint-workshop-key.sh
 ----
 
@@ -111,9 +138,13 @@ Stop and start the Dev Space to load the new key, then repeat the test.
 For this probe, use the injected developer MaaS key with the native Responses
 API. The prepared service has a separate runtime key for application research.
 
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Prepare the client-key header expected by the native agent; never echo its value.
 PROVIDER_DATA=$(jq -cn --arg key "$OPENAI_API_KEY" '{vllm_api_token:$key}')
+# Build a native Responses request that requires the named, read-only MCP price tool.
 jq -n --arg mcp "$CARD_SCOUT_URL/mcp" '{
   model:"maas-vllm-inference-1/deepseekv4pro",
   input:"Use get_card_market_data once for item-104. Report its exact catalogue identity and Cardmarket EUR trend, 7-day average, update timestamp and source. Do not invent missing prices.",
@@ -121,9 +152,12 @@ jq -n --arg mcp "$CARD_SCOUT_URL/mcp" '{
   tool_choice:{type:"mcp",server_label:"card_scout_market",name:"get_card_market_data"},
   max_infer_iters:4,reasoning:{effort:"none"},store:false
 }' > /tmp/card-scout-agent.json
+# Ask the native OpenShift AI agent to execute the required catalogue tool; jq displays its
+# evidence.
 curl --fail-with-body -sS --max-time 180   http://lsd-genai-playground-service.card-scout-dev.svc.cluster.local:8321/v1/responses \
   -H "X-OGX-Provider-Data: $PROVIDER_DATA" -H 'Content-Type: application/json' \
   --data-binary @/tmp/card-scout-agent.json | jq '{status,output,usage}'
+# Remove the temporary credential-bearing variable from this shell.
 unset PROVIDER_DATA
 ----
 

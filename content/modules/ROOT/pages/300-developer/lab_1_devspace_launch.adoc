@@ -1,6 +1,10 @@
 = Lab 2.1 — Launch Your Dev Space
 
-Welcome to Act 2. You are now the *Developer*. Everything you need — editor, terminal, and OpenCode pointed at DeepSeek-V4 Pro — is in the browser through *OpenShift Dev Spaces*. No laptop installation is required. The model is published through the OpenShift AI MaaS gateway prepared in Act 1.
+include::ROOT:partial$pr-preview.adoc[]
+
+== Goal
+
+Open a browser workspace with the app template, CLI tools and OpenCode configured for DeepSeek. Sign in as `dev` to use the platform prepared in Act 1.
 
 [NOTE]
 ====
@@ -9,43 +13,37 @@ Welcome to Act 2. You are now the *Developer*. Everything you need — editor, t
 *What you need:* The platform prepared in Act 1 and your cluster login
 ====
 
-== What is OpenShift Dev Spaces?
-
-OpenShift Dev Spaces provides *cloud-based developer workspaces* — VS Code-compatible IDEs that run as pods in the cluster. Key benefits:
-
-* *Zero local setup:* the workspace comes pre-configured; just open a browser
-* *Consistent environment:* every developer gets the same tools, versions, and configuration
-* *Model access:* the workspace calls MaaS at `$OPENAI_BASE_URL` with an injected MaaS key — same chat-completions JSON, pay per token
-* *Persistent storage:* your work survives closing the browser, but remains tied to the lifetime of this RHDP environment. Export anything you want to keep before it expires
-
 == Get the Dev Spaces URL
 
-The models and runtime agent backend are now ready. In the *bastion terminal*, generate the workspace launch link:
+The models and runtime agent backend are now ready. In the *cluster terminal*, generate the workspace launch link:
+
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
+# Read the operator-reported browser IDE URL for this cluster.
 DEVSPACES_URL=$(oc get checluster devspaces -n openshift-operators -o jsonpath='{.status.cheURL}')
-oc rollout status daemonset/kubernetes-image-puller -n openshift-operators --timeout=600s
+# Select the ARO template branch; it contains scaffolding and tests, not a finished app.
 TEMPLATE_URL=https://github.com/fjcloud/go-app-template/tree/aro-card-scout
-printf '%s/#%s?ai-provider=opencodeai/opencode\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL"
+# Use the standard Red Hat UDI tag, keeping the image digest out of the link.
+UDI_IMAGE=registry.redhat.io/devspaces/udi-rhel9:latest
+# Print the workspace launch URL.
+printf '%s/#%s?ai-provider=opencodeai/opencode&image=%s\n' "${DEVSPACES_URL%/}" "$TEMPLATE_URL" "$UDI_IMAGE"
 ----
 
-Open the printed link in your browser. It clones the Card Scout template and creates the workspace from its `devfile.yaml`.
-
-[NOTE]
-====
-The `#<template-url>` suffix tells Dev Spaces to clone the template and create a workspace from its `devfile.yaml` automatically. OpenCode is injected by the platform. The project `opencode.json` already pins DeepSeek through MaaS. The workspace comes pre-loaded with a short `AGENTS.md`, `APP_CONTRACT.md`, acceptance tests, `DELIVERY.md` and the delivery scaffold — you only need to write the application code.
-====
-
-. Open that URL in your browser.
-
-== Use the named workshop account
-
-Choose the *workshop* identity provider and sign in as `workshop-admin` with the password created in Act 0. The RHDP catalog password is different. Keep the OpenShift password out of OpenCode and Git; the developer terminal receives its own scoped identity.
+Open the printed link in a *private window or separate browser profile*.
+This keeps the developer's login separate from your administrator session.
+The https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/user_guide/optional-parameters-for-urls_user_guide[image URL parameter]
+selects the standard Red Hat UDI using its short `latest` tag. The test-browser
+component remains defined in the template. The operator caches its own image
+catalogue; if the tag resolves to a different image, the workspace downloads it
+on demand.
+The link selects the template and OpenCode; Dev Spaces creates a workspace in
+the prepared *dev-devspaces* project.
 
 == Log In and Create Your Workspace
 
-. You will be redirected to OpenShift SSO. Choose *workshop* and log in as `workshop-admin`.
+. You will be redirected to OpenShift SSO. Choose *workshop* and log in as `dev`.
 
 . On first access, click *Log in with OpenShift* if prompted, then *Allow selected permissions* for the Dev Spaces client. The redirect should return to your lab's Dev Spaces address.
 
@@ -64,30 +62,65 @@ Running postStart commands...
   ✓ Installing the ephemeral Git client
 ----
 +
-The first launch can take up to 15 minutes while the images are pulled. *Subsequent launches are faster* — the images are cached.
+[IMPORTANT]
+====
+*Allow 2–5 minutes with cached images; the first start can take up to 15 minutes.*
+Storage and the persistent home still need initialization. Background caching
+does not block launch; the workspace pulls any required image that is missing
+from its node. Keep the start screen open; do not create extra
+workspaces while one is starting. A timeout or an error in *Events* is a failure
+to inspect, not proof that the IDE is ready.
+====
 
 . When the workspace is ready, a VS Code-like editor opens in the browser. You will see:
 ** A file explorer on the left
 ** A terminal at the bottom
 ** OpenCode available on `PATH` (injected by Dev Spaces, not by the template)
 +
-Do **not** sign in to GitHub Copilot. Che Code ships Copilot as a built-in; the platform disables it. Do not install Continue. Use OpenCode in the terminal to call DeepSeek-V4 Pro.
+Use OpenCode in the terminal to call DeepSeek-V4 Pro.
 
-If the editor opens in *Restricted Mode*, open *Manage Workspace Trust*, trust this repository, and confirm. The IDE may reload before its terminal becomes available.
+If the editor opens in *Restricted Mode*, click *Manage* in the banner, then
+*Trust*. The IDE may reload before its terminal becomes available.
+
+== Open the terminal inside Dev Spaces
+
+In the browser editor’s top menu, choose *Terminal → New Terminal*. A shell opens
+in the bottom panel. If the menu is collapsed, use the editor’s main menu or
+kbd:[Ctrl+Shift+P], then run *Terminal: Create New Terminal*. This is the Dev Spaces
+terminal. Use it for all Act 2 commands.
+
+Run developer commands here, in `$PROJECT_SOURCE`. Shell blocks go into this
+terminal; natural-language prompt blocks go into OpenCode after it starts.
 
 == Check your scoped CLI access
 
-The platform injects a separate developer kubeconfig into the workspace. Browser SSO and CLI access are separate; you do not paste an administrator token into the terminal or OpenCode.
+The terminal must use `dev`, the same identity as the browser. Synchronize its
+credentials before running the checks:
+
+. In the Dev Spaces dashboard, select *Workspaces → card-scout-workspace*.
+. Open *Advanced* and click *Refresh Kubeconfig* while signed in as *dev*.
+. Wait for *Kubeconfig refreshed*, then reload the editor tab and open a new terminal.
+
+image::devspaces-refresh-kubeconfig.png[Refresh the workspace kubeconfig as dev,align="center",link=self]
+
+This uses Dev Spaces' native credential injection; no additional `oc login` or
+custom CLI identity is needed.
+
+include::ROOT:partial$run-devspaces.adoc[]
 
 [source,sh,role=execute]
 ----
+# Show the CLI identity actually used by this terminal.
 oc whoami
+# Expect yes: the developer can start application builds.
 oc auth can-i create pipelineruns -n "${APP_NAME}-build"
+# Expect yes: this identity can deploy in the application project.
 oc auth can-i create deployments -n "${APP_NAME}-dev"
-oc auth can-i use scc/privileged -n "${APP_NAME}-build"
 ----
 
-Expect the `workshop-developer` service account, then `yes`, `yes`, and `no`. The final `no` is intentional: OpenCode must not grant SCCs or use privileged containers. If build/deploy access is missing, ask the facilitator to rerun `scripts/prepare-developer.py` and restart the workspace. Keep the scoped identity; an administrator login is not a workaround.
+Expect `dev`, then `yes` and `yes`. If `oc whoami` shows a ServiceAccount,
+repeat *Refresh Kubeconfig* from the `dev` dashboard session. If the identity is
+`dev` but either permission is `no`, ask the platform engineer to check Lab 1.7.
 
 The template also includes a local-only browser component for acceptance tests.
 OpenCode prepares it with `npm ci && npm run setup`. No system-package installation
@@ -99,8 +132,11 @@ is needed in the developer container. The generated app remains a Go application
 
 . Check that OpenCode is on `PATH` (injected) and that ephemeral Git is configured (`$GIT_SERVER`):
 +
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Verify that OpenCode and the platform Git client are available in this workspace.
 opencode --version && command -v gitpop && echo "GIT_SERVER=$GIT_SERVER"
 ----
 +
@@ -112,14 +148,22 @@ opencode --version && command -v gitpop && echo "GIT_SERVER=$GIT_SERVER"
 GIT_SERVER=https://git.<workshop-domain>
 ----
 
-. Check the project model configuration against the platform. The template's `opencode.json` wins over the platform file; both should pin DeepSeek through MaaS. The following also updates older workspaces when needed. This file contains environment references; it contains no key. From the workspace terminal:
+. Check the project model configuration against the platform. The template's `opencode.json` wins over the platform file; both should pin DeepSeek through MaaS. This file contains environment references; it contains no key. From the workspace terminal:
 +
+include::ROOT:partial$run-devspaces.adoc[]
+
 [source,sh,role=execute]
 ----
+# Use the cloned project directory inside Dev Spaces.
 cd "${PROJECT_SOURCE}"
-cp "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/opencode.json" opencode.json
+# Align the project’s model configuration with the injected platform configuration; it
+# contains environment references, not a key.
+cp "$OPENCODE_CONFIG" opencode.json
+# Commit only when the injected configuration differs from the template.
 if ! git diff --quiet HEAD -- opencode.json; then
+  # Stage only the intended model-configuration update.
   git add opencode.json
+  # Commit the configuration change using the workshop developer identity.
   git -c user.name="Workshop Developer" -c user.email="dev@workshop.local" \
     commit -m "Use DeepSeek through the workshop MaaS gateway"
 fi
@@ -127,56 +171,35 @@ fi
 +
 . Test both model APIs in *Lab 2.2* before starting OpenCode. Your MaaS key is already injected; do not print it.
 
-== Understanding the OpenCode Configuration
+== Check the workspace identity in the UI
 
-OpenCode reads **project** `opencode.json` first (it overrides the platform mount under `~/.config/opencode`). Verify the file in the template:
+Open the Dev Spaces dashboard in the same developer browser session. Confirm
+that the user menu shows *dev* and that the workspace belongs to *dev-devspaces*.
+In the editor, `oc whoami` should also show `dev`. This user has namespace-scoped
+workspace and application permissions; it does not administer the cluster.
+
+== Model configuration
+
+OpenCode uses the project `opencode.json`. Inspect it to confirm the model is
+`deepseek/deepseekv4pro` and the URL and key are environment references:
+
+include::ROOT:partial$run-devspaces.adoc[]
 
 [source,sh,role=execute]
 ----
+# Inspect the model configuration without printing the injected key.
 jq . "${PROJECT_SOURCE}/opencode.json"
 ----
 
-Expected content:
-
-[source,json]
-----
-{
-  "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "deepseek": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "DeepSeek-V4 Pro",
-      "options": {
-        "baseURL": "{env:OPENAI_BASE_URL}",
-        "apiKey": "{env:OPENAI_API_KEY}",
-        "chunkTimeout": 120000,
-        "timeout": 600000
-      },
-      "models": {
-        "deepseekv4pro": {
-          "name": "DeepSeek-V4 Pro",
-          "limit": {
-            "context": 131072,
-            "output": 32768
-          }
-        }
-      }
-    }
-  },
-  "model": "deepseek/deepseekv4pro",
-  "autoupdate": false
-}
-----
-
-OpenCode still reads `AGENTS.md` from the project directory at the start of every session. These instructions guide generation. Tekton validates the image reference, and you check the deployed application in Lab 2.3.
-
-`limit.output` is 32 768. Keep prompts specific and review usage and pricing in Lab 3.1.
-
 == ✅ Checkpoint
+
+include::ROOT:partial$run-devspaces.adoc[]
 
 [source,sh,role=execute]
 ----
+# Use the cloned project directory inside Dev Spaces.
 cd ${PROJECT_SOURCE}
+# Verify that OpenCode and the platform Git client are available in this workspace.
 opencode --version && \
 echo "GIT_SERVER=$GIT_SERVER" && \
 jq -r .model opencode.json

@@ -5,13 +5,13 @@ installing the platform, provisioning one CPU and one T4 worker, testing the
 actual APIs from Dev Spaces, generating the Go app with DeepSeek/OpenCode,
 and delivering it through Tekton and Argo CD. Fixtures alone are not acceptance.
 
-Run the shell blocks from the guide in order. Act 0 and Act 1 use the bastion;
-Act 2 uses the scoped Dev Spaces identity. The Playground tests the CLI-created
+Run the shell blocks from the guide in order. Act 0 and Act 1 use the cluster terminal;
+Act 2 uses the native `dev` user in Dev Spaces. The Playground tests the CLI-created
 `OGXServer/lsd-genai-playground` in `card-scout-dev`; it does not provision it.
 
 ## Platform and developer APIs
 
-From the authenticated bastion, with the workshop checkout:
+From the authenticated cluster terminal, with the workshop checkout:
 
 ```sh
 bash e2e/platform-run.sh
@@ -23,7 +23,8 @@ The API check executes all four Lab 2.2 command blocks verbatim in the real
 workspace. It requires five JSON responses: D3 discovery, Pokémon and control
 image decisions, MaaS Chat Completions, and a completed native Responses call
 with a successful `get_card_market_data` call for the requested catalogue ID.
-It also checks that the developer cannot read model Secrets or edit the model.
+It first verifies that the workspace CLI is authenticated as `dev`, then checks
+from that same terminal that the developer cannot read model Secrets or edit the model.
 D3 needs no credential; DeepSeek uses the injected MaaS key.
 
 ## Generated app and browser

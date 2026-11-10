@@ -1,6 +1,10 @@
 = Lab 1.7 — Prepare Developer Access
 
-DeepSeek-V4 Pro is already answering. Prepare the scoped developer access and project runbook for the developer in Act 2.
+include::ROOT:partial$pr-preview.adoc[]
+
+== Goal
+
+Prepare the developer projects, permissions and app template. The account `dev` owns its workspace and uses the same identity in `oc` and OpenCode to build and deploy the app.
 
 The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-template/tree/aro-card-scout[fjcloud/go-app-template].
 
@@ -39,34 +43,83 @@ The Card Scout template is on its own branch: https://github.com/fjcloud/go-app-
 | Golden-path Kustomize. The Deployment already names the internal Tekton image. The pipeline validates that image before building; the model keeps the scaffold intact.
 |===
 
-`APP_CONTRACT.md` defines the application, APIs and acceptance checks. `AGENTS.md` defines the short test-and-fix workflow; `DELIVERY.md` contains the detailed delivery commands. There is no app `scripts/` directory and no Ansible.
+`APP_CONTRACT.md` defines the application, APIs and acceptance checks. `AGENTS.md` defines the short test-and-fix workflow; `DELIVERY.md` contains the detailed delivery commands.
 
 == Prepare the developer's permissions
 
-Prepare the two application namespaces and inject a scoped developer identity into Dev Spaces. This helper waits for namespace security allocation, creates the limited permissions and mounts a temporary kubeconfig without printing its token.
+Prepare the two application namespaces and grant `dev` the application and
+delivery permissions. The helper also waits for namespace security allocation
+and prepares the pipeline service account and application image-pull access.
 
-Run from the bastion before opening Dev Spaces:
+Dev Spaces https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/user_guide/assembly_integrating-with-openshift_user_guide[automatically injects the OpenShift user's token]
+for `oc` and `kubectl`. No separate developer ServiceAccount, token creation or
+custom CLI kubeconfig is needed. OpenCode uses the same user permissions.
+
+Run from the cluster terminal before opening Dev Spaces:
+
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
+# Create app/build projects and grant the developer's namespaced permissions.
 python3 scripts/prepare-developer.py
+# Expect yes: the developer can start application builds.
 oc auth can-i create pipelineruns -n card-scout-build \
-  --as=system:serviceaccount:card-scout-dev:workshop-developer
+  --as=dev
 ----
 
-The developer can build and deploy in the two application namespaces. They cannot create namespaces, change SCCs or create cluster-wide bindings. Image-pull permission is prepared here, not by the model. The Pipelines operator supplies its standard, non-privileged build service account permissions.
+These checks run from the platform terminal using impersonation; Lab 2.1 checks
+the actual user identity and permissions inside Dev Spaces. Run preparation
+before opening the workspace.
 
-The injected developer token is valid for 24 hours. Preparation must run before opening Dev Spaces; restart an existing workspace to receive the scoped kubeconfig.
+For workspaces created with the previous guide, the helper removes the old
+`workshop-developer` credentials and `KUBECONFIG` override from the global
+configuration and *dev-devspaces*. Stop and start an existing workspace, then
+open a new terminal so it loads the native user credentials.
 
-== Step 1: Read AGENTS.md
+== Give the browser user a prepared workspace project
 
-Clone only if you want it on disk. On a shared workshop cluster you can also open the file on GitHub. Either way, *read it* — it is short.
+The HTPasswd user `dev` exists from Act 0. The following
+manifest pre-creates *dev-devspaces*, labels it for Dev Spaces discovery, and
+associates it with username `dev`. It grants namespace administration only in
+that workspace project, and `edit` only in *card-scout-dev* and *card-scout-build*.
+These rights apply both in the browser and to the CLI authenticated as `dev`.
+
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
+# Inspect the workspace namespace labels and the three namespaced role bindings.
+cat deploy/developer/dev-user-access.yaml
+# Create the prepared project and browser permissions after the app projects exist.
+oc apply -f deploy/developer/dev-user-access.yaml
+# Verify that Dev Spaces can identify the project as belonging to dev.
+oc get namespace dev-devspaces -o json | jq '{name:.metadata.name,labels:.metadata.labels,owner:.metadata.annotations["che.eclipse.org/username"]}'
+# Verify browser permissions without logging out of the administrator terminal.
+oc auth can-i create devworkspaces.workspace.devfile.io -n dev-devspaces --as=dev
+# Expect yes: this identity can deploy in the application project.
+oc auth can-i create deployments -n card-scout-dev --as=dev
+----
+
+Expect `yes` for both permission checks. The workspace role is limited to
+*dev-devspaces*; the application roles are limited to the two app projects.
+The supplied https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.28/html/administration_guide/assembly_configuring-projects_administration_guide[Dev Spaces project labels and username annotation]
+allow the existing project to be reused.
+
+== Read the application contract
+
+Inspect the agent instructions and app contract. The developer will use these
+same files in Dev Spaces.
+
+include::ROOT:partial$run-cluster.adoc[]
+
+[source,sh,role=execute]
+----
+# Clone the application template for inspection; do not copy a completed app.
 git clone --depth 1 --branch aro-card-scout https://github.com/fjcloud/go-app-template "$HOME/card-scout-template"
-wc -l "$HOME/card-scout-template/AGENTS.md"
+# Read the short generation, test and delivery rules for the coding agent.
 cat "$HOME/card-scout-template/AGENTS.md"
+# Read the required minimal UI and the platform API it must call.
 cat "$HOME/card-scout-template/APP_CONTRACT.md"
 ----
 
@@ -93,12 +146,16 @@ until it passes and keep the supplied tests unchanged. The detailed Git → Tekt
 
 image::cicd-gitops.svg["Prompt to deployment",align="center",link=self]
 
-== Step 2: Confirm OpenCode is wired to MaaS
+== Confirm OpenCode is configured for MaaS
 
 OpenCode is injected from the AI tool registry enabled in Lab 1.3. The *binary* comes from the platform. The platform model pin is the ConfigMap. The project and platform files both pin DeepSeek through MaaS. Lab 2.1 checks they agree.
 
+include::ROOT:partial$run-cluster.adoc[]
+
 [source,sh,role=execute]
 ----
+# Inspect the platform’s default coding-model configuration, which references environment
+# variables.
 oc get configmap opencode-workspace-config -n openshift-operators \
   -o jsonpath='{.data.opencode\.json}' | jq .
 ----
@@ -128,3 +185,21 @@ You should see `baseURL` `{env:OPENAI_BASE_URL}`, Bearer authentication, provide
 |===
 
 Before switching persona, prepare the native Responses backend and tracing in *Lab 1.8: Prepare Card Scout*.
+
+OpenShift AI allows authenticated OpenShift users by default in this fresh-lab
+configuration. If the platform has been deliberately restricted to user groups,
+`workshop-admin` must add `dev` to an allowed group in *Settings → User management*;
+that does not require giving `dev` cluster administration. See the
+https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/html/managing_resources/selecting-admin-and-user-groups_resource-mgmt[OpenShift AI user-group documentation].
+
+== Verify the handoff in the console
+
+Keep the cluster terminal as `workshop-admin`. In a *separate browser profile or private
+window*, open the console URL from `oc whoami --show-console`, choose the
+*workshop* identity provider and sign in as *dev*, using the developer password
+from Act 0. A separate browser session avoids silently reusing the administrator’s
+single sign-on session when you open Dev Spaces.
+
+Use the project selector to find *dev-devspaces*, *card-scout-dev* and
+*card-scout-build*. The platform namespaces do not need to be editable by this
+user. Keep this developer browser window for Act 2.

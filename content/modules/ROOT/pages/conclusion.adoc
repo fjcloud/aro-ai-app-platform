@@ -1,5 +1,7 @@
 = Conclusion
 
+include::ROOT:partial$pr-preview.adoc[]
+
 You prepared complementary AI capabilities:
 
 * *DeepSeek through OpenShift AI MaaS* generated the Go application and powered

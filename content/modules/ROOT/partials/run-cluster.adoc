@@ -1,0 +1,4 @@
+[NOTE]
+====
+*Terminal: cluster* — the shell beside this guide.
+====

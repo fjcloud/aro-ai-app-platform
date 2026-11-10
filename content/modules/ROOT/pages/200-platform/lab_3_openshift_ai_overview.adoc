@@ -1,6 +1,10 @@
 = Lab 1.5 — Publish DeepSeek through MaaS
 
-Give developers the same access pattern whether a model runs on the cluster or at a cloud provider. Register DeepSeek on Foundry as an *external model* in OpenShift AI, then publish it through *Models-as-a-Service*: one HTTPS endpoint, a MaaS API key and a token quota.
+include::ROOT:partial$pr-preview.adoc[]
+
+== Goal
+
+Publish DeepSeek through Models-as-a-Service (MaaS). Developers receive a stable endpoint and a limited client key; the platform retains the Azure provider key and controls token allowances.
 
 [NOTE]
 ====
@@ -24,11 +28,15 @@ For this single-participant cluster, the workshop grants `system:authenticated` 
 
 == Step 1: Register the Foundry provider
 
-Run from the workshop repository in the *bastion terminal*. Keep shell tracing (`set -x`) off.
+Run from the workshop repository in the *cluster terminal*. Keep shell tracing (`set -x`) off.
+
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
+# Register the Foundry endpoint and store its provider key only on the platform.
 bash scripts/configure-coding-provider.sh
+# Inspect externalprovider.inference.opendatahub.io status.
 oc get externalprovider.inference.opendatahub.io foundry -n llm-serving
 ----
 
@@ -36,13 +44,25 @@ The helper reads the existing Azure key without printing it, stores it in `llm-s
 
 == Step 2: Publish the model, access policy and subscription
 
+include::ROOT:partial$run-cluster.adoc[]
+
 [source,sh,role=execute]
 ----
+# Publish the external model, access policy and token-allowance subscription.
 oc apply -k deploy/coding
+# Wait for the external model registration to report Ready.
 oc wait externalmodel.inference.opendatahub.io/deepseekv4pro -n llm-serving \
   --for=jsonpath='{.status.phase}'=Ready --timeout=300s
+# Wait until MaaS can publish the external model.
 oc wait maasmodelref/deepseekv4pro -n llm-serving \
   --for=jsonpath='{.status.phase}'=Ready --timeout=300s
+# Wait until the provider registration and workshop subscription can actually be used.
+oc wait externalprovider.inference.opendatahub.io/foundry -n llm-serving \
+  --for=jsonpath='{.status.phase}'=Ready --timeout=300s
+# Wait until the requested token-allowance subscription is usable.
+oc wait maassubscription/deepseekv4pro-workshop -n models-as-a-service \
+  --for=condition=Ready --timeout=300s
+# Inspect both the access policy and the token-allowance subscription.
 oc get maasauthpolicy,maassubscription -n models-as-a-service
 ----
 
@@ -50,12 +70,55 @@ Inspect `deploy/coding/external-model.yaml`: the client model is `deepseekv4pro`
 
 `MaaSModelRef` publishes the external model. `MaaSAuthPolicy` grants access; `MaaSSubscription` sets a shared *10 million tokens per 24 hours* workshop allowance. The quota controls consumption, not Azure prices or infrastructure charges. It is separate from Foundry’s tokens-per-minute limit.
 
-== Step 3: Give Dev Spaces a MaaS key
+== Understand readiness before creating a client key
 
-Act 0 signs the bastion in automatically. If the session has expired, run `make onboard` again before creating the key.
+[IMPORTANT]
+====
+*Allow 2–5 minutes for a fresh registration and its access policy to reconcile.*
+Each wait above permits 5 minutes. A short-lived `Degraded` label while supporting
+components start is not the final result. Continue only when the model/provider
+checks are Ready and the workshop subscription is Ready. If a wait times
+out or `Degraded` persists, inspect the conditions below; do not mint more keys,
+grant administrator access, or silently switch model providers.
+====
+
+If everything is Ready, continue to Step 3. For persistent `Degraded` or a timeout,
+use the status message to identify the failing layer:
+
+include::ROOT:partial$run-cluster.adoc[]
 
 [source,sh,role=execute]
 ----
+# Inspect provider connectivity/credential reconciliation without reading its Secret.
+oc get externalprovider.inference.opendatahub.io foundry -n llm-serving -o json | jq '{phase:.status.phase,conditions:.status.conditions}'
+# Inspect the external deployment and the model published through MaaS.
+oc get externalmodel.inference.opendatahub.io deepseekv4pro -n llm-serving -o json | jq '{phase:.status.phase,conditions:.status.conditions}'
+# Inspect maasmodelref status.
+oc get maasmodelref deepseekv4pro -n llm-serving -o json | jq '{phase:.status.phase,conditions:.status.conditions}'
+# Inspect the tenant's component readiness and its reported failure reasons.
+oc get maastenantconfig default-tenant -n models-as-a-service -o json | jq '{phase:.status.phase,conditions:.status.conditions}'
+# Confirm that the user-workload monitoring pods exist and are running.
+oc get pods -n openshift-user-workload-monitoring
+----
+
+Missing user-workload monitoring is one documented cause of MaaS `Degraded`.
+Lab 1.3 already applies `deploy/instances/uwm-cluster-monitoring-config.yaml` to
+enable it. Check that configuration and monitoring pod events before reapplying
+anything. Provider errors require checking the Foundry deployment and the endpoint
+saved in Lab 1.4; gateway or policy errors require checking their conditions.
+The https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.5/html/govern_llm_access_with_models-as-a-service/deploy-and-manage-models-as-a-service[official MaaS readiness and troubleshooting guide]
+explains these separate checks. A successful curl proves an inference path, not
+that every monitoring or UI component is healthy.
+
+== Step 3: Give Dev Spaces a MaaS key
+
+If your session has expired, run `oc login -u workshop-admin` before creating the key.
+
+include::ROOT:partial$run-cluster.adoc[]
+
+[source,sh,role=execute]
+----
+# Mint a separate, time-limited MaaS client key and inject it into future workspaces.
 bash deploy/coding/mint-workshop-key.sh
 ----
 
@@ -65,32 +128,87 @@ This creates a key for subscription `deepseekv4pro-workshop`, valid for 24 hours
 
 Load only the Dev Spaces credential into the shell, then call the gateway:
 
+include::ROOT:partial$run-cluster.adoc[]
+
 [source,sh,role=execute]
 ----
+# Read the governed URL from the prepared Dev Spaces Secret.
 OPENAI_BASE_URL=$(oc get secret ai-provider-openai-api-key -n openshift-operators \
   -o jsonpath='{.data.OPENAI_BASE_URL}' | base64 -d)
+# Read the client MaaS key from its prepared Secret, not the Foundry provider key.
 OPENAI_API_KEY=$(oc get secret ai-provider-openai-api-key -n openshift-operators \
   -o jsonpath='{.data.OPENAI_API_KEY}' | base64 -d)
 
+# Call the governed language-model endpoint with the client Bearer key and inspect its JSON
+# response.
 curl --fail-with-body -sS --max-time 180 "${OPENAI_BASE_URL}/chat/completions" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"model":"deepseekv4pro","messages":[{"role":"user","content":"Reply with one short sentence."}],"max_completion_tokens":256}' | jq .
+# Remove the temporary credential-bearing variable from this shell.
 unset OPENAI_API_KEY
 ----
 
 The URL is `https://maas.<apps-domain>/v1`. Clients send a Bearer MaaS key; they never send the Foundry `api-key` header. An invalid MaaS key must be rejected before an Azure inference request is made.
 
-== Inspect it in OpenShift AI
+== Open OpenShift AI and verify the published model
 
-Open *Red Hat OpenShift AI* from the OpenShift application launcher:
+First recover the URLs from the *cluster terminal*, still as `workshop-admin`:
 
-Close the welcome tour dialog if it appears on first access.
+include::ROOT:partial$run-cluster.adoc[]
 
-. In *AI hub → Models → External models*, choose the `llm-serving` project and inspect DeepSeek and its provider.
-. In *Settings → MaaS governance*, inspect `deepseekv4pro-workshop` and its token allowance.
-. In *Gen AI studio → AI asset endpoints*, find the published model and its endpoint.
+[source,sh,role=execute]
+----
+# Print the OpenShift console URL for this cluster.
+oc whoami --show-console
+# Read the cluster application domain and print its OpenShift AI 3.5 URL.
+APPS_DOMAIN=$(oc get ingress.config.openshift.io cluster -o jsonpath='{.spec.domain}')
+# Print the prepared browser launch URL; no credential is included.
+printf 'OpenShift AI: https://rh-ai.%s\n' "$APPS_DOMAIN"
+----
 
-The same MaaS catalog and access pattern can publish local and external models. d3-mini remains an internal decision service, configured next; it is not the coding model.
+Open the printed OpenShift AI URL, or open the console’s nine-dot application
+launcher and choose *Red Hat OpenShift AI*. Choose identity provider *workshop*,
+username *workshop-admin*, and the administrator password chosen in Act 0.
+This is not the catalog password or a model API key. Close the welcome tour.
 
-➡️ Move on to *Lab 1.6: Serve d3-mini*.
+. Go to *AI hub → Models → External models*.
+. Set the *Project* selector to *llm-serving*. Leaving another project selected
+  can hide the model even though the CLI deployment succeeded.
+. Find *DeepSeek-V4 Pro (Microsoft Foundry)* (`deepseekv4pro`), provider
+  *foundry*, with status *Ready*. Expand its row to inspect the provider details.
+  Inference runs on Azure.
+. Go to *Settings → MaaS governance → Subscriptions*. Find
+  *DeepSeek-V4 Pro workshop subscription* (`deepseekv4pro-workshop`), with
+  status *Ready*.
+. In that row, click *1* in the *Models* column. This expands the model's
+  *Token limits*: verify *10,000,000 / 24 hours*. This is the configured
+  allowance; remaining usage is explored in Lab 3.1.
+. In *Gen AI studio → AI asset endpoints*, find the published model endpoint.
+  Act 2 will use it from OpenCode; the Playground is exercised in Lab 3.2.
+
+image::workshop-external-deepseek.png[External DeepSeek model in the llm-serving project,align="center",link=self]
+
+image::workshop-maas-token-limits.png[MaaS subscription with the Models column expanded to show token limits,align="center",link=self]
+
+For reference, the same configuration can be inspected without changing it:
+
+include::ROOT:partial$run-cluster.adoc[]
+
+[source,sh,role=execute]
+----
+# Display only the model names and their token limits from the subscription spec.
+oc get maassubscription deepseekv4pro-workshop -n models-as-a-service -o json | jq '.spec.modelRefs[] | {name,namespace,tokenRateLimits}'
+----
+
+== Checkpoint
+
+You can explain the difference between the provider key and a MaaS client key,
+locate DeepSeek under *llm-serving*, and identify the subscription’s token allowance.
+The provider/model checks are Ready and the governed curl has returned an answer.
+If any of those checks is missing, stay in the platform persona and investigate.
+
+d3-mini is configured next as a separate internal image-decision service. It is
+not another copy of the coding model.
+
+Continue to xref:200-platform/lab_4_decision_model.adoc[Lab 1.6 — Serve d3-mini].

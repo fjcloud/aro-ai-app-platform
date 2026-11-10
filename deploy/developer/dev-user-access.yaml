@@ -1,0 +1,58 @@
+# The browser user dev owns this workspace project. The annotation lets
+# Dev Spaces find it instead of provisioning another workspace namespace.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-devspaces
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: workspaces-namespace
+  annotations:
+    che.eclipse.org/username: dev
+---
+# Namespace administration permits normal workspace management, not cluster
+# administration or use of privileged Security Context Constraints (SCCs).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-workspace-owner
+  namespace: dev-devspaces
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+---
+# The developer can edit application resources in the console and via the
+# user credentials automatically injected into the Dev Spaces CLI.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-browser-edit
+  namespace: card-scout-dev
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+---
+# Build access stays scoped to the application's build project.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-browser-edit
+  namespace: card-scout-build
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
